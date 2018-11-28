@@ -1,7 +1,7 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.1"
 
   @source "https://gitlab.motel-lab.com/teal/ex_teal"
 
@@ -73,7 +73,7 @@ by Motel."
 
   defp package do
     [
-      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG* priv),
       maintainers: [
         "Alexandrea Defreitas",
         "Caleb Oller",
