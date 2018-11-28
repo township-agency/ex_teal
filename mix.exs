@@ -1,20 +1,25 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+
+  @source "https://gitlab.motel-lab.com/teal/ex_teal"
+
   def project do
     [
       app: :ex_teal,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      docs: docs(),
       package: package(),
       description: description(),
       name: "ExTeal",
       organization: "motel",
-      source_url: "https://gitlab.motel-lab.com/teal/ex_teal"
+      source_url: @source
     ]
   end
 
@@ -40,30 +45,8 @@ defmodule ExTeal.MixProject do
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.3.0-rc3", only: :test},
-      {:phoenix_ecto, "~> 4.0", only: :test}
-    ]
-  end
-
-  defp description do
-    "ExTeal is a beautiful administration dashboard written for Phoenix Apps built
-by Motel. The primary feature of ExTeal is the ability to administrate
-your data using Ecto Schema and queries. ExTeal acomplishes this by allowing you
-to define a ExTeal \"resource\" that corresponds to each Ecto schema in your
-application."
-  end
-
-  defp package do
-    [
-      files: ~w(lib .formatter.exs mix.exs README* LICENSE*),
-      maintainers: [
-        "Alexandrea Defreitas",
-        "Caleb Oller",
-        "Lydia Koller",
-        "Samina Khan",
-        "Scott Taylor"
-      ],
-      licenses: ["MIT"],
-      links: %{"GitLab" => "https://gitlab.motel-lab.com/teal/ex_teal"}
+      {:phoenix_ecto, "~> 4.0", only: :test},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 
@@ -82,5 +65,40 @@ application."
 
   defp compile_assets(_) do
     Mix.shell().cmd("cd assets && ./node_modules/.bin/vue-cli-service build")
+  end
+
+  defp description do
+    "ExTeal is a beautiful administration dashboard written for Phoenix Apps built
+by Motel. The primary feature of ExTeal is the ability to administrate
+your data using Ecto Schema and queries. ExTeal acomplishes this by allowing you
+to define a ExTeal \"resource\" that corresponds to each Ecto schema in your
+application."
+  end
+
+  defp package do
+    [
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
+      maintainers: [
+        "Alexandrea Defreitas",
+        "Caleb Oller",
+        "Lydia Koller",
+        "Samina Khan",
+        "Scott Taylor"
+      ],
+      licenses: ["MIT"],
+      links: %{"GitLab" => @source}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: [
+        "README.md",
+        "CHANGELOG.md"
+      ],
+      source_ref: "v#{@version}",
+      source_url: @source
+    ]
   end
 end
