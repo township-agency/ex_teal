@@ -10,7 +10,6 @@ defmodule ExTeal.Router do
   alias ExTeal.Api.ResourceResponder
   alias ExTeal.GlobalSearch
   alias ExTeal.Resource.Serializer
-  alias Mix.Project
   alias Plug.Conn
 
   if Mix.env() == :dev do
@@ -103,16 +102,7 @@ defmodule ExTeal.Router do
   end
 
   defp build_body_with_config(conn) do
-    rel = Application.get_env(:ex_teal, :index_path)
-
-    path =
-      if Project.umbrella?() do
-        abs_path = Project.apps_paths() |> Map.get(:ex_teal)
-        "#{abs_path}/#{rel}"
-      else
-        Path.expand(rel, __DIR__)
-      end
-
+    path = Path.expand("../../priv/static/teal/index.html", __DIR__)
     {:ok, str} = File.read(path)
 
     base = Application.get_env(:ex_teal, :base_url)
