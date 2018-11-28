@@ -1,0 +1,444 @@
+@tailwind preflight;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --transparent: transparent;
+  --black: #22292f;
+  --white: white;
+  --white-50: rgba(255, 255, 255, 0.5);
+  --danger: #F91E17;
+  --danger-dark: #BB1611;
+  --success: #2CD82E;
+  --success-dark: #49B31C;
+  --warning: #ffeb3b;
+  --info: #03a9f4;
+  --primary-light: #4DC6F3;
+  --primary: #00ADEE;
+  --primary-dark: #0082B3;
+  --primary-70: rgba(64, 153, 222, 0.7);
+  --primary-50: rgba(64, 153, 222, 0.5);
+  --primary-30: rgba(64, 153, 222, 0.3);
+  --primary-10: rgba(64, 153, 222, 0.1);
+  --logo: #252d37;
+  --sidebar-icon: #b3c1d1;
+  --20: #F8F8F8;
+  --30: #E9E9E9;
+  --40: #eef1f4;
+  --50: #e3e7eb;
+  --60: #bacad6;
+  --70: #b3b9bf;
+  --80: #7c858e;
+  --90: #252d37;
+  --90-half: rgba(40, 54, 61, 0.5);
+}
+
+/* purgecss start ignore */
+
+/* Content ---------------------------------------------------------------------------- */
+.content {
+  min-width: 66.25rem;
+  width: 100%;
+  max-width: calc(100vw - 13.75rem);
+}
+
+/* Toast ---------------------------------------------------------------------------- */
+.toasted-container.top-center {
+  top: 30px !important;
+}
+
+/* Card Components
+---------------------------------------------------------------------------- */
+.card-headline{
+  @apply .flex .items-center .mb-4 .capitalize;
+}
+
+.card {
+  @apply .bg-white .border .border-solid .border-grey-light .w-full;
+}
+
+.card-panel {
+  height: 150px;
+}
+
+.card-refresh {
+  @apply .p-1 .ml-auto .text-80 .inline-flex .items-center;
+}
+
+.card-refresh:hover {
+  @apply .text-primary;
+}
+
+/* Tables
+---------------------------------------------------------------------------- */
+.table-fixed {
+  table-layout: fixed;
+}
+
+.table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.table tr:hover td {
+  @apply .bg-20;
+}
+
+.small-header{
+  @apply .bg-grey-lightest .text-xs .text-grey .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
+}
+
+.table th {
+  @apply .small-header;
+}
+
+.table td {
+  @apply .font-light .text-90 .border-t .border-40 .px-3 .align-middle .max-w-xs .overflow-hidden;
+  text-overflow: ellipsis;
+  height: 3.8125rem;
+}
+
+.th-fit,
+.td-fit {
+  width: 1%;
+  white-space: nowrap;
+}
+.sortable-chosen {
+  @apply .shadow;
+  transition: .25s all;
+}
+.sortable-chosen td{
+  @apply bg-grey-lighter text-primary-light;
+  transition: .25s all;
+}
+
+/* Remove the last border on a panel-item component
+---------------------------------------------------------------------------- */
+.remove-bottom-border {
+  border-bottom: none;
+}
+
+/* Forms
+---------------------------------------------------------------------------- */
+
+.form-control {
+  @apply .h-8;
+  line-height: normal;
+}
+
+.form-control-sm {
+  @apply .h-8;
+}
+
+.form-input {
+  @apply .bg-white .border .border-white .px-2 .text-80;
+}
+
+.form-control-focus {
+  outline: none;
+  box-shadow: 0 0 8px config('colors.primary');
+}
+
+.form-input:focus,
+.form-input:active {
+  @apply .form-control-focus;
+}
+
+.form-control-lg {
+  @apply .h-12;
+}
+
+.form-input-bordered {
+  @apply .bg-white .border .border-60 .px-2 .text-80;
+}
+
+.form-select {
+  @apply .bg-white .border .border-60 .pl-3 .pr-8 .text-80 .shadow;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-size: 10px 6px;
+  background-position: center right 0.75rem;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="#35393C" fill-rule="nonzero" d="M8.293.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4A1 1 0 0 1 1.707.293L5 3.586 8.293.293z"/></svg>');
+}
+
+.form-input:active:disabled,
+.form-input:focus:disabled,
+.form-select:active:disabled,
+.form-select:focus:disabled {
+  box-shadow: none;
+  @apply .shadow;
+}
+
+.form-input:disabled,
+.form-select:disabled {
+  @apply .bg-grey-lightest;
+  cursor: not-allowed;
+}
+
+.form-select:focus {
+  @apply .form-control-focus;
+}
+
+.form-combo {
+  @apply .bg-white .border .border-60 .text-80 .shadow .overflow-hidden;
+}
+
+.form-combo-select {
+  @apply .bg-white .bg-transparent .pr-4;
+  outline: none;
+  background-repeat: no-repeat;
+  background-size: 10px 6px;
+  background-position: center right 0.75rem;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="#35393C" fill-rule="nonzero" d="M8.293.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4A1 1 0 0 1 1.707.293L5 3.586 8.293.293z"/></svg>');
+}
+
+/* Checkbox
+---------------------------------------------------------------------------- */
+.checkbox {
+  outline: none;
+}
+
+.checkbox:focus {
+  box-shadow: 0 0 8px config('colors.primary');
+}
+
+/* Buttons
+---------------------------------------------------------------------------- */
+.btn {
+  @apply .inline-block .no-underline .font-bold .rounded;
+}
+.btn,.cursor-pointer{
+    transition: .5s all;
+}
+
+.btn-text-shadow {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.btn-default {
+  @apply .h-10 .px-3 .leading-36;
+}
+
+.btn-default:focus,
+.btn-default:active {
+  outline: none;
+}
+
+.btn-primary,
+.btn-primary.router-link-active {
+  @apply .bg-primary .border-primary-dark .border .text-white;
+}
+
+.btn-primary:hover {
+  @apply .bg-primary-dark;
+}
+
+.btn-secondary {
+  @apply .border .border-primary .text-primary;
+}
+
+.btn-secondary:hover {
+  @apply .bg-primary-light .border-primary-dark .text-primary-dark;
+}
+
+.btn-danger {
+  @apply .bg-danger .text-white;
+}
+
+.btn-danger:hover {
+  @apply .bg-red-dark;
+}
+
+.btn-icon {
+  @apply .px-4 .flex .items-center;
+}
+
+.btn-icon-inline {
+  @apply .inline-flex .items-center;
+}
+
+/* Checkbox toggle
+---------------------------------------------------------------------------- */
+.form-switch {
+    @apply .relative .select-none .w-12 .mr-2 .leading-normal;
+}
+.form-switch-checkbox {
+    @apply .hidden;
+}
+.form-switch-label {
+    @apply .block .overflow-hidden .cursor-pointer .bg-white;
+    @apply .border .rounded-full .h-6 .shadow-inner;
+
+    transition: background-color 0.2s ease-in;
+}
+.form-switch-label:before {
+    @apply .absolute .block .bg-white .pin-y .w-6;
+    @apply .border .rounded-full .-ml-1;
+
+    right: 50%;
+    content: "";
+    transition: all 0.2s ease-in;
+}
+.form-switch-checkbox:checked + .form-switch-label,
+.form-switch-checkbox:checked + .form-switch-label:before {
+
+}
+.form-switch-checkbox:checked + .form-switch-label {
+    @apply .bg-green .shadow-none;
+}
+.form-switch-checkbox:checked + .form-switch-label:before {
+    @apply .pin-r;
+}
+
+/* File Upload
+---------------------------------------------------------------------------- */
+.form-file {
+  @apply .relative;
+}
+
+.form-file-btn {
+  @apply .leading-40;
+}
+
+.form-file-input {
+  @apply .opacity-0 .overflow-hidden .absolute;
+  width: 0.1px;
+  height: 0.1px;
+  z-index: -1;
+}
+
+.form-file-input:focus + .form-file-btn,
+.form-file-input + .form-file-btn:hover {
+  @apply .bg-primary-dark .cursor-pointer;
+}
+
+.form-file-input:focus + .form-file-btn {
+  outline: none;
+  box-shadow: 0 0 8px config('colors.primary');
+}
+
+/* Dropdown
+---------------------------------------------------------------------------- */
+
+.dropdown-menu-left {
+  top: 3rem;
+  left: -2rem;
+}
+
+.dropdown-arrow-left {
+  top: calc(-1.35rem);
+  left: 2.3rem;
+}
+
+.dropdown-menu-right {
+  top: 3rem;
+  right: -1.5rem;
+}
+
+.dropdown-arrow-right {
+  top: calc(-1.35rem);
+  right: 2rem;
+}
+
+.dropdown-alt .dropdown-trigger {
+  @apply .flex .items-center .h-8 .px-3 .bg-40;
+}
+
+.dropdown-trigger-active .dropdown-trigger {
+  @apply .bg-40;
+}
+
+/* Fade Transition
+---------------------------------------------------------------------------- */
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Show/Hide Transition
+---------------------------------------------------------------------------- */
+
+.hidden-content {
+  max-height: 0;
+  transition: all .5s;
+  opacity:0;
+  overflow: hidden;
+}
+
+.show-content {
+  @apply .leading-normal .mt-3;
+  max-height: 1000px;
+  transition: all .5s;
+  opacity:1;
+  overflow: hidden;
+}
+
+/* Override Form Field Widths For ConfirmActionModal
+-----------------------------------------------------------------------------*/
+.toasted-container.top-center {
+  top: 30px !important;
+}
+
+.teal {
+  @apply .text-white .py-2 .shadow-lg;
+}
+
+.toasted.default {
+  @apply .bg-primary .teal;
+}
+
+.toasted.success {
+  @apply .bg-success .teal;
+}
+
+.toasted.error {
+  @apply .bg-danger .teal;
+}
+
+.toasted.info {
+  @apply .bg-info .teal;
+}
+
+.teal-action {
+  @apply .text-white .py-0;
+}
+
+.toasted .action {
+  @apply .teal-action !important;
+}
+
+/* Router
+---------------------------------------------------------------------------- */
+
+.router-link-active {
+  @apply .text-primary;
+}
+
+/* Global Layout Updates */
+
+.global-wrapper {
+  @apply .mx-auto .px-6 .mt-16;
+}
+
+@screen lg {
+  .global-wrapper.auth {
+    @apply .ml-sidebar;
+  }
+}
+
+.global-wrapper.guest {
+  @apply .mt-0;
+  @apply .flex .items-center .justify-center .h-screen;
+}
+
+.global-wrapper.guest > div {
+  @apply .mx-0;
+}
+
+/* purgecss end ignore */

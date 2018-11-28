@@ -1,0 +1,65 @@
+{
+  "name": "assets",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit -r tests/setup.js"
+  },
+  "dependencies": {
+    "@websanova/vue-auth": "^2.21.14-beta",
+    "flatpickr": "^4.5.2",
+    "form-backend-validation": "^2.3.3",
+    "places.js": "^1.11.0",
+    "popper.js": "^1.14.4",
+    "portal-vue": "^1.3.0",
+    "postcss-import": "^12.0.0",
+    "trix": "^0.12.1",
+    "vue": "^2.5.17",
+    "vue-async-computed": "^3.4.1",
+    "vue-clickaway": "^2.2.2",
+    "vue-multiselect": "^2.1.3",
+    "vue-router": "^3.0.1",
+    "vue-smooth-reflow": "^0.1.7",
+    "vue-toasted": "^1.1.24",
+    "vuedraggable": "^2.16.0"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.0.0",
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-plugin-eslint": "^3.0.3",
+    "@vue/cli-plugin-unit-mocha": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "@vue/eslint-config-prettier": "^3.0.3",
+    "@vue/test-utils": "^1.0.0-beta.24",
+    "axios": "^0.18.0",
+    "chai": "^4.1.2",
+    "date-fns": "^1.29.0",
+    "glob-all": "^3.1.0",
+    "path": "^0.12.7",
+    "purgecss-webpack-plugin": "^1.3.0",
+    "tailwindcss": "^0.6.5",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "browser": true,
+      "es6": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ]
+  },
+  "postcss": {
+    "plugins": {
+      "postcss-import": {},
+      "tailwindcss": "./tailwind.js",
+      "autoprefixer": {}
+    }
+  }
+}

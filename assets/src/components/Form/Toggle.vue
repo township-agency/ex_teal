@@ -1,0 +1,63 @@
+<template>
+  <default-field :field="field">
+    <template slot="field">
+      <div class="mb-2">
+        <div
+          class="form-switch inline-block align-middle"
+          @click="toggle">
+          <input
+            :id="field.attribute"
+            :name="field.name"
+            :checked="checked"
+            type="checkbox"
+            class="form-switch-checkbox"
+          >
+          <label
+            class="form-switch-label"
+            for="field.attribute"/>
+        </div>
+        <label
+          class="text-xs text-grey-dark"
+          for="field.attribute">{{ label }}</label>
+      </div>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+        v-html="firstError" />
+    </template>
+  </default-field>
+</template>
+
+<script>
+import { FormField, HandlesValidationErrors, Toggle } from "@/mixins";
+
+export default {
+  mixins: [HandlesValidationErrors, FormField, Toggle],
+
+  data: () => ({
+    value: false,
+    options: {}
+  }),
+
+  computed: {
+    checked() {
+      return Boolean(this.value);
+    }
+  },
+
+  mounted() {
+    this.value = this.field.value || false;
+    this.options = this.field.options || {};
+
+    this.field.fill = form => {
+      form[this.field.attribute] = this.value;
+    };
+  },
+
+  methods: {
+    toggle() {
+      this.value = !this.value;
+    }
+  }
+};
+</script>
