@@ -73,7 +73,7 @@ by Motel."
 
   defp package do
     [
-      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG* priv),
       maintainers: [
         "Alexandrea Defreitas",
         "Caleb Oller",
