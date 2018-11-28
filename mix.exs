@@ -18,7 +18,6 @@ defmodule ExTeal.MixProject do
       package: package(),
       description: description(),
       name: "ExTeal",
-      organization: "motel",
       source_url: @source
     ]
   end
@@ -69,10 +68,7 @@ defmodule ExTeal.MixProject do
 
   defp description do
     "ExTeal is a beautiful administration dashboard written for Phoenix Apps built
-by Motel. The primary feature of ExTeal is the ability to administrate
-your data using Ecto Schema and queries. ExTeal acomplishes this by allowing you
-to define a ExTeal \"resource\" that corresponds to each Ecto schema in your
-application."
+by Motel."
   end
 
   defp package do
@@ -86,7 +82,8 @@ application."
         "Scott Taylor"
       ],
       licenses: ["MIT"],
-      links: %{"GitLab" => @source}
+      links: %{"GitLab" => @source},
+      organization: "motel"
     ]
   end
 
