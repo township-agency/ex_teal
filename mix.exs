@@ -14,7 +14,7 @@ defmodule ExTeal.MixProject do
       description: description(),
       name: "ExTeal",
       organization: "motel",
-      source_url: "https://gitlab.motel-lab.com/teal/ex_teal",
+      source_url: "https://gitlab.motel-lab.com/teal/ex_teal"
     ]
   end
 
@@ -36,7 +36,6 @@ defmodule ExTeal.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.4.0"},
       {:ecto_sql, "~> 3.0"},
-
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
