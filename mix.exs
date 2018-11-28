@@ -1,7 +1,7 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
 
   @source "https://gitlab.motel-lab.com/teal/ex_teal"
 
@@ -53,8 +53,6 @@ defmodule ExTeal.MixProject do
     [
       integration: [
         "assets.compile --quiet",
-        # "ecto.create -r TestExTeal.Repo --quiet",
-        # "ecto.migrate -r TestExTeal.Repo",
         "features"
       ],
       features: "test --only feature:true",
