@@ -101,10 +101,11 @@ defmodule ExTeal.Router do
     Conn.assign(conn, :namespace, "/" <> ns)
   end
 
-  defp build_body_with_config(conn) do
-    path = Path.expand("../../priv/static/teal/index.html", __DIR__)
-    {:ok, str} = File.read(path)
+  @external_resource "priv/static/teal/index.html"
+  @index_contents File.read!(@external_resource)
+  def index_contents, do: @index_contents
 
+  defp build_body_with_config(conn) do
     base = Application.get_env(:ex_teal, :base_url)
     config = ExTeal.json_configuration()
     auth_provider = ExTeal.auth_provider()
@@ -124,7 +125,7 @@ defmodule ExTeal.Router do
 
     end_of_page_match = ~r/<\/body>/
 
-    str
+    index_contents()
     |> String.replace(match, config_str)
     |> String.replace(end_of_page_match, boot_order())
   end
