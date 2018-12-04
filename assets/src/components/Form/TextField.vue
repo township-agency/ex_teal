@@ -12,13 +12,9 @@
         :class="errorClasses"
         :placeholder="field.name"
         class="w-full form-control form-input form-input-bordered"
-      >
+      />
 
-      <p
-        v-if="hasError"
-        class="my-2 text-danger">
-        {{ firstError }}
-      </p>
+      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
     </template>
   </default-field>
 </template>

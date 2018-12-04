@@ -3,7 +3,7 @@
     v-on-clickaway="close"
     :data-testid="dataTestid"
     :dusk="dataTestid"
-    :class="{'opacity-75': disabled}"
+    :class="{ 'opacity-75': disabled }"
   >
     <div class="relative">
       <div
@@ -16,14 +16,13 @@
         @keydown.down.prevent="open"
         @keydown.up.prevent="open"
       >
-
         <div
           v-if="shouldShowDropdownArrow"
           class="search-input-trigger absolute pin select-box"
         />
 
         <slot name="default">
-          <div class="text-70">{{ __('Click to choose') }}</div>
+          <div class="text-70">{{ __("Click to choose") }}</div>
         </slot>
       </div>
 
@@ -33,12 +32,16 @@
         tabindex="-1"
         class="absolute p-2 inline-block"
         style="right: 4px; top: 6px;"
-        @click.stop="clear">
+        @click.stop="clear"
+      >
         <svg
           class="block fill-current icon h-2 w-2"
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="278.046 126.846 235.908 235.908">
-          <path d="M506.784 134.017c-9.56-9.56-25.06-9.56-34.62 0L396 210.18l-76.164-76.164c-9.56-9.56-25.06-9.56-34.62 0-9.56 9.56-9.56 25.06 0 34.62L361.38 244.8l-76.164 76.165c-9.56 9.56-9.56 25.06 0 34.62 9.56 9.56 25.06 9.56 34.62 0L396 279.42l76.164 76.165c9.56 9.56 25.06 9.56 34.62 0 9.56-9.56 9.56-25.06 0-34.62L430.62 244.8l76.164-76.163c9.56-9.56 9.56-25.06 0-34.62z"/>
+          viewBox="278.046 126.846 235.908 235.908"
+        >
+          <path
+            d="M506.784 134.017c-9.56-9.56-25.06-9.56-34.62 0L396 210.18l-76.164-76.164c-9.56-9.56-25.06-9.56-34.62 0-9.56 9.56-9.56 25.06 0 34.62L361.38 244.8l-76.164 76.165c-9.56 9.56-9.56 25.06 0 34.62 9.56 9.56 25.06 9.56 34.62 0L396 279.42l76.164 76.165c9.56 9.56 25.06 9.56 34.62 0 9.56-9.56 9.56-25.06 0-34.62L430.62 244.8l76.164-76.163c9.56-9.56 9.56-25.06 0-34.62z"
+          />
         </svg>
       </button>
     </div>
@@ -47,8 +50,8 @@
       v-if="show"
       ref="dropdown"
       :style="{ width: inputWidth + 'px', zIndex: 2000 }"
-      class="form-input px-0 border border-60 absolute pin-t pin-l my-1 overflow-hidden">
-
+      class="form-input px-0 border border-60 absolute pin-t pin-l my-1 overflow-hidden"
+    >
       <div class="p-2 bg-grey-300">
         <input
           ref="search"
@@ -62,7 +65,8 @@
           @input="handleInput"
           @keydown.enter.prevent="chooseSelected"
           @keydown.down.prevent="move(1)"
-          @keydown.up.prevent="move(-1)" >
+          @keydown.up.prevent="move(-1)"
+        />
       </div>
 
       <div
@@ -71,7 +75,6 @@
         tabindex="-1"
         style="max-height: 155px;"
       >
-
         <div
           v-for="(option, index) in data"
           :dusk="dataTestid + '-result-' + index"
@@ -85,11 +88,7 @@
           class="px-4 py-2 cursor-pointer"
           @click="choose(option)"
         >
-
-          <slot
-            :option="option"
-            :selected="index === selected"
-            name="option"/>
+          <slot :option="option" :selected="index === selected" name="option" />
         </div>
       </div>
     </div>

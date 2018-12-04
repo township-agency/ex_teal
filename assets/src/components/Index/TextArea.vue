@@ -1,10 +1,6 @@
 <template>
-  <div
-    v-if="field.asHtml"
-    v-html="field.value"/>
-  <span
-    v-else
-    class="block truncate max-w-xs">{{ field.value }}</span>
+  <div v-if="field.asHtml" v-html="field.value" />
+  <span v-else class="block truncate max-w-xs">{{ field.value }}</span>
 </template>
 
 <script>

@@ -1,14 +1,12 @@
 <template>
   <div class="border-t  bg-grey-lightest">
-    <nav
-      v-if="resources.length > 0"
-      class="flex">
+    <nav v-if="resources.length > 0" class="flex">
       <!-- Previous Link -->
       <button
         :disabled="!hasPreviousPages"
         :class="{
           'text-primary dim': hasPreviousPages,
-          'text-80 opacity-50': !hasPreviousPages,
+          'text-80 opacity-50': !hasPreviousPages
         }"
         class="btn btn-link py-3 px-4"
         rel="prev"
@@ -22,7 +20,7 @@
         :disabled="!hasMorePages"
         :class="{
           'text-primary dim': hasMorePages,
-          'text-80 opacity-50': !hasMorePages,
+          'text-80 opacity-50': !hasMorePages
         }"
         class="ml-auto btn btn-link py-3 px-4"
         rel="next"

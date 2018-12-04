@@ -10,9 +10,12 @@
         <!-- Select Checkbox -->
         <th
           :class="{
-            'w-16' : shouldShowCheckboxes || isSorting,
-            'w-8' : !shouldShowCheckboxes
-        }">&nbsp;</th>
+            'w-16': shouldShowCheckboxes || isSorting,
+            'w-8': !shouldShowCheckboxes
+          }"
+        >
+          &nbsp;
+        </th>
 
         <!-- Field Names -->
         <th
@@ -29,9 +32,7 @@
             {{ field.name }}
           </sortable-icon>
 
-          <span v-else>
-            {{ field.name }}
-          </span>
+          <span v-else> {{ field.name }} </span>
         </th>
 
         <th>&nbsp;<!-- View, Edit, Delete --></th>
@@ -55,7 +56,8 @@
       :list="sortableResources"
       :options="draggableOptions"
       element="tbody"
-      @end="reordered">
+      @end="reordered"
+    >
       <tr
         is="resource-table-row"
         v-for="resource in sortableResources"

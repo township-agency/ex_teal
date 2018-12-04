@@ -8,7 +8,8 @@
           dusk="create-and-add-another-button"
           type="button"
           class="ml-auto btn btn-default btn-secondary mr-3"
-          @click="createAndAddAnother">
+          @click="createAndAddAnother"
+        >
           Create &amp; Add Another
         </button>
 
@@ -23,15 +24,11 @@
     </div>
 
     <card class="overflow-hidden">
-      <form
-        v-if="fields"
-        @submit.prevent="createResource">
+      <form v-if="fields" @submit.prevent="createResource">
         <!-- Validation Errors -->
-        <validation-errors :errors="validationErrors"/>
+        <validation-errors :errors="validationErrors" />
         <!-- Fields -->
-        <div
-          v-for="field in fields"
-          :key="field.attribute">
+        <div v-for="field in fields" :key="field.attribute">
           <component
             :is="'form-' + field.component"
             :errors="validationErrors"
@@ -42,8 +39,6 @@
             :via-relationship="viaRelationship"
           />
         </div>
-
-
       </form>
     </card>
   </loading-view>
@@ -100,7 +95,9 @@ export default {
 
       const {
         data: { fields }
-      } = await ExTeal.request().get(`/api/${this.resourceName}/creation-fields`);
+      } = await ExTeal.request().get(
+        `/api/${this.resourceName}/creation-fields`
+      );
 
       this.fields = fields;
       this.loading = false;

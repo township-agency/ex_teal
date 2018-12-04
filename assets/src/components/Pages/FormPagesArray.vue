@@ -1,10 +1,7 @@
 <template>
   <default-field :field="field">
     <template slot="field">
-      <div 
-        v-for="field in indexedFields" 
-        :key="field.title" 
-        class="mb-2">
+      <div v-for="field in indexedFields" :key="field.title" class="mb-2">
         <component
           :is="'form-' + inputType"
           :errors="errors"
@@ -13,11 +10,7 @@
           :field="field"
         />
       </div>
-      <p
-        v-if="hasError"
-        class="my-2 text-danger">
-        {{ firstError }}
-      </p>
+      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
     </template>
   </default-field>
 </template>

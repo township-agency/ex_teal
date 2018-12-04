@@ -9,7 +9,8 @@
             resourceId: field.options.belongs_to_id
           }
         }"
-        class="no-underline dim text-primary font-bold">
+        class="no-underline dim text-primary font-bold"
+      >
         {{ field.value }}
       </router-link>
     </span>

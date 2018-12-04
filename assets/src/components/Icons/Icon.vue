@@ -1,5 +1,5 @@
 <template>
-  <svg 
+  <svg
     :width="width"
     :height="height"
     :viewBox="viewBox"

@@ -4,24 +4,18 @@
       <LayoutTopNav
         :config="config"
         :title="config.title"
-        :logo="config.logo"/>
-      <LayoutSideNav
-        :config="config"/>
+        :logo="config.logo"
+      />
+      <LayoutSideNav :config="config" />
       <main :class="layoutClass">
         <div class="lg:flex -mx-6">
-          <div
-            id="content-wrapper"
-            class="w-full">
-            <div class="p-5 mx-auto">
-              <router-view/>
-            </div>
+          <div id="content-wrapper" class="w-full">
+            <div class="p-5 mx-auto"><router-view /></div>
           </div>
         </div>
       </main>
     </loading-view>
-    <portal-target
-      name="modals"
-      multiple/>
+    <portal-target name="modals" multiple />
   </div>
 </template>
 

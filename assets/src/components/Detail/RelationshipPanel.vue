@@ -1,15 +1,14 @@
 <template>
   <div>
-    <div 
-      v-for="field in panel.fields" 
-      :key="field + resourceId">
+    <div v-for="field in panel.fields" :key="field + resourceId">
       <component
         :is="'detail-' + field.component"
         :resource-name="resourceName"
         :resource-id="resourceId"
         :resource="resource"
         :field="field"
-        @actionExecuted="actionExecuted" />
+        @actionExecuted="actionExecuted"
+      />
     </div>
   </div>
 </template>

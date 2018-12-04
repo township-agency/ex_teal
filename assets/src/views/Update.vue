@@ -3,7 +3,6 @@
     <div class="card-headline">
       <heading class="">Editing {{ singularName }}</heading>
       <div class="flex ml-auto">
-
         <button
           dusk="update-button"
           class="ml-auto btn btn-default btn-secondary mr-3"
@@ -16,26 +15,21 @@
           type="button"
           dusk="update-and-continue-editing-button"
           class="btn btn-default btn-primary capitalize"
-          @click="updateAndContinueEditing">
+          @click="updateAndContinueEditing"
+        >
           Save {{ singularName }}
         </button>
-
       </div>
     </div>
 
     <card class="overflow-hidden">
-      <form
-        v-if="fields"
-        @submit.prevent="updateResource">
+      <form v-if="fields" @submit.prevent="updateResource">
         <!-- Validation Errors -->
         <validation-errors :errors="validationErrors" />
         <!-- Update Button -->
 
-
         <!-- Fields -->
-        <div
-          v-for="field in fields"
-          :key="field.attribute">
+        <div v-for="field in fields" :key="field.attribute">
           <component
             :is="'form-' + field.component"
             :errors="validationErrors"
@@ -47,9 +41,6 @@
         </div>
 
         <!-- Update Button -->
-
-
-
       </form>
     </card>
   </div>

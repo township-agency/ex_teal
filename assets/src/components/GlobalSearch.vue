@@ -1,13 +1,9 @@
 <template>
-  <div
-    v-on-clickaway="closeSearch"
-    class="relative z-50 w-full max-w-xs">
+  <div v-on-clickaway="closeSearch" class="relative z-50 w-full max-w-xs">
     <div class="relative">
       <!-- Search -->
       <div class="relative">
-        <icon
-          type="search"
-          class="absolute search-icon-center ml-3 text-70" />
+        <icon type="search" class="absolute search-icon-center ml-3 text-70" />
 
         <input
           ref="input"
@@ -22,7 +18,7 @@
           @focus="openSearch"
           @keydown.down.prevent="move(1)"
           @keydown.up.prevent="move(-1)"
-        >
+        />
       </div>
 
       <!-- Loader -->
@@ -30,9 +26,7 @@
         v-if="loading"
         class="bg-white py-3 overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
-        <loader
-          class="text-60"
-          width="40" />
+        <loader class="text-60" width="40" />
       </div>
 
       <!-- No Results Found -->
@@ -51,10 +45,10 @@
         ref="container"
         class="overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
-        <div
-          v-for="group in formattedResults"
-          :key="group.resourceName">
-          <h3 class="text-xs uppercase tracking-wide text-80 bg-grey-lighter py-2 px-3">
+        <div v-for="group in formattedResults" :key="group.resourceName">
+          <h3
+            class="text-xs uppercase tracking-wide text-80 bg-grey-lighter py-2 px-3"
+          >
             {{ group.resourceTitle }}
           </h3>
 
@@ -67,7 +61,7 @@
               <a
                 :class="{
                   'bg-white': highlightedResultIndex != item.index,
-                  'bg-20': highlightedResultIndex == item.index,
+                  'bg-20': highlightedResultIndex == item.index
                 }"
                 class="cursor-pointer flex items-center hover:bg-grey-lightest block py-2 px-3 no-underline font-normal"
                 @click.prevent="navigate(item.index)"
@@ -75,12 +69,13 @@
                 <img
                   v-if="item.thumbnail"
                   :src="item.thumbnail"
-                  class="h-8 w-8 mr-3" >
+                  class="h-8 w-8 mr-3"
+                />
                 <div>
                   <p class="text-90">{{ item.title }}</p>
-                  <p
-                    v-if="item.subTitle"
-                    class="text-xs mt-1 text-80">{{ item.subTitle }}</p>
+                  <p v-if="item.subTitle" class="text-xs mt-1 text-80">
+                    {{ item.subTitle }}
+                  </p>
                 </div>
               </a>
             </li>

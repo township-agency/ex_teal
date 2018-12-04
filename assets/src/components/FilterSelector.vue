@@ -1,13 +1,7 @@
 <template>
   <div>
-    <filter-select
-      v-for="filter in filters"
-      :key="filter.key">
-      <h3
-        slot="default"
-        class="small-header">
-        {{ filter.title }}
-      </h3>
+    <filter-select v-for="filter in filters" :key="filter.key">
+      <h3 slot="default" class="small-header">{{ filter.title }}</h3>
 
       <select
         slot="select"
@@ -15,14 +9,13 @@
         class="block w-full form-control-sm form-select"
         @change="filterChanged(filter)"
       >
-        <option
-          value=""
-          selected>&mdash;</option>
+        <option value="" selected>&mdash;</option>
 
         <option
           v-for="option in filter.options"
           :value="option.value"
-          :key="option.value">
+          :key="option.value"
+        >
           {{ option.name }}
         </option>
       </select>

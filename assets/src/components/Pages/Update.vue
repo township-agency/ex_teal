@@ -15,23 +15,20 @@
           type="button"
           dusk="update-and-continue-editing-button"
           class="btn btn-default btn-primary capitalize"
-          @click="updateAndContinueEditing">
+          @click="updateAndContinueEditing"
+        >
           Save {{ pageKey }}
         </button>
       </div>
     </div>
 
     <card class="overflow-hidden">
-      <form
-        v-if="fields"
-        @submit.prevent="updateResource">
+      <form v-if="fields" @submit.prevent="updateResource">
         <!-- Validation Errors -->
         <validation-errors :errors="validationErrors" />
 
         <!-- Fields -->
-        <div
-          v-for="field in fields"
-          :key="field.attribute">
+        <div v-for="field in fields" :key="field.attribute">
           <component
             :is="'form-' + field.component"
             :errors="validationErrors"

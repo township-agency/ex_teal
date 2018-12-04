@@ -1,10 +1,8 @@
 <template>
   <panel-item :field="field">
-    <p 
-      slot="value" 
-      class="text-90">
+    <p slot="value" class="text-90">
       <span
-        :class="{'bg-success': field.value, 'bg-danger': !field.value}"
+        :class="{ 'bg-success': field.value, 'bg-danger': !field.value }"
         class="inline-block rounded-full w-2 h-2 mr-1"
       />
       <span>{{ label }}</span>

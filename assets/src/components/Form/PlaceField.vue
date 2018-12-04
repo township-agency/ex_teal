@@ -1,7 +1,5 @@
 <template>
-  <default-field
-    :field="field"
-    :errors="errors">
+  <default-field :field="field" :errors="errors">
     <template slot="field">
       <div class="mb-4">
         <input
@@ -10,7 +8,7 @@
           placeholder="Address"
           type="search"
           class="w-full form-control form-input form-input-bordered"
-        >
+        />
       </div>
       <div class="mb-4">
         <input
@@ -19,7 +17,7 @@
           placeholder="Address Line 2"
           type="text"
           class="w-full form-control form-input form-input-bordered"
-        >
+        />
       </div>
       <div class="mb-4">
         <input
@@ -28,7 +26,7 @@
           placeholder="Company"
           type="text"
           class="w-full form-control form-input form-input-bordered"
-        >
+        />
       </div>
       <div class="mb-4 flex">
         <div class="city mr-2">
@@ -38,7 +36,7 @@
             placeholder="City"
             type="text"
             class="w-full form-control form-input form-input-bordered"
-          >
+          />
         </div>
         <div class="state mx-2 flex-1">
           <select
@@ -46,12 +44,7 @@
             v-model="value.state"
             class="w-full form-control form-select"
           >
-            <option
-              value=""
-              selected
-              disabled>
-              Choose a State
-            </option>
+            <option value="" selected disabled> Choose a State </option>
 
             <option
               v-for="(value, key) in states"
@@ -71,7 +64,7 @@
             placeholder="Zip Code"
             type="text"
             class="w-full form-control form-input form-input-bordered"
-          >
+          />
         </div>
       </div>
     </template>

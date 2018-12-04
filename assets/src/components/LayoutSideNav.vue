@@ -1,31 +1,23 @@
 <template>
   <div id="sidebar">
     <div class="lg:block lg:relative lg:sticky lg:top-16 ">
-      <nav
-        id="nav"
-        class="sticky?lg:h-(screen-16)">
-        <h3>
-          <span>Resources</span>
-        </h3>
+      <nav id="nav" class="sticky?lg:h-(screen-16)">
+        <h3><span>Resources</span></h3>
         <ul class="">
-          <li
-            v-for="resource in availableResources"
-            :key="resource.plural"
-          >
+          <li v-for="resource in availableResources" :key="resource.plural">
             <router-link
               :to="{
                 name: 'index',
                 params: {
                   resourceName: resource.uri
                 }
-            }">
+              }"
+            >
               {{ resource.title }}
             </router-link>
           </li>
         </ul>
-        <div
-          v-for="plugin in pluginsWithNavComponents"
-          :key="plugin.uri">
+        <div v-for="plugin in pluginsWithNavComponents" :key="plugin.uri">
           <component :is="plugin.navigation_component" />
         </div>
       </nav>

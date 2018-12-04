@@ -3,40 +3,25 @@
     <template slot="field">
       <transition name="fade">
         <div v-if="!isEditing">
-          <img
-            v-if="showPreview"
-            :src="imgixUrl"
-            class="h-20 block mb-2"
-          >
+          <img v-if="showPreview" :src="imgixUrl" class="h-20 block mb-2" />
 
-          <div
-            v-if="hasValue"
-            class="my-2 block">
+          <div v-if="hasValue" class="my-2 block">
             <a
               :href="s3DirectUrl"
               target="_blank"
-              class="btn btn-default btn-primary btn-icon-inline">
-              <icon
-                type="link"
-                class="mr-2"/>
-              <span>Link</span>
+              class="btn btn-default btn-primary btn-icon-inline"
+            >
+              <icon type="link" class="mr-2" /> <span>Link</span>
             </a>
 
-            <a
-              class="btn btn-default btn-icon-inline"
-              @click="showEdit">
-              <icon
-                type="edit"
-                class="mr-2"/>
-              <span>Edit</span>
+            <a class="btn btn-default btn-icon-inline" @click="showEdit">
+              <icon type="edit" class="mr-2" /> <span>Edit</span>
             </a>
           </div>
         </div>
       </transition>
       <transition name="fade">
-        <div
-          v-if="isEditing"
-          class="form-file mr-4 h-20">
+        <div v-if="isEditing" class="form-file mr-4 h-20">
           <input
             ref="fileField"
             :dusk="field.attribute"
@@ -45,20 +30,16 @@
             type="file"
             name="name"
             @change="fileChange"
-          >
+          />
           <label
             :for="labelFor"
-            class="form-file-btn btn btn-default btn-primary">
+            class="form-file-btn btn btn-default btn-primary"
+          >
             Choose File
           </label>
 
-          <span class="text-gray-50">
-            {{ currentLabel }}
-          </span>
-          <a
-            v-if="value"
-            class="btn btn-default"
-            @click="cancelEdit">Cancel</a>
+          <span class="text-gray-50"> {{ currentLabel }} </span>
+          <a v-if="value" class="btn btn-default" @click="cancelEdit">Cancel</a>
         </div>
       </transition>
     </template>

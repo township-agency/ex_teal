@@ -1,7 +1,8 @@
 <template>
   <a
     class="dropdown-trigger h-8 flex items-center cursor-pointer select-none rounded"
-    @click="handleClick">
+    @click="handleClick"
+  >
     <slot />
 
     <svg
@@ -13,11 +14,7 @@
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
     >
-      <g
-        stroke="none"
-        stroke-width="1"
-        fill="none"
-        fill-rule="evenodd">
+      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g
           id="04-user"
           transform="translate(-385.000000, -573.000000)"
