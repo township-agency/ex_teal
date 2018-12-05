@@ -4,9 +4,7 @@ import routes from "./routes";
 
 Vue.use(Router);
 
-let base = window.config ? window.config.base : "http://localhost:4000/teal";
-
-const router = createRouter({ base });
+const router = createRouter({ base: window.config.path });
 
 export default router;
 

@@ -4,4 +4,4 @@ use Mix.Config
 config :logger, :console, format: "[$level] $message\n"
 
 config :ex_teal,
-  index_path: "priv/static/teal/index.html"
+  compiled_assets: true

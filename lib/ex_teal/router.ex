@@ -8,7 +8,7 @@ defmodule ExTeal.Router do
   use Plug.Router
 
   alias ExTeal.Api.ResourceResponder
-  alias ExTeal.GlobalSearch
+  alias ExTeal.{GlobalSearch, View}
   alias ExTeal.Resource.Serializer
   alias Plug.Conn
 
@@ -88,11 +88,9 @@ defmodule ExTeal.Router do
   forward("/plugins/:uri", to: ExTeal.Api.PluginResponder)
 
   match _ do
-    body = build_body_with_config(conn)
-
     conn
     |> put_resp_header("content-type", "text/html; charset=utf-8")
-    |> Conn.send_resp(200, body)
+    |> Conn.send_resp(200, View.render(conn))
     |> halt()
   end
 
@@ -100,46 +98,4 @@ defmodule ExTeal.Router do
     ns = opts[:namespace] || ""
     Conn.assign(conn, :namespace, "/" <> ns)
   end
-
-  @external_resource "priv/static/teal/index.html"
-  @index_contents File.read!(@external_resource)
-  def index_contents, do: @index_contents
-
-  defp build_body_with_config(conn) do
-    base = Application.get_env(:ex_teal, :base_url)
-    config = ExTeal.json_configuration()
-    auth_provider = ExTeal.auth_provider()
-
-    user = apply(auth_provider, :current_user_for, [conn])
-
-    config_str = """
-    <div id="app"></div>
-    <script type="text/javascript">
-      window.config = #{Jason.encode!(config)};
-      window.config.baseUrl = "#{base}";
-      window.config.currentUser = #{Jason.encode!(user)};
-    </script>
-    """
-
-    match = ~r/<div id="?app"?><\/div>/
-
-    end_of_page_match = ~r/<\/body>/
-
-    index_contents()
-    |> String.replace(match, config_str)
-    |> String.replace(end_of_page_match, boot_order())
-  end
-
-  def boot_order,
-    do: """
-    <!-- Build ExTeal Instance -->
-    <script>
-        window.ExTeal = new CreateExTeal(config)
-    </script>
-
-    <!-- Start ExTeal -->
-      <script>
-          ExTeal.beamMeUp();
-      </script>
-    """
 end

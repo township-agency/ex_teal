@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang=en class="font-sans bg-grey-lightest antialiased">
+  <head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel=icon href=/teal/favicon.ico>
+    <title><%= @title %></title>
+    <%= if @compiled_assets do %>
+      <link href=/teal/css/app.css rel=preload as=style>
+      <link href=/teal/css/chunk-vendors.css rel=preload as=style>
+      <link href=/teal/js/app.js rel=preload as=script>
+      <link href=/teal/js/chunk-vendors.js rel=preload as=script>
+      <link href=/teal/css/chunk-vendors.css rel=stylesheet>
+      <link href=/teal/css/app.css rel=stylesheet>
+    <% else %>
+      <link href="http://localhost:8080/teal/app.js" rel="preload" as="script"></head>
+    <% end %>
+  </head>
+  <body class="font-normal text-black leading-normal">
+    <noscript>
+      <strong>
+        We're sorry but assets doesn't work properly without JavaScript enabled. Please enable it to continue.
+      </strong>
+    </noscript>
+    <div id=app></div>
+    <script type="text/javascript">
+      window.config = <%= Jason.encode!(@config) %>;
+      window.config.baseUrl = "<%= @base %>";
+      window.config.currentUser = <%= Jason.encode!(@user) %>;
+    </script>
+    <%= if @compiled_assets do %>
+      <script src="/teal/js/chunk-vendors.js"></script>
+      <script src="/teal/js/app.js"></script>
+    <% else %>
+      <script src="http://localhost:8080/teal/app.js"></script>
+    <% end %>
+    <!-- Build ExTeal Instance -->
+    <script>
+      window.ExTeal = new CreateExTeal(config)
+    </script>
+
+    <!-- Start ExTeal -->
+    <script>
+      ExTeal.beamMeUp();
+    </script>
+  </body>
+</html>
