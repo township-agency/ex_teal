@@ -13,11 +13,7 @@
       height="14"
       viewBox="0 0 8 14"
     >
-      <g
-        id="sortable-icon"
-        fill="none"
-        fill-rule="evenodd"
-      >
+      <g id="sortable-icon" fill="none" fill-rule="evenodd">
         <path
           id="Path-2-Copy-3"
           :class="descClass"

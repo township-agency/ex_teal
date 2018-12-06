@@ -7,12 +7,7 @@
         :class="errorClasses"
         class="w-full form-control form-select"
       >
-        <option
-          value=""
-          selected
-          disabled>
-          Choose an Option
-        </option>
+        <option value="" selected disabled> Choose an Option </option>
 
         <option
           v-for="(label, key) in field.options"
@@ -24,11 +19,7 @@
         </option>
       </select>
 
-      <p
-        v-if="hasError"
-        class="my-2 text-danger">
-        {{ firstError }}
-      </p>
+      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
     </template>
   </default-field>
 </template>

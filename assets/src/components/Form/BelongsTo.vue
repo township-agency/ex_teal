@@ -8,9 +8,7 @@
         class="form-control form-select mb-3 w-full"
         @change="selectResourceFromSelectControl"
       >
-        <option
-          value=""
-          selected>Choose {{ field.name }}</option>
+        <option value="" selected>Choose {{ field.name }}</option>
 
         <option
           v-for="resource in availableResources"
@@ -22,11 +20,7 @@
         </option>
       </select>
 
-      <p
-        v-if="hasError"
-        class="my-2 text-danger">
-        {{ firstError }}
-      </p>
+      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
     </template>
   </default-field>
 </template>

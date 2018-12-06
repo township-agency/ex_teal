@@ -2,23 +2,21 @@
   <div>
     <h3>Pages</h3>
     <ul>
-      <li
-        v-for="page in pages"
-        :key="page.key">
+      <li v-for="page in pages" :key="page.key">
         <router-link
           :to="{
             name: 'page_detail',
             params: {
               pageKey: page.key
             }
-        }">
+          }"
+        >
           {{ page.title }}
         </router-link>
       </li>
     </ul>
   </div>
 </template>
-
 
 <script>
 export default {

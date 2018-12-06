@@ -1,8 +1,5 @@
-
 <template>
-  <default-field 
-    :field="field" 
-    :errors="errors">
+  <default-field :field="field" :errors="errors">
     <template slot="field">
       <date-time-picker
         :field="field"

@@ -1,7 +1,5 @@
 <template>
-  <p
-    v-if="field.value"
-    class="text-90">{{ formattedDate }}</p>
+  <p v-if="field.value" class="text-90">{{ formattedDate }}</p>
   <p v-else>&mdash;</p>
 </template>
 

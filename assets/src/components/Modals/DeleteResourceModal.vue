@@ -6,14 +6,14 @@
       style="width: 460px"
       @submit.prevent="handleConfirm"
     >
-      <slot
-        :uppercaseMode="uppercaseMode"
-        :mode="mode">
+      <slot :uppercaseMode="uppercaseMode" :mode="mode">
         <div class="p-8">
-          <heading
-            :level="2"
-            class="mb-6">{{ uppercaseMode }} Resource</heading>
-          <p class="text-80 leading-normal">Are you sure you want to {{ mode }} the selected resources?</p>
+          <heading :level="2" class="mb-6"
+            >{{ uppercaseMode }} Resource</heading
+          >
+          <p class="text-80 leading-normal">
+            Are you sure you want to {{ mode }} the selected resources?
+          </p>
         </div>
       </slot>
 
@@ -22,11 +22,17 @@
           <button
             type="button"
             class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
-            @click.prevent="handleClose">Cancel</button>
+            @click.prevent="handleClose"
+          >
+            Cancel
+          </button>
           <button
             ref="confirmButton"
             type="submit"
-            class="btn btn-default btn-danger">{{ uppercaseMode }}</button>
+            class="btn btn-default btn-danger"
+          >
+            {{ uppercaseMode }}
+          </button>
         </div>
       </div>
     </form>

@@ -4,7 +4,8 @@
       v-if="canShowImgix"
       :src="imgixUrl"
       style="object-fit: cover;"
-      class="w-8 h-8" >
+      class="w-8 h-8"
+    />
     <span v-else>&mdash;</span>
   </div>
 </template>

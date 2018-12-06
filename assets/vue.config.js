@@ -12,9 +12,19 @@ module.exports = {
   lintOnSave: undefined,
   outputDir: path.resolve(__dirname, "../priv/static/teal"),
   baseUrl: "teal",
+  filenameHashing: false,
+  devServer: {
+    clientLogLevel: "info",
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    },
+    watchOptions: {
+      poll: true
+    }
+  },
   configureWebpack: () => {
     if (process.env.NODE_ENV !== "production") {
-      return;
+      return {};
     }
     return {
       plugins: [
@@ -36,5 +46,10 @@ module.exports = {
         })
       ]
     };
+  },
+  chainWebpack: config => {
+    config.plugins.delete("html");
+    config.plugins.delete("preload");
+    config.plugins.delete("prefetch");
   }
 };

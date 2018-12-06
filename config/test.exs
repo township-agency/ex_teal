@@ -19,7 +19,6 @@ config :ex_teal, TestExTeal.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :ex_teal,
-  index_path: "../../test/support/index.html",
   base_url: "http://localhost:4001/teal"
 
 config :hound, driver: "chrome_driver"

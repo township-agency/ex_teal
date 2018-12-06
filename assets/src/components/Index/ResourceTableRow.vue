@@ -4,9 +4,10 @@
     <td
       v-if="!isSorting"
       :class="{
-        'w-16' : shouldShowCheckboxes || isSorting,
-        'w-8' : !shouldShowCheckboxes
-    }">
+        'w-16': shouldShowCheckboxes || isSorting,
+        'w-8': !shouldShowCheckboxes
+      }"
+    >
       <checkbox
         v-if="shouldShowCheckboxes"
         :data-testid="`${testId}-checkbox`"
@@ -14,21 +15,18 @@
       />
     </td>
     <!-- Sort Handle -->
-    <td
-      v-if="isSorting"
-      class="td-fit align-center">
+    <td v-if="isSorting" class="td-fit align-center">
       <icon
         type="drag"
         view-box="0 0 24 24"
         width="30"
         height="30"
-        class="drag-handle pt-3"/>
+        class="drag-handle pt-3"
+      />
     </td>
 
     <!-- Fields -->
-    <td
-      v-for="field in resource.fields"
-      :key="field.name">
+    <td v-for="field in resource.fields" :key="field.name">
       <component
         :is="'index-' + field.component"
         :class="`text-${field.text_align}`"
@@ -36,36 +34,34 @@
         :field="field"
       />
     </td>
-    <td
-      v-if="isSorting"
-      class="td-fit text-right pr-6"/>
-    <td
-      v-else
-      class="td-fit text-right pr-6">
+    <td v-if="isSorting" class="td-fit text-right pr-6" />
+    <td v-else class="td-fit text-right pr-6">
       <!-- View Resource Link -->
       <span>
         <router-link
-          :to="{ name: 'detail', params: {
-            resourceName: resourceName,
-            resourceId: resourceId
-          }}"
+          :to="{
+            name: 'detail',
+            params: {
+              resourceName: resourceName,
+              resourceId: resourceId
+            }
+          }"
           title="Show"
           class="cursor-pointer text-70 hover:text-primary mr-3"
         >
-          <icon
-            type="view"
-            width="22"
-            height="18"
-            view-box="0 0 22 16" />
+          <icon type="view" width="22" height="18" view-box="0 0 22 16" />
         </router-link>
       </span>
       <span>
         <!-- Edit Resource Link -->
         <router-link
-          :to="{ name: 'edit', params: {
-            resourceName: resourceName,
-            resourceId: resourceId
-          }}"
+          :to="{
+            name: 'edit',
+            params: {
+              resourceName: resourceName,
+              resourceId: resourceId
+            }
+          }"
           title="Edit"
           class="cursor-pointer text-70 hover:text-primary mr-3"
         >
@@ -78,7 +74,7 @@
         title="Delete"
         @click.prevent="openDeleteModal"
       >
-        <icon type="delete"/>
+        <icon type="delete" />
       </button>
       <portal to="modals">
         <transition name="fade">
@@ -88,13 +84,13 @@
             @confirm="confirmDelete"
             @close="closeDeleteModal"
           >
-            <div
-              slot-scope="{ uppercaseMode, mode }"
-              class="p-8">
-              <heading
-                :level="2"
-                class="mb-6">{{ uppercaseMode }}  Resource</heading>
-              <p class="text-80 leading-normal">Are you sure you want to delete this resource?</p>
+            <div slot-scope="{ uppercaseMode, mode }" class="p-8">
+              <heading :level="2" class="mb-6"
+                >{{ uppercaseMode }} Resource</heading
+              >
+              <p class="text-80 leading-normal">
+                Are you sure you want to delete this resource?
+              </p>
             </div>
           </delete-resource-modal>
         </transition>

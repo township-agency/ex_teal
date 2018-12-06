@@ -1,9 +1,6 @@
 <template>
   <panel-item :field="field">
-    <p
-      slot="value"
-      class="text-90">
-
+    <p slot="value" class="text-90">
       <span
         v-for="v in field.value"
         :key="v.value"
@@ -11,7 +8,6 @@
       >
         {{ v.label }}
       </span>
-
     </p>
   </panel-item>
 </template>

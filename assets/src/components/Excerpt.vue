@@ -7,14 +7,8 @@
     >
       {{ showHideLabel }}
     </a>
-    <div
-      v-if="expanded"
-      class="show-content"
-      v-html="content" />
-    <div
-      v-else
-      class="hidden-content"
-      v-html="content" />
+    <div v-if="expanded" class="show-content" v-html="content" />
+    <div v-else class="hidden-content" v-html="content" />
   </div>
   <div v-else>—</div>
 </template>

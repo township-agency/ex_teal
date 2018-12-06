@@ -70,11 +70,12 @@ export default {
     ref="datePicker"
     :disabled="disabled"
     :dusk="field.attribute"
-    :class="{'!cursor-not-allowed': disabled}"
+    :class="{ '!cursor-not-allowed': disabled }"
     :value="value"
     :name="field.name"
     :placeholder="placeholder"
-    type="text">
+    type="text"
+  />
 </template>
 
 <style scoped>

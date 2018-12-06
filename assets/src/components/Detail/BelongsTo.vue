@@ -3,10 +3,13 @@
     <template slot="value">
       <router-link
         v-if="field.value"
-        :to="{name: 'detail', params: {
-          resourceName: field.options.belongs_to_relationship,
-          resourceId: field.options.belongs_to_id
-        }}"
+        :to="{
+          name: 'detail',
+          params: {
+            resourceName: field.options.belongs_to_relationship,
+            resourceId: field.options.belongs_to_id
+          }
+        }"
         class="no-underline font-bold dim text-primary"
       >
         {{ field.value }}

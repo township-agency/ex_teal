@@ -1,22 +1,13 @@
 <template>
   <panel-item :field="field">
-    <p
-      v-if="field.value"
-      slot="value"
-      class="text-90">
-      <img
-        v-if="isImgix"
-        :src="imgixUrl"
-        class="block mb-2"
-      >
+    <p v-if="field.value" slot="value" class="text-90">
+      <img v-if="isImgix" :src="imgixUrl" class="block mb-2" />
       <a
         :href="s3DirectUrl"
         target="_blank"
-        class="btn btn-default btn-primary btn-icon-inline">
-        <icon
-          type="link"
-          class="mr-2"/>
-        <span>Link</span>
+        class="btn btn-default btn-primary btn-icon-inline"
+      >
+        <icon type="link" class="mr-2" /> <span>Link</span>
       </a>
     </p>
   </panel-item>

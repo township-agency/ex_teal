@@ -9,11 +9,7 @@
         type="text"
         class="w-full form-control form-input form-input-bordered py-3 min-h-textarea"
       />
-      <p
-        v-if="hasError"
-        class="my-2 text-danger">
-        {{ firstError }}
-      </p>
+      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
     </template>
   </default-field>
 </template>

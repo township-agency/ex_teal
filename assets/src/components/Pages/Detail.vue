@@ -3,22 +3,21 @@
     <div
       v-for="(panel, index) in availablePanels"
       :key="panel.key"
-      class="mb-8">
+      class="mb-8"
+    >
       <component
         :is="panel.component"
-        :class="{'remove-bottom-border': index == panel.fields.length - 1}"
+        :class="{ 'remove-bottom-border': index == panel.fields.length - 1 }"
         :resource-name="pageKey"
         :resource-id="pageKey"
         :resource="page"
         :panel="panel"
       >
-        <div
-          v-if="panel.name.includes('Details')"
-          class="card-headline">
+        <div v-if="panel.name.includes('Details')" class="card-headline">
           <h2 class="text-90 font-normal text-xl">{{ panel.name }}</h2>
           <div class="ml-auto flex">
             <router-link
-              :to="{ name: 'page_edit', params: {pageKey: pageKey} }"
+              :to="{ name: 'page_edit', params: { pageKey: pageKey } }"
               data-testid="edit-resource"
               dusk="edit-resource-button"
               class="btn btn-default btn-icon btn-primary"
@@ -27,12 +26,11 @@
               <icon
                 type="edit"
                 class="text-white"
-                style="margin-top: -2px; margin-left: 3px" />
+                style="margin-top: -2px; margin-left: 3px"
+              />
             </router-link>
           </div>
-
         </div>
-
       </component>
     </div>
   </loading-view>
