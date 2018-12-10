@@ -20,6 +20,8 @@
   --primary-50: rgba(64, 153, 222, 0.5);
   --primary-30: rgba(64, 153, 222, 0.3);
   --primary-10: rgba(64, 153, 222, 0.1);
+  --secondary: #f16522;
+  --secondary-10: rgba(241, 101, 34, 0.1);
   --logo: #252d37;
   --sidebar-icon: #b3c1d1;
   --20: #F8F8F8;
@@ -81,7 +83,15 @@
 }
 
 .table tr:hover td {
-  @apply .bg-20;
+  @apply .bg-secondary-10;
+}
+
+.table tr.checked td {
+  @apply .bg-primary-10;
+}
+
+.table tr.checked:hover td {
+  @apply .bg-primary-30;
 }
 
 .small-header{
@@ -107,6 +117,7 @@
   width: 1%;
   white-space: nowrap;
 }
+
 .sortable-chosen {
   @apply .shadow;
   transition: .25s all;
@@ -250,7 +261,7 @@
 }
 
 .btn-danger:hover {
-  @apply .bg-red-dark;
+  @apply .bg-danger-dark;
 }
 
 .btn-icon {
@@ -288,7 +299,7 @@
 
 }
 .form-switch-checkbox:checked + .form-switch-label {
-    @apply .bg-green .shadow-none;
+    @apply .bg-success .shadow-none;
 }
 .form-switch-checkbox:checked + .form-switch-label:before {
     @apply .pin-r;

@@ -28,7 +28,7 @@
           <g id="Page-1" fill="none" fill-rule="evenodd">
             <g id="checkbox-on" fill-rule="nonzero">
               <g id="b-link" fill="var(--primary)">
-                <rect id="b" width="20" height="20" rx="4" />
+                <rect id="b" width="20" height="20" />
               </g>
               <path
                 id="Shape"
@@ -49,7 +49,7 @@
           <g id="Page-1" fill="none" fill-rule="evenodd">
             <g id="checkbox-off">
               <g id="b-link" fill="#FFF" fill-rule="nonzero">
-                <rect id="b" width="20" height="20" rx="4" />
+                <rect id="b" width="20" height="20" />
               </g>
               <rect
                 id="Rectangle-path"
@@ -58,7 +58,6 @@
                 x=".5"
                 y=".5"
                 stroke="#CCD4DB"
-                rx="4"
               />
             </g>
           </g>

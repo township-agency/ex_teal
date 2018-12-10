@@ -10,8 +10,8 @@
         <!-- Select Checkbox -->
         <th
           :class="{
-            'w-16': shouldShowCheckboxes || isSorting,
-            'w-8': !shouldShowCheckboxes
+            'w-16': shouldShowCheckBoxes || isSorting,
+            'w-8': !shouldShowCheckBoxes
           }"
         >
           &nbsp;
@@ -35,7 +35,7 @@
           <span v-else> {{ field.name }} </span>
         </th>
 
-        <th>&nbsp;<!-- View, Edit, Delete --></th>
+        <th>actions</th>
       </tr>
     </thead>
     <tbody v-if="!isSorting">
@@ -47,8 +47,10 @@
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
-        :should-show-checkboxes="shouldShowCheckboxes"
+        :should-show-check-boxes="shouldShowCheckBoxes"
+        :update-selection-status="updateSelectionStatus"
         :is-sorting="isSorting"
+        :checked="selectedResources.indexOf(resource) > -1"
       />
     </tbody>
     <draggable
@@ -66,7 +68,8 @@
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
-        :should-show-checkboxes="shouldShowCheckboxes"
+        :should-show-check-boxes="false"
+        :update-selection-status="updateSelectionStatus"
         :is-sorting="isSorting"
       />
     </draggable>
@@ -101,9 +104,19 @@ export default {
         return [];
       }
     },
-    shouldShowCheckboxes: {
+    shouldShowCheckBoxes: {
       type: Boolean,
       default: false
+    },
+    selectedResources: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    updateSelectionStatus: {
+      type: Function,
+      required: true
     },
     isSorting: {
       type: Boolean,

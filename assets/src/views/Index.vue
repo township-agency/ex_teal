@@ -163,6 +163,10 @@
           :is-sorting="isSorting"
           :sortable-by="sortableBy"
           :resources-to-sort.sync="resourcesToSort"
+          :should-show-check-boxes="shouldShowCheckBoxes"
+          :selected-resources="selectedResources"
+          :selected-resource-ids="selectedResourceIds"
+          :update-selection-status="updateSelectionStatus"
           @order="orderByField"
           @delete="deleteResources"
         />
@@ -240,6 +244,9 @@ export default {
     orderBy: "",
     orderByDirection: "",
     filters: [],
+    actions: [],
+
+    selectedResources: [],
 
     isSorting: false,
 
@@ -334,6 +341,13 @@ export default {
       return Boolean(this.filters.length > 0);
     },
 
+    /**
+     * Determine if there are any resources for the view
+     */
+    hasResources() {
+      return Boolean(this.resources.length > 0);
+    },
+
     shouldShowFilterDropdown() {
       if (this.isSorting) {
         return false;
@@ -351,6 +365,20 @@ export default {
      */
     shouldShowToolbar() {
       return Boolean(this.hasFilters || this.shouldShowReorder);
+    },
+
+    /**
+     * Get the IDs for the selected resources.
+     */
+    selectedResourceIds() {
+      return _.map(this.selectedResources, resource => resource.id);
+    },
+
+    /**
+     * Determine whether to show the selection checkboxes for resources
+     */
+    shouldShowCheckBoxes() {
+      return Boolean(this.hasResources);
     }
   },
 
@@ -468,6 +496,16 @@ export default {
       });
 
       this.isSorting = true;
+    },
+
+    /*
+     * Update the resource selection status
+     */
+    updateSelectionStatus(resource) {
+      if (!_(this.selectedResources).includes(resource))
+        return this.selectedResources.push(resource);
+      const index = this.selectedResources.indexOf(resource);
+      if (index > -1) return this.selectedResources.splice(index, 1);
     },
 
     saveSorting() {

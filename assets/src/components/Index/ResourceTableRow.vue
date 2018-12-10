@@ -1,17 +1,17 @@
 <template>
-  <tr>
+  <tr :class="{ checked }">
     <!-- Resource Selection Checkbox -->
     <td
       v-if="!isSorting"
       :class="{
-        'w-16': shouldShowCheckboxes || isSorting,
-        'w-8': !shouldShowCheckboxes
+        'w-16': shouldShowCheckBoxes || isSorting,
+        'w-8': !shouldShowCheckBoxes
       }"
     >
       <checkbox
-        v-if="shouldShowCheckboxes"
-        :data-testid="`${testId}-checkbox`"
-        :dusk="`${resource['id'].value}-checkbox`"
+        v-if="shouldShowCheckBoxes"
+        :checked="checked"
+        @input="toggleSelection"
       />
     </td>
     <!-- Sort Handle -->
@@ -144,9 +144,13 @@ export default {
       type: Boolean,
       default: false
     },
-    shouldShowCheckboxes: {
+    shouldShowCheckBoxes: {
       type: Boolean,
       default: false
+    },
+    updateSelectionStatus: {
+      type: Function,
+      required: true
     },
     isSorting: {
       type: Boolean,
@@ -165,6 +169,13 @@ export default {
   },
 
   methods: {
+    /**
+     * Select the resource in the parent component
+     */
+    toggleSelection() {
+      this.updateSelectionStatus(this.resource);
+    },
+
     openDeleteModal() {
       this.deleteModalOpen = true;
     },
