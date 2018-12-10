@@ -11,20 +11,27 @@ export default {
     /**
      * Delete the given resources.
      */
-    deleteResources(resource, callback = null) {
-      let id = resource.id
-        ? resource.id
-        : _.find(resource.fields, { attribute: "id" }).value;
-      return ExTeal.request()
-        .delete(`api/${this.resourceName}/${id}`)
-        .then(
-          callback
-            ? callback
-            : () => {
-                this.deleteModalOpen = false;
-                this.getResources();
-              }
-        );
+    deleteResources(resources, callback = null) {
+      console.log(resources);
+      return ExTeal.request({
+        url: `api/${this.resourceName}`,
+        method: "delete",
+        params: {
+          ...this.queryString,
+          ...{ resources: mapResources(resources) }
+        }
+      }).then(
+        callback
+          ? callback
+          : () => {
+              this.deleteModalOpen = false;
+              this.getResources();
+            }
+      );
     }
   }
 };
+
+function mapResources(resources) {
+  return _.map(resources, resource => resource.id);
+}

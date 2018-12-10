@@ -83,6 +83,7 @@ defmodule ExTeal.Resource.Fields do
       |> apply_values(model, default, :show)
 
     %{
+      id: model.id,
       fields: fields,
       panels: panels
     }

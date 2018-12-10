@@ -1,7 +1,7 @@
 <template>
   <loading-view :loading="initialLoading">
     <div class="card-headline">
-      <heading v-if="meta.label" class=""> {{ meta.label }} </heading>
+      <heading v-if="meta.label" :level="1"> {{ meta.label }} </heading>
       <div class="flex justify-between ml-auto">
         <!-- Search -->
         <div v-if="resourceInformation.searchable" class="relative h-9 mb-6">

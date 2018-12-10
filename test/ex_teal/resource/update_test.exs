@@ -48,6 +48,10 @@ defmodule ExTeal.Resource.UpdateTest do
       Multi.new()
       |> Multi.update(:post, changeset)
     end
+
+    def render_update(conn, %{post: post}) do
+      Serializer.render_update(post, __MODULE__, conn)
+    end
   end
 
   test "default implementation renders 404 if record not found" do
