@@ -8,24 +8,28 @@ class TailwindExtractor {
   }
 }
 
-module.exports = {
+let base = {
   lintOnSave: undefined,
   outputDir: path.resolve(__dirname, "../priv/static/teal"),
-  baseUrl: "teal",
+  baseUrl: "http://localhost:8080/teal",
   filenameHashing: false,
   devServer: {
-    clientLogLevel: "info",
     headers: {
       "Access-Control-Allow-Origin": "*"
     },
-    watchOptions: {
-      poll: true
-    }
+    hot: true,
+    proxy: "http://localhost:8080/teal"
   },
-  configureWebpack: () => {
-    if (process.env.NODE_ENV !== "production") {
-      return {};
-    }
+  chainWebpack: config => {
+    config.plugins.delete("html");
+    config.plugins.delete("preload");
+    config.plugins.delete("prefetch");
+  }
+};
+
+if (process.env.NODE_ENV === "production") {
+  base.baseUrl = "/teal";
+  base.configureWebpack = () => {
     return {
       plugins: [
         new PurgecssPlugin({
@@ -46,10 +50,7 @@ module.exports = {
         })
       ]
     };
-  },
-  chainWebpack: config => {
-    config.plugins.delete("html");
-    config.plugins.delete("preload");
-    config.plugins.delete("prefetch");
-  }
-};
+  };
+}
+
+module.exports = base;
