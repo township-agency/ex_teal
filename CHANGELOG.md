@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - New tool for easier development of teal alongside a parent app.
+- LiveReload and HMR while developing the Vue App
 ### Changed
 - Upgraded Vue-CLI Dependencies
 - Applied new Vue-CLI Linter Rules

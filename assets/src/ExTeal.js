@@ -48,7 +48,6 @@ export default class ExTeal {
     this.boot();
 
     this.app = new Vue({
-      el: "#app",
       router,
       mounted: function() {
         this.$loading = this.$refs.loading;
@@ -66,7 +65,7 @@ export default class ExTeal {
           }
         });
       }
-    });
+    }).$mount("#app");
   }
 
   /**
