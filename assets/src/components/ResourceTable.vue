@@ -141,23 +141,8 @@ export default {
     /**
      * Delete the given resource.
      */
-    async deleteResource(resource) {
-      try {
-        await this.deleteRequest(resource);
-      } catch (error) {
-        if (error.response.status == 422) {
-          let resp_errors = error.response.data.errors;
-          let messages = Object.values(resp_errors)[0].join(", ");
-          this.$toasted.show("Could not delete, error: " + messages, {
-            type: "error"
-          });
-        }
-      }
-    },
-    deleteRequest(resource) {
-      return this.$teal
-        .request()
-        .delete(`/api/${this.resourceName}/${resource.id}`);
+    deleteResource(resource) {
+      this.$emit("delete", [resource]);
     },
 
     /**

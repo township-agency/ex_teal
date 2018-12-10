@@ -92,6 +92,10 @@
   @apply .small-header;
 }
 
+.table th.text-center {
+  @apply .text-center;
+}
+
 .table td {
   @apply .font-light .text-90 .border-t .border-40 .px-3 .align-middle .max-w-xs .overflow-hidden;
   text-overflow: ellipsis;

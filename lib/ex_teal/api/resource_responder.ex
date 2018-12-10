@@ -83,10 +83,15 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
-  def delete(conn, resource_uri, resource_id) do
-    with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
-      Delete.call(resource, resource_id, conn)
-    end
+  def delete(conn, resource_uri) do
+    conn =
+      for resource_id <- conn.params["resources"] do
+        with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
+          Delete.call(resource, resource_id, conn)
+        end
+      end
+
+    conn
   end
 
   def reorder(conn, resource_uri) do

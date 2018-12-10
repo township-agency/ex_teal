@@ -81,8 +81,8 @@ defmodule ExTeal.Router do
     do: ResourceResponder.update(conn, resource_name, resource_id)
   )
 
-  delete("/api/:resource_name/:resource_id",
-    do: ResourceResponder.delete(conn, resource_name, resource_id)
+  delete("/api/:resource_name",
+    do: ResourceResponder.delete(conn, resource_name)
   )
 
   forward("/plugins/:uri", to: ExTeal.Api.PluginResponder)

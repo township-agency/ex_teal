@@ -47,6 +47,10 @@ defmodule ExTeal.Resource.CreateTest do
       Multi.new()
       |> Multi.insert(:post, changeset)
     end
+
+    def render_create(conn, %{post: post}) do
+      Serializer.render_create(post, __MODULE__, conn)
+    end
   end
 
   test "default implementation renders 201 if valid" do

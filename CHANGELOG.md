@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgraded Vue-CLI Dependencies
 - Applied new Vue-CLI Linter Rules
+### Fixes
+- Broken Delete Icon on the ResourceTable
 
 ## [0.1.3] - 2018-11-29
 

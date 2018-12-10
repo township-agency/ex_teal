@@ -143,25 +143,9 @@ export default {
       this.deleteModalOpen = false;
     },
 
-    /**
-     * Show the confirmation modal for deleting or detaching a resource
-     */
-    async deleteResource(resource) {
-      try {
-        await this.deleteRequest(resource);
-      } catch (error) {
-        if (error.response.status == 422) {
-          let resp_errors = error.response.data.errors;
-          let messages = Object.values(resp_errors)[0].join(", ");
-          this.$toasted.show("Could not delete, error: " + messages, {
-            type: "error"
-          });
-        }
-      }
-    },
     async confirmDelete() {
       try {
-        await this.deleteResources(this.resource, () => {
+        await this.deleteResources([this.resource], () => {
           this.$toasted.show(
             `The ${this.resourceInformation.singular.toLowerCase()} was deleted!`,
             { type: "success" }
@@ -174,9 +158,6 @@ export default {
             });
             return;
           }
-
-          this.closeDeleteModal();
-          this.getResource();
         });
       } catch (error) {
         if (error.response.status == 422) {
@@ -197,9 +178,9 @@ export default {
 
       return ExTeal.request()
         .get(`/api/${this.resourceName}/${this.resourceId}`)
-        .then(({ data: { panels, fields } }) => {
+        .then(({ data: { panels, fields, id } }) => {
           this.panels = panels;
-          this.resource = { fields };
+          this.resource = { fields, id };
           this.loading = false;
         })
         .catch(error => {
