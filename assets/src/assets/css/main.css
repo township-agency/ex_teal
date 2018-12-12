@@ -96,6 +96,7 @@
 
 .small-header{
   @apply .bg-grey-lightest .text-xs .text-grey .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
+  @apply .border-b;
 }
 
 .table th {
@@ -127,6 +128,47 @@
   transition: .25s all;
 }
 
+.table-actions {
+  @apply .h-8;
+}
+
+.table-action {
+  @apply .inline-block .mr-2 .w-8 .h-8;
+}
+
+.table-action:last-of-type {
+  @apply .mr-0;
+}
+
+.table-action-link {
+  @apply .border .rounded .w-8 .h-8 .flex .items-center .justify-center;
+  transition: .5s all;
+}
+
+.table-action-link.detail {
+  @apply .border-secondary .text-secondary;
+}
+
+.table-action-link.detail:hover {
+  @apply .text-white .bg-secondary;
+}
+
+.table-action-link.edit {
+  @apply .border-primary .text-primary;
+}
+
+.table-action-link.edit:hover {
+  @apply .text-white .bg-primary;
+}
+
+.table-action-link.delete {
+  @apply .border-danger .text-danger;
+}
+
+.table-action-link.delete:hover {
+  @apply .text-white .bg-danger;
+}
+
 /* Remove the last border on a panel-item component
 ---------------------------------------------------------------------------- */
 .remove-bottom-border {
@@ -151,7 +193,6 @@
 
 .form-control-focus {
   outline: none;
-  box-shadow: 0 0 8px config('colors.primary');
 }
 
 .form-input:focus,
@@ -211,10 +252,6 @@
 ---------------------------------------------------------------------------- */
 .checkbox {
   outline: none;
-}
-
-.checkbox:focus {
-  box-shadow: 0 0 8px config('colors.primary');
 }
 
 /* Buttons
