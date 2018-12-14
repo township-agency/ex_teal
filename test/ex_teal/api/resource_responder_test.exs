@@ -68,4 +68,45 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert resp.status == 404
     end
   end
+
+  describe "actions_for/2" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:get, "/api/posts/actions")
+      resp = ResourceResponder.actions_for(conn, "posts")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns the actions for the resource" do
+      conn = build_conn(:get, "/api/posts/actions")
+      resp = ResourceResponder.actions_for(conn, "posts")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      assert Enum.map(body.actions, & &1.key) == ["publish-post"]
+    end
+  end
+
+  describe "commit_action/2" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:post, "/api/posts/actions")
+      resp = ResourceResponder.commit_action(conn, "posts")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 200 when complete" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:post, "/api/posts/actions", %{
+          "action" => "publish-post",
+          "resources" => "#{p.id}"
+        })
+
+      resp = ResourceResponder.commit_action(conn, "posts")
+      assert resp.status == 200
+    end
+  end
 end

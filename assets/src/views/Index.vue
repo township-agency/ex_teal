@@ -19,29 +19,7 @@
             @search="performSearch"
           />
         </div>
-
-        <!-- Create / Attach Button -->
-        <create-resource-button
-          :singular-name="singularName"
-          :resource-name="resourceName"
-          :via-resource="viaResource"
-          :via-resource-id="viaResourceId"
-          :via-relationship="viaRelationship"
-          :relationship-type="relationshipType"
-          class=""
-        />
-      </div>
-    </div>
-
-    <loading-card
-      :loading="loading"
-      :class="{ 'overflow-hidden border border-50': !shouldShowToolbar }"
-    >
-      <div
-        v-if="shouldShowToolbar"
-        class="py-3 flex items-center border-b border-50"
-      >
-        <div class="flex items-center ml-auto px-3">
+        <div class="index-action-bar">
           <div v-if="shouldShowReorder">
             <button
               v-if="isSorting"
@@ -68,9 +46,25 @@
             </button>
           </div>
 
+          <!-- Action Selector -->
+          <action-selector
+            v-if="selectedResources.length > 0"
+            :resource-name="resourceName"
+            :actions="actions"
+            :query-string="{
+              currentSearch,
+              encodedFilters,
+              viaResource,
+              viaResourceId,
+              viaRelationship
+            }"
+            :selected-resources="selectedResourcesForActionSelector"
+            @actionExecuted="getResources"
+          />
+
           <dropdown
             v-if="shouldShowFilterDropdown"
-            class="bg-grey-lighter hover:bg-grey-light rounded"
+            class="bg-white border hover:bg-grey-light rounded"
           >
             <dropdown-trigger
               slot-scope="{ toggle }"
@@ -78,6 +72,7 @@
               class="px-3"
             >
               <icon type="filter" class="text-grey-darker" />
+              <span class="text-grey-darker text-sm mx-2">Filter</span>
             </dropdown-trigger>
 
             <dropdown-menu slot="menu" :dark="true" width="290" direction="rtl">
@@ -106,9 +101,25 @@
               </filter-select>
             </dropdown-menu>
           </dropdown>
+
+          <!-- Create / Attach Button -->
+          <create-resource-button
+            :singular-name="singularName"
+            :resource-name="resourceName"
+            :via-resource="viaResource"
+            :via-resource-id="viaResourceId"
+            :via-relationship="viaRelationship"
+            :relationship-type="relationshipType"
+            classes="btn-lg"
+          />
         </div>
       </div>
+    </div>
 
+    <loading-card
+      :loading="loading"
+      :class="{ 'overflow-hidden border border-50': !shouldShowToolbar }"
+    >
       <div
         v-if="!resources.length && !loading"
         class="flex justify-center items-center px-6 py-8"
@@ -166,7 +177,12 @@
           :should-show-check-boxes="shouldShowCheckBoxes"
           :selected-resources="selectedResources"
           :selected-resource-ids="selectedResourceIds"
+          :select-all-matching-resources="selectAllMatchingResources"
+          :select-all-matching-checked="selectAllMatchingChecked"
           :update-selection-status="updateSelectionStatus"
+          :all-matching-resource-count="allMatchingResourceCount"
+          :toggle-select-all="toggleSelectAll"
+          :toggle-select-all-matching="toggleSelectAllMatching"
           @order="orderByField"
           @delete="deleteResources"
         />
@@ -247,6 +263,8 @@ export default {
     actions: [],
 
     selectedResources: [],
+    selectAllMatchingResources: false,
+    allMatchingResourceCount: 0,
 
     isSorting: false,
 
@@ -335,6 +353,13 @@ export default {
     },
 
     /**
+     * Get the current search value from the query string.
+     */
+    currentSearch() {
+      return this.$route.query[this.searchParameter] || "";
+    },
+
+    /**
      * Determine if there any filters for this resource
      */
     hasFilters() {
@@ -375,10 +400,34 @@ export default {
     },
 
     /**
+     * Get the selected resources for the action selector.
+     */
+    selectedResourcesForActionSelector() {
+      return this.selectAllMatchingChecked ? "all" : this.selectedResourceIds;
+    },
+
+    /**
      * Determine whether to show the selection checkboxes for resources
      */
     shouldShowCheckBoxes() {
       return Boolean(this.hasResources);
+    },
+
+    /**
+     * Determine if all matching resources are selected.
+     */
+    selectAllMatchingChecked() {
+      return (
+        this.selectedResources.length == this.resources.length &&
+        this.selectAllMatchingResources
+      );
+    },
+
+    /**
+     * Determine if all resources are selected.
+     */
+    selectAllChecked() {
+      return this.selectedResources.length == this.resources.length;
     }
   },
 
@@ -391,6 +440,8 @@ export default {
 
     await this.getResources();
     await this.getFilters();
+
+    this.getActions();
 
     this.initialLoading = false;
 
@@ -420,6 +471,7 @@ export default {
       },
       () => {
         this.getFilters();
+        this.getActions();
       }
     );
   },
@@ -431,6 +483,8 @@ export default {
     getResources() {
       this.loading = true;
       this.$nextTick(() => {
+        this.clearResourceSelections();
+
         return Minimum(
           ExTeal.request().get(`/api/${this.resourceName}`, {
             params: this.resourceRequestQueryString
@@ -441,6 +495,7 @@ export default {
           this.resourceResponse = data;
           this.resources = data.data;
           this.meta = data.meta;
+          this.allMatchingResourceCount = data.meta.all;
           this.sortable = Boolean(data.meta.sortable_by);
           this.sortableBy = data.meta.sortable_by || "";
 
@@ -461,6 +516,15 @@ export default {
         .then(response => {
           this.filters = response.data.filters;
           this.initializeFilterValuesFromQueryString();
+        });
+    },
+
+    getActions() {
+      this.actions = [];
+      return ExTeal.request()
+        .get(`/api/${this.resourceName}/actions`)
+        .then(response => {
+          this.actions = response.data.actions;
         });
     },
 
@@ -537,6 +601,45 @@ export default {
       if (this.resources !== this.getResources) {
         this.getResources();
       }
+    },
+
+    /**
+     * Clear the selected resouces and the "select all" states.
+     */
+    clearResourceSelections() {
+      this.selectAllMatchingResources = false;
+      this.selectedResources = [];
+    },
+
+    /**
+     * Select all of the available resources
+     */
+    selectAllResources() {
+      this.selectedResources = this.resources.slice(0);
+    },
+
+    /**
+     * Toggle the selection of all resources
+     */
+    toggleSelectAll() {
+      if (this.selectAllChecked) {
+        return this.clearResourceSelections();
+      }
+      this.selectAllResources();
+    },
+
+    /**
+     * Toggle the selection of all matching resources in the database
+     */
+    toggleSelectAllMatching() {
+      console.log(this.selectAllMatchingResources);
+      if (!this.selectAllMatchingResources) {
+        this.selectAllResources();
+        this.selectAllMatchingResources = true;
+        return;
+      }
+
+      this.selectAllMatchingResources = false;
     }
   }
 };

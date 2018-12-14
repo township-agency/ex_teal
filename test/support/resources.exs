@@ -32,4 +32,6 @@ defmodule TestExTeal.PostResource do
     ]
 
   def filters(_conn), do: [TestExTeal.PublishedStatus]
+
+  def actions(_), do: [TestExTeal.PublishAction]
 end

@@ -1,7 +1,10 @@
 import Vue from "vue";
 
+import ActionSelector from "@/components/ActionSelector";
 import Card from "@/components/Card";
 import Checkbox from "@/components/Checkbox";
+import CheckboxWithLabel from "@/components/CheckboxWithLabel";
+import ConfirmActionModal from "@/components/Modals/ConfirmActionModal";
 import CreateResourceButton from "@/components/CreateResourceButton";
 import DeleteResourceModal from "@/components/Modals/DeleteResourceModal";
 import Dropdown from "@/components/Dropdown";
@@ -10,6 +13,7 @@ import DropdownTrigger from "@/components/DropdownTrigger";
 import Editor from "@/components/Editor";
 import Error403 from "@/views/Error403";
 import Error404 from "@/views/Error404";
+import FakeCheckbox from "@/components/FakeCheckbox";
 import FilterSelect from "@/components/FilterSelect";
 import FilterSelector from "@/components/FilterSelector";
 import Heading from "@/components/Heading";
@@ -27,6 +31,8 @@ import SortableIcon from "@/components/Index/SortableIcon";
 import ValidationErrors from "@/components/ValidationErrors";
 
 import Icon from "@/components/Icons/Icon";
+import Action from "@/components/Icons/Action";
+import Create from "@/components/Icons/Create";
 import Delete from "@/components/Icons/Delete";
 import Drag from "@/components/Icons/Drag";
 import Edit from "@/components/Icons/Edit";
@@ -35,8 +41,11 @@ import Link from "@/components/Icons/Link";
 import Reorder from "@/components/Icons/Reorder";
 import View from "@/components/Icons/View";
 
+Vue.component("action-selector", ActionSelector);
 Vue.component("card", Card);
 Vue.component("checkbox", Checkbox);
+Vue.component("checkbox-with-label", CheckboxWithLabel);
+Vue.component("confirm-action-modal", ConfirmActionModal);
 Vue.component("create-resource-button", CreateResourceButton);
 Vue.component("delete-resource-modal", DeleteResourceModal);
 Vue.component("dropdown", Dropdown);
@@ -45,6 +54,7 @@ Vue.component("dropdown-trigger", DropdownTrigger);
 Vue.component("editor", Editor);
 Vue.component("error-403", Error403);
 Vue.component("error-404", Error404);
+Vue.component("fake-checkbox", FakeCheckbox);
 Vue.component("filter-select", FilterSelect);
 Vue.component("filter-selector", FilterSelector);
 Vue.component("heading", Heading);
@@ -62,6 +72,8 @@ Vue.component("sortable-icon", SortableIcon);
 Vue.component("validation-errors", ValidationErrors);
 
 Vue.component("icon", Icon);
+Vue.component("icon-action", Action);
+Vue.component("icon-create", Create);
 Vue.component("icon-delete", Delete);
 Vue.component("icon-drag", Drag);
 Vue.component("icon-edit", Edit);

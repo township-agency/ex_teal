@@ -47,7 +47,7 @@
               }
             }"
             title="Show"
-            class="table-action-link detail"
+            class="table-action-link primary"
           >
             <icon
               type="view"
@@ -67,14 +67,14 @@
               }
             }"
             title="Edit"
-            class="table-action-link edit"
+            class="table-action-link primary"
           >
             <icon type="edit" />
           </router-link>
         </span>
         <span class="table-action">
           <button
-            class="appearance-none cursor-pointer table-action-link delete"
+            class="appearance-none cursor-pointer table-action-link danger"
             title="Delete"
             @click.prevent="openDeleteModal"
           >

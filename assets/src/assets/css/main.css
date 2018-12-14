@@ -51,6 +51,7 @@
 
 /* Card Components
 ---------------------------------------------------------------------------- */
+
 .card-headline{
   @apply .flex .items-center .mb-4 .capitalize;
 }
@@ -71,6 +72,18 @@
   @apply .text-primary;
 }
 
+.index-action-bar {
+  @apply .flex .justify-end .items-center;
+}
+
+.index-action-bar > div {
+  @apply .ml-3;
+}
+
+.index-action-bar .dropdown {
+  height: 32px;
+}
+
 /* Tables
 ---------------------------------------------------------------------------- */
 .table-fixed {
@@ -83,7 +96,7 @@
 }
 
 .table tr:hover td {
-  @apply .bg-secondary-10;
+  @apply .bg-primary-10;
 }
 
 .table tr.checked td {
@@ -94,7 +107,7 @@
   @apply .bg-primary-30;
 }
 
-.small-header{
+.small-header {
   @apply .bg-grey-lightest .text-xs .text-grey .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
   @apply .border-b;
 }
@@ -123,7 +136,7 @@
   @apply .shadow;
   transition: .25s all;
 }
-.sortable-chosen td{
+.sortable-chosen td {
   @apply bg-grey-lighter text-primary-light;
   transition: .25s all;
 }
@@ -142,31 +155,45 @@
 
 .table-action-link {
   @apply .border .rounded .w-8 .h-8 .flex .items-center .justify-center;
-  transition: .5s all;
+  transition: .25s all;
 }
 
-.table-action-link.detail {
-  @apply .border-secondary .text-secondary;
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  box-shadow: none;
 }
 
-.table-action-link.detail:hover {
-  @apply .text-white .bg-secondary;
+input[type="checkbox"]:focus {
+  -webkit-appearance: none;
+  box-shadow: none;
 }
 
-.table-action-link.edit {
+.table-action-link:hover {
+  border-radius: 0;
+}
+
+.table-action-link.primary {
   @apply .border-primary .text-primary;
 }
 
-.table-action-link.edit:hover {
+.table-action-link.primary:hover {
   @apply .text-white .bg-primary;
 }
 
-.table-action-link.delete {
+.table-action-link.danger {
   @apply .border-danger .text-danger;
 }
 
-.table-action-link.delete:hover {
+.table-action-link.danger:hover {
   @apply .text-white .bg-danger;
+}
+
+.table .table-check-menu {
+  left: -12px;
+}
+
+.table .table-check-menu .dropdown-arrow {
+  left: -1px;
 }
 
 /* Remove the last border on a panel-item component
@@ -177,6 +204,8 @@
 
 /* Forms
 ---------------------------------------------------------------------------- */
+textarea, select, input, button, .checkbox { outline: none; }
+
 
 .form-control {
   @apply .h-8;
@@ -252,6 +281,11 @@
 ---------------------------------------------------------------------------- */
 .checkbox {
   outline: none;
+  @apply .border;
+}
+
+.checkbox input {
+  outline: none;
 }
 
 /* Buttons
@@ -307,6 +341,15 @@
 
 .btn-icon-inline {
   @apply .inline-flex .items-center;
+}
+
+.btn-only-icon {
+  @apply .flex .items-center .text-white .justify-center .h-8 .w-8 .px-0 .py-0;
+}
+
+.btn-lg {
+  height: 36px;
+  width: 36px;
 }
 
 /* Checkbox toggle
@@ -393,11 +436,15 @@
 }
 
 .dropdown-alt .dropdown-trigger {
-  @apply .flex .items-center .h-8 .px-3 .bg-40;
+  @apply .flex .items-center .h-8 .px-3 .bg-white;
 }
 
-.dropdown-trigger-active .dropdown-trigger {
-  @apply .bg-40;
+.dropdown-trigger-active.dropdown-trigger {
+  @apply .bg-white;
+}
+
+.dropdown-trigger span {
+  padding-bottom: 1px;
 }
 
 /* Fade Transition
