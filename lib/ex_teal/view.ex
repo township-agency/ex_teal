@@ -6,7 +6,7 @@ defmodule ExTeal.View do
 
   def render(conn) do
     base = Application.get_env(:ex_teal, :base_url)
-    use_compiled_assets = Application.get_env(:ex_teal, :compiled_assets)
+    use_compiled_assets = Application.get_env(:ex_teal, :compiled_assets, true)
     config = ExTeal.json_configuration()
     auth_provider = ExTeal.auth_provider()
 
