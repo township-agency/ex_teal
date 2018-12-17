@@ -10,11 +10,48 @@
         <!-- Select Checkbox -->
         <th
           :class="{
-            'w-16': shouldShowCheckboxes || isSorting,
-            'w-8': !shouldShowCheckboxes
+            'w-16': shouldShowCheckBoxes || isSorting,
+            'w-8': !shouldShowCheckBoxes
           }"
         >
-          &nbsp;
+          <div v-if="shouldShowCheckBoxes">
+            <!-- Select All -->
+            <dropdown>
+              <dropdown-trigger slot-scope="{ toggle }" :handle-click="toggle">
+                <fake-checkbox :checked="selectAllChecked" />
+              </dropdown-trigger>
+
+              <dropdown-menu
+                slot="menu"
+                width="250"
+                override="table-check-menu"
+              >
+                <div class="p-4">
+                  <ul class="list-reset">
+                    <li class="flex items-center mb-4">
+                      <checkbox-with-label
+                        :checked="selectAllChecked"
+                        @change="toggleSelectAll"
+                      >
+                        Select All
+                      </checkbox-with-label>
+                    </li>
+                    <li class="flex items-center">
+                      <checkbox-with-label
+                        :checked="selectAllMatchingChecked"
+                        @change="toggleSelectAllMatching"
+                      >
+                        <template>
+                          <span class="mr-1"> Select All Matching </span>
+                          <span>({{ allMatchingResourceCount }})</span>
+                        </template>
+                      </checkbox-with-label>
+                    </li>
+                  </ul>
+                </div>
+              </dropdown-menu>
+            </dropdown>
+          </div>
         </th>
 
         <!-- Field Names -->
@@ -35,7 +72,7 @@
           <span v-else> {{ field.name }} </span>
         </th>
 
-        <th>&nbsp;<!-- View, Edit, Delete --></th>
+        <th>actions</th>
       </tr>
     </thead>
     <tbody v-if="!isSorting">
@@ -47,8 +84,10 @@
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
-        :should-show-checkboxes="shouldShowCheckboxes"
+        :should-show-check-boxes="shouldShowCheckBoxes"
+        :update-selection-status="updateSelectionStatus"
         :is-sorting="isSorting"
+        :checked="selectedResources.indexOf(resource) > -1"
       />
     </tbody>
     <draggable
@@ -66,7 +105,8 @@
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
-        :should-show-checkboxes="shouldShowCheckboxes"
+        :should-show-check-boxes="false"
+        :update-selection-status="updateSelectionStatus"
         :is-sorting="isSorting"
       />
     </draggable>
@@ -101,9 +141,31 @@ export default {
         return [];
       }
     },
-    shouldShowCheckboxes: {
+    shouldShowCheckBoxes: {
       type: Boolean,
       default: false
+    },
+    selectedResources: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    updateSelectionStatus: {
+      type: Function,
+      required: true
+    },
+    updateAllMatchingChecked: {
+      type: Boolean,
+      default: false
+    },
+    toggleSelectAll: {
+      type: Function,
+      required: true
+    },
+    toggleSelectAllMatching: {
+      type: Function,
+      required: true
     },
     isSorting: {
       type: Boolean,
@@ -118,6 +180,14 @@ export default {
       default() {
         return [];
       }
+    },
+    allMatchingResourceCount: {
+      type: Number,
+      required: true
+    },
+    selectAllMatchingChecked: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -134,6 +204,13 @@ export default {
         return this.resourcesToSort;
       }
       return this.resources;
+    },
+
+    /**
+     * Determine if all resources are selected.
+     */
+    selectAllChecked() {
+      return this.selectedResources.length == this.resources.length;
     }
   },
 

@@ -2,9 +2,7 @@
   <div
     class="modal select-none fixed pin flex justify-center items-center z-50"
   >
-    <div class="relative z-20 bg-white rounded-lg shadow-lg overflow-hidden">
-      <slot />
-    </div>
+    <div class="relative z-20 bg-white shadow-lg overflow-hidden"><slot /></div>
     <div class="absolute pin bg-80 z-0 opacity-25" @click="close" />
   </div>
 </template>

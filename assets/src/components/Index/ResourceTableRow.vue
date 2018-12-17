@@ -1,17 +1,17 @@
 <template>
-  <tr>
+  <tr :class="{ checked }">
     <!-- Resource Selection Checkbox -->
     <td
       v-if="!isSorting"
       :class="{
-        'w-16': shouldShowCheckboxes || isSorting,
-        'w-8': !shouldShowCheckboxes
+        'w-16': shouldShowCheckBoxes || isSorting,
+        'w-8': !shouldShowCheckBoxes
       }"
     >
       <checkbox
-        v-if="shouldShowCheckboxes"
-        :data-testid="`${testId}-checkbox`"
-        :dusk="`${resource['id'].value}-checkbox`"
+        v-if="shouldShowCheckBoxes"
+        :checked="checked"
+        @input="toggleSelection"
       />
     </td>
     <!-- Sort Handle -->
@@ -35,66 +35,72 @@
       />
     </td>
     <td v-if="isSorting" class="td-fit text-right pr-6" />
-    <td v-else class="td-fit text-right pr-6">
-      <!-- View Resource Link -->
-      <span>
-        <router-link
-          :to="{
-            name: 'detail',
-            params: {
-              resourceName: resourceName,
-              resourceId: resourceId
-            }
-          }"
-          title="Show"
-          class="cursor-pointer text-70 hover:text-primary mr-3"
-        >
-          <icon type="view" width="22" height="18" view-box="0 0 22 16" />
-        </router-link>
-      </span>
-      <span>
-        <!-- Edit Resource Link -->
-        <router-link
-          :to="{
-            name: 'edit',
-            params: {
-              resourceName: resourceName,
-              resourceId: resourceId
-            }
-          }"
-          title="Edit"
-          class="cursor-pointer text-70 hover:text-primary mr-3"
-        >
-          <icon type="edit" />
-        </router-link>
-      </span>
-      <!-- Delete Resource Link -->
-      <button
-        class="appearance-none cursor-pointer text-70 hover:text-danger mr-3"
-        title="Delete"
-        @click.prevent="openDeleteModal"
-      >
-        <icon type="delete" />
-      </button>
-      <portal to="modals">
-        <transition name="fade">
-          <delete-resource-modal
-            v-if="deleteModalOpen"
-            mode="delete"
-            @confirm="confirmDelete"
-            @close="closeDeleteModal"
+    <td v-else class="td-fit text-right pr-6 table-actions">
+      <div class="flex">
+        <span class="table-action">
+          <router-link
+            :to="{
+              name: 'detail',
+              params: {
+                resourceName: resourceName,
+                resourceId: resourceId
+              }
+            }"
+            title="Show"
+            class="table-action-link primary"
           >
-            <div slot-scope="{ uppercaseMode, mode }" class="p-8">
-              <heading :level="2" class="mb-6"
-                >{{ uppercaseMode }} Resource</heading
-              >
-              <p class="text-80 leading-normal">
-                Are you sure you want to delete this resource?
-              </p>
-            </div>
-          </delete-resource-modal>
-        </transition>
-      </portal>
+            <icon
+              type="view"
+              width="18.85"
+              height="16.25"
+              view-box="0 0 18.85 16.25"
+            />
+          </router-link>
+        </span>
+        <span class="table-action">
+          <router-link
+            :to="{
+              name: 'edit',
+              params: {
+                resourceName: resourceName,
+                resourceId: resourceId
+              }
+            }"
+            title="Edit"
+            class="table-action-link primary"
+          >
+            <icon type="edit" />
+          </router-link>
+        </span>
+        <span class="table-action">
+          <button
+            class="appearance-none cursor-pointer table-action-link danger"
+            title="Delete"
+            @click.prevent="openDeleteModal"
+          >
+            <icon type="delete" />
+          </button>
+        </span>
+        <portal to="modals">
+          <transition name="fade">
+            <delete-resource-modal
+              v-if="deleteModalOpen"
+              mode="delete"
+              @confirm="confirmDelete"
+              @close="closeDeleteModal"
+            >
+              <div slot-scope="{ uppercaseMode, mode }" class="p-8">
+                <heading :level="2" class="mb-6"
+                  >{{ uppercaseMode }} Resource</heading
+                >
+                <p class="text-80 leading-normal">
+                  Are you sure you want to delete this resource?
+                </p>
+              </div>
+            </delete-resource-modal>
+          </transition>
+        </portal>
+      </div>
     </td>
   </tr>
 </template>
@@ -144,9 +150,13 @@ export default {
       type: Boolean,
       default: false
     },
-    shouldShowCheckboxes: {
+    shouldShowCheckBoxes: {
       type: Boolean,
       default: false
+    },
+    updateSelectionStatus: {
+      type: Function,
+      required: true
     },
     isSorting: {
       type: Boolean,
@@ -165,6 +175,13 @@ export default {
   },
 
   methods: {
+    /**
+     * Select the resource in the parent component
+     */
+    toggleSelection() {
+      this.updateSelectionStatus(this.resource);
+    },
+
     openDeleteModal() {
       this.deleteModalOpen = true;
     },

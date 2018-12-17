@@ -1,8 +1,8 @@
 <template>
-  <span class="ml-auto">
+  <div class="create-resource-button">
     <!-- Create Related Models -->
     <router-link
-      :class="classes"
+      :class="classesWithOverrides"
       :to="{
         name: 'create',
         params: {
@@ -14,18 +14,19 @@
           viaRelationship: viaRelationship
         }
       }"
+      :title="title"
       tag="button"
     >
-      Create {{ singularName }}
+      <icon type="create" />
     </router-link>
-  </span>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
     classes: {
-      default: "btn btn-default btn-primary capitalize",
+      default: "",
       type: String
     },
     singularName: {
@@ -57,6 +58,16 @@ export default {
   computed: {
     shouldShowCreateButton() {
       return true;
+    },
+
+    title() {
+      return `Create ${this.singularName}`;
+    },
+
+    classesWithOverrides() {
+      return `btn btn-default btn-primary capitalize btn-only-icon ${
+        this.classes
+      }`;
     }
   }
 };

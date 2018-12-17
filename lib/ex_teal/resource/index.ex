@@ -122,7 +122,22 @@ defmodule ExTeal.Resource.Index do
         |> Enum.map(fn filter_module -> filter_module.build_for(conn) end)
       end
 
-      defoverridable(filters: 1, filters_for: 1, handle_index: 2, handle_related: 2)
+      def actions(_conn), do: []
+
+      def actions_for(conn) do
+        conn
+        |> actions()
+        |> Enum.map(fn action_module -> action_module.build_for(conn) end)
+      end
+
+      defoverridable(
+        filters: 1,
+        filters_for: 1,
+        actions: 1,
+        actions_for: 1,
+        handle_index: 2,
+        handle_related: 2
+      )
     end
   end
 

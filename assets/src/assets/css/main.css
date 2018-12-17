@@ -20,6 +20,8 @@
   --primary-50: rgba(64, 153, 222, 0.5);
   --primary-30: rgba(64, 153, 222, 0.3);
   --primary-10: rgba(64, 153, 222, 0.1);
+  --secondary: #f16522;
+  --secondary-10: rgba(241, 101, 34, 0.1);
   --logo: #252d37;
   --sidebar-icon: #b3c1d1;
   --20: #F8F8F8;
@@ -49,6 +51,7 @@
 
 /* Card Components
 ---------------------------------------------------------------------------- */
+
 .card-headline{
   @apply .flex .items-center .mb-4 .capitalize;
 }
@@ -69,6 +72,18 @@
   @apply .text-primary;
 }
 
+.index-action-bar {
+  @apply .flex .justify-end .items-center;
+}
+
+.index-action-bar > div {
+  @apply .ml-3;
+}
+
+.index-action-bar .dropdown {
+  height: 32px;
+}
+
 /* Tables
 ---------------------------------------------------------------------------- */
 .table-fixed {
@@ -81,11 +96,20 @@
 }
 
 .table tr:hover td {
-  @apply .bg-20;
+  @apply .bg-primary-10;
 }
 
-.small-header{
+.table tr.checked td {
+  @apply .bg-primary-10;
+}
+
+.table tr.checked:hover td {
+  @apply .bg-primary-30;
+}
+
+.small-header {
   @apply .bg-grey-lightest .text-xs .text-grey .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
+  @apply .border-b;
 }
 
 .table th {
@@ -107,13 +131,69 @@
   width: 1%;
   white-space: nowrap;
 }
+
 .sortable-chosen {
   @apply .shadow;
   transition: .25s all;
 }
-.sortable-chosen td{
+.sortable-chosen td {
   @apply bg-grey-lighter text-primary-light;
   transition: .25s all;
+}
+
+.table-actions {
+  @apply .h-8;
+}
+
+.table-action {
+  @apply .inline-block .mr-2 .w-8 .h-8;
+}
+
+.table-action:last-of-type {
+  @apply .mr-0;
+}
+
+.table-action-link {
+  @apply .border .rounded .w-8 .h-8 .flex .items-center .justify-center;
+  transition: .25s all;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  box-shadow: none;
+}
+
+input[type="checkbox"]:focus {
+  -webkit-appearance: none;
+  box-shadow: none;
+}
+
+.table-action-link:hover {
+  border-radius: 0;
+}
+
+.table-action-link.primary {
+  @apply .border-primary .text-primary;
+}
+
+.table-action-link.primary:hover {
+  @apply .text-white .bg-primary;
+}
+
+.table-action-link.danger {
+  @apply .border-danger .text-danger;
+}
+
+.table-action-link.danger:hover {
+  @apply .text-white .bg-danger;
+}
+
+.table .table-check-menu {
+  left: -12px;
+}
+
+.table .table-check-menu .dropdown-arrow {
+  left: -1px;
 }
 
 /* Remove the last border on a panel-item component
@@ -124,6 +204,8 @@
 
 /* Forms
 ---------------------------------------------------------------------------- */
+textarea, select, input, button, .checkbox { outline: none; }
+
 
 .form-control {
   @apply .h-8;
@@ -140,7 +222,6 @@
 
 .form-control-focus {
   outline: none;
-  box-shadow: 0 0 8px config('colors.primary');
 }
 
 .form-input:focus,
@@ -200,10 +281,11 @@
 ---------------------------------------------------------------------------- */
 .checkbox {
   outline: none;
+  @apply .border;
 }
 
-.checkbox:focus {
-  box-shadow: 0 0 8px config('colors.primary');
+.checkbox input {
+  outline: none;
 }
 
 /* Buttons
@@ -250,7 +332,7 @@
 }
 
 .btn-danger:hover {
-  @apply .bg-red-dark;
+  @apply .bg-danger-dark;
 }
 
 .btn-icon {
@@ -259,6 +341,15 @@
 
 .btn-icon-inline {
   @apply .inline-flex .items-center;
+}
+
+.btn-only-icon {
+  @apply .flex .items-center .text-white .justify-center .h-8 .w-8 .px-0 .py-0;
+}
+
+.btn-lg {
+  height: 36px;
+  width: 36px;
 }
 
 /* Checkbox toggle
@@ -288,7 +379,7 @@
 
 }
 .form-switch-checkbox:checked + .form-switch-label {
-    @apply .bg-green .shadow-none;
+    @apply .bg-success .shadow-none;
 }
 .form-switch-checkbox:checked + .form-switch-label:before {
     @apply .pin-r;
@@ -323,33 +414,30 @@
 
 /* Dropdown
 ---------------------------------------------------------------------------- */
-
-.dropdown-menu-left {
-  top: 3rem;
-  left: -2rem;
+.dropdown.visible {
+  @apply .border-b-0 .rounded-b-none;
 }
 
-.dropdown-arrow-left {
-  top: calc(-1.35rem);
-  left: 2.3rem;
+.dropdown-menu-left {
+  top: 2rem;
+  left: 0;
 }
 
 .dropdown-menu-right {
-  top: 3rem;
-  right: -1.5rem;
-}
-
-.dropdown-arrow-right {
-  top: calc(-1.35rem);
-  right: 2rem;
+  top: calc(2rem - 1px);
+  right: -1px;
 }
 
 .dropdown-alt .dropdown-trigger {
-  @apply .flex .items-center .h-8 .px-3 .bg-40;
+  @apply .flex .items-center .h-8 .px-3 .bg-white;
 }
 
-.dropdown-trigger-active .dropdown-trigger {
-  @apply .bg-40;
+.dropdown-trigger-active.dropdown-trigger {
+  @apply .bg-white;
+}
+
+.dropdown-trigger span {
+  padding-bottom: 1px;
 }
 
 /* Fade Transition

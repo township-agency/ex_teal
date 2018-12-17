@@ -71,6 +71,27 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  def actions_for(conn, resource_uri) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
+      actions = resource.actions_for(conn)
+      {:ok, body} = Jason.encode(%{actions: actions})
+      Serializer.as_json(conn, body, 200)
+    else
+      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
+  def commit_action(conn, resource_uri) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         {:ok, resp} <- ExTeal.Action.apply_action(resource, conn) do
+      {:ok, body} = Jason.encode(resp)
+      Serializer.as_json(conn, body, 200)
+    else
+      {:error, reason} ->
+        ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
   def create(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
       Create.call(resource, conn)
@@ -84,14 +105,11 @@ defmodule ExTeal.Api.ResourceResponder do
   end
 
   def delete(conn, resource_uri) do
-    conn =
-      for resource_id <- conn.params["resources"] do
-        with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
-          Delete.call(resource, resource_id, conn)
-        end
-      end
-
-    conn
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
+      Delete.call(resource, conn)
+    else
+      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    end
   end
 
   def reorder(conn, resource_uri) do
