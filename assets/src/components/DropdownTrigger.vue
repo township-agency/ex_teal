@@ -10,12 +10,11 @@
       width="7"
       height="5"
       viewBox="0 0 7 5"
-      class="ml-2"
+      class="ml-2 stroke-current"
     >
       <path
         fill="none"
         fill-rule="evenodd"
-        stroke="#7A7A7A"
         d="M6.53 1L3.764 3.765 1 1z"
       />
     </svg>

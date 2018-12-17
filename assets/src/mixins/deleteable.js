@@ -12,7 +12,6 @@ export default {
      * Delete the given resources.
      */
     deleteResources(resources, callback = null) {
-      console.log(resources);
       return ExTeal.request({
         url: `api/${this.resourceName}`,
         method: "delete",
@@ -28,10 +27,34 @@ export default {
               this.getResources();
             }
       );
+    },
+
+    /**
+     * Delete the selected resources.
+     */
+    deleteSelectedResources() {
+      this.deleteResources(this.selectedResources);
+    },
+
+    /**
+     * Delete all of the matching resources.
+     */
+    deleteAllMatchingResources() {
+      return ExTeal.request({
+        url: `api/${this.resourceName}`,
+        method: "delete",
+        params: {
+          ...this.queryString,
+          ...{ resources: "all" }
+        }
+      }).then(() => {
+        this.deleteModalOpen = false;
+        this.getResources();
+      });
     }
   }
 };
 
 function mapResources(resources) {
-  return _.map(resources, resource => resource.id);
+  return _.map(resources, resource => resource.id).join(",");
 }

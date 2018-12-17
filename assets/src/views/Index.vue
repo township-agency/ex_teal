@@ -102,6 +102,17 @@
             </dropdown-menu>
           </dropdown>
 
+          <delete-menu
+            v-if="shouldShowDeleteMenu"
+            :resources="resources"
+            :selected-resources="selectedResources"
+            :all-matching-resource-count="allMatchingResourceCount"
+            :all-matching-selected="selectAllMatchingChecked"
+            @deleteSelected="deleteSelectedResources"
+            @deleteAllMatching="deleteAllMatchingResources"
+            @close="deleteModalOpen = false"
+          />
+
           <!-- Create / Attach Button -->
           <create-resource-button
             :singular-name="singularName"
@@ -151,17 +162,6 @@
             No {{ resourceInformation.title.toLowerCase() }} matched the given
             criteria.
           </h3>
-
-          <!-- Create / Attach Button -->
-          <create-resource-button
-            :singular-name="singularName"
-            :resource-name="resourceName"
-            :via-resource="viaResource"
-            :via-resource-id="viaResourceId"
-            :via-relationship="viaRelationship"
-            :relationship-type="relationshipType"
-            class="mb-6"
-          />
         </div>
       </div>
       <div class="overflow-hidden overflow-x-auto relative">
@@ -428,6 +428,13 @@ export default {
      */
     selectAllChecked() {
       return this.selectedResources.length == this.resources.length;
+    },
+
+    /**
+     * Determine whether the delete menu should be shown to the user
+     */
+    shouldShowDeleteMenu() {
+      return Boolean(this.selectedResources.length > 0);
     }
   },
 
