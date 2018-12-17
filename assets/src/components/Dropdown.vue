@@ -1,5 +1,9 @@
 <template>
-  <div v-on-clickaway="close" class="dropdown relative">
+  <div
+    v-on-clickaway="close"
+    :class="{ visible: visible }"
+    class="dropdown relative"
+  >
     <slot :toggle="toggle" />
 
     <transition name="fade"> <slot v-if="visible" name="menu" /> </transition>

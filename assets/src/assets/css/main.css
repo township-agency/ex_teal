@@ -414,25 +414,18 @@ textarea, select, input, button, .checkbox { outline: none; }
 
 /* Dropdown
 ---------------------------------------------------------------------------- */
-
-.dropdown-menu-left {
-  top: 3rem;
-  left: -2rem;
+.dropdown.visible {
+  @apply .border-b-0 .rounded-b-none;
 }
 
-.dropdown-arrow-left {
-  top: calc(-1.35rem);
-  left: 2.3rem;
+.dropdown-menu-left {
+  top: 2rem;
+  left: 0;
 }
 
 .dropdown-menu-right {
-  top: 3rem;
-  right: -1.5rem;
-}
-
-.dropdown-arrow-right {
-  top: calc(-1.35rem);
-  right: 2rem;
+  top: calc(2rem - 1px);
+  right: -1px;
 }
 
 .dropdown-alt .dropdown-trigger {

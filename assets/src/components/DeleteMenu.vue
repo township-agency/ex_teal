@@ -1,6 +1,8 @@
 <template>
   <div>
-    <dropdown class="ml-3 bg-danger hover:bg-danger-dark text-white rounded">
+    <dropdown
+      class="ml-3 bg-danger hover:bg-danger-dark text-white rounded border border-danger"
+    >
       <dropdown-trigger
         slot-scope="{ toggle }"
         :handle-click="toggle"
