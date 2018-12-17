@@ -3,19 +3,19 @@ defmodule ExTeal.Action do
   ExTeal Actions allow you to scope your ExTeal Index queries with custom conditions. For example, you may
   wish to define a filter to quickly view "Published" posts within your application:
 
-  Each ExTeal filter should contain two functions: `apply/3` and `options/1`.
-  The apply function is responsible for modifying the query to achieve the desired filter state, while
-  the options function determines the "values" the filter may have.  Let's look at the
-  `PublishedStatus` filter:
+  Each ExTeal action should contain a `commit/3` function.
+
+  **Fields have not been implemented yet**
+
+  The commit function is responsible for modifying the state of the application to achieve the desired actions.
+  Let's look at the `PublishAction` action:
 
   ```
   defmodule PortfolioWeb.ExTeal.PublishAction do
-    use ExTeal.Filter
+    use ExTeal.Action
 
-    import Ecto.Query, only: [from: 2]
-
-    def title, do: "Publish"
-    def key, do: "publish"
+    def title, do: "Publish" // defaults to Publish Action
+    def key, do: "publish" // default to publish-action
 
     def commit(conn, fields, resources) do
       for post <- resources do
@@ -28,8 +28,6 @@ defmodule ExTeal.Action do
 
   The commit should return an `:ok` or an `{:error, "error message"}` tuple.  You should not write the example above,
   but wrap the database updates in at least a transaction inside your main context.
-
-  Notice that because the params for the filter are encoded as query params they should be url safe and handled as url params.
   """
 
   alias ExTeal.Resource.Index
