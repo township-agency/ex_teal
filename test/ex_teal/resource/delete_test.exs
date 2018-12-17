@@ -12,47 +12,40 @@ defmodule ExTeal.Resource.DeleteTest do
     def repo, do: TestExTeal.Repo
     def model, do: TestExTeal.Post
 
-    def handle_delete(conn, record) do
+    def handle_delete(query, conn) do
       case conn.assigns[:user] do
-        %{is_admin: true} -> super(conn, record)
+        %{is_admin: true} -> super(query, conn)
         _ -> send_resp(conn, 401, "ah ah ah")
       end
     end
   end
 
   test "default implementation renders 404 if record not found" do
-    conn = prep_conn(:delete, "/posts/404", %{"id" => 404})
-    response = Delete.call(TestExTeal.PostResource, 404, conn)
+    conn = prep_conn(:delete, "/posts", %{"resources" => "404"})
+    response = Delete.call(TestExTeal.PostResource, conn)
     assert response.status == 404
   end
 
   test "default implementation returns 204 if record found" do
     post = insert(:post)
-    conn = prep_conn(:delete, "/posts/#{post.id}", %{"id" => post.id})
-    response = Delete.call(TestExTeal.PostResource, post.id, conn)
+    conn = prep_conn(:delete, "/posts", %{"resources" => "#{post.id}"})
+    response = Delete.call(TestExTeal.PostResource, conn)
     assert response.status == 204
-  end
-
-  test "failing on delete returns 422 if model fails on changeset validation" do
-    post = insert(:post)
-    conn = prep_conn(:delete, "/posts/#{post.id}", %{"id" => post.id})
-    response = Delete.call(FailingOnDeleteResource, post.id, conn)
-    assert response.status == 422
   end
 
   test "custom implementation returns 401 if not admin" do
     post = insert(:post)
-    conn = prep_conn(:delete, "/posts/#{post.id}", %{"id" => post.id})
-    response = Delete.call(CustomResource, post.id, conn)
+    conn = prep_conn(:delete, "/posts", %{"resources" => "#{post.id}"})
+    response = Delete.call(CustomResource, conn)
     assert response.status == 401
   end
 
   test "custom implementation return 404 if no model" do
     conn =
-      prep_conn(:delete, "/posts/404", %{"id" => 404})
+      prep_conn(:delete, "/posts", %{"resources" => "404"})
       |> assign(:user, %{is_admin: true})
 
-    response = Delete.call(CustomResource, 404, conn)
+    response = Delete.call(CustomResource, conn)
     assert response.status == 404
   end
 
@@ -60,10 +53,10 @@ defmodule ExTeal.Resource.DeleteTest do
     post = insert(:post)
 
     conn =
-      prep_conn(:delete, "/posts/#{post.id}", %{"id" => post.id})
+      prep_conn(:delete, "/posts", %{"resources" => "#{post.id}"})
       |> assign(:user, %{is_admin: true})
 
-    response = Delete.call(CustomResource, post.id, conn)
+    response = Delete.call(CustomResource, conn)
     assert response.status == 204
   end
 
