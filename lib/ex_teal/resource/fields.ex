@@ -30,6 +30,8 @@ defmodule ExTeal.Resource.Fields do
 
       alias ExTeal.Resource.Fields
 
+      def identifier(model), do: model.id
+
       @inferred_fields ExTeal.Resource.Fields.fields_from_model(__MODULE__)
       def fields, do: @inferred_fields
 
@@ -39,7 +41,7 @@ defmodule ExTeal.Resource.Fields do
       def serialize_response(method, resource, data),
         do: Fields.serialize_response(method, resource, data)
 
-      defoverridable(fields: 0, serialize_response: 3)
+      defoverridable(fields: 0, serialize_response: 3, identifier: 1)
     end
   end
 
@@ -83,7 +85,7 @@ defmodule ExTeal.Resource.Fields do
       |> apply_values(model, default, :show)
 
     %{
-      id: model.id,
+      id: resource.identifier(model),
       fields: fields,
       panels: panels
     }
