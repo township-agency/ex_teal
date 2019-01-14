@@ -8,11 +8,10 @@ const instance = axios.create({
 instance.interceptors.response.use(
   response => response,
   error => {
-    console.log(error);
     const { status } = error.response;
     // Show the user a 500 error
     if (status >= 500) {
-      window.teal.$emit("error", error.response.data.message);
+      window.ExTeal.$emit("error", error.response.data.message);
     }
 
     // Handle Session Timeouts
@@ -21,7 +20,7 @@ instance.interceptors.response.use(
     }
 
     if (status === 404) {
-      window.teal.$emit("error", "NOT FOUND");
+      window.ExTeal.$emit("error", "NOT FOUND");
     }
 
     // Handle Forbidden
