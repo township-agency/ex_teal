@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing Here Yet
 
+## [0.1.5] - 2019-01-14
+
+### Fixes
+- Missing `window.teal` in axios error interceptor
+- Aggressive `id` requirement that broke pages.
 
 ## [0.1.4] - 2018-12-17
 
