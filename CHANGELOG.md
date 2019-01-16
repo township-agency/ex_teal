@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Color Picker
 
+### Fixes
+- Subtitles not displayed while searching
+- Broken default Teal logo in sidenav
+
 ## [0.1.6] - 2019-03-08
 
 ### Added
