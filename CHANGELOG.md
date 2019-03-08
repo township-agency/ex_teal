@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing Here Yet
 
+## [0.1.6] - 2019-03-08
+
+### Added
+- Additional, dropdown options for viewing more resources without pagination
+
+
 ## [0.1.5] - 2019-01-14
 
 ### Fixes
