@@ -97,8 +97,6 @@
                   <option value="25">25</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                  <option value="250">250</option>
-                  <option value="500">500</option>
                 </select>
               </filter-select>
             </dropdown-menu>
@@ -560,15 +558,30 @@ export default {
     },
 
     showSort() {
-      let index = _.findIndex(this.resources[0].fields, {
-        attribute: this.sortableBy
-      });
+      this.perPageBeforeSort = this.currentPerPage;
+      this.pageBeforeSort =  this.currentPage;
 
-      this.resourcesToSort = _.sortBy(this.resources, resource => {
-        return resource.fields[index].value;
-      });
+      this.updateQueryString({ [this.perPageParameter]: 500});
+      this.updateQueryString({ [this.pageParameter]: 1});
 
-      this.isSorting = true;
+      ExTeal.request().get(`/api/${this.resourceName}`, {
+          params: this.resourceRequestQueryString
+        }).then(({ data }) => {
+        this.resources = [];
+
+        this.resources = data.data;
+
+        this.loading = false;
+        let index = _.findIndex(this.resources[0].fields, {
+          attribute: this.sortableBy
+        });
+
+        this.resourcesToSort = _.sortBy(this.resources, resource => {
+          return resource.fields[index].value;
+        });
+
+        this.isSorting = true;
+      });
     },
 
     /*
@@ -582,6 +595,8 @@ export default {
     },
 
     saveSorting() {
+      this.updateQueryString({ [this.perPageParameter]: this.perPageBeforeSort});
+      this.updateQueryString({ [this.pageParameter]: this.pageBeforeSort});
       let data = _.map(this.resourcesToSort, record => {
         let field = _.find(record.fields, { attribute: this.sortableBy });
         return {
