@@ -559,29 +559,31 @@ export default {
 
     showSort() {
       this.perPageBeforeSort = this.currentPerPage;
-      this.pageBeforeSort =  this.currentPage;
+      this.pageBeforeSort = this.currentPage;
 
-      this.updateQueryString({ [this.perPageParameter]: 500});
-      this.updateQueryString({ [this.pageParameter]: 1});
+      this.updateQueryString({ [this.perPageParameter]: 500 });
+      this.updateQueryString({ [this.pageParameter]: 1 });
 
-      ExTeal.request().get(`/api/${this.resourceName}`, {
+      ExTeal.request()
+        .get(`/api/${this.resourceName}`, {
           params: this.resourceRequestQueryString
-        }).then(({ data }) => {
-        this.resources = [];
+        })
+        .then(({ data }) => {
+          this.resources = [];
 
-        this.resources = data.data;
+          this.resources = data.data;
 
-        this.loading = false;
-        let index = _.findIndex(this.resources[0].fields, {
-          attribute: this.sortableBy
+          this.loading = false;
+          let index = _.findIndex(this.resources[0].fields, {
+            attribute: this.sortableBy
+          });
+
+          this.resourcesToSort = _.sortBy(this.resources, resource => {
+            return resource.fields[index].value;
+          });
+
+          this.isSorting = true;
         });
-
-        this.resourcesToSort = _.sortBy(this.resources, resource => {
-          return resource.fields[index].value;
-        });
-
-        this.isSorting = true;
-      });
     },
 
     /*
@@ -595,8 +597,10 @@ export default {
     },
 
     saveSorting() {
-      this.updateQueryString({ [this.perPageParameter]: this.perPageBeforeSort});
-      this.updateQueryString({ [this.pageParameter]: this.pageBeforeSort});
+      this.updateQueryString({
+        [this.perPageParameter]: this.perPageBeforeSort
+      });
+      this.updateQueryString({ [this.pageParameter]: this.pageBeforeSort });
       let data = _.map(this.resourcesToSort, record => {
         let field = _.find(record.fields, { attribute: this.sortableBy });
         return {
