@@ -204,7 +204,7 @@ input[type="checkbox"]:focus {
 
 /* Forms
 ---------------------------------------------------------------------------- */
-textarea, select, input, button, .checkbox { outline: none; }
+textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 
 .form-control {
@@ -533,4 +533,13 @@ textarea, select, input, button, .checkbox { outline: none; }
   @apply .mx-0;
 }
 
+.top-8 {
+  top: 2rem;
+}
+
+.card .vc-chrome {
+  border-radius: 0;
+  box-shadow: none;
+  @apply .border .border-60;
+}
 /* purgecss end ignore */

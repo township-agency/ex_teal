@@ -56,7 +56,7 @@ export default {
 
 <style>
 #sidebar {
-  @apply .hidden .z-50 .bg-white .overflow-x-hidden;
+  @apply .hidden .z-50 .bg-white .overflow-x-hidden .border-r;
   top: 4rem;
   bottom: 0rem;
 }

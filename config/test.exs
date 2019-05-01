@@ -22,3 +22,5 @@ config :ex_teal,
   base_url: "http://localhost:4001/teal"
 
 config :hound, driver: "chrome_driver"
+
+config :phoenix, :json_library, Jason

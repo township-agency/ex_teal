@@ -2,6 +2,7 @@ ExUnit.start()
 
 Application.put_env(:ex_teal, :repo, TestExTeal.Repo)
 Application.put_env(:ex_teal, :manifest, TestExTeal.DefaultManifest)
+Application.ensure_all_started(:jason)
 Application.ensure_all_started(:ex_teal)
 {:ok, _} = Application.ensure_all_started(:hound)
 

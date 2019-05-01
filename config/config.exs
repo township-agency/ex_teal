@@ -32,4 +32,6 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :phoenix, :json_encoder, Jason
+
 import_config "#{Mix.env()}.exs"
