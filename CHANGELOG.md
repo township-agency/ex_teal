@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+Nothing Here Yet
+
+## [0.1.7] - 2019-05-06
+
 ### Added
 - Color Picker
 
