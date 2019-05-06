@@ -73,8 +73,8 @@
                 />
                 <div>
                   <p class="text-90">{{ item.title }}</p>
-                  <p v-if="item.subTitle" class="text-xs mt-1 text-80">
-                    {{ item.subTitle }}
+                  <p v-if="item.subtitle" class="text-xs mt-1 text-80">
+                    {{ item.subtitle }}
                   </p>
                 </div>
               </a>
