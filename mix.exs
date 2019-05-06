@@ -38,7 +38,7 @@ defmodule ExTeal.MixProject do
       {:jason, "~> 1.1"},
       {:inflex, "~> 1.10.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:phoenix, "~> 1.4.0"},
+      {:phoenix, "~> 1.4"},
       {:ecto_sql, "~> 3.0"},
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},

@@ -30,7 +30,7 @@ defmodule ExTeal.Application.Configuration do
 
       def application_name, do: "ExTeal"
 
-      def logo_image_path, do: "/assets/static/images/logo.svg"
+      def logo_image_path, do: "/teal/logo.svg"
 
       def json_configuration, do: Configuration.parse_json()
 

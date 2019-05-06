@@ -1,9 +1,14 @@
 <template>
   <header class="fixed flex z-50 h-16 pin-t pin-x">
     <aside
-      class="hidden lg:flex flex-none border-r border-grey bg-white lg:w-1/4 xl:w-1/5 items-center px-4 text-black lg:max-w-sidebar"
+      class="hidden lg:flex flex-none border-r border-grey bg-white lg:w-1/4 items-center px-4 text-black lg:max-w-sidebar"
     >
-      <img v-if="config.logo" :src="config.logo" :alt="config.title" />
+      <img
+        v-if="config.logo"
+        :src="config.logo"
+        :alt="config.title"
+        class="max-h-full py-1"
+      />
       <div v-else>{{ config.title }}</div>
     </aside>
     <nav

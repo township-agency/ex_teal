@@ -1,6 +1,6 @@
 <template>
   <div id="sidebar">
-    <div class="lg:block lg:relative lg:sticky lg:top-16 ">
+    <div class="lg:block lg:relative lg:top-16 w-sidebar">
       <nav id="nav" class="sticky?lg:h-(screen-16)">
         <h3><span>Resources</span></h3>
         <ul class="">
@@ -56,19 +56,15 @@ export default {
 
 <style>
 #sidebar {
-  @apply .hidden .fixed .z-50 .bg-white .border-r .border-grey .w-full;
+  @apply .hidden .z-50 .bg-white .overflow-x-hidden .border-r;
   top: 4rem;
+  bottom: 0rem;
 }
 
 @screen lg {
   #sidebar {
-    @apply .max-w-sidebar .fixed .pin-l .pt-0 .w-1/4 .block .overflow-y-scroll .h-screen;
-  }
-}
-
-@screen xl {
-  #sidebar {
-    @apply .w-1/5;
+    @apply .fixed .block;
+    @apply .pin-l .pt-0 .overflow-y-scroll .w-sidebar .mr-0;
   }
 }
 
@@ -78,7 +74,7 @@ export default {
 
 @screen lg {
   #nav {
-    @apply .text-sm;
+    @apply .text-sm .w-sidebar;
   }
 }
 

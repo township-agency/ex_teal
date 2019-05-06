@@ -135,3 +135,12 @@ import IndexPlaceField from "@/components/Index/PlaceField.vue";
 Vue.component("form-place-field", FormPlaceField);
 Vue.component("detail-place-field", DetailPlaceField);
 Vue.component("index-place-field", IndexPlaceField);
+
+// Color...
+import FormColorField from "@/components/Form/Color.vue";
+import DetailColorField from "@/components/Detail/Color.vue";
+import IndexColorField from "@/components/Index/Color.vue";
+
+Vue.component("form-color", FormColorField);
+Vue.component("detail-color", DetailColorField);
+Vue.component("index-color", IndexColorField);
