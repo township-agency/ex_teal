@@ -4,17 +4,17 @@
     <meta charset=utf-8>
     <meta http-equiv=X-UA-Compatible content="IE=edge">
     <meta name=viewport content="width=device-width,initial-scale=1">
-    <link rel=icon href=/teal/favicon.ico>
+    <link rel=icon href=<%= @config.path %>/favicon.ico>
     <title><%= @title %></title>
     <%= if @compiled_assets do %>
-      <link href=/teal/css/app.css rel=preload as=style>
-      <link href=/teal/css/chunk-vendors.css rel=preload as=style>
-      <link href=/teal/js/app.js rel=preload as=script>
-      <link href=/teal/js/chunk-vendors.js rel=preload as=script>
-      <link href=/teal/css/chunk-vendors.css rel=stylesheet>
-      <link href=/teal/css/app.css rel=stylesheet>
+      <link href=<%= @config.path %>/css/app.css rel=preload as=style>
+      <link href=<%= @config.path %>/css/chunk-vendors.css rel=preload as=style>
+      <link href=<%= @config.path %>/js/app.js rel=preload as=script>
+      <link href=<%= @config.path %>/js/chunk-vendors.js rel=preload as=script>
+      <link href=<%= @config.path %>/css/chunk-vendors.css rel=stylesheet>
+      <link href=<%= @config.path %>/css/app.css rel=stylesheet>
     <% else %>
-      <link href="http://localhost:8080/teal/app.js" rel="preload" as="script"></head>
+      <link href="http://localhost:8080<%= @config.path %>/app.js" rel="preload" as="script"></head>
     <% end %>
   </head>
   <body class="font-normal text-black leading-normal">
@@ -26,14 +26,13 @@
     <div id=app></div>
     <script type="text/javascript">
       window.config = <%= Jason.encode!(@config) %>;
-      window.config.baseUrl = "<%= @base %>";
       window.config.currentUser = <%= Jason.encode!(@user) %>;
     </script>
     <%= if @compiled_assets do %>
-      <script src="/teal/js/chunk-vendors.js"></script>
-      <script src="/teal/js/app.js"></script>
+      <script src="<%= @config.path %>/js/chunk-vendors.js"></script>
+      <script src="<%= @config.path %>/js/app.js"></script>
     <% else %>
-      <script src="http://localhost:8080/teal/app.js"></script>
+      <script src="http://localhost:8080<%= @config.path %>/app.js"></script>
     <% end %>
     <!-- Build ExTeal Instance -->
     <script>

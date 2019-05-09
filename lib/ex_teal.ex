@@ -19,6 +19,14 @@ defmodule ExTeal do
     end
   end
 
+  @spec path() :: String.t()
+  def path do
+    case manifest() do
+      nil -> "/teal"
+      module -> module.path()
+    end
+  end
+
   @spec json_configuration() :: map()
   def json_configuration do
     case manifest() do
