@@ -22,6 +22,11 @@ defmodule ExTeal.Application.Configuration do
   """
   @callback json_configuration() :: map()
 
+  @doc """
+  Returns the base path that the teal app is located.
+  """
+  @callback path() :: String.t()
+
   defmacro __using__(_) do
     quote do
       alias ExTeal.Application.Configuration
@@ -32,6 +37,8 @@ defmodule ExTeal.Application.Configuration do
 
       def logo_image_path, do: "/teal/logo.svg"
 
+      def path, do: "/teal"
+
       def json_configuration, do: Configuration.parse_json()
 
       def auth_provider, do: ExTeal.GuestAuthProvider
@@ -40,7 +47,8 @@ defmodule ExTeal.Application.Configuration do
         application_name: 0,
         logo_image_path: 0,
         json_configuration: 0,
-        auth_provider: 0
+        auth_provider: 0,
+        path: 0
       )
     end
   end
@@ -50,7 +58,7 @@ defmodule ExTeal.Application.Configuration do
       version: "0.1.0",
       name: ExTeal.application_name(),
       logo: ExTeal.logo_image_path(),
-      path: "/teal",
+      path: ExTeal.path(),
       resources: ExTeal.available_resources() |> Resource.map_to_json(),
       plugins: ExTeal.available_plugins(),
       authenticated: true
