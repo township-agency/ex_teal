@@ -42,8 +42,8 @@ export default {
     this.value = this.field.value || false;
     this.options = this.field.options || {};
 
-    this.field.fill = form => {
-      form[this.field.attribute] = this.value;
+    this.field.fill = formData => {
+      formData.append(this.field.attribute, this.value);
     };
   },
 

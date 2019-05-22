@@ -187,9 +187,9 @@ export default {
         : this.field.attribute;
 
       if (this.selectedResource) {
-        formData[key] = this.selectedResource.id;
+        formData.append(key, this.selectedResource.id);
       } else {
-        formData[key] = null;
+        formData.append(key, null);
       }
     },
 

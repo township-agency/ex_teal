@@ -167,12 +167,11 @@ export default {
      * Create the form data for creating the resource.
      */
     createResourceFormData() {
-      let data = _.tap({}, formData => {
+      return _.tap(new FormData(), formData => {
         _.each(this.fields, field => {
           field.fill(formData);
         });
       });
-      return { data };
     }
   }
 };

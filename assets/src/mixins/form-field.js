@@ -36,8 +36,8 @@ export default {
      * Provide a function that fills a passed FormData object with the
      * field's internal value attribute
      */
-    fill(form) {
-      return (form[this.field.attribute] = this.value || "");
+    fill(formData) {
+      formData.append(this.field.attribute, String(this.value));
     },
 
     /**

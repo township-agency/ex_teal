@@ -116,6 +116,10 @@ export default {
     this.field.fill = this.fill;
     this.setInitialValue();
 
+    ExTeal.$on(this.field.attribute + "-value", value => {
+      this.value = value;
+    });
+
     this.initializePlaces();
     this.states = states;
   },

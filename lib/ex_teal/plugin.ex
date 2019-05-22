@@ -12,7 +12,9 @@ defmodule ExTeal.Plugin do
             title: nil,
             navigation_component: nil,
             options: nil,
-            router: nil
+            router: nil,
+            scripts: [],
+            styles: []
 
   defmacro __using__(_opts) do
     quote do

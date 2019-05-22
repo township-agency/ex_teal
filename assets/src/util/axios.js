@@ -2,7 +2,9 @@ import axios from "axios";
 import router from "@/router";
 
 const instance = axios.create({
-  baseURL: window.config.path ? `${window.location.origin}${window.config.path}` : "http://localhost:4000/teal"
+  baseURL: window.config.path
+    ? `${window.location.origin}${window.config.path}`
+    : "http://localhost:4000/teal"
 });
 
 instance.interceptors.response.use(

@@ -38,9 +38,7 @@ defmodule ExTeal.Resource.AttributesTest do
 
   test "formatting attributes from json" do
     params = %{
-      "data" => %{
-        "title" => "a post"
-      }
+      "title" => "a post"
     }
 
     merged = %{

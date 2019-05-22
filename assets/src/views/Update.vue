@@ -78,15 +78,14 @@ export default {
      * Create the form data for creating the resource.
      */
     updateResourceFormData() {
-      let data = _.tap({}, formData => {
+      return _.tap(new FormData(), formData => {
         _(this.fields).each(field => {
           field.fill(formData);
         });
 
-        // formData.append("_method", "PUT");
-        // formData.append("_retrieved_at", this.lastRetrievedAt);
+        formData.append("_method", "PUT");
+        formData.append("_retrieved_at", this.lastRetrievedAt);
       });
-      return { data };
     },
 
     singularName() {
@@ -173,6 +172,7 @@ export default {
 
         // Reset the form by refetching the fields
         this.getFields();
+        this.validationErrors = new Errors();
         this.updateLastRetrievedAtTimestamp();
       } catch (error) {
         console.log(error);

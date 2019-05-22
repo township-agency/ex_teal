@@ -18,7 +18,7 @@ defmodule ExTeal.Resource.Create do
 
   """
 
-  alias ExTeal.Resource.{Attributes, Create}
+  alias ExTeal.Resource.Create
 
   @doc """
   Returns an unpersisted changeset or persisted model of the newly created object.
@@ -96,8 +96,10 @@ defmodule ExTeal.Resource.Create do
       Create.call(ArticleResource, conn)
   """
   def call(resource, conn) do
-    merged = Attributes.from_params(conn.params)
-    attributes = resource.permitted_attributes(conn, merged, :create)
+    attributes =
+      conn
+      |> Map.get(:params, %{})
+      |> resource.permitted_attributes(conn.params, :create)
 
     conn
     |> resource.handle_create(attributes)

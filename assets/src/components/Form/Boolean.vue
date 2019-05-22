@@ -33,8 +33,8 @@ export default {
   mounted() {
     this.value = this.field.value || false;
 
-    this.field.fill = form => {
-      form[this.field.attribute] = this.value;
+    this.field.fill = formData => {
+      formData.append(this.field.attribute, this.value);
     };
   },
 

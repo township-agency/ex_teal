@@ -50,5 +50,5 @@ defmodule ExTeal.Resource.Attributes do
   end
 
   @doc false
-  def from_params(%{"data" => data}), do: data
+  def from_params(params), do: params
 end
