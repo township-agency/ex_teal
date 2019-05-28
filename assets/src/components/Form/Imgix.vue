@@ -50,7 +50,7 @@
 import axios from "axios";
 import SmoothReflow from "vue-smooth-reflow";
 
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from "ex-teal-js";
 
 export default {
   mixins: [HandlesValidationErrors, FormField, SmoothReflow],

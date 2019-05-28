@@ -27,7 +27,7 @@
 
 <script>
 import _ from "lodash";
-import { PerformsSearches, HandlesValidationErrors } from "@/mixins";
+import { PerformsSearches, HandlesValidationErrors } from "ex-teal-js";
 
 export default {
   mixins: [PerformsSearches, HandlesValidationErrors],

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from "ex-teal-js";
 
 export default {
   mixins: [HandlesValidationErrors, FormField],

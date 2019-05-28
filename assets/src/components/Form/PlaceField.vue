@@ -72,10 +72,9 @@
 </template>
 
 <script>
-import { HandlesValidationErrors } from "@/mixins";
+import { HandlesValidationErrors, UsStates } from "ex-teal-js";
 import _ from "lodash";
 import places from "places.js";
-import states from "@/util/us-states";
 
 let defaultValue = {
   address: "",
@@ -121,7 +120,7 @@ export default {
     });
 
     this.initializePlaces();
-    this.states = states;
+    this.states = UsStates;
   },
 
   methods: {

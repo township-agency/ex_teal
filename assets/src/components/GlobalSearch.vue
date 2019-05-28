@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { Minimum } from "@/mixins";
+import { Minimum } from "ex-teal-js";
 import { mixin as clickaway } from "vue-clickaway";
 import _ from "lodash";
 

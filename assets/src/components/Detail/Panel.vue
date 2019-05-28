@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { BehavesAsPanel } from "@/mixins";
+import { BehavesAsPanel } from "ex-teal-js";
 
 export default {
   mixins: [BehavesAsPanel],

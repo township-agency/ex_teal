@@ -44,7 +44,7 @@
 
 <script>
 import _ from "lodash";
-import { Errors } from "@/mixins";
+import { Errors } from "ex-teal-js";
 import Heading from "@/components/Heading";
 
 export default {

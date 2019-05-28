@@ -17,7 +17,7 @@
 </template>
 <script>
 import DateTimePicker from "../DateTimePicker";
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from "ex-teal-js";
 import format from "date-fns/format";
 
 export default {

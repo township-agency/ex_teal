@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { InteractsWithResourceInformation, Deleteable } from "@/mixins";
+import { InteractsWithResourceInformation, Deleteable } from "ex-teal-js";
 import _ from "lodash";
 export default {
   mixins: [InteractsWithResourceInformation, Deleteable],

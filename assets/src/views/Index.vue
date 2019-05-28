@@ -213,7 +213,7 @@ import {
   Minimum,
   Paginatable,
   PerPageable
-} from "@/mixins";
+} from "ex-teal-js";
 
 export default {
   mixins: [

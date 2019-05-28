@@ -46,7 +46,11 @@
 
 <script>
 import _ from "lodash";
-import { Errors, InteractsWithResourceInformation, Capitalize } from "@/mixins";
+import {
+  Errors,
+  InteractsWithResourceInformation,
+  Capitalize
+} from "ex-teal-js";
 
 export default {
   mixins: [InteractsWithResourceInformation],

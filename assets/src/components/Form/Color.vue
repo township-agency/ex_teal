@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from "ex-teal-js";
 import { Chrome } from "vue-color";
 import { mixin as clickaway } from "vue-clickaway";
 

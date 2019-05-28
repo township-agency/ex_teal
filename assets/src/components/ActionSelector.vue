@@ -35,7 +35,7 @@
 
 <script>
 import _ from "lodash";
-import { Errors, InteractsWithResourceInformation } from "@/mixins";
+import { Errors, InteractsWithResourceInformation } from "ex-teal-js";
 
 export default {
   mixins: [InteractsWithResourceInformation],
