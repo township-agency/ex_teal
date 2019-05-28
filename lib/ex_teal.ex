@@ -1,5 +1,7 @@
 defmodule ExTeal do
   @moduledoc false
+  alias ExTeal.Plugin
+
   @type record :: map() | Ecto.Schema.t()
   @type records :: module | Ecto.Query.t() | list(record)
 
@@ -93,6 +95,13 @@ defmodule ExTeal do
       nil -> {:error, :not_found}
       module -> {:ok, module}
     end
+  end
+
+  @spec all_scripts() :: [ExTeal.Asset.Script.t()]
+  def all_scripts do
+    available_plugins()
+    |> Enum.map(&Plugin.available_scripts/1)
+    |> List.flatten()
   end
 
   @spec resource_for_relationship(ExTeal.Resource.t(), String.t()) ::

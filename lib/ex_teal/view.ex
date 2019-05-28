@@ -17,7 +17,8 @@ defmodule ExTeal.View do
       base: base,
       config: config,
       user: user,
-      compiled_assets: use_compiled_assets
+      compiled_assets: use_compiled_assets,
+      plugin_scripts: ExTeal.all_scripts()
     )
   end
 

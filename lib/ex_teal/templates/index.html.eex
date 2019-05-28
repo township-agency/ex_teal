@@ -39,6 +39,9 @@
       window.ExTeal = new CreateExTeal(config)
     </script>
 
+    <%= for script <- @plugin_scripts do %>
+      <script src="<%= @config.path %>/plugins/<%= script.plugin_uri %>/<%= script.path %>"></script>
+    <% end %>
     <!-- Start ExTeal -->
     <script>
       ExTeal.beamMeUp();
