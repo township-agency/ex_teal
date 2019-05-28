@@ -75,15 +75,11 @@ Vue.component("index-number-field", IndexTextField);
 Vue.component("detail-number-field", DetailTextField);
 Vue.component("form-number-field", NumberField);
 
-// Imgix (TODO Extract this to teal_direct_upload)
+// File
 
 import IndexFile from "@/components/Index/File";
 import DetailFile from "@/components/Detail/File";
 import FormFile from "@/components/Form/File";
-
-Vue.component("index-imgix-field", IndexFile);
-Vue.component("detail-imgix-field", DetailFile);
-Vue.component("form-imgix-field", FormFile);
 
 Vue.component("index-file-field", IndexFile);
 Vue.component("detail-file-field", DetailFile);
