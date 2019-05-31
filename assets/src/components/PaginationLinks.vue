@@ -1,6 +1,9 @@
 <template>
   <div class="border-t  bg-grey-lightest">
-    <nav v-if="resources.length > 0" class="flex">
+    <nav
+      v-if="resources.length > 0"
+      class="flex"
+    >
       <!-- Previous Link -->
       <button
         :disabled="!hasPreviousPages"
@@ -41,13 +44,13 @@ export default {
     },
     resources: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
     resourceResponse: {
       type: Object,
-      default() {
+      default () {
         return {};
       }
     },
@@ -61,14 +64,14 @@ export default {
     /**
      * Determine if prior pages are available.
      */
-    hasPreviousPages: function() {
+    hasPreviousPages: function () {
       return Boolean(this.resourceResponse && this.currentPage > 1);
     },
 
     /**
      * Determine if more pages are available.
      */
-    hasMorePages: function() {
+    hasMorePages: function () {
       return Boolean(
         this.resourceResponse &&
           this.resourceResponse.meta.total > this.currentPage
@@ -80,15 +83,15 @@ export default {
     /**
      * Select the previous page.
      */
-    selectPreviousPage() {
-      this.$emit("previous");
+    selectPreviousPage () {
+      this.$emit('previous');
     },
 
     /**
      * Select the next page.
      */
-    selectNextPage() {
-      this.$emit("next");
+    selectNextPage () {
+      this.$emit('next');
     }
   }
 };

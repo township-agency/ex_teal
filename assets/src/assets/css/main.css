@@ -37,8 +37,13 @@
 
 /* purgecss start ignore */
 
+#app {
+  @apply .font-sans;
+}
+
 /* Content ---------------------------------------------------------------------------- */
 .content {
+  @apply font-sans;
   min-width: 66.25rem;
   width: 100%;
   max-width: calc(100vw - 13.75rem);

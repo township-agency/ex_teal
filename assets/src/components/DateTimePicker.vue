@@ -1,7 +1,20 @@
+<template>
+  <input
+    ref="datePicker"
+    :disabled="disabled"
+    :dusk="field.attribute"
+    :class="{ '!cursor-not-allowed': disabled }"
+    :value="value"
+    :name="field.name"
+    :placeholder="placeholder"
+    type="text"
+  >
+</template>
+
 <script>
-import flatpickr from "flatpickr";
-import format from "date-fns/format";
-require("flatpickr/dist/themes/airbnb.css");
+import flatpickr from 'flatpickr';
+import format from 'date-fns/format';
+import 'flatpickr/dist/themes/airbnb.css';
 
 export default {
   props: {
@@ -10,14 +23,14 @@ export default {
       required: true
     },
     value: {
-      type: [Date, String],
+      type: [ Date, String ],
       required: false,
-      default: format(new Date(), "YYYY-MM-DD")
+      default: format(new Date(), 'YYYY-MM-DD')
     },
     placeholder: {
       type: String,
       default: () => {
-        return format(new Date(), "YYYY-MM-DD kk:mm:ss");
+        return format(new Date(), 'YYYY-MM-DD kk:mm:ss');
       }
     },
     disabled: {
@@ -26,7 +39,7 @@ export default {
     },
     dateFormat: {
       type: String,
-      default: "Y-m-d H:i:S"
+      default: 'Y-m-d H:i:S'
     },
     twelveHourTime: {
       type: Boolean,
@@ -44,7 +57,7 @@ export default {
 
   data: () => ({ flatpickr: null }),
 
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       this.flatpickr = flatpickr(this.$refs.datePicker, {
         enableTime: this.enableTime,
@@ -58,28 +71,9 @@ export default {
   },
 
   methods: {
-    onChange() {
-      this.$emit("change", this.$refs.datePicker.value);
+    onChange () {
+      this.$emit('change', this.$refs.datePicker.value);
     }
   }
 };
 </script>
-
-<template>
-  <input
-    ref="datePicker"
-    :disabled="disabled"
-    :dusk="field.attribute"
-    :class="{ '!cursor-not-allowed': disabled }"
-    :value="value"
-    :name="field.name"
-    :placeholder="placeholder"
-    type="text"
-  />
-</template>
-
-<style scoped>
-.\!cursor-not-allowed {
-  cursor: not-allowed !important;
-}
-</style>

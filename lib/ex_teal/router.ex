@@ -18,6 +18,8 @@ defmodule ExTeal.Router do
 
   plug(Plug.Static,
     at: "/",
+    gzip: true,
+    brotli: true,
     from: {:ex_teal, "priv/static/teal"}
   )
 

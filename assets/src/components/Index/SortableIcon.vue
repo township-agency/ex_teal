@@ -12,8 +12,15 @@
       height="9"
       viewBox="0 0 8 9"
     >
-      <g id="sortable-icon" fill="none" fill-rule="evenodd">
-        <path :class="descClass" d="M4,0L0,4H8L4,0z M4,1.4L5.6,3H2.4L4,1.4z" />
+      <g
+        id="sortable-icon"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        <path
+          :class="descClass"
+          d="M4,0L0,4H8L4,0z M4,1.4L5.6,3H2.4L4,1.4z"
+        />
         <path
           :class="ascClass"
           fill-rule="nonzero"
@@ -29,11 +36,11 @@ export default {
   props: {
     resourceName: {
       type: String,
-      default: ""
+      default: ''
     },
     uriKey: {
       type: String,
-      default: ""
+      default: ''
     }
   },
 
@@ -41,64 +48,64 @@ export default {
     /**
      * The CSS class to apply to the ascending arrow icon
      */
-    ascClass() {
-      if (this.isSorted && this.direction == "desc") {
-        return "fill-80";
+    ascClass () {
+      if (this.isSorted && this.direction == 'desc') {
+        return 'fill-80';
       }
 
-      return "fill-60";
+      return 'fill-60';
     },
 
     /**
      * The CSS class to apply to the descending arrow icon
      */
-    descClass() {
-      if (this.isSorted && this.direction == "asc") {
-        return "fill-80";
+    descClass () {
+      if (this.isSorted && this.direction == 'asc') {
+        return 'fill-80';
       }
 
-      return "fill-60";
+      return 'fill-60';
     },
 
     /**
      * Determine whether this column is being sorted
      */
-    isSorted() {
+    isSorted () {
       return this.sortColumn == this.uriKey;
     },
 
     /**
      * The current order query parameter for this resource
      */
-    sortKey() {
+    sortKey () {
       return `${this.resourceName}_order`;
     },
 
     /**
      * The current order query parameter value
      */
-    sortColumn() {
+    sortColumn () {
       return this.$route.query[this.sortKey];
     },
 
     /**
      * The current direction query parameter for this resource
      */
-    directionKey() {
+    directionKey () {
       return `${this.resourceName}_direction`;
     },
 
     /**
      * The current direction query parameter value
      */
-    direction() {
+    direction () {
       return this.$route.query[this.directionKey];
     }
   },
 
   methods: {
-    handleClick() {
-      this.$emit("sort", {
+    handleClick () {
+      this.$emit('sort', {
         key: this.uriKey,
         direction: this.direction
       });

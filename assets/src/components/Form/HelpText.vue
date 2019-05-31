@@ -1,5 +1,8 @@
 <template>
-  <p v-if="showHelpText" class="text-sm leading-normal text-80 italic">
+  <p
+    v-if="showHelpText"
+    class="text-sm leading-normal text-80 italic"
+  >
     <slot />
   </p>
 </template>

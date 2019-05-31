@@ -1,23 +1,31 @@
 <template>
   <loading-view :loading="initialLoading">
     <div class="card-headline">
-      <heading v-if="meta.label" :level="1"> {{ meta.label }} </heading>
+      <heading
+        v-if="meta.label"
+        :level="1"
+      >
+        {{ meta.label }}
+      </heading>
       <div class="flex justify-between ml-auto">
         <!-- Search -->
-        <div v-if="resourceInformation.searchable" class="relative h-9 mb-6">
+        <div
+          v-if="resourceInformation.searchable"
+          class="relative h-9 mb-6"
+        >
           <icon
             type="search"
             class="absolute search-icon-center ml-3 text-70"
           />
 
           <input
-            :placeholder="Search"
             v-model="search"
+            :placeholder="Search"
             class="appearance-none form-control form-input w-search pl-search"
             type="search"
             @keydown.stop="performSearch"
             @search="performSearch"
-          />
+          >
         </div>
         <div class="index-action-bar">
           <div v-if="shouldShowReorder">
@@ -42,7 +50,10 @@
               class="bg-grey-lighter hover:bg-grey-light rounded px-2 mr-4 h-8"
               @click="showSort"
             >
-              <icon type="reorder" class="text-grey-darker" />
+              <icon
+                type="reorder"
+                class="text-grey-darker"
+              />
             </button>
           </div>
 
@@ -71,11 +82,19 @@
               :handle-click="toggle"
               class="px-3"
             >
-              <icon type="filter" class="text-grey-darker" />
+              <icon
+                type="filter"
+                class="text-grey-darker"
+              />
               <span class="text-grey-darker text-sm mx-2">Filter</span>
             </dropdown-trigger>
 
-            <dropdown-menu slot="menu" :dark="true" width="290" direction="rtl">
+            <dropdown-menu
+              slot="menu"
+              :dark="true"
+              width="290"
+              direction="rtl"
+            >
               <!-- Filters -->
               <filter-selector
                 :filters="filters"
@@ -85,7 +104,12 @@
 
               <!-- Per Page -->
               <filter-select v-if="!viaResource">
-                <h3 slot="default" class="small-header">Per Page:</h3>
+                <h3
+                  slot="default"
+                  class="small-header"
+                >
+                  Per Page:
+                </h3>
 
                 <select
                   slot="select"
@@ -94,9 +118,15 @@
                   class="block w-full form-control-sm form-select"
                   @change="perPageChanged"
                 >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
+                  <option value="25">
+                    25
+                  </option>
+                  <option value="50">
+                    50
+                  </option>
+                  <option value="100">
+                    100
+                  </option>
                 </select>
               </filter-select>
             </dropdown-menu>
@@ -143,7 +173,11 @@
             height="51"
             viewBox="0 0 65 51"
           >
-            <g id="Page-1" fill="none" fill-rule="evenodd">
+            <g
+              id="Page-1"
+              fill="none"
+              fill-rule="evenodd"
+            >
               <g
                 id="05-blank-state"
                 fill="#A8B9C5"
@@ -203,7 +237,7 @@
 </template>
 
 <script>
-import _ from "lodash";
+import _ from 'lodash';
 import {
   Capitalize,
   Deleteable,
@@ -213,7 +247,7 @@ import {
   Minimum,
   Paginatable,
   PerPageable
-} from "ex-teal-js";
+} from 'ex-teal-js';
 
 export default {
   mixins: [
@@ -232,7 +266,7 @@ export default {
     },
     viaResource: {
       type: String,
-      default: ""
+      default: ''
     },
     viaResourceId: {
       type: Number,
@@ -240,11 +274,11 @@ export default {
     },
     viaRelationship: {
       type: String,
-      default: ""
+      default: ''
     },
     relationshipType: {
       type: String,
-      default: ""
+      default: ''
     }
   },
 
@@ -257,8 +291,8 @@ export default {
     meta: {},
     deleteModalOpen: false,
 
-    orderBy: "",
-    orderByDirection: "",
+    orderBy: '',
+    orderByDirection: '',
     filters: [],
     actions: [],
 
@@ -278,14 +312,14 @@ export default {
     /**
      * Get the singular name for the resource
      */
-    singularName() {
+    singularName () {
       return Capitalize(this.resourceInformation.singular);
     },
 
     /**
      * Build the resource request query string.
      */
-    resourceRequestQueryString() {
+    resourceRequestQueryString () {
       return _.pickBy(
         {
           filters: this.encodedFilters,
@@ -306,74 +340,74 @@ export default {
     /**
      * Get the name of the order by query string variable.
      */
-    orderByParameter() {
-      return this.resourceName + "_order";
+    orderByParameter () {
+      return this.resourceName + '_order';
     },
 
     /**
      * Get the name of the order by direction query string variable.
      */
-    orderByDirectionParameter() {
-      return this.resourceName + "_direction";
+    orderByDirectionParameter () {
+      return this.resourceName + '_direction';
     },
 
     /**
      * Get the name of the per page query string variable.
      */
-    perPageParameter() {
-      return this.resourceName + "_per_page";
+    perPageParameter () {
+      return this.resourceName + '_per_page';
     },
 
     /**
      * Get the name of the page query string variable.
      */
-    pageParameter() {
-      return this.resourceName + "_page";
+    pageParameter () {
+      return this.resourceName + '_page';
     },
 
     /**
      * Get the name of the filter query string variable.
      */
-    filterParameter() {
-      return this.resourceName + "_filter";
+    filterParameter () {
+      return this.resourceName + '_filter';
     },
 
     /**
      * Get the current order by value from the query string.
      */
-    currentOrderBy() {
-      return this.$route.query[this.orderByParameter] || "";
+    currentOrderBy () {
+      return this.$route.query[this.orderByParameter] || '';
     },
 
     /**
      * Get the current order by direction from the query string.
      */
-    currentOrderByDirection() {
-      return this.$route.query[this.orderByDirectionParameter] || "desc";
+    currentOrderByDirection () {
+      return this.$route.query[this.orderByDirectionParameter] || 'desc';
     },
 
     /**
      * Get the current search value from the query string.
      */
-    currentSearch() {
-      return this.$route.query[this.searchParameter] || "";
+    currentSearch () {
+      return this.$route.query[this.searchParameter] || '';
     },
 
     /**
      * Determine if there any filters for this resource
      */
-    hasFilters() {
+    hasFilters () {
       return Boolean(this.filters.length > 0);
     },
 
     /**
      * Determine if there are any resources for the view
      */
-    hasResources() {
+    hasResources () {
       return Boolean(this.resources.length > 0);
     },
 
-    shouldShowFilterDropdown() {
+    shouldShowFilterDropdown () {
       if (this.isSorting) {
         return false;
       }
@@ -381,42 +415,42 @@ export default {
       return this.filters.length > 0 || !this.viaResource;
     },
 
-    shouldShowReorder() {
+    shouldShowReorder () {
       return (this.sortable && this.sortableBy) || this.meta.sortable_by;
     },
 
     /**
      * Determine whether to show the toolbar for this resource index
      */
-    shouldShowToolbar() {
+    shouldShowToolbar () {
       return Boolean(this.hasFilters || this.shouldShowReorder);
     },
 
     /**
      * Get the IDs for the selected resources.
      */
-    selectedResourceIds() {
+    selectedResourceIds () {
       return _.map(this.selectedResources, resource => resource.id);
     },
 
     /**
      * Get the selected resources for the action selector.
      */
-    selectedResourcesForActionSelector() {
-      return this.selectAllMatchingChecked ? "all" : this.selectedResourceIds;
+    selectedResourcesForActionSelector () {
+      return this.selectAllMatchingChecked ? 'all' : this.selectedResourceIds;
     },
 
     /**
      * Determine whether to show the selection checkboxes for resources
      */
-    shouldShowCheckBoxes() {
+    shouldShowCheckBoxes () {
       return Boolean(this.hasResources);
     },
 
     /**
      * Determine if all matching resources are selected.
      */
-    selectAllMatchingChecked() {
+    selectAllMatchingChecked () {
       return (
         this.selectedResources.length == this.resources.length &&
         this.selectAllMatchingResources
@@ -426,14 +460,14 @@ export default {
     /**
      * Determine if all resources are selected.
      */
-    selectAllChecked() {
+    selectAllChecked () {
       return this.selectedResources.length == this.resources.length;
     },
 
     /**
      * Determine whether the delete menu should be shown to the user
      */
-    shouldShowDeleteMenu() {
+    shouldShowDeleteMenu () {
       return Boolean(this.selectedResources.length > 0);
     }
   },
@@ -441,7 +475,7 @@ export default {
   /**
    * Mount the component and retrieve its initial data.
    */
-  async created() {
+  async created () {
     this.initializeOrderingFromQueryString();
     this.initializePerPageFromQueryString();
 
@@ -487,7 +521,7 @@ export default {
     /**
      * Get the resources based on the current page, search, filters, etc.
      */
-    getResources() {
+    getResources () {
       this.loading = true;
       this.$nextTick(() => {
         this.clearResourceSelections();
@@ -504,7 +538,7 @@ export default {
           this.meta = data.meta;
           this.allMatchingResourceCount = data.meta.all;
           this.sortable = Boolean(data.meta.sortable_by);
-          this.sortableBy = data.meta.sortable_by || "";
+          this.sortableBy = data.meta.sortable_by || '';
 
           this.loading = false;
         });
@@ -514,7 +548,7 @@ export default {
     /**
      * Get the filters available for the current resource.
      */
-    getFilters() {
+    getFilters () {
       this.filters = [];
       this.currentFilters = [];
 
@@ -526,7 +560,7 @@ export default {
         });
     },
 
-    getActions() {
+    getActions () {
       this.actions = [];
       return ExTeal.request()
         .get(`/api/${this.resourceName}/actions`)
@@ -538,10 +572,10 @@ export default {
     /**
      * Sort the resources by the given field.
      */
-    orderByField(field) {
-      var direction = this.currentOrderByDirection == "asc" ? "desc" : "asc";
+    orderByField (field) {
+      let direction = this.currentOrderByDirection == 'asc' ? 'desc' : 'asc';
       if (this.currentOrderBy != field.attribute) {
-        direction = "asc";
+        direction = 'asc';
       }
       this.updateQueryString({
         [this.orderByParameter]: field.attribute,
@@ -552,12 +586,12 @@ export default {
     /**
      * Sync the current order by values from the query string.
      */
-    initializeOrderingFromQueryString() {
+    initializeOrderingFromQueryString () {
       this.orderBy = this.currentOrderBy;
       this.orderByDirection = this.currentOrderByDirection;
     },
 
-    showSort() {
+    showSort () {
       this.perPageBeforeSort = this.currentPerPage;
       this.pageBeforeSort = this.currentPage;
 
@@ -574,7 +608,7 @@ export default {
           this.resources = data.data;
 
           this.loading = false;
-          let index = _.findIndex(this.resources[0].fields, {
+          const index = _.findIndex(this.resources[0].fields, {
             attribute: this.sortableBy
           });
 
@@ -589,20 +623,20 @@ export default {
     /*
      * Update the resource selection status
      */
-    updateSelectionStatus(resource) {
+    updateSelectionStatus (resource) {
       if (!_(this.selectedResources).includes(resource))
-        return this.selectedResources.push(resource);
+      {return this.selectedResources.push(resource);}
       const index = this.selectedResources.indexOf(resource);
-      if (index > -1) return this.selectedResources.splice(index, 1);
+      if (index > -1) {return this.selectedResources.splice(index, 1);}
     },
 
-    saveSorting() {
+    saveSorting () {
       this.updateQueryString({
         [this.perPageParameter]: this.perPageBeforeSort
       });
       this.updateQueryString({ [this.pageParameter]: this.pageBeforeSort });
-      let data = _.map(this.resourcesToSort, record => {
-        let field = _.find(record.fields, { attribute: this.sortableBy });
+      const data = _.map(this.resourcesToSort, record => {
+        const field = _.find(record.fields, { attribute: this.sortableBy });
         return {
           id: record.id,
           attributes: {
@@ -616,7 +650,7 @@ export default {
         .then(() => {
           this.isSorting = false;
           this.$toasted.show(`The ${this.meta.label} were reordered`, {
-            type: "success"
+            type: 'success'
           });
           this.loading = false;
 
@@ -624,7 +658,7 @@ export default {
         });
     },
 
-    cancelSorting() {
+    cancelSorting () {
       this.isSorting = false;
       if (this.resources !== this.getResources) {
         this.getResources();
@@ -634,7 +668,7 @@ export default {
     /**
      * Clear the selected resouces and the "select all" states.
      */
-    clearResourceSelections() {
+    clearResourceSelections () {
       this.selectAllMatchingResources = false;
       this.selectedResources = [];
     },
@@ -642,14 +676,14 @@ export default {
     /**
      * Select all of the available resources
      */
-    selectAllResources() {
+    selectAllResources () {
       this.selectedResources = this.resources.slice(0);
     },
 
     /**
      * Toggle the selection of all resources
      */
-    toggleSelectAll() {
+    toggleSelectAll () {
       if (this.selectAllChecked) {
         return this.clearResourceSelections();
       }
@@ -659,7 +693,7 @@ export default {
     /**
      * Toggle the selection of all matching resources in the database
      */
-    toggleSelectAllMatching() {
+    toggleSelectAllMatching () {
       console.log(this.selectAllMatchingResources);
       if (!this.selectAllMatchingResources) {
         this.selectAllResources();

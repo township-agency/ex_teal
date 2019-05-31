@@ -6,24 +6,29 @@
   >
     <slot :toggle="toggle" />
 
-    <transition name="fade"> <slot v-if="visible" name="menu" /> </transition>
+    <transition name="fade">
+      <slot
+        v-if="visible"
+        name="menu"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
-import { mixin as clickaway } from "vue-clickaway";
+import { mixin as clickaway } from 'vue-clickaway';
 
 export default {
-  mixins: [clickaway],
+  mixins: [ clickaway ],
 
   data: () => ({ visible: false }),
 
   methods: {
-    toggle() {
+    toggle () {
       this.visible = !this.visible;
     },
 
-    close() {
+    close () {
       this.visible = false;
     }
   }

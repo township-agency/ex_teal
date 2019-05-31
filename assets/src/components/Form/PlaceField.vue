@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field" :errors="errors">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <div class="mb-4">
         <input
@@ -8,7 +11,7 @@
           placeholder="Address"
           type="search"
           class="w-full form-control form-input form-input-bordered"
-        />
+        >
       </div>
       <div class="mb-4">
         <input
@@ -17,7 +20,7 @@
           placeholder="Address Line 2"
           type="text"
           class="w-full form-control form-input form-input-bordered"
-        />
+        >
       </div>
       <div class="mb-4">
         <input
@@ -26,7 +29,7 @@
           placeholder="Company"
           type="text"
           class="w-full form-control form-input form-input-bordered"
-        />
+        >
       </div>
       <div class="mb-4 flex">
         <div class="city mr-2">
@@ -36,7 +39,7 @@
             placeholder="City"
             type="text"
             class="w-full form-control form-input form-input-bordered"
-          />
+          >
         </div>
         <div class="state mx-2 flex-1">
           <select
@@ -44,7 +47,13 @@
             v-model="value.state"
             class="w-full form-control form-select"
           >
-            <option value="" selected disabled> Choose a State </option>
+            <option
+              value=""
+              selected
+              disabled
+            >
+              Choose a State
+            </option>
 
             <option
               v-for="(value, key) in states"
@@ -64,7 +73,7 @@
             placeholder="Zip Code"
             type="text"
             class="w-full form-control form-input form-input-bordered"
-          />
+          >
         </div>
       </div>
     </template>
@@ -72,22 +81,21 @@
 </template>
 
 <script>
-import { HandlesValidationErrors, UsStates } from "ex-teal-js";
-import _ from "lodash";
-import places from "places.js";
+import { HandlesValidationErrors, UsStates } from 'ex-teal-js';
+import places from 'places.js';
 
-let defaultValue = {
-  address: "",
-  address_line_2: "",
-  city: "",
-  company: "",
-  country: "US",
-  state: "",
-  zip: ""
+const defaultValue = {
+  address: '',
+  address_line_2: '',
+  city: '',
+  company: '',
+  country: 'US',
+  state: '',
+  zip: ''
 };
 
 export default {
-  mixins: [HandlesValidationErrors],
+  mixins: [ HandlesValidationErrors ],
   props: {
     resourceName: {
       type: String,
@@ -95,7 +103,7 @@ export default {
     },
     field: {
       type: Object,
-      default() {
+      default () {
         return {};
       }
     }
@@ -111,11 +119,11 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
+  mounted () {
     this.field.fill = this.fill;
     this.setInitialValue();
 
-    ExTeal.$on(this.field.attribute + "-value", value => {
+    ExTeal.$on(this.field.attribute + '-value', value => {
       this.value = value;
     });
 
@@ -127,21 +135,21 @@ export default {
     /*
      * Set the initial value for the field
      */
-    setInitialValue() {
+    setInitialValue () {
       this.value = this.field.value || defaultValue;
     },
 
     /**
      * Initialize Algolia places library.
      */
-    initializePlaces() {
+    initializePlaces () {
       const config = {
         container: document.querySelector(
-          "#" + this.field.attribute + "-address"
+          '#' + this.field.attribute + '-address'
         ),
-        type: "address",
+        type: 'address',
         templates: {
-          value(suggestion) {
+          value (suggestion) {
             return suggestion.name;
           }
         }
@@ -153,11 +161,11 @@ export default {
 
       const placesAutocomplete = places(config);
 
-      placesAutocomplete.on("change", e => {
+      placesAutocomplete.on('change', e => {
         this.$nextTick(() => {
           this.value = {
             address: e.suggestion.name,
-            address_line_2: "",
+            address_line_2: '',
             city: e.suggestion.city,
             state: this.parseState(
               e.suggestion.administrative,
@@ -169,7 +177,7 @@ export default {
         });
       });
 
-      placesAutocomplete.on("clear", () => {
+      placesAutocomplete.on('clear', () => {
         this.$nextTick(() => {
           this.value = defaultValue;
         });
@@ -179,25 +187,25 @@ export default {
     /**
      * Parse the selected state into an abbreviation if possible.
      */
-    parseState(state, countryCode) {
-      if (countryCode != "us") {
+    parseState (state, countryCode) {
+      if (countryCode != 'us') {
         return state;
       }
 
-      return _.find(this.states, s => {
+      return this.states.find(s => {
         return s.name == state;
       }).abbr;
     },
 
-    addressId(val) {
-      return this.field.attribute + "-" + val;
+    addressId (val) {
+      return this.field.attribute + '-' + val;
     },
 
     /**
      * Provide a function that fills a passed FormData object with the
      * field's internal value attribute
      */
-    fill(form) {
+    fill (form) {
       return (form[this.field.attribute] = this.value || defaultValue);
     }
   }

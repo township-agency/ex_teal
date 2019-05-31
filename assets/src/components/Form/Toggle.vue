@@ -2,30 +2,43 @@
   <default-field :field="field">
     <template slot="field">
       <div class="mb-2">
-        <div class="form-switch inline-block align-middle" @click="toggle">
+        <div
+          class="form-switch inline-block align-middle"
+          @click="toggle"
+        >
           <input
             :id="field.attribute"
             :name="field.name"
             :checked="checked"
             type="checkbox"
             class="form-switch-checkbox"
+          >
+          <label
+            class="form-switch-label"
+            for="field.attribute"
           />
-          <label class="form-switch-label" for="field.attribute" />
         </div>
-        <label class="text-xs text-grey-dark" for="field.attribute">{{
+        <label
+          class="text-xs text-grey-dark"
+          for="field.attribute"
+        >{{
           label
         }}</label>
       </div>
-      <p v-if="hasError" class="my-2 text-danger" v-html="firstError" />
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+        v-html="firstError"
+      />
     </template>
   </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors, Toggle } from "ex-teal-js";
+import { FormField, HandlesValidationErrors, Toggle } from 'ex-teal-js';
 
 export default {
-  mixins: [HandlesValidationErrors, FormField, Toggle],
+  mixins: [ HandlesValidationErrors, FormField, Toggle ],
 
   data: () => ({
     value: false,
@@ -33,12 +46,12 @@ export default {
   }),
 
   computed: {
-    checked() {
+    checked () {
       return Boolean(this.value);
     }
   },
 
-  mounted() {
+  mounted () {
     this.value = this.field.value || false;
     this.options = this.field.options || {};
 
@@ -48,7 +61,7 @@ export default {
   },
 
   methods: {
-    toggle() {
+    toggle () {
       this.value = !this.value;
     }
   }

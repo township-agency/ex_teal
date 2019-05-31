@@ -1,6 +1,12 @@
 <template>
-  <div :class="menuClasses" class="dropdown-menu absolute z-50 select-none">
-    <div :style="styles" class="z-40 overflow-hidden bg-white border shadow">
+  <div
+    :class="menuClasses"
+    class="dropdown-menu absolute z-50 select-none"
+  >
+    <div
+      :style="styles"
+      class="z-40 overflow-hidden bg-white border shadow"
+    >
       <slot />
     </div>
   </div>
@@ -15,12 +21,12 @@ export default {
     },
     direction: {
       type: String,
-      default: "ltr",
-      validator: value => ["ltr", "rtl"].indexOf(value) != -1
+      default: 'ltr',
+      validator: value => [ 'ltr', 'rtl' ].indexOf(value) != -1
     },
     width: {
       default: 120,
-      type: [Number, String]
+      type: [ Number, String ]
     },
     override: {
       type: String,
@@ -28,18 +34,18 @@ export default {
     }
   },
   computed: {
-    menuClasses() {
+    menuClasses () {
       return [
-        this.direction == "ltr" ? "dropdown-menu-left" : "dropdown-menu-right",
+        this.direction == 'ltr' ? 'dropdown-menu-left' : 'dropdown-menu-right',
         this.override ? this.override : null
       ];
     },
-    arrowClasses() {
+    arrowClasses () {
       return [
-        this.direction == "ltr" ? "dropdown-arrow-left" : "dropdown-arrow-right"
+        this.direction == 'ltr' ? 'dropdown-arrow-left' : 'dropdown-arrow-right'
       ];
     },
-    styles() {
+    styles () {
       return {
         width: `${this.width}px`
       };

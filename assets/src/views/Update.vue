@@ -1,7 +1,9 @@
 <template>
   <div v-if="!loading">
     <div class="card-headline">
-      <heading class="">Editing {{ singularName }}</heading>
+      <Heading class="">
+        Editing {{ singularName }}
+      </Heading>
       <div class="flex ml-auto">
         <button
           dusk="update-button"
@@ -23,13 +25,19 @@
     </div>
 
     <card class="overflow-hidden">
-      <form v-if="fields" @submit.prevent="updateResource">
+      <form
+        v-if="fields"
+        @submit.prevent="updateResource"
+      >
         <!-- Validation Errors -->
         <validation-errors :errors="validationErrors" />
         <!-- Update Button -->
 
         <!-- Fields -->
-        <div v-for="field in fields" :key="field.attribute">
+        <div
+          v-for="field in fields"
+          :key="field.attribute"
+        >
           <component
             :is="'form-' + field.component"
             :errors="validationErrors"
@@ -47,13 +55,13 @@
 </template>
 
 <script>
-import _ from "lodash";
-import { Errors, InteractsWithResourceInformation } from "ex-teal-js";
-import Heading from "@/components/Heading";
+import _ from 'lodash';
+import { Errors, InteractsWithResourceInformation } from 'ex-teal-js';
+import Heading from '@/components/Heading';
 
 export default {
   components: { Heading },
-  mixins: [InteractsWithResourceInformation],
+  mixins: [ InteractsWithResourceInformation ],
 
   props: {
     resourceName: {
@@ -77,23 +85,23 @@ export default {
     /**
      * Create the form data for creating the resource.
      */
-    updateResourceFormData() {
+    updateResourceFormData () {
       return _.tap(new FormData(), formData => {
         _(this.fields).each(field => {
           field.fill(formData);
         });
 
-        formData.append("_method", "PUT");
-        formData.append("_retrieved_at", this.lastRetrievedAt);
+        formData.append('_method', 'PUT');
+        formData.append('_retrieved_at', this.lastRetrievedAt);
       });
     },
 
-    singularName() {
+    singularName () {
       return this.resourceInformation.singular;
     }
   },
 
-  created() {
+  created () {
     this.getFields();
 
     this.updateLastRetrievedAtTimestamp();
@@ -103,7 +111,7 @@ export default {
     /**
      * Get the available fields for the resource.
      */
-    async getFields() {
+    async getFields () {
       this.loading = true;
 
       this.fields = [];
@@ -114,7 +122,7 @@ export default {
         .get(`/api/${this.resourceName}/${this.resourceId}/update-fields`)
         .catch(error => {
           if (error.response.status == 404) {
-            this.$router.push({ name: "404" });
+            this.$router.push({ name: '404' });
             return;
           }
         });
@@ -127,17 +135,17 @@ export default {
     /**
      * Update the resource using the provided data.
      */
-    async updateResource() {
+    async updateResource () {
       try {
         await this.updateRequest();
 
         this.$toasted.show(
           `The ${this.resourceInformation.singular} was updated`,
-          { type: "success" }
+          { type: 'success' }
         );
 
         this.$router.push({
-          name: "detail",
+          name: 'detail',
           params: {
             resourceName: this.resourceName,
             resourceId: this.resourceId
@@ -151,8 +159,8 @@ export default {
 
         if (error.response.status == 409) {
           this.$toasted.show(
-            "Another user has updated this resource since this page was loaded. Please refresh the page and try again.",
-            { type: "error" }
+            'Another user has updated this resource since this page was loaded. Please refresh the page and try again.',
+            { type: 'error' }
           );
         }
       }
@@ -161,13 +169,13 @@ export default {
     /**
      * Update the resource and reset the form
      */
-    async updateAndContinueEditing() {
+    async updateAndContinueEditing () {
       try {
         await this.updateRequest();
 
         this.$toasted.show(
           `The ${this.resourceInformation.singular.toLowerCase()} was updated!`,
-          { type: "success" }
+          { type: 'success' }
         );
 
         // Reset the form by refetching the fields
@@ -183,9 +191,9 @@ export default {
         if (error.response.status == 409) {
           this.$toasted.show(
             this.__(
-              "Another user has updated this resource since this page was loaded. Please refresh the page and try again."
+              'Another user has updated this resource since this page was loaded. Please refresh the page and try again.'
             ),
-            { type: "error" }
+            { type: 'error' }
           );
         }
       }
@@ -194,7 +202,7 @@ export default {
     /**
      * Send an update request for this resource
      */
-    updateRequest() {
+    updateRequest () {
       return ExTeal.request().put(
         `/api/${this.resourceName}/${this.resourceId}`,
         this.updateResourceFormData
@@ -204,7 +212,7 @@ export default {
     /**
      * Update the last retrieved at timestamp to the current UNIX timestamp.
      */
-    updateLastRetrievedAtTimestamp() {
+    updateLastRetrievedAtTimestamp () {
       this.lastRetrievedAt = Math.floor(new Date().getTime() / 1000);
     }
   }

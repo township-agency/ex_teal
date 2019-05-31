@@ -1,7 +1,7 @@
 <template>
   <default-field :field="field">
     <template slot="field">
-      <multiselect
+      <Multiselect
         v-model="value"
         :options="options"
         :multiple="true"
@@ -13,30 +13,36 @@
         label="label"
         track-by="value"
       />
-      <p v-if="hasError" class="my-2 text-danger" v-html="firstError" />
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+        v-html="firstError"
+      />
     </template>
   </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "ex-teal-js";
-import Multiselect from "vue-multiselect";
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
+import Multiselect from 'vue-multiselect';
 
 export default {
   components: { Multiselect },
-  mixins: [HandlesValidationErrors, FormField],
+  mixins: [ HandlesValidationErrors, FormField ],
 
   data: () => ({
     value: false,
     options: []
   }),
 
-  mounted() {
+  mounted () {
     this.value = this.field.value || false;
     this.options = this.field.options;
 
     this.field.fill = formData => {
-      formData.append(this.field.attribute, this.value);
+      this.value.forEach((option) => {
+        formData.append(`${this.field.attribute}[]`, option.value);
+      });
     };
   }
 };

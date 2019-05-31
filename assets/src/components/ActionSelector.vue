@@ -1,18 +1,33 @@
 <template>
   <div>
-    <dropdown v-if="actions.length > 0" class="bg-white border rounded">
+    <dropdown
+      v-if="actions.length > 0"
+      class="bg-white border rounded"
+    >
       <dropdown-trigger
         slot-scope="{ toggle }"
         :handle-click="toggle"
         class="px-3"
       >
-        <icon type="action" class="text-grey-darker" view-box="0 0 16 16" />
+        <icon
+          type="action"
+          class="text-grey-darker"
+          view-box="0 0 16 16"
+        />
         <span class="text-grey-darker text-sm ml-2">Actions</span>
       </dropdown-trigger>
 
-      <dropdown-menu slot="menu" :dark="true" width="270" direction="rtl">
+      <dropdown-menu
+        slot="menu"
+        :dark="true"
+        width="270"
+        direction="rtl"
+      >
         <ul class="list-reset px-2 py-1">
-          <li v-for="action in actions" :key="action.key">
+          <li
+            v-for="action in actions"
+            :key="action.key"
+          >
             <a @click="selectAction(action)"> {{ action.title }} </a>
           </li>
         </ul>
@@ -34,15 +49,16 @@
 </template>
 
 <script>
-import _ from "lodash";
-import { Errors, InteractsWithResourceInformation } from "ex-teal-js";
+import each from 'lodash/each';
+import tap from 'lodash/tap';
+import { Errors, InteractsWithResourceInformation } from 'ex-teal-js';
 
 export default {
-  mixins: [InteractsWithResourceInformation],
+  mixins: [ InteractsWithResourceInformation ],
 
   props: {
     selectedResources: {
-      type: [Array, String],
+      type: [ Array, String ],
       default: () => []
     },
     resourceName: {
@@ -56,11 +72,11 @@ export default {
     queryString: {
       type: Object,
       default: () => ({
-        currentSearch: "",
-        encodedFilters: "",
-        viaResource: "",
-        viaResourceId: "",
-        viaRelationship: ""
+        currentSearch: '',
+        encodedFilters: '',
+        viaResource: '',
+        viaResourceId: '',
+        viaRelationship: ''
       })
     }
   },
@@ -68,21 +84,22 @@ export default {
   data: () => ({
     working: false,
     errors: new Errors(),
-    selectedActionKey: "",
+    selectedActionKey: '',
     confirmActionModalOpened: false
   }),
 
   computed: {
-    selectedAction() {
+    selectedAction () {
       if (this.selectedActionKey) {
-        return _.find(this.actions, a => a.key == this.selectedActionKey);
+        return this.actions.find(a => a.key == this.selectedActionKey);
       }
+      return false;
     },
 
     /**
      * Get the query string for an action request.
      */
-    actionRequestQueryString() {
+    actionRequestQueryString () {
       return {
         action: this.selectedActionKey,
         search: this.queryString.currentSearch,
@@ -96,16 +113,14 @@ export default {
     /**
      * Get all of the available non-pivot actions for the resource.
      */
-    availableActions() {
-      return _(this.actions)
-        .filter(action => {
-          if (this.selectedResources != "all") {
-            return true;
-          }
+    availableActions () {
+      return this.actions.filter((action) => {
+        if (this.selectedResources != 'all') {
+          return true;
+        }
 
-          return action.options.availableForEntireResource;
-        })
-        .value();
+        return action.options.availableForEntireResource;
+      });
     }
   },
 
@@ -113,38 +128,38 @@ export default {
     /**
      * Watch the actions property for changes.
      */
-    actions() {
-      this.selectedActionKey = "";
+    actions () {
+      this.selectedActionKey = '';
       this.initializeActionFields();
     }
   },
 
   methods: {
-    selectAction(action) {
+    selectAction (action) {
       this.selectedActionKey = action.key;
       this.openConfirmationModal();
     },
     /**
      * Confirm with the user that they actually want to run the selected action.
      */
-    openConfirmationModal() {
+    openConfirmationModal () {
       this.confirmActionModalOpened = true;
     },
 
     /**
      * Close the action confirmation modal.
      */
-    closeConfirmationModal() {
+    closeConfirmationModal () {
       this.confirmActionModalOpened = false;
     },
 
     /**
      * Initialize all of the action fields to empty strings.
      */
-    initializeActionFields() {
-      _(this.actions).each(action => {
-        _(action.fields).each(field => {
-          field.fill = () => "";
+    initializeActionFields () {
+      this.actions.forEach(action => {
+        action.fields.forEach(field => {
+          field.fill = () => '';
         });
       });
     },
@@ -152,16 +167,16 @@ export default {
     /**
      * Execute the selected action.
      */
-    executeAction() {
+    executeAction () {
       this.working = true;
 
       if (this.selectedResources.length == 0) {
-        alert("Please select a resource to perform this action on.");
+        alert('Please select a resource to perform this action on.');
         return;
       }
 
       ExTeal.request({
-        method: "post",
+        method: 'post',
         url: `/api/${this.resourceName}/actions`,
         params: this.actionRequestQueryString,
         data: this.actionFormData()
@@ -183,11 +198,11 @@ export default {
     /**
      * Gather the action FormData for the given action.
      */
-    actionFormData() {
-      return _.tap(new FormData(), formData => {
-        formData.append("resources", this.selectedResources);
+    actionFormData () {
+      return tap(new FormData(), formData => {
+        formData.append('resources', this.selectedResources);
 
-        _.each(this.selectedAction.fields, field => {
+        each(this.selectedAction.fields, field => {
           field.fill(formData);
         });
       });
@@ -196,21 +211,21 @@ export default {
     /**
      * Handle the action response. Typically either a message, download or a redirect.
      */
-    handleActionResponse(response) {
+    handleActionResponse (response) {
       if (response.message) {
-        this.$emit("actionExecuted");
-        this.$toasted.show(response.message, { type: "success" });
+        this.$emit('actionExecuted');
+        this.$toasted.show(response.message, { type: 'success' });
       } else if (response.deleted) {
-        this.$emit("actionExecuted");
+        this.$emit('actionExecuted');
       } else if (response.error) {
-        this.$emit("actionExecuted");
-        this.$toasted.show(response.error, { type: "error" });
+        this.$emit('actionExecuted');
+        this.$toasted.show(response.error, { type: 'error' });
       } else if (response.redirect) {
         window.location = response.redirect;
       } else {
-        this.$emit("actionExecuted");
-        this.$toasted.show("The action ran successfully!", {
-          type: "success"
+        this.$emit('actionExecuted');
+        this.$toasted.show('The action ran successfully!', {
+          type: 'success'
         });
       }
     }

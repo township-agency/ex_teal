@@ -1,5 +1,9 @@
 <template>
-  <modal tabindex="-1" role="dialog" @modal-close="handleClose">
+  <modal
+    tabindex="-1"
+    role="dialog"
+    @modal-close="handleClose"
+  >
     <form
       :class="{
         'w-action-fields': selectedAction.fields.length > 0,
@@ -11,11 +15,19 @@
       @submit.prevent.stop="handleConfirm"
     >
       <div>
-        <heading :level="2" class="pt-8 px-8">{{
-          selectedAction.title
-        }}</heading>
+        <heading
+          :level="2"
+          class="pt-8 px-8"
+        >
+          {{
+            selectedAction.title
+          }}
+        </heading>
 
-        <p v-if="selectedAction.fields.length == 0" class="text-80 px-8 my-8">
+        <p
+          v-if="selectedAction.fields.length == 0"
+          class="text-80 px-8 my-8"
+        >
           Are you sure you want to run this action?
         </p>
 
@@ -58,7 +70,10 @@
             type="submit"
             class="btn btn-default"
           >
-            <loader v-if="working" width="30"></loader>
+            <loader
+              v-if="working"
+              width="30"
+            />
             <span v-else>Run Action</span>
           </button>
         </div>
@@ -91,13 +106,13 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
+  mounted () {
     // If the modal has inputs, let's highlight the first one, otherwise
     // let's highlight the submit button
-    if (document.querySelectorAll(".modal input").length) {
-      document.querySelectorAll(".modal input")[0].focus();
+    if (document.querySelectorAll('.modal input').length) {
+      document.querySelectorAll('.modal input')[0].focus();
     } else {
-      document.querySelectorAll(".modal button[type=submit]")[0].focus();
+      document.querySelectorAll('.modal button[type=submit]')[0].focus();
     }
   },
 
@@ -105,8 +120,8 @@ export default {
     /**
      * Stop propogation of input events unless it's for an escape or enter keypress
      */
-    handleKeydown(e) {
-      if (["Escape", "Enter"].indexOf(e.key) !== -1) {
+    handleKeydown (e) {
+      if ([ 'Escape', 'Enter' ].indexOf(e.key) !== -1) {
         return;
       }
 
@@ -116,15 +131,15 @@ export default {
     /**
      * Execute the selected action.
      */
-    handleConfirm() {
-      this.$emit("confirm");
+    handleConfirm () {
+      this.$emit('confirm');
     },
 
     /**
      * Close the modal.
      */
-    handleClose() {
-      this.$emit("close");
+    handleClose () {
+      this.$emit('close');
     }
   }
 };

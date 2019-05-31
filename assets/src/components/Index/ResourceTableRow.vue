@@ -15,7 +15,10 @@
       />
     </td>
     <!-- Sort Handle -->
-    <td v-if="isSorting" class="td-fit align-center">
+    <td
+      v-if="isSorting"
+      class="td-fit align-center"
+    >
       <icon
         type="drag"
         view-box="0 0 24 24"
@@ -26,7 +29,10 @@
     </td>
 
     <!-- Fields -->
-    <td v-for="field in resource.fields" :key="field.name">
+    <td
+      v-for="field in resource.fields"
+      :key="field.name"
+    >
       <component
         :is="'index-' + field.component"
         :class="`text-${field.text_align}`"
@@ -34,8 +40,14 @@
         :field="field"
       />
     </td>
-    <td v-if="isSorting" class="td-fit text-right pr-6" />
-    <td v-else class="td-fit text-right pr-6 table-actions">
+    <td
+      v-if="isSorting"
+      class="td-fit text-right pr-6"
+    />
+    <td
+      v-else
+      class="td-fit text-right pr-6 table-actions"
+    >
       <div class="flex">
         <span class="table-action">
           <router-link
@@ -89,10 +101,16 @@
               @confirm="confirmDelete"
               @close="closeDeleteModal"
             >
-              <div slot-scope="{ uppercaseMode, mode }" class="p-8">
-                <heading :level="2" class="mb-6"
-                  >{{ uppercaseMode }} Resource</heading
+              <div
+                slot-scope="{ uppercaseMode }"
+                class="p-8"
+              >
+                <heading
+                  :level="2"
+                  class="mb-6"
                 >
+                  {{ uppercaseMode }} Resource
+                </heading>
                 <p class="text-80 leading-normal">
                   Are you sure you want to delete this resource?
                 </p>
@@ -106,9 +124,9 @@
 </template>
 
 <script>
-import { Deleteable } from "ex-teal-js";
+import { Deleteable } from 'ex-teal-js';
 export default {
-  mixins: [Deleteable],
+  mixins: [ Deleteable ],
   props: {
     deleteResource: {
       type: Function,
@@ -169,7 +187,7 @@ export default {
   }),
 
   computed: {
-    resourceId() {
+    resourceId () {
       return this.resource.id;
     }
   },
@@ -178,20 +196,20 @@ export default {
     /**
      * Select the resource in the parent component
      */
-    toggleSelection() {
+    toggleSelection () {
       this.updateSelectionStatus(this.resource);
     },
 
-    openDeleteModal() {
+    openDeleteModal () {
       this.deleteModalOpen = true;
     },
 
-    confirmDelete() {
+    confirmDelete () {
       this.deleteResource(this.resource);
       this.closeDeleteModal();
     },
 
-    closeDeleteModal() {
+    closeDeleteModal () {
       this.deleteModalOpen = false;
     }
   }

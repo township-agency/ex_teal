@@ -46,7 +46,6 @@ vue-tests:
     - yarn
   script:
     - yarn run lint
-    - yarn run test:unit
 
 coverage:
   image: alpine

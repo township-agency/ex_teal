@@ -5,7 +5,7 @@
       :src="imgixUrl"
       style="object-fit: cover;"
       class="w-8 h-8"
-    />
+    >
     <span v-else>&mdash;</span>
   </div>
 </template>
@@ -15,21 +15,21 @@ export default {
   props: {
     resourceName: {
       type: String,
-      default: ""
+      default: ''
     },
     field: {
       type: Object,
-      default() {
+      default () {
         return {};
       }
     }
   },
 
   computed: {
-    canShowImgix() {
-      return this.field.options.type === "imgix" && this.field.value;
+    canShowImgix () {
+      return this.field.options.type === 'imgix' && this.field.value;
     },
-    imgixUrl() {
+    imgixUrl () {
       return `//${this.field.options.imgix_host}/${this.field.value}?w=${
         this.field.options.width
       }&h=${this.field.options.height}`;

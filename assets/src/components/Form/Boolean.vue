@@ -9,28 +9,32 @@
         @input="toggle"
       />
 
-      <p v-if="hasError" class="my-2 text-danger" v-html="firstError" />
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+        v-html="firstError"
+      />
     </template>
   </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "ex-teal-js";
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
 
 export default {
-  mixins: [HandlesValidationErrors, FormField],
+  mixins: [ HandlesValidationErrors, FormField ],
 
   data: () => ({
     value: false
   }),
 
   computed: {
-    checked() {
+    checked () {
       return Boolean(this.value);
     }
   },
 
-  mounted() {
+  mounted () {
     this.value = this.field.value || false;
 
     this.field.fill = formData => {
@@ -39,7 +43,7 @@ export default {
   },
 
   methods: {
-    toggle() {
+    toggle () {
       this.value = !this.value;
     }
   }

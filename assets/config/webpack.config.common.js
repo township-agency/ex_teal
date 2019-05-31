@@ -1,7 +1,7 @@
 'use strict';
 
 const VueLoaderPlugin      = require('vue-loader/lib/plugin');
-const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const helpers              = require('./helpers');
 const isDev                = process.env.NODE_ENV === 'development';
 
@@ -32,8 +32,9 @@ const webpackConfig = {
       {
         test: /\.css$/,
         use: [
-          isDev ? 'vue-style-loader' : MiniCSSExtractPlugin.loader,
-          { loader: 'css-loader', options: { sourceMap: isDev } },
+          isDev ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
+          'postcss-loader'
         ]
       },
     ]

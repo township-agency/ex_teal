@@ -17,7 +17,10 @@
           <div v-if="shouldShowCheckBoxes">
             <!-- Select All -->
             <dropdown>
-              <dropdown-trigger slot-scope="{ toggle }" :handle-click="toggle">
+              <dropdown-trigger
+                slot-scope="{ toggle }"
+                :handle-click="toggle"
+              >
                 <fake-checkbox :checked="selectAllChecked" />
               </dropdown-trigger>
 
@@ -79,8 +82,8 @@
       <tr
         is="resource-table-row"
         v-for="resource in resources"
-        :fields="fields"
         :key="resource.id"
+        :fields="fields"
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
@@ -95,13 +98,14 @@
       :list="sortableResources"
       :options="draggableOptions"
       element="tbody"
+      @start="dragging"
       @end="reordered"
     >
       <tr
         is="resource-table-row"
         v-for="resource in sortableResources"
-        :fields="fields"
         :key="resource.id"
+        :fields="fields"
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
@@ -114,15 +118,15 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import { InteractsWithResourceInformation } from "ex-teal-js";
-import map from "lodash/map";
+import draggable from 'vuedraggable';
+import { InteractsWithResourceInformation } from 'ex-teal-js';
+import map from 'lodash/map';
 export default {
   components: {
     draggable
   },
 
-  mixins: [InteractsWithResourceInformation],
+  mixins: [ InteractsWithResourceInformation ],
 
   props: {
     resourceName: {
@@ -131,13 +135,13 @@ export default {
     },
     resources: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
     fields: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
@@ -147,7 +151,7 @@ export default {
     },
     selectedResources: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
@@ -173,11 +177,11 @@ export default {
     },
     sortableBy: {
       type: String,
-      default: ""
+      default: ''
     },
     resourcesToSort: {
       type: Array,
-      default() {
+      default () {
         return [];
       }
     },
@@ -192,14 +196,14 @@ export default {
   },
 
   computed: {
-    draggableOptions() {
+    draggableOptions () {
       return {
         disabled: !this.isSorting,
         sort: true
       };
     },
 
-    sortableResources() {
+    sortableResources () {
       if (this.isSorting) {
         return this.resourcesToSort;
       }
@@ -209,7 +213,7 @@ export default {
     /**
      * Determine if all resources are selected.
      */
-    selectAllChecked() {
+    selectAllChecked () {
       return this.selectedResources.length == this.resources.length;
     }
   },
@@ -218,22 +222,26 @@ export default {
     /**
      * Delete the given resource.
      */
-    deleteResource(resource) {
-      this.$emit("delete", [resource]);
+    deleteResource (resource) {
+      this.$emit('delete', [ resource ]);
     },
 
     /**
      * Broadcast that the ordering should be updated.
      */
-    requestOrderByChange(field) {
+    requestOrderByChange (field) {
       if (this.isSorting && field.attribute == this.sortableBy) {
         return;
       }
-      this.$emit("order", field);
+      this.$emit('order', field);
     },
 
-    reordered() {
-      let resources = map(this.sortableResources, (item, i) => {
+    dragging () {
+
+    },
+
+    reordered () {
+      const resources = map(this.sortableResources, (item, i) => {
         item.fields = map(item.fields, field => {
           if (field.attribute !== this.sortableBy) {
             return field;
@@ -243,11 +251,11 @@ export default {
         });
         return item;
       });
-      this.$emit("update:resourcesForSorting", resources);
-      this.$emit("changed");
+      this.$emit('update:resourcesForSorting', resources);
+      this.$emit('changed');
     },
 
-    showSortFor(field) {
+    showSortFor (field) {
       if (this.isSorting) {
         return field.attribute == this.sortableBy;
       }

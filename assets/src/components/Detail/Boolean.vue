@@ -1,6 +1,9 @@
 <template>
   <panel-item :field="field">
-    <p slot="value" class="text-90">
+    <p
+      slot="value"
+      class="text-90"
+    >
       <span
         :class="{ 'bg-success': field.value, 'bg-danger': !field.value }"
         class="inline-block rounded-full w-2 h-2 mr-1"
@@ -18,7 +21,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {
@@ -32,8 +35,8 @@ export default {
   },
 
   computed: {
-    label() {
-      return this.field.value == true ? "Yes" : "No";
+    label () {
+      return this.field.value == true ? 'Yes' : 'No';
     }
   }
 };

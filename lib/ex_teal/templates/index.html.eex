@@ -6,15 +6,12 @@
     <meta name=viewport content="width=device-width,initial-scale=1">
     <link rel=icon href=<%= @config.path %>/favicon.ico>
     <title><%= @title %></title>
-    <%= if @compiled_assets do %>
-      <link href=<%= @config.path %>/css/app.css rel=preload as=style>
-      <link href=<%= @config.path %>/css/chunk-vendors.css rel=preload as=style>
-      <link href=<%= @config.path %>/js/app.js rel=preload as=script>
-      <link href=<%= @config.path %>/js/chunk-vendors.js rel=preload as=script>
-      <link href=<%= @config.path %>/css/chunk-vendors.css rel=stylesheet>
-      <link href=<%= @config.path %>/css/app.css rel=stylesheet>
+    <%= if @assets.compiled_assets do %>
+      <%= for style <- @assets.styles do %>
+        <link href="<%= @config.path %><%= style %>" rel=stylesheet>
+      <% end %>
     <% else %>
-      <link href="http://localhost:8080<%= @config.path %>/app.js" rel="preload" as="script"></head>
+      <link href="http://localhost:8080<%= @config.path %>/main.js" rel="preload" as="script"></head>
     <% end %>
   </head>
   <body class="font-normal text-black leading-normal">
@@ -28,11 +25,15 @@
       window.config = <%= Jason.encode!(@config) %>;
       window.config.currentUser = <%= Jason.encode!(@user) %>;
     </script>
-    <%= if @compiled_assets do %>
-      <script src="<%= @config.path %>/js/chunk-vendors.js"></script>
-      <script src="<%= @config.path %>/js/app.js"></script>
+    <%= if @assets.compiled_assets do %>
+      <%= for asset <- @assets.scripts do %>
+        <script src="<%= @config.path %><%= asset %>"></script>
+      <% end %>
     <% else %>
-      <script src="http://localhost:8080<%= @config.path %>/app.js"></script>
+      <script src="http://localhost:8080/teal/js/runtime.js"></script>
+      <script src="http://localhost:8080/teal/js/polyfill.js"></script>
+      <script src="http://localhost:8080/teal/js/vendors.js"></script>
+      <script src="http://localhost:8080/teal/js/main.js"></script>
     <% end %>
     <!-- Build ExTeal Instance -->
     <script>

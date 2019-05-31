@@ -1,6 +1,10 @@
 <template>
   <loading-view :loading="initialLoading">
-    <div v-for="panel in availablePanels" :key="panel.key" class="mb-8">
+    <div
+      v-for="panel in availablePanels"
+      :key="panel.key"
+      class="mb-8"
+    >
       <component
         :is="panel.component"
         :resource-name="resourceName"
@@ -8,15 +12,23 @@
         :resource="resource"
         :panel="panel"
       >
-        <div v-if="panel.name.includes('Details')" class="card-headline">
-          <h2 class="text-90 font-normal text-xl">{{ panel.name }}</h2>
+        <div
+          v-if="panel.name.includes('Details')"
+          class="card-headline"
+        >
+          <h2 class="text-90 font-normal text-xl">
+            {{ panel.name }}
+          </h2>
           <div class="ml-auto flex">
             <button
               class="btn btn-default btn-icon btn-danger mr-3"
               title="Delete"
               @click="openDeleteModal"
             >
-              <icon type="delete" class="text-white" />
+              <icon
+                type="delete"
+                class="text-white"
+              />
             </button>
 
             <portal to="modals">
@@ -51,10 +63,10 @@
 </template>
 
 <script>
-import { InteractsWithResourceInformation, Deleteable } from "ex-teal-js";
-import _ from "lodash";
+import { Deleteable, InteractsWithResourceInformation } from 'ex-teal-js';
+import _ from 'lodash';
 export default {
-  mixins: [InteractsWithResourceInformation, Deleteable],
+  mixins: [ InteractsWithResourceInformation, Deleteable ],
   props: {
     resourceName: {
       type: String,
@@ -79,11 +91,11 @@ export default {
     /**
      * Get the available field panels.
      */
-    availablePanels() {
+    availablePanels () {
       if (this.resource) {
-        var panels = {};
+        const panels = {};
 
-        var fields = _.toArray(
+        const fields = _.toArray(
           JSON.parse(JSON.stringify(this.resource.fields))
         );
 
@@ -101,11 +113,12 @@ export default {
 
         return _.toArray(panels);
       }
+      return [];
     }
   },
 
   watch: {
-    resourceId: function(newResourceId, oldResourceId) {
+    resourceId: function (newResourceId, oldResourceId) {
       if (newResourceId != oldResourceId) {
         this.initializeComponent();
       }
@@ -115,7 +128,7 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
+  mounted () {
     this.initializeComponent();
   },
 
@@ -123,7 +136,7 @@ export default {
     /**
      * Initialize the compnent's data.
      */
-    async initializeComponent() {
+    async initializeComponent () {
       await this.getResource();
 
       this.initialLoading = false;
@@ -132,28 +145,28 @@ export default {
     /**
      * Open the delete modal
      */
-    openDeleteModal() {
+    openDeleteModal () {
       this.deleteModalOpen = true;
     },
 
     /**
      * Close the delete modal
      */
-    closeDeleteModal() {
+    closeDeleteModal () {
       this.deleteModalOpen = false;
     },
 
-    async confirmDelete() {
+    async confirmDelete () {
       try {
-        await this.deleteResources([this.resource], () => {
+        await this.deleteResources([ this.resource ], () => {
           this.$toasted.show(
             `The ${this.resourceInformation.singular.toLowerCase()} was deleted!`,
-            { type: "success" }
+            { type: 'success' }
           );
 
           if (!this.resource.softDeletes) {
             this.$router.push({
-              name: "index",
+              name: 'index',
               params: { resourceName: this.resourceName }
             });
             return;
@@ -161,10 +174,10 @@ export default {
         });
       } catch (error) {
         if (error.response.status == 422) {
-          let resp_errors = error.response.data.errors;
-          let messages = Object.values(resp_errors)[0].join(", ");
-          this.$toasted.show("Could not delete, error: " + messages, {
-            type: "error"
+          const resp_errors = error.response.data.errors;
+          const messages = Object.values(resp_errors)[0].join(', ');
+          this.$toasted.show('Could not delete, error: ' + messages, {
+            type: 'error'
           });
         }
       }
@@ -173,7 +186,7 @@ export default {
     /**
      * Get the resource information.
      */
-    getResource() {
+    getResource () {
       this.resource = null;
 
       return ExTeal.request()
@@ -185,26 +198,26 @@ export default {
         })
         .catch(error => {
           if (error.response.status >= 500) {
-            ExTeal.$emit("error", error.response.data.message);
+            ExTeal.$emit('error', error.response.data.message);
             return;
           }
 
           if (error.response.status === 404 && this.initialLoading) {
-            this.$router.push({ name: "404" });
+            this.$router.push({ name: '404' });
             return;
           }
 
           if (error.response.status === 403) {
-            this.$router.push({ name: "403" });
+            this.$router.push({ name: '403' });
             return;
           }
 
-          this.$toasted.show(this.__("This resource no longer exists"), {
-            type: "error"
+          this.$toasted.show(this.__('This resource no longer exists'), {
+            type: 'error'
           });
 
           this.$router.push({
-            name: "index",
+            name: 'index',
             params: { resourceName: this.resourceName }
           });
         });
@@ -213,24 +226,24 @@ export default {
     /**
      * Create a new panel for the given relationship field.
      */
-    createPanelForRelationship(field) {
+    createPanelForRelationship (field) {
       return {
-        component: "relationship-panel",
+        component: 'relationship-panel',
         prefixComponent: true,
         name: field.name,
-        fields: [field]
+        fields: [ field ]
       };
     },
 
     /**
      * Create a new panel for the given field.
      */
-    createPanelForField(field) {
+    createPanelForField (field) {
       return _.tap(
         _.find(this.panels, panel => panel.key == field.panel),
         panel => {
-          panel.component = "panel";
-          panel.fields = [field];
+          panel.component = 'panel';
+          panel.fields = [ field ];
         }
       );
     }

@@ -17,7 +17,7 @@ export default {
   },
 
   computed: {
-    uri() {
+    uri () {
       return this.field.attribute;
     }
   }

@@ -10,20 +10,20 @@
 </template>
 
 <script>
-import Trix from "trix"; // eslint-disable-line no-unused-vars
-import "trix/dist/trix.css";
+import Trix from 'trix'; // eslint-disable-line no-unused-vars
+import 'trix/dist/trix.css';
 
 export default {
   props: {
-    value: { type: String, default: "" },
-    placeholder: { type: String, default: "" }
+    value: { type: String, default: '' },
+    placeholder: { type: String, default: '' }
   },
   methods: {
-    initialize() {
+    initialize () {
       this.$refs.theEditor.editor.insertHTML(this.value);
     },
-    handleChange() {
-      this.$emit("change", this.$refs.theEditor.value);
+    handleChange () {
+      this.$emit('change', this.$refs.theEditor.value);
     }
   }
 };

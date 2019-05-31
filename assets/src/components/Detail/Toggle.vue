@@ -1,6 +1,9 @@
 <template>
   <panel-item :field="field">
-    <p slot="value" class="text-90">
+    <p
+      slot="value"
+      class="text-90"
+    >
       <span
         :class="{ 'bg-success': field.value, 'bg-danger': !field.value }"
         class="inline-block rounded-full w-2 h-2 mr-1"
@@ -11,10 +14,10 @@
 </template>
 
 <script>
-import { Toggle } from "ex-teal-js";
+import { Toggle } from 'ex-teal-js';
 
 export default {
-  mixins: [Toggle],
+  mixins: [ Toggle ],
 
   props: {
     resourceName: {
@@ -22,7 +25,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {
@@ -35,7 +38,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted () {
     this.value = this.field.value || false;
     this.options = this.field.options || {};
   }

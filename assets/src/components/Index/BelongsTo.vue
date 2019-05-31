@@ -24,11 +24,11 @@ export default {
   props: {
     resourceName: {
       type: String,
-      default: ""
+      default: ''
     },
     field: {
       type: Object,
-      default() {
+      default () {
         return {};
       }
     }

@@ -22,7 +22,9 @@
         />
 
         <slot name="default">
-          <div class="text-70">{{ __("Click to choose") }}</div>
+          <div class="text-70">
+            {{ __("Click to choose") }}
+          </div>
         </slot>
       </div>
 
@@ -55,8 +57,8 @@
       <div class="p-2 bg-grey-300">
         <input
           ref="search"
-          :disabled="disabled"
           v-model="search"
+          :disabled="disabled"
           placeholder="Search"
           class="outline-none search-input-input w-full px-2 py-1.5 text-sm leading-normal bg-white rounded"
           tabindex="-1"
@@ -66,7 +68,7 @@
           @keydown.enter.prevent="chooseSelected"
           @keydown.down.prevent="move(1)"
           @keydown.up.prevent="move(-1)"
-        />
+        >
       </div>
 
       <div
@@ -77,9 +79,9 @@
       >
         <div
           v-for="(option, index) in data"
-          :dusk="dataTestid + '-result-' + index"
           :key="getTrackedByKey(option)"
           :ref="index === selected ? 'selected' : null"
+          :dusk="dataTestid + '-result-' + index"
           :class="{
             [`search-input-item-${index}`]: true,
             'hover:bg-30': index !== selected,
@@ -88,7 +90,11 @@
           class="px-4 py-2 cursor-pointer"
           @click="choose(option)"
         >
-          <slot :option="option" :selected="index === selected" name="option" />
+          <slot
+            :option="option"
+            :selected="index === selected"
+            name="option"
+          />
         </div>
       </div>
     </div>
@@ -96,13 +102,13 @@
 </template>
 
 <script>
-import _ from "lodash";
-import Vue from "vue";
-import Popper from "popper.js";
-import { mixin as clickaway } from "vue-clickaway";
+import _ from 'lodash';
+import Vue from 'vue';
+import Popper from 'popper.js';
+import { mixin as clickaway } from 'vue-clickaway';
 
 export default {
-  mixins: [clickaway],
+  mixins: [ clickaway ],
   inheritAttrs: false,
   props: {
     dataTestid: {
@@ -112,7 +118,7 @@ export default {
     disabled: { default: false, type: Boolean },
     value: {
       default: null,
-      type: [Object, String]
+      type: [ Object, String ]
     },
     data: {
       type: Object,
@@ -138,38 +144,38 @@ export default {
 
   data: () => ({
     show: false,
-    search: "",
+    search: '',
     selected: 0,
     popper: null,
     inputWidth: null
   }),
 
   computed: {
-    shouldShowDropdownArrow() {
-      return this.value == "" || this.value == null;
+    shouldShowDropdownArrow () {
+      return this.value == '' || this.value == null;
     }
   },
 
   watch: {
-    search() {
+    search () {
       this.selected = 0;
       this.$refs.container.scrollTop = 0;
     },
-    show(show) {
+    show (show) {
       if (show) {
-        let selected = _.findIndex(this.data, [
+        const selected = _.findIndex(this.data, [
           this.trackBy,
           _.get(this.value, this.trackBy)
         ]);
-        if (selected !== -1) this.selected = selected;
+        if (selected !== -1) {this.selected = selected;}
         this.inputWidth = this.$refs.input.offsetWidth;
 
         Vue.nextTick(() => {
           const vm = this;
 
           this.popper = new Popper(this.$refs.input, this.$refs.dropdown, {
-            placement: "bottom-start",
-            onCreate() {
+            placement: 'bottom-start',
+            onCreate () {
               vm.$refs.container.scrollTop = vm.$refs.container.scrollHeight;
               vm.updateScrollPosition();
               vm.$refs.search.focus();
@@ -178,19 +184,19 @@ export default {
               preventOverflow: {
                 boundariesElement: this.boundary
                   ? this.boundary
-                  : "scrollParent"
+                  : 'scrollParent'
               }
             }
           });
         });
       } else {
-        if (this.popper) this.popper.destroy();
+        if (this.popper) {this.popper.destroy();}
       }
     }
   },
 
-  mounted() {
-    document.addEventListener("keydown", e => {
+  mounted () {
+    document.addEventListener('keydown', e => {
       if (this.show && (e.keyCode == 9 || e.keyCode == 27)) {
         setTimeout(() => this.close(), 50);
       }
@@ -198,30 +204,30 @@ export default {
   },
 
   methods: {
-    getTrackedByKey(option) {
+    getTrackedByKey (option) {
       return _.get(option, this.trackBy);
     },
 
-    open() {
+    open () {
       // if (!this.disabled) {
       this.show = true;
-      this.search = "";
+      this.search = '';
       // }
     },
 
-    close() {
+    close () {
       this.show = false;
     },
 
-    clear() {
+    clear () {
       // if (!this.disabled) {
       this.selected = null;
-      this.$emit("clear", null);
+      this.$emit('clear', null);
       // }
     },
 
-    move(offset) {
-      let newIndex = this.selected + offset;
+    move (offset) {
+      const newIndex = this.selected + offset;
 
       if (newIndex >= 0 && newIndex < this.data.length) {
         this.selected = newIndex;
@@ -229,7 +235,7 @@ export default {
       }
     },
 
-    updateScrollPosition() {
+    updateScrollPosition () {
       Vue.nextTick(() => {
         if (this.$refs.selected) {
           if (
@@ -253,20 +259,20 @@ export default {
       });
     },
 
-    chooseSelected() {
+    chooseSelected () {
       if (this.data[this.selected] !== undefined) {
-        this.$emit("selected", this.data[this.selected]);
+        this.$emit('selected', this.data[this.selected]);
         this.$refs.input.focus();
         Vue.nextTick(() => this.close());
       }
     },
 
-    choose(option) {
+    choose (option) {
       this.selected = _.findIndex(this.data, [
         this.trackBy,
         _.get(option, this.trackBy)
       ]);
-      this.$emit("selected", option);
+      this.$emit('selected', option);
       this.$refs.input.focus();
       Vue.nextTick(() => this.close());
     },
@@ -274,9 +280,9 @@ export default {
     /**
      * Handle the input event of the search box
      */
-    handleInput(e) {
+    handleInput (e) {
       this.debouncer(() => {
-        this.$emit("input", e.target.value);
+        this.$emit('input', e.target.value);
       });
     },
 
