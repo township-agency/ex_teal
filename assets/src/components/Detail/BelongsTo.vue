@@ -14,7 +14,9 @@
       >
         {{ field.value }}
       </router-link>
-      <p v-else>&mdash;</p>
+      <p v-else>
+        &mdash;
+      </p>
     </template>
   </panel-item>
 </template>
@@ -27,7 +29,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {

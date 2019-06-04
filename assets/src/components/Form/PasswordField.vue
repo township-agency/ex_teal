@@ -3,37 +3,42 @@
     <template slot="field">
       <input
         :id="field.attribute"
+        v-model="value"
         :type="inputType"
         :pattern="inputPattern"
-        v-model="value"
         :class="errorClasses"
         :placeholder="field.name"
         class="w-full form-control form-input form-input-bordered"
-      />
+      >
 
-      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+      >
+        {{ firstError }}
+      </p>
     </template>
   </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
 
 export default {
-  mixins: [HandlesValidationErrors, FormField],
+  mixins: [ HandlesValidationErrors, FormField ],
 
   computed: {
     /**
      * Get the input type.
      */
-    inputType() {
-      return this.field.type || "password";
+    inputType () {
+      return this.field.type || 'password';
     },
 
     /**
      * Get the pattern that should be used for the field
      */
-    inputPattern() {
+    inputPattern () {
       return this.field.pattern;
     }
   }

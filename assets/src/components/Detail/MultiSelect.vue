@@ -1,6 +1,9 @@
 <template>
   <panel-item :field="field">
-    <p slot="value" class="text-90">
+    <p
+      slot="value"
+      class="text-90"
+    >
       <span
         v-for="v in field.value"
         :key="v.value"
@@ -20,7 +23,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {

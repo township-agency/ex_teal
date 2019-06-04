@@ -8,7 +8,12 @@
         class="form-control form-select mb-3 w-full"
         @change="selectResourceFromSelectControl"
       >
-        <option value="" selected>Choose {{ field.name }}</option>
+        <option
+          value=""
+          selected
+        >
+          Choose {{ field.name }}
+        </option>
 
         <option
           v-for="resource in availableResources"
@@ -20,17 +25,21 @@
         </option>
       </select>
 
-      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+      >
+        {{ firstError }}
+      </p>
     </template>
   </default-field>
 </template>
 
 <script>
-import _ from "lodash";
-import { PerformsSearches, HandlesValidationErrors } from "@/mixins";
+import { HandlesValidationErrors, PerformsSearches } from 'ex-teal-js';
 
 export default {
-  mixins: [PerformsSearches, HandlesValidationErrors],
+  mixins: [ PerformsSearches, HandlesValidationErrors ],
 
   props: {
     resourceName: {
@@ -60,21 +69,21 @@ export default {
     initializingWithExistingResource: false,
     selectedResource: null,
     selectedResourceId: null,
-    search: ""
+    search: ''
   }),
 
   computed: {
     /**
      * Determine if we are editing and existing resource
      */
-    editingExistingResource() {
+    editingExistingResource () {
       return Boolean(this.field.options.belongs_to_id);
     },
 
     /**
      * Determine if we are creating a new resource via a parent relation
      */
-    creatingViaRelatedResource() {
+    creatingViaRelatedResource () {
       return (
         this.viaResource == this.field.options.belongs_to_relationship &&
         this.viaResourceId
@@ -84,7 +93,7 @@ export default {
     /**
      * Determine if we should select an initial resource when mounting this field
      */
-    shouldSelectInitialResource() {
+    shouldSelectInitialResource () {
       return Boolean(
         this.editingExistingResource || this.creatingViaRelatedResource
       );
@@ -93,14 +102,14 @@ export default {
     /**
      * Determine if the related resources is searchable
      */
-    isSearchable() {
+    isSearchable () {
       return false;
     },
 
     /**
      * Get the query params for getting available resources
      */
-    queryParams() {
+    queryParams () {
       return {
         params: {
           current: this.selectedResourceId,
@@ -110,7 +119,7 @@ export default {
       };
     },
 
-    isLocked() {
+    isLocked () {
       return this.viaResource == this.field.options.belongs_to_relationship;
     }
   },
@@ -118,12 +127,12 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
+  mounted () {
     this.initializeComponent();
   },
 
   methods: {
-    initializeComponent() {
+    initializeComponent () {
       this.withTrashed = false;
 
       // If a user is editing an existing resource with this relation
@@ -163,7 +172,7 @@ export default {
       this.field.fill = this.fill;
     },
 
-    fetchAvailableResources(resourceName, attribute, params) {
+    fetchAvailableResources (resourceName, attribute, params) {
       return ExTeal.request().get(
         `/api/${resourceName}/relatable/${attribute}`,
         params
@@ -173,7 +182,7 @@ export default {
     /**
      * Select a resource using the <select> control
      */
-    selectResourceFromSelectControl(e) {
+    selectResourceFromSelectControl (e) {
       this.selectedResourceId = e.target.value;
       this.selectInitialResource();
     },
@@ -181,22 +190,22 @@ export default {
     /**
      * Fill the forms formData with details from this field
      */
-    fill(formData) {
-      let key = this.field.options.belongs_to_key
+    fill (formData) {
+      const key = this.field.options.belongs_to_key
         ? this.field.options.belongs_to_key
         : this.field.attribute;
 
       if (this.selectedResource) {
-        formData[key] = this.selectedResource.id;
+        formData.append(key, this.selectedResource.id);
       } else {
-        formData[key] = null;
+        formData.append(key, null);
       }
     },
 
     /**
      * Get the resources that may be related to this resource.
      */
-    getAvailableResources() {
+    getAvailableResources () {
       return this.fetchAvailableResources(
         this.resourceName,
         this.field.attribute,
@@ -210,16 +219,15 @@ export default {
     /**
      * Determine if the given value is numeric.
      */
-    isNumeric(value) {
+    isNumeric (value) {
       return !isNaN(parseFloat(value)) && isFinite(value);
     },
 
     /**
      * Select the initial selected resource
      */
-    selectInitialResource() {
-      this.selectedResource = _.find(
-        this.availableResources,
+    selectInitialResource () {
+      this.selectedResource = this.availableResources.find(
         r => r.id == this.selectedResourceId
       );
     }

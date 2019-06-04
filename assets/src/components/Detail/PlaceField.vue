@@ -10,7 +10,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {

@@ -8,13 +8,17 @@
         :src="config.logo"
         :alt="config.title"
         class="max-h-full py-1"
-      />
-      <div v-else>{{ config.title }}</div>
+      >
+      <div v-else>
+        {{ config.title }}
+      </div>
     </aside>
     <nav
       class="flex items-center justify-between flex-grow border-b border-grey bg-grey-lightest px-5"
     >
-      <div class="search w-1/2"><global-search /></div>
+      <div class="search w-1/2">
+        <GlobalSearch />
+      </div>
       <dropdown
         v-if="config.currentUser"
         class="ml-auto h-9 flex items-center"
@@ -29,12 +33,16 @@
             v-if="config.currentUser.gravatar"
             :src="config.currentUser.gravatar"
             class="rounded-full w-8 h-8 mr-3"
-          />
+          >
 
           <span class="text-90"> {{ config.currentUser.name }} </span>
         </dropdown-trigger>
 
-        <dropdown-menu slot="menu" width="200" direction="rtl">
+        <dropdown-menu
+          slot="menu"
+          width="200"
+          direction="rtl"
+        >
           <ul class="list-reset">
             <li>
               <a
@@ -52,19 +60,19 @@
 </template>
 
 <script>
-import GlobalSearch from "./GlobalSearch";
+import GlobalSearch from './GlobalSearch';
 export default {
-  name: "LayoutTopNav",
+  name: 'LayoutTopNav',
   components: {
     GlobalSearch
   },
   props: {
     config: {
       type: Object,
-      default() {
+      default () {
         return {
-          title: "",
-          logo: "",
+          title: '',
+          logo: '',
           currentUser: false
         };
       }

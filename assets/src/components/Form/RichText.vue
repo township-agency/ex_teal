@@ -1,7 +1,11 @@
 <template>
   <default-field :field="field">
     <template slot="field">
-      <input :id="editorId" type="hidden" name="content" />
+      <input
+        :id="editorId"
+        type="hidden"
+        name="content"
+      >
       <editor
         :value="field.value"
         :class="errorClasses"
@@ -9,16 +13,21 @@
         :placeholder="field.name"
         @change="handleChange"
       />
-      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+      >
+        {{ firstError }}
+      </p>
     </template>
   </default-field>
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
 
 export default {
-  mixins: [FormField, HandlesValidationErrors],
+  mixins: [ FormField, HandlesValidationErrors ],
 
   props: {
     resourceName: {
@@ -32,7 +41,7 @@ export default {
   },
 
   computed: {
-    editorId() {
+    editorId () {
       return `editor-${this.field.name}`;
     }
   }

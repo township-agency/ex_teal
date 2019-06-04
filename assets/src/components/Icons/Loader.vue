@@ -1,19 +1,19 @@
 <script>
 export default {
-  name: "Loader",
+  name: 'Loader',
   props: {
     width: {
-      type: [Number, String],
+      type: [ Number, String ],
       required: false,
       default: 50
     },
     fillColor: {
       type: String,
       required: false,
-      default: "currentColor"
+      default: 'currentColor'
     }
   },
-  render() {
+  render () {
     return (
       <svg
         class="mx-auto block"

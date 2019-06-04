@@ -1,8 +1,8 @@
 <script>
 const classes = {
-  "1": "text-90 font-normal text-xl",
-  "2": "text-90 font-normal text-lg",
-  "3": "text-90 font-bold text-bg"
+  '1': 'text-90 font-normal text-xl',
+  '2': 'text-90 font-normal text-lg',
+  '3': 'text-90 font-bold text-bg'
 };
 
 export default {
@@ -13,9 +13,9 @@ export default {
     }
   },
 
-  render(h) {
+  render (h) {
     return h(
-      "h" + this.level,
+      'h' + this.level,
       { class: classes[this.level] },
       this.$slots.default
     );

@@ -1,17 +1,20 @@
 <template>
   <label
     ref="label"
-    class="flex items-center select-none"
+    class="overflow-hidden flex items-center select-none"
     @keydown.prevent.enter.space="$refs.label.click()"
   >
-    <fake-checkbox :checked="checked" class="mr-2" />
+    <fake-checkbox
+      :checked="checked"
+      class="mr-2"
+    />
     <input
       :disabled="disabled"
       :tabindex="disabled ? false : 0"
       :aria-checked="checked"
       type="checkbox"
       @change="$emit('change', $event)"
-    />
+    >
     <slot />
   </label>
 </template>
@@ -32,9 +35,6 @@ export default {
 </script>
 
 <style scoped>
-label {
-  overflow: hidden;
-}
 input[type="checkbox"] {
   position: absolute;
   left: 0;

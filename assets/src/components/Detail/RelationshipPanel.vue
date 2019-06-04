@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-for="field in panel.fields" :key="field + resourceId">
+    <div
+      v-for="field in panel.fields"
+      :key="field + resourceId"
+    >
       <component
         :is="'detail-' + field.component"
         :resource-name="resourceName"
@@ -14,9 +17,9 @@
 </template>
 
 <script>
-import { BehavesAsPanel } from "@/mixins";
+import { BehavesAsPanel } from 'ex-teal-js';
 
 export default {
-  mixins: [BehavesAsPanel]
+  mixins: [ BehavesAsPanel ]
 };
 </script>

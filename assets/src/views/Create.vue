@@ -1,7 +1,9 @@
 <template>
   <loading-view :loading="loading">
     <div class="card-headline">
-      <heading class="mb-3">New {{ singularName }}</heading>
+      <heading class="mb-3">
+        New {{ singularName }}
+      </heading>
       <!-- Create Button -->
       <div class="flex ml-auto">
         <button
@@ -24,11 +26,17 @@
     </div>
 
     <card class="overflow-hidden">
-      <form v-if="fields" @submit.prevent="createResource">
+      <form
+        v-if="fields"
+        @submit.prevent="createResource"
+      >
         <!-- Validation Errors -->
         <validation-errors :errors="validationErrors" />
         <!-- Fields -->
-        <div v-for="field in fields" :key="field.attribute">
+        <div
+          v-for="field in fields"
+          :key="field.attribute"
+        >
           <component
             :is="'form-' + field.component"
             :errors="validationErrors"
@@ -45,11 +53,15 @@
 </template>
 
 <script>
-import _ from "lodash";
-import { Errors, InteractsWithResourceInformation, Capitalize } from "@/mixins";
+import _ from 'lodash';
+import {
+  Capitalize,
+  Errors,
+  InteractsWithResourceInformation
+} from 'ex-teal-js';
 
 export default {
-  mixins: [InteractsWithResourceInformation],
+  mixins: [ InteractsWithResourceInformation ],
 
   props: {
     resourceName: {
@@ -57,7 +69,7 @@ export default {
       required: true
     },
     viaResource: {
-      default: "",
+      default: '',
       type: String
     },
     viaResourceId: {
@@ -65,7 +77,7 @@ export default {
       type: Number
     },
     viaRelationship: {
-      default: "",
+      default: '',
       type: String
     }
   },
@@ -77,12 +89,12 @@ export default {
   }),
 
   computed: {
-    singularName() {
+    singularName () {
       return Capitalize(this.resourceInformation.singular);
     }
   },
 
-  created() {
+  created () {
     this.getFields();
   },
 
@@ -90,7 +102,7 @@ export default {
     /**
      * Get the available fields for the resource.
      */
-    async getFields() {
+    async getFields () {
       this.fields = [];
 
       const {
@@ -106,18 +118,18 @@ export default {
     /**
      * Create a new resource instance using the provided data.
      */
-    async createResource() {
+    async createResource () {
       try {
         const response = await this.createRequest();
 
         this.$toasted.show(
           `The ${this.resourceInformation.singular} was created`,
-          { type: "success" }
+          { type: 'success' }
         );
 
-        let idField = _.find(response.data.fields, { attribute: "id" });
+        const idField = _.find(response.data.fields, { attribute: 'id' });
         this.$router.push({
-          name: "detail",
+          name: 'detail',
           params: {
             resourceName: this.resourceName,
             resourceId: idField.value
@@ -133,13 +145,13 @@ export default {
     /**
      * Create a new resource and reset the form
      */
-    async createAndAddAnother() {
+    async createAndAddAnother () {
       try {
         await this.createRequest();
 
         this.$toasted.show(
           `The ${this.resourceInformation.singular} was created`,
-          { type: "success" }
+          { type: 'success' }
         );
 
         // Reset the form by refetching the fields
@@ -156,7 +168,7 @@ export default {
     /**
      * Send a create request for this resource
      */
-    createRequest() {
+    createRequest () {
       return ExTeal.request().post(
         `/api/${this.resourceName}`,
         this.createResourceFormData()
@@ -166,13 +178,12 @@ export default {
     /**
      * Create the form data for creating the resource.
      */
-    createResourceFormData() {
-      let data = _.tap({}, formData => {
+    createResourceFormData () {
+      return _.tap(new FormData(), formData => {
         _.each(this.fields, field => {
           field.fill(formData);
         });
       });
-      return { data };
     }
   }
 };

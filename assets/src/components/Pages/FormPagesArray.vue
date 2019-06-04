@@ -1,7 +1,11 @@
 <template>
   <default-field :field="field">
     <template slot="field">
-      <div v-for="field in indexedFields" :key="field.title" class="mb-2">
+      <div
+        v-for="field in indexedFields"
+        :key="field.title"
+        class="mb-2"
+      >
         <component
           :is="'form-' + inputType"
           :errors="errors"
@@ -10,17 +14,21 @@
           :field="field"
         />
       </div>
-      <p v-if="hasError" class="my-2 text-danger">{{ firstError }}</p>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+      >
+        {{ firstError }}
+      </p>
     </template>
   </default-field>
 </template>
 
 <script>
-import _ from "lodash";
-import { FormField, HandlesValidationErrors } from "@/mixins";
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
 
 export default {
-  mixins: [HandlesValidationErrors, FormField],
+  mixins: [ HandlesValidationErrors, FormField ],
 
   props: {
     resourceId: {
@@ -29,7 +37,7 @@ export default {
     }
   },
 
-  data() {
+  data () {
     return {
       indexedFields: []
     };
@@ -39,13 +47,13 @@ export default {
     /**
      * Get the input type.
      */
-    inputType() {
+    inputType () {
       return this.field.options.child_component;
     }
   },
 
-  mounted() {
-    this.indexedFields = _.map(this.value, ({ content, title }) => {
+  mounted () {
+    this.indexedFields = this.value.map(({ content, title }) => {
       return {
         ...this.field,
         component: this.inputType,
@@ -56,8 +64,8 @@ export default {
     });
 
     this.field.fill = form => {
-      let data = _.map(this.indexedFields, field => {
-        let val = field.fill({});
+      const data = this.indexedFields.map(field => {
+        const val = field.fill({});
         return { title: field.name, content: val };
       });
       form[this.field.attribute] = data;

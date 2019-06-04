@@ -1,14 +1,21 @@
 <template>
   <panel-item :field="field">
     <template slot="value">
-      <p v-if="field.value" class="text-90">{{ formattedDate }}</p>
-      <p v-else>&mdash;</p>
+      <p
+        v-if="field.value"
+        class="text-90"
+      >
+        {{ formattedDate }}
+      </p>
+      <p v-else>
+        &mdash;
+      </p>
     </template>
   </panel-item>
 </template>
 
 <script>
-import format from "date-fns/format";
+import format from 'date-fns/format';
 
 export default {
   props: {
@@ -17,7 +24,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {
@@ -30,7 +37,7 @@ export default {
     }
   },
   computed: {
-    formattedDate() {
+    formattedDate () {
       if (this.field.options.format) {
         return format(this.field.value, this.field.options.format);
       }

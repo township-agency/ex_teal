@@ -1,10 +1,16 @@
 <template>
   <div id="sidebar">
     <div class="lg:block lg:relative lg:top-16 w-sidebar">
-      <nav id="nav" class="sticky?lg:h-(screen-16)">
+      <nav
+        id="nav"
+        class="sticky?lg:h-(screen-16)"
+      >
         <h3><span>Resources</span></h3>
         <ul class="">
-          <li v-for="resource in availableResources" :key="resource.plural">
+          <li
+            v-for="resource in availableResources"
+            :key="resource.plural"
+          >
             <router-link
               :to="{
                 name: 'index',
@@ -17,7 +23,10 @@
             </router-link>
           </li>
         </ul>
-        <div v-for="plugin in pluginsWithNavComponents" :key="plugin.uri">
+        <div
+          v-for="plugin in pluginsWithNavComponents"
+          :key="plugin.uri"
+        >
           <component :is="plugin.navigation_component" />
         </div>
       </nav>
@@ -26,26 +35,26 @@
 </template>
 
 <script>
-import filter from "lodash/filter";
-import identity from "lodash/identity";
+import filter from 'lodash/filter';
+import identity from 'lodash/identity';
 export default {
   props: {
     config: {
       type: Object,
-      default: function() {
+      default: function () {
         return {};
       }
     }
   },
 
   computed: {
-    availableResources() {
+    availableResources () {
       return filter(this.config.resources, resource => {
         return !resource.hidden;
       });
     },
 
-    pluginsWithNavComponents() {
+    pluginsWithNavComponents () {
       return filter(this.config.plugins, plugin => {
         return identity(plugin.navigation_component);
       });

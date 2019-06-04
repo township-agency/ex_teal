@@ -1,23 +1,23 @@
-import Home from "@/views/Home.vue";
-import Index from "@/views/Index.vue";
-import Detail from "@/views/Detail.vue";
-import Create from "@/views/Create.vue";
-import Update from "@/views/Update.vue";
-import Error403 from "@/views/403.vue";
-import Error404 from "@/views/404.vue";
+import Home from '@/views/Home.vue';
+import Index from '@/views/Index.vue';
+import Detail from '@/views/Detail.vue';
+import Create from '@/views/Create.vue';
+import Update from '@/views/Update.vue';
+import Error403 from '@/views/403.vue';
+import Error404 from '@/views/404.vue';
 
-import PageDetail from "@/components/Pages/Detail.vue";
-import PageUpdate from "@/components/Pages/Update.vue";
+import PageDetail from '@/components/Pages/Detail.vue';
+import PageUpdate from '@/components/Pages/Update.vue';
 
 export default [
   {
-    path: "/",
-    name: "home",
+    path: '/',
+    name: 'home',
     component: Home
   },
   {
-    path: "/resources/:resourceName",
-    name: "index",
+    path: '/resources/:resourceName',
+    name: 'index',
     component: Index,
     props: route => {
       return {
@@ -30,8 +30,8 @@ export default [
     }
   },
   {
-    path: "/resources/:resourceName/new",
-    name: "create",
+    path: '/resources/:resourceName/new',
+    name: 'create',
     component: Create,
     props: route => {
       return {
@@ -43,8 +43,8 @@ export default [
     }
   },
   {
-    name: "edit",
-    path: "/resources/:resourceName/:resourceId/edit",
+    name: 'edit',
+    path: '/resources/:resourceName/:resourceId/edit',
     component: Update,
     props: route => {
       return {
@@ -54,8 +54,8 @@ export default [
     }
   },
   {
-    path: "/resources/:resourceName/:resourceId",
-    name: "detail",
+    path: '/resources/:resourceName/:resourceId',
+    name: 'detail',
     component: Detail,
     props: route => {
       return {
@@ -65,8 +65,8 @@ export default [
     }
   },
   {
-    path: "/pages/:pageKey",
-    name: "page_detail",
+    path: '/pages/:pageKey',
+    name: 'page_detail',
     component: PageDetail,
     props: route => {
       return {
@@ -75,8 +75,8 @@ export default [
     }
   },
   {
-    path: "/pages/:pageKey/edit",
-    name: "page_edit",
+    path: '/pages/:pageKey/edit',
+    name: 'page_edit',
     component: PageUpdate,
     props: route => {
       return {
@@ -85,18 +85,18 @@ export default [
     }
   },
   {
-    name: "403",
-    path: "/403",
+    name: '403',
+    path: '/403',
     component: Error403
   },
   {
-    name: "404",
-    path: "/404",
+    name: '404',
+    path: '/404',
     component: Error404
   },
   {
-    name: "catch-all",
-    path: "*",
+    name: 'catch-all',
+    path: '*',
     component: Error404
   }
 ];

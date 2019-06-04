@@ -7,10 +7,20 @@
     >
       {{ showHideLabel }}
     </a>
-    <div v-if="expanded" class="show-content" v-html="content" />
-    <div v-else class="hidden-content" v-html="content" />
+    <div
+      v-if="expanded"
+      class="show-content"
+      v-html="content"
+    />
+    <div
+      v-else
+      class="hidden-content"
+      v-html="content"
+    />
   </div>
-  <div v-else>—</div>
+  <div v-else>
+    —
+  </div>
 </template>
 
 <script>
@@ -18,24 +28,24 @@ export default {
   props: {
     content: {
       type: String,
-      default: ""
+      default: ''
     }
   },
 
   data: () => ({ expanded: false }),
 
   computed: {
-    showHideLabel() {
-      return !this.expanded ? "Show Content" : "Hide Content";
+    showHideLabel () {
+      return !this.expanded ? 'Show Content' : 'Hide Content';
     },
 
-    hasContent() {
-      return this.content && this.content !== "";
+    hasContent () {
+      return this.content && this.content !== '';
     }
   },
 
   methods: {
-    toggle() {
+    toggle () {
       this.expanded = !this.expanded;
     }
   }

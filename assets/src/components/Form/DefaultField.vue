@@ -11,7 +11,9 @@
         </help-text>
       </slot>
     </div>
-    <div class="sm:w-4/5 px-8 py-2 sm:py-6"><slot name="field" /></div>
+    <div class="sm:w-4/5 px-8 py-2 sm:py-6">
+      <slot name="field" />
+    </div>
   </field-wrapper>
 </template>
 
@@ -19,7 +21,7 @@
 export default {
   props: {
     field: { type: Object, required: true },
-    fieldName: { type: String, default: "" },
+    fieldName: { type: String, default: '' },
     showHelpText: { type: Boolean, default: true }
   }
 };

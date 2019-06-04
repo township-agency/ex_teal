@@ -2,7 +2,10 @@
   <div>
     <h3>Pages</h3>
     <ul>
-      <li v-for="page in pages" :key="page.key">
+      <li
+        v-for="page in pages"
+        :key="page.key"
+      >
         <router-link
           :to="{
             name: 'page_detail',
@@ -20,19 +23,19 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       pages: []
     };
   },
 
-  mounted() {
+  mounted () {
     this.initializePages();
   },
 
   methods: {
-    async initializePages() {
-      let response = await ExTeal.request().get("/plugins/pages");
+    async initializePages () {
+      const response = await ExTeal.request().get('/plugins/pages');
       this.pages = response.data;
     }
   }

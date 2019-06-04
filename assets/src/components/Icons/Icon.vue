@@ -17,24 +17,24 @@ export default {
   props: {
     type: {
       type: String,
-      default: "delete"
+      default: 'delete'
     },
     viewBox: {
       type: String,
-      default: "0 0 20 20"
+      default: '0 0 20 20'
     },
     width: {
-      type: [Number, String],
+      type: [ Number, String ],
       default: 20
     },
     height: {
-      type: [Number, String],
+      type: [ Number, String ],
       default: 20
     }
   },
 
   computed: {
-    iconName() {
+    iconName () {
       return `icon-${this.type}`;
     }
   }

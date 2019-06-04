@@ -1,9 +1,15 @@
 <template>
-  <div v-on-clickaway="closeSearch" class="relative z-50 w-full max-w-xs">
+  <div
+    v-on-clickaway="closeSearch"
+    class="relative z-50 w-full max-w-xs"
+  >
     <div class="relative">
       <!-- Search -->
       <div class="relative">
-        <icon type="search" class="absolute search-icon-center ml-3 text-70" />
+        <icon
+          type="search"
+          class="absolute search-icon-center ml-3 text-70"
+        />
 
         <input
           ref="input"
@@ -18,7 +24,7 @@
           @focus="openSearch"
           @keydown.down.prevent="move(1)"
           @keydown.up.prevent="move(-1)"
-        />
+        >
       </div>
 
       <!-- Loader -->
@@ -26,7 +32,10 @@
         v-if="loading"
         class="bg-white py-3 overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
-        <loader class="text-60" width="40" />
+        <loader
+          class="text-60"
+          width="40"
+        />
       </div>
 
       <!-- No Results Found -->
@@ -45,7 +54,10 @@
         ref="container"
         class="overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
-        <div v-for="group in formattedResults" :key="group.resourceName">
+        <div
+          v-for="group in formattedResults"
+          :key="group.resourceName"
+        >
           <h3
             class="text-xs uppercase tracking-wide text-80 bg-grey-lighter py-2 px-3"
           >
@@ -70,10 +82,13 @@
                   v-if="item.thumbnail"
                   :src="item.thumbnail"
                   class="h-8 w-8 mr-3"
-                />
+                >
                 <div>
                   <p class="text-90">{{ item.title }}</p>
-                  <p v-if="item.subtitle" class="text-xs mt-1 text-80">
+                  <p
+                    v-if="item.subtitle"
+                    class="text-xs mt-1 text-80"
+                  >
                     {{ item.subtitle }}
                   </p>
                 </div>
@@ -87,31 +102,32 @@
 </template>
 
 <script>
-import { Minimum } from "@/mixins";
-import { mixin as clickaway } from "vue-clickaway";
-import _ from "lodash";
+import { Minimum } from 'ex-teal-js';
+import { mixin as clickaway } from 'vue-clickaway';
+import uniqBy from 'lodash/uniqBy';
+import debounce from 'lodash/debounce';
 
 export default {
-  mixins: [clickaway],
+  mixins: [ clickaway ],
 
   data: () => ({
     loading: false,
     currentlySearching: false,
-    searchTerm: "",
+    searchTerm: '',
     results: [],
     highlightedResultIndex: 0
   }),
 
   computed: {
-    hasResults() {
+    hasResults () {
       return this.results.length > 0;
     },
 
-    hasSearchTerm() {
-      return this.searchTerm !== "";
+    hasSearchTerm () {
+      return this.searchTerm !== '';
     },
 
-    shouldShowNoResults() {
+    shouldShowNoResults () {
       return (
         this.currentlySearching &&
         !this.loading &&
@@ -120,66 +136,61 @@ export default {
       );
     },
 
-    shouldShowResults() {
+    shouldShowResults () {
       return this.currentlySearching && this.hasResults && !this.loading;
     },
 
-    indexedResults() {
-      return _.map(this.results, (item, index) => {
+    indexedResults () {
+      return this.results.map((item, index) => {
         return { index, ...item };
       });
     },
 
-    formattedGroups() {
-      return _.chain(this.indexedResults)
-        .map(item => {
-          return {
-            resourceName: item.resourceName,
-            resourceTitle: item.resourceTitle
-          };
-        })
-        .uniqBy("resourceName")
-        .value();
+    formattedGroups () {
+      const items = this.indexedResults.map(({ resourceName, resourceTitle }) => {
+        resourceName,
+        resourceTitle;
+      });
+
+      return uniqBy(items, 'resourceName');
     },
 
-    formattedResults() {
-      return _.map(this.formattedGroups, group => {
+    formattedResults () {
+      return this.formattedGroups.map((group) => {
+        const items = this.indexedResults.filter(item => item.resourceTitle == group.resourceTitle);
         return {
           resourceName: group.resourceName,
           resourceTitle: group.resourceTitle,
-          items: _.filter(
-            this.indexedResults,
-            item => item.resourceTitle == group.resourceTitle
-          )
+          items        
         };
       });
     }
   },
 
   watch: {
-    $route: function() {
+    $route: function () {
       this.closeSearch();
     }
   },
 
-  destroyed() {
-    document.removeEventListener("keydown", this.handleKeydown);
+  destroyed () {
+    document.removeEventListener('keydown', this.handleKeydown);
   },
 
   methods: {
-    isNotInputElement(event) {
+    isNotInputElement (event) {
       const tagName = event.target.tagName;
-      return Boolean(tagName !== "INPUT" && tagName !== "TEXTAREA");
+      return Boolean(tagName !== 'INPUT' && tagName !== 'TEXTAREA');
     },
 
-    openSearch() {
+    openSearch () {
       this.clearSearch();
       this.$refs.input.focus();
       this.currentlySearching = true;
       this.clearResults();
     },
 
-    closeSearch() {
+    closeSearch () {
       this.clearSearch();
       this.clearResults();
       this.$refs.input.blur();
@@ -187,19 +198,19 @@ export default {
       this.loading = false;
     },
 
-    clearSearch() {
-      this.searchTerm = "";
+    clearSearch () {
+      this.searchTerm = '';
     },
 
-    clearResults() {
+    clearResults () {
       this.results = [];
     },
 
-    search(event) {
+    search (event) {
       this.highlightedResultIndex = 0;
       this.loading = true;
 
-      if (this.searchTerm == "") {
+      if (this.searchTerm == '') {
         this.loading = false;
         this.results = [];
       } else {
@@ -209,15 +220,15 @@ export default {
       }
     },
 
-    async fetchResults(search) {
+    async fetchResults (search) {
       this.results = [];
 
-      if (search !== "") {
+      if (search !== '') {
         try {
           const {
             data: { results }
           } = await Minimum(
-            ExTeal.request().get("/search", {
+            ExTeal.request().get('/search', {
               params: { search }
             })
           );
@@ -234,14 +245,14 @@ export default {
     /**
      * Debounce function for the search handler
      */
-    debouncer: _.debounce(callback => callback(), 200),
+    debouncer: debounce(callback => callback(), 200),
 
     /**
      * Move the highlighted results
      */
-    move(offset) {
+    move (offset) {
       if (this.results.length) {
-        let newIndex = this.highlightedResultIndex + offset;
+        const newIndex = this.highlightedResultIndex + offset;
 
         if (newIndex < 0) {
           this.highlightedResultIndex = this.results.length - 1;
@@ -256,7 +267,7 @@ export default {
       }
     },
 
-    updateScrollPosition() {
+    updateScrollPosition () {
       const selection = this.$refs.selected;
       const container = this.$refs.container;
 
@@ -280,19 +291,16 @@ export default {
       });
     },
 
-    navigate(index) {
+    navigate (index) {
       this.highlightedResultIndex = index;
       this.goToCurrentlySelectedResource();
     },
 
-    goToCurrentlySelectedResource() {
-      const resource = _.find(
-        this.indexedResults,
-        res => res.index == this.highlightedResultIndex
-      );
+    goToCurrentlySelectedResource () {
+      const resource = this.indexedResults.find(res => res.index == this.highlightedResultIndex);
 
       this.$router.push({
-        name: "detail",
+        name: 'detail',
         params: {
           resourceName: resource.resourceName,
           resourceId: resource.resourceId

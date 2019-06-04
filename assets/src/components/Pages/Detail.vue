@@ -13,8 +13,13 @@
         :resource="page"
         :panel="panel"
       >
-        <div v-if="panel.name.includes('Details')" class="card-headline">
-          <h2 class="text-90 font-normal text-xl">{{ panel.name }}</h2>
+        <div
+          v-if="panel.name.includes('Details')"
+          class="card-headline"
+        >
+          <h2 class="text-90 font-normal text-xl">
+            {{ panel.name }}
+          </h2>
           <div class="ml-auto flex">
             <router-link
               :to="{ name: 'page_edit', params: { pageKey: pageKey } }"
@@ -37,7 +42,10 @@
 </template>
 
 <script>
-import _ from "lodash";
+import toArray from 'lodash/toArray';
+import tap from 'lodash/tap';
+import find from 'lodash/find';
+
 export default {
   props: {
     pageKey: {
@@ -58,16 +66,14 @@ export default {
     /**
      * Get the available field panels.
      */
-    availablePanels() {
+    availablePanels () {
       if (this.page) {
-        var panels = {};
+        const panels = {};
 
-        var fields = _.toArray(JSON.parse(JSON.stringify(this.page.fields)));
-
-        fields.forEach(field => {
+        this.page.fields.forEach(field => {
           if (field.options.child_component) {
             return (panels[field.name] = this.createPanelForArray(field));
-          } else if (field.component == "resource-field") {
+          } else if (field.component == 'resource-field') {
             return (panels[field.name] = this.createPanelForRelationship(
               field
             ));
@@ -78,13 +84,14 @@ export default {
           panels[field.panel] = this.createPanelForField(field);
         });
 
-        return _.toArray(panels);
+        return toArray(panels);
       }
+      return [];
     }
   },
 
   watch: {
-    pageKey: function(newKey, oldKey) {
+    pageKey: function (newKey, oldKey) {
       if (newKey != oldKey) {
         this.initializeComponent();
       }
@@ -94,17 +101,17 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
+  mounted () {
     this.initializeComponent();
   },
 
   methods: {
-    async initializeComponent() {
+    async initializeComponent () {
       await this.getPage();
       this.initialLoading = false;
     },
 
-    getPage() {
+    getPage () {
       this.page = null;
 
       return ExTeal.request()
@@ -119,12 +126,12 @@ export default {
     /**
      * Create a new panel for the given field.
      */
-    createPanelForField(field) {
-      return _.tap(
-        _.find(this.panels, panel => panel.key == field.panel),
+    createPanelForField (field) {
+      return tap(
+        find(this.panels, panel => panel.key == field.panel),
         panel => {
-          panel.component = "panel";
-          panel.fields = [field];
+          panel.component = 'panel';
+          panel.fields = [ field ];
         }
       );
     },
@@ -132,9 +139,9 @@ export default {
     /**
      * Create a new panel for the given relationship field.
      */
-    createPanelForArray(field) {
-      let component = field.options.child_component;
-      let fields = _.map(field.value, ({ content, title }) => {
+    createPanelForArray (field) {
+      const component = field.options.child_component;
+      const fields = field.value.map(({ content, title }) => {
         return {
           ...field,
           component,
@@ -145,7 +152,7 @@ export default {
       });
 
       return {
-        component: "pages-array-panel",
+        component: 'pages-array-panel',
         prefixComponent: true,
         name: field.name,
         fields
@@ -155,12 +162,12 @@ export default {
     /**
      * Create a new panel for the given relationship field.
      */
-    createPanelForRelationship(field) {
+    createPanelForRelationship (field) {
       return {
-        component: "relationship-panel",
+        component: 'relationship-panel',
         prefixComponent: true,
         name: field.name,
-        fields: [field]
+        fields: [ field ]
       };
     }
   }

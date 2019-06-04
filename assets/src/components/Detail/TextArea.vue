@@ -1,13 +1,13 @@
 <template>
   <panel-item :field="field">
     <template slot="value">
-      <excerpt :content="field.value" />
+      <Excerpt :content="field.value" />
     </template>
   </panel-item>
 </template>
 
 <script>
-import Excerpt from "../Excerpt";
+import Excerpt from '../Excerpt';
 
 export default {
   components: { Excerpt },
@@ -17,7 +17,7 @@ export default {
       required: true
     },
     resourceId: {
-      type: [String, Number],
+      type: [ String, Number ],
       required: true
     },
     resource: {

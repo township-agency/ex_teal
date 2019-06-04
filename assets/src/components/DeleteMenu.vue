@@ -8,10 +8,17 @@
         :handle-click="toggle"
         class="px-3"
       >
-        <icon type="delete" class="text-white" />
+        <icon
+          type="delete"
+          class="text-white"
+        />
       </dropdown-trigger>
 
-      <dropdown-menu slot="menu" direction="rtl" width="250">
+      <dropdown-menu
+        slot="menu"
+        direction="rtl"
+        width="250"
+      >
         <div class="px-3">
           <!-- Delete Menu -->
           <button
@@ -63,7 +70,7 @@ export default {
   }),
 
   computed: {
-    selectedResourcesCount() {
+    selectedResourcesCount () {
       return this.allMatchingSelected
         ? this.allMatchingResourceCount
         : this.selectedResources.length;
@@ -73,41 +80,41 @@ export default {
   /**
    * Mount the component.
    */
-  mounted() {
-    document.addEventListener("keydown", this.handleEscape);
+  mounted () {
+    document.addEventListener('keydown', this.handleEscape);
   },
 
   /**
    * Prepare the component to tbe destroyed.
    */
-  destroyed() {
-    document.removeEventListener("keydown", this.handleEscape);
+  destroyed () {
+    document.removeEventListener('keydown', this.handleEscape);
   },
 
   methods: {
-    confirmDeleteSelectedResources() {
+    confirmDeleteSelectedResources () {
       this.deleteSelectedModalOpen = true;
     },
 
-    closeDeleteSelectedModal() {
+    closeDeleteSelectedModal () {
       this.deleteSelectedModalOpen = false;
     },
 
     /**
      * Delete the selected resources.
      */
-    deleteSelectedResources() {
+    deleteSelectedResources () {
       if (this.allMatchingSelected) {
-        this.$emit("deleteAllMatching");
+        this.$emit('deleteAllMatching');
       }
 
-      this.$emit("deleteSelected");
+      this.$emit('deleteSelected');
     },
 
     /**
      * Handle the escape key press event.
      */
-    handleEscape(e) {
+    handleEscape (e) {
       if (this.show && e.keyCode == 27) {
         this.close();
       }
@@ -116,8 +123,8 @@ export default {
     /**
      * Close the modal.
      */
-    close() {
-      this.$emit("close");
+    close () {
+      this.$emit('close');
     }
   }
 };

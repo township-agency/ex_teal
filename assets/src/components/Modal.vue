@@ -2,27 +2,32 @@
   <div
     class="modal select-none fixed pin flex justify-center items-center z-50"
   >
-    <div class="relative z-20 bg-white shadow-lg overflow-hidden"><slot /></div>
-    <div class="absolute pin bg-80 z-0 opacity-25" @click="close" />
+    <div class="relative z-20 bg-white shadow-lg overflow-hidden">
+      <slot />
+    </div>
+    <div
+      class="absolute pin bg-80 z-0 opacity-25"
+      @click="close"
+    />
   </div>
 </template>
 
 <script>
-import { mixin as clickaway } from "vue-clickaway";
+import { mixin as clickaway } from 'vue-clickaway';
 
 export default {
-  mixins: [clickaway],
+  mixins: [ clickaway ],
 
-  created() {
-    document.addEventListener("keydown", this.handleEscape);
+  created () {
+    document.addEventListener('keydown', this.handleEscape);
   },
 
-  destroyed() {
-    document.removeEventListener("keydown", this.handleEscape);
+  destroyed () {
+    document.removeEventListener('keydown', this.handleEscape);
   },
 
   methods: {
-    handleEscape(e) {
+    handleEscape (e) {
       e.stopPropagation();
 
       if (e.keyCode == 27) {
@@ -30,8 +35,8 @@ export default {
       }
     },
 
-    close() {
-      this.$emit("modal-close");
+    close () {
+      this.$emit('modal-close');
     }
   }
 };

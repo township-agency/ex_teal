@@ -1,7 +1,10 @@
 <template>
-  <default-field :field="field" :errors="errors">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
-      <date-time-picker
+      <DateTimePicker
         :field="field"
         :name="field.name"
         :value="value"
@@ -16,17 +19,17 @@
   </default-field>
 </template>
 <script>
-import DateTimePicker from "../DateTimePicker";
-import { FormField, HandlesValidationErrors } from "@/mixins";
-import format from "date-fns/format";
+import DateTimePicker from '../DateTimePicker';
+import { FormField, HandlesValidationErrors } from 'ex-teal-js';
+import format from 'date-fns/format';
 
 export default {
   components: { DateTimePicker },
-  mixins: [HandlesValidationErrors, FormField],
+  mixins: [ HandlesValidationErrors, FormField ],
 
   computed: {
-    placeholder() {
-      return format(new Date(), "YYYY-MM-DD");
+    placeholder () {
+      return format(new Date(), 'YYYY-MM-DD');
     }
   }
 };

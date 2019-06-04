@@ -26,7 +26,7 @@
 export default {
   props: {
     classes: {
-      default: "",
+      default: '',
       type: String
     },
     singularName: {
@@ -39,7 +39,7 @@ export default {
     },
     viaResource: {
       type: String,
-      default: ""
+      default: ''
     },
     viaResourceId: {
       type: Number,
@@ -47,24 +47,24 @@ export default {
     },
     viaRelationship: {
       type: String,
-      default: ""
+      default: ''
     },
     relationshipType: {
       type: String,
-      default: ""
+      default: ''
     }
   },
 
   computed: {
-    shouldShowCreateButton() {
+    shouldShowCreateButton () {
       return true;
     },
 
-    title() {
+    title () {
       return `Create ${this.singularName}`;
     },
 
-    classesWithOverrides() {
+    classesWithOverrides () {
       return `btn btn-default btn-primary capitalize btn-only-icon ${
         this.classes
       }`;

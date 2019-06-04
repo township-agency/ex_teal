@@ -54,55 +54,55 @@ defmodule ExTeal.Resource.CreateTest do
   end
 
   test "default implementation renders 201 if valid" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "valid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(TestExTeal.PostResource, conn)
     assert response.status == 201
   end
 
   test "default implementation renders 422 if invalid" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => ""}))
+    conn = prep_conn(:post, "/posts", %{"name" => ""})
     response = Create.call(TestExTeal.PostResource, conn)
     assert response.status == 422
   end
 
   test "custom implementation accepts cons" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "valid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(ProtectedResource, conn)
     assert response.status == 401
   end
 
   test "custom implementation handles {:ok, model}" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "valid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(CustomResource, conn)
     assert response.status == 201
   end
 
   test "custom implementation handles {:error, errors}" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "invalid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "invalid"})
     response = Create.call(CustomResource, conn)
     assert response.status == 422
   end
 
   test "custom multi implementation handles valid data" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "valid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(MultiCustomResource, conn)
     assert response.status == 201
   end
 
   test "custom multi implementation handles invalid data" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => ""}))
+    conn = prep_conn(:post, "/posts", %{"name" => ""})
     response = Create.call(MultiCustomResource, conn)
     assert response.status == 422
   end
 
   test "custom implementation renders 200 if valid" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => "valid"}))
+    conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(CustomResponseResource, conn)
     assert response.status == 200
   end
 
   test "custom implementation renders 401 if invalid" do
-    conn = prep_conn(:post, "/posts", ja_attrs(%{"name" => ""}))
+    conn = prep_conn(:post, "/posts", %{"name" => ""})
     response = Create.call(CustomResponseResource, conn)
     assert response.status == 401
   end
@@ -114,6 +114,4 @@ defmodule ExTeal.Resource.CreateTest do
     |> build_conn(path, params)
     |> fetch_query_params
   end
-
-  defp ja_attrs(attrs), do: %{"data" => attrs}
 end

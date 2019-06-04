@@ -11,9 +11,11 @@
         :disabled="disabled"
         class="hidden"
         type="checkbox"
-      />
+      >
 
-      <div class="h-5 w-5"><fake-checkbox :checked="checked" /></div>
+      <div class="h-5 w-5">
+        <fake-checkbox :checked="checked" />
+      </div>
     </div>
 
     <slot />
@@ -34,8 +36,8 @@ export default {
   },
 
   methods: {
-    toggle() {
-      this.$emit("input", !this.checked);
+    toggle () {
+      this.$emit('input', !this.checked);
     }
   }
 };
