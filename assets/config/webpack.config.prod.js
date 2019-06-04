@@ -9,6 +9,7 @@ const CompressionPlugin        = require('compression-webpack-plugin');
 const BrotliPlugin             = require('brotli-webpack-plugin');
 const { CleanWebpackPlugin }   = require('clean-webpack-plugin');
 const ManifestPlugin           = require('webpack-manifest-plugin');
+const CopyPlugin               = require('copy-webpack-plugin');
 const helpers                  = require('./helpers');
 const commonConfig             = require('./webpack.config.common');
 const isProd                   = process.env.NODE_ENV === 'production';
@@ -19,8 +20,8 @@ const webpackConfig = merge(commonConfig, {
   output: {
     path: helpers.root('../priv/static/teal'),
     publicPath: '/',
-    filename: 'js/[hash].js',
-    chunkFilename: 'js/[id].[hash].chunk.js'
+    filename: 'js/[contenthash].js',
+    chunkFilename: 'js/[id].[contenthash].chunk.js'
   },
   optimization: {
     minimizer: [
@@ -58,10 +59,14 @@ const webpackConfig = merge(commonConfig, {
   },
   plugins: [
     new webpack.EnvironmentPlugin(environment),
+    new webpack.HashedModuleIdsPlugin(),
     new MiniCSSExtractPlugin({
       filename: 'css/[name].css',
       chunkFilename: 'css/[name].css'
     }),
+    new CopyPlugin([
+      { from: 'public', to: 'images' }
+    ]),
     new CompressionPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
