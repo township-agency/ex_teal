@@ -1,8 +1,8 @@
 <template>
   <div class="flex">
     <img
-      v-if="canShowImgix"
-      :src="imgixUrl"
+      v-if="field.value"
+      :src="field.value"
       style="object-fit: cover;"
       class="w-8 h-8"
     >
@@ -22,17 +22,6 @@ export default {
       default () {
         return {};
       }
-    }
-  },
-
-  computed: {
-    canShowImgix () {
-      return this.field.options.type === 'imgix' && this.field.value;
-    },
-    imgixUrl () {
-      return `//${this.field.options.imgix_host}/${this.field.value}?w=${
-        this.field.options.width
-      }&h=${this.field.options.height}`;
     }
   }
 };

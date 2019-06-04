@@ -6,12 +6,11 @@
       class="text-90"
     >
       <img
-        v-if="isImgix"
-        :src="imgixUrl"
+        :src="field.value"
         class="block mb-2"
       >
       <a
-        :href="s3DirectUrl"
+        :href="field.value"
         target="_blank"
         class="btn btn-default btn-primary btn-icon-inline"
       >
@@ -42,20 +41,6 @@ export default {
     field: {
       type: Object,
       required: true
-    }
-  },
-
-  computed: {
-    imgixUrl () {
-      return `//${this.field.options.imgix_host}/${this.field.value}`;
-    },
-
-    isImgix () {
-      return this.field.options.type == 'imgix';
-    },
-
-    s3DirectUrl () {
-      return `//${this.field.options.s3_host}/${this.field.value}`;
     }
   }
 };

@@ -8,7 +8,6 @@
         <input
           :id="idAttr"
           ref="fileField"
-          :dusk="field.attribute"
           class="form-file-input select-none"
           type="file"
           name="name"
