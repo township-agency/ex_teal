@@ -6,9 +6,6 @@ import Update from '@/views/Update.vue';
 import Error403 from '@/views/403.vue';
 import Error404 from '@/views/404.vue';
 
-import PageDetail from '@/components/Pages/Detail.vue';
-import PageUpdate from '@/components/Pages/Update.vue';
-
 export default [
   {
     path: '/',
@@ -61,26 +58,6 @@ export default [
       return {
         resourceName: route.params.resourceName,
         resourceId: Number.parseInt(route.params.resourceId)
-      };
-    }
-  },
-  {
-    path: '/pages/:pageKey',
-    name: 'page_detail',
-    component: PageDetail,
-    props: route => {
-      return {
-        pageKey: route.params.pageKey
-      };
-    }
-  },
-  {
-    path: '/pages/:pageKey/edit',
-    name: 'page_edit',
-    component: PageUpdate,
-    props: route => {
-      return {
-        pageKey: route.params.pageKey
       };
     }
   },

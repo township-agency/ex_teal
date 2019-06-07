@@ -83,13 +83,3 @@ Vue.component('icon-filter', Filter);
 Vue.component('icon-link', Link);
 Vue.component('icon-reorder', Reorder);
 Vue.component('icon-view', View);
-
-import PagesNav from '@/components/Pages/Nav';
-import ArrayPanel from '@/components/Pages/ArrayPanel';
-import FormPagesArray from '@/components/Pages/FormPagesArray';
-import ResourceField from '@/components/Pages/ResourceField.vue';
-
-Vue.component('pages-nav', PagesNav);
-Vue.component('pages-array-panel', ArrayPanel);
-Vue.component('form-pages-array', FormPagesArray);
-Vue.component('detail-resource-field', ResourceField);

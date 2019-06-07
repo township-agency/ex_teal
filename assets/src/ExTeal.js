@@ -34,7 +34,6 @@ export default class ExTeal {
    */
   boot () {
     this.bootingCallbacks.forEach(callback => callback(Vue, router));
-
     this.bootingCallbacks = [];
   }
 
@@ -45,13 +44,11 @@ export default class ExTeal {
   beamMeUp () {
     const _this = this;
 
-    this.boot();
+    _this.boot();
 
     this.app = new Vue({
       router,
       mounted: function () {
-        this.$loading = this.$refs.loading;
-
         _this.$on('error', message => {
           this.$toasted.show(message, { type: 'error' });
         });

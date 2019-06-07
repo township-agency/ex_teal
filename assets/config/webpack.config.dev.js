@@ -43,7 +43,8 @@ const webpackConfig = merge(commonConfig, {
     port: 8080,
     stats: {
       normal: true
-    }
+    },
+    disableHostCheck: true
   }
 });
 

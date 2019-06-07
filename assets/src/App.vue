@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <loading-view :loading="!configLoaded">
+    <loading-view
+      :loading="!configLoaded"
+    >
       <LayoutTopNav
         :config="config"
         :title="config.title"
