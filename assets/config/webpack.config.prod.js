@@ -65,7 +65,7 @@ const webpackConfig = merge(commonConfig, {
       chunkFilename: 'css/[name].css'
     }),
     new CopyPlugin([
-      { from: 'public', to: 'images' }
+      { from: 'public/images', to: 'images' }
     ]),
     new CompressionPlugin({
       filename: '[path].gz[query]',
