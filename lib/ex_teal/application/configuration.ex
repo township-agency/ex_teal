@@ -35,7 +35,7 @@ defmodule ExTeal.Application.Configuration do
 
       def application_name, do: "ExTeal"
 
-      def logo_image_path, do: "/teal/logo.svg"
+      def logo_image_path, do: "/teal/images/logo.svg"
 
       def path, do: "/teal"
 

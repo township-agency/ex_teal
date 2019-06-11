@@ -56,7 +56,7 @@ defmodule ExTeal.Application.ConfigurationTest do
     alias ExTealTest.{Config, CustomLogoConfig}
 
     test "defaults to /assets/static/images/logo.svg" do
-      assert Config.logo_image_path() == "/teal/logo.svg"
+      assert Config.logo_image_path() == "/teal/images/logo.svg"
     end
 
     test "can be overriden" do
