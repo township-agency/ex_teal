@@ -96,10 +96,7 @@ defmodule ExTeal.Resource.Create do
       Create.call(ArticleResource, conn)
   """
   def call(resource, conn) do
-    attributes =
-      conn
-      |> Map.get(:params, %{})
-      |> resource.permitted_attributes(conn.params, :create)
+    attributes = resource.permitted_attributes(conn, conn.params, :create)
 
     conn
     |> resource.handle_create(attributes)
