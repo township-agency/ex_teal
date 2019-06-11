@@ -39,10 +39,14 @@ defmodule ExTeal.Resource.Attributes do
 
   defmacro __using__(_) do
     quote do
-      unless ExTeal.Resource.Attributes in @behaviour do
-        @behaviour ExTeal.Resource.Attributes
+      alias ExTeal.Resource.Attributes
 
-        def permitted_attributes(_conn, attrs, _), do: attrs
+      unless Attributes in @behaviour do
+        @behaviour Attributes
+
+        def permitted_attributes(_conn, attrs, _) do
+          Enum.into(attrs, %{}, &Attributes.filter_null/1)
+        end
 
         defoverridable permitted_attributes: 3
       end
@@ -51,4 +55,7 @@ defmodule ExTeal.Resource.Attributes do
 
   @doc false
   def from_params(params), do: params
+
+  def filter_null({k, "null"}), do: {k, nil}
+  def filter_null(pair), do: pair
 end

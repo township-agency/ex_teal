@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Broken Default Logo
+- Attributes that have "null" values should be transformed to `nil`
 
 ## [0.2.1] - 2019-06-07
 
