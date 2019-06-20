@@ -19,16 +19,6 @@ defmodule ExTeal.Api.ResourceResponderTest do
       ]
   end
 
-  setup tags do
-    if Map.has_key?(tags, :manifest) do
-      Application.put_env(:ex_teal, :manifest, Map.get(tags, :manifest))
-    end
-
-    on_exit(fn ->
-      Application.put_env(:ex_teal, :manifest, nil)
-    end)
-  end
-
   describe "index/2" do
     @tag manifest: EmptyManifest
     test "returns a 404 when no resource available" do

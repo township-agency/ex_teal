@@ -53,6 +53,7 @@ defmodule ExTeal.Resource.CreateTest do
     end
   end
 
+  @tag manifest: TestExTeal.DefaultManifest
   test "default implementation renders 201 if valid" do
     conn = prep_conn(:post, "/posts", %{"name" => "valid"})
     response = Create.call(TestExTeal.PostResource, conn)

@@ -67,6 +67,10 @@ defmodule ExTeal.Router do
     do: ResourceResponder.attachable(conn, resource_name, resource_id, field_name)
   )
 
+  post("/api/:resource_name/:resource_id/attach/:field_name",
+    do: ResourceResponder.attach(conn, resource_name, resource_id, field_name)
+  )
+
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
 
   get("/api/:resource_name/actions", do: ResourceResponder.actions_for(conn, resource_name))

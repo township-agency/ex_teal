@@ -67,6 +67,10 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  def attach(conn, _resource_uri, _resource_id, _field_name) do
+    conn
+  end
+
   def update_fields(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
       model = resource.handle_show(conn, resource_id)

@@ -5,6 +5,7 @@ import Create from '@/views/Create.vue';
 import Update from '@/views/Update.vue';
 import Error403 from '@/views/403.vue';
 import Error404 from '@/views/404.vue';
+import Attach from '@/views/Attach.vue';
 
 export default [
   {
@@ -60,6 +61,19 @@ export default [
         resourceId: Number.parseInt(route.params.resourceId)
       };
     }
+  },
+  {
+    name: 'attach',
+    path: '/resources/:resourceName/:resourceId/attach/:relatedResourceName',
+    component: Attach,
+    props: route => {
+      return {
+        resourceName: route.params.resourceName,
+        resourceId: route.params.resourceId,
+        relatedResourceName: route.params.relatedResourceName,
+        viaRelationship: route.query.viaRelationship,
+      };
+    },
   },
   {
     name: '403',

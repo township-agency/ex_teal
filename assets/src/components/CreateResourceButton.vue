@@ -1,8 +1,25 @@
 <template>
   <div class="create-resource-button">
+    <router-link
+      v-if="shouldShowAttachButton"
+      :class="classesWithOverrides"
+      :to="{
+        name: 'attach',
+        params: {
+          resourceName: viaResource,
+          resourceId: viaResourceId,
+          relatedResourceName: resourceName,
+        },
+        query: {
+          viaRelationship: viaRelationship
+        }
+      }"
+    >
+      <icon type="create" />
+    </router-link>
     <!-- Create Related Models -->
     <router-link
-      v-if="shouldShowCreateButton"
+      v-else-if="shouldShowCreateButton"
       :class="classesWithOverrides"
       :to="{
         name: 'create',
@@ -61,6 +78,10 @@ export default {
   },
 
   computed: {
+    shouldShowAttachButton () {
+      return this.relationshipType === 'ManyToMany';
+    },
+
     shouldShowCreateButton () {
       return this.canCreate;
     },

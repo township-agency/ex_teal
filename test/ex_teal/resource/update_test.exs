@@ -60,6 +60,7 @@ defmodule ExTeal.Resource.UpdateTest do
     assert response.status == 404
   end
 
+  @tag manifest: TestExTeal.DefaultManifest
   test "default implementation renders 200 if valid" do
     post = insert(:post)
     conn = prep_conn(:put, "/posts/#{post.id}", %{"name" => "valid"})

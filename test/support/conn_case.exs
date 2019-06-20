@@ -42,6 +42,14 @@ defmodule TestExTeal.ConnCase do
       Sandbox.checkout(Repo)
     end
 
+    if Map.has_key?(tags, :manifest) do
+      Application.put_env(:ex_teal, :manifest, Map.get(tags, :manifest))
+    end
+
+    on_exit(fn ->
+      Application.put_env(:ex_teal, :manifest, nil)
+    end)
+
     {:ok, conn: ConnTest.build_conn()}
   end
 end
