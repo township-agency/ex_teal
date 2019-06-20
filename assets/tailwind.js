@@ -540,7 +540,7 @@ module.exports = {
   */
 
   maxWidth: {
-    sidebar: "13rem",
+    sidebar: "15rem",
     xs: "20rem",
     sm: "30rem",
     md: "40rem",
