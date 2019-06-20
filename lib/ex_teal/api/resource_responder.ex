@@ -4,6 +4,7 @@ defmodule ExTeal.Api.ResourceResponder do
   and returns the resources response as serialized json
   """
   alias ExTeal.Api.ErrorSerializer
+  alias ExTeal.Field
   alias ExTeal.Resource.{Create, Delete, Fields, Index, Serializer, Show, Update}
 
   def index(conn, resource_uri) do
@@ -35,6 +36,34 @@ defmodule ExTeal.Api.ResourceResponder do
 
       {:ok, body} = Jason.encode(%{fields: fields})
       Serializer.as_json(conn, body, 200)
+    end
+  end
+
+  def field(conn, resource_uri, field_name) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         {:ok, field} <- Fields.field_for(resource, field_name) do
+      new_schema = resource.model() |> struct(%{})
+      field = field.type.apply_options_for(field, new_schema)
+      {:ok, body} = Jason.encode(%{field: field})
+      Serializer.as_json(conn, body, 200)
+    else
+      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
+  def attachable(conn, resource_uri, resource_id, field_name) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         {:ok, field} <- Fields.field_for(resource, field_name),
+         model when not is_nil(model) <- resource.handle_show(conn, resource_id),
+         %Field{} = updated_field <- field.type.apply_options_for(field, model),
+         {:ok, related_resource} <-
+           ExTeal.resource_for_model(updated_field.private_options.rel.queryable) do
+      related_resource.model()
+      |> related_resource.repo().all()
+      |> Serializer.render_related_key_values(related_resource, conn)
+    else
+      nil -> ErrorSerializer.handle_error(conn, {:error, :not_found})
+      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
     end
   end
 

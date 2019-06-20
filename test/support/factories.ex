@@ -3,7 +3,7 @@ defmodule TestExTeal.Factory do
 
   use ExMachina.Ecto, repo: TestExTeal.Repo
 
-  alias TestExTeal.{Post, User}
+  alias TestExTeal.{Post, Tag, User}
 
   def user_factory do
     %User{
@@ -18,6 +18,12 @@ defmodule TestExTeal.Factory do
       body: "Bacon Ipsum Lorem",
       published: true,
       user: build(:user)
+    }
+  end
+
+  def tag_factory do
+    %Tag{
+      name: sequence(:name, &"Tag #{&1}")
     }
   end
 end

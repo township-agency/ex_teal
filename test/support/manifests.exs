@@ -4,7 +4,8 @@ defmodule TestExTeal.DefaultManifest do
   def resources,
     do: [
       TestExTeal.UserResource,
-      TestExTeal.PostResource
+      TestExTeal.PostResource,
+      TestExTeal.TagResource
     ]
 
   def plugins, do: []

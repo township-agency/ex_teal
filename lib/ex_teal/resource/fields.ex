@@ -38,10 +38,10 @@ defmodule ExTeal.Resource.Fields do
       def meta_for(method, data, all, total, resource, conn),
         do: Fields.meta_for(method, data, all, total, resource, conn)
 
-      def serialize_response(method, resource, data),
-        do: Fields.serialize_response(method, resource, data)
+      def serialize_response(method, resource, data, conn),
+        do: Fields.serialize_response(method, resource, data, conn)
 
-      defoverridable(fields: 0, serialize_response: 3, identifier: 1)
+      defoverridable(fields: 0, serialize_response: 4, identifier: 1)
     end
   end
 
@@ -59,7 +59,7 @@ defmodule ExTeal.Resource.Fields do
     }
   end
 
-  def serialize_response(:index, resource, data) do
+  def serialize_response(:index, resource, data, _conn) do
     fields = fields_for(:index, resource)
 
     data
@@ -75,7 +75,7 @@ defmodule ExTeal.Resource.Fields do
     end)
   end
 
-  def serialize_response(:show, resource, model) do
+  def serialize_response(:show, resource, model, _conn) do
     panels = Panel.gather_panels(resource)
     [default | _others] = panels
 
@@ -119,6 +119,18 @@ defmodule ExTeal.Resource.Fields do
     resource.fields()
     |> Enum.map(&panel_fields/1)
     |> Enum.concat()
+  end
+
+  def field_for(resource, name) do
+    result =
+      resource
+      |> all_fields()
+      |> Enum.find(fn f -> f.field == String.to_existing_atom(name) end)
+
+    case result do
+      nil -> {:error, :not_found}
+      result = %Field{} -> {:ok, result}
+    end
   end
 
   defp panel_fields(%Field{} = field), do: [field]

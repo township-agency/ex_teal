@@ -70,6 +70,41 @@ defmodule ExTeal.Api.ResourceResponderTest do
     end
   end
 
+  describe "attachable/4" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 for an invalid resource" do
+      conn = build_conn(:get, "/api/posts/1/attachable/foo")
+      resp = ResourceResponder.attachable(conn, "posts", "1", "foo")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for a missing field" do
+      conn = build_conn(:get, "/api/posts/1/attachable/foo")
+      resp = ResourceResponder.attachable(conn, "posts", "1", "foo")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for an invalid field" do
+      conn = build_conn(:get, "/api/posts/1/attachable/title")
+      resp = ResourceResponder.attachable(conn, "posts", "1", "title")
+      assert resp.status == 404
+    end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "returns a list of tags" do
+      p = insert(:post)
+      [t1, t2] = insert_pair(:tag)
+
+      conn = build_conn(:get, "/api/posts/#{p.id}/attachable/tags")
+      resp = ResourceResponder.attachable(conn, "posts", "#{p.id}", "tags")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      assert Enum.map(body.data, & &1.value) == [t1.id, t2.id]
+    end
+  end
+
   describe "actions_for/2" do
     @tag manifest: EmptyManifest
     test "returns a 404 when no resource available" do

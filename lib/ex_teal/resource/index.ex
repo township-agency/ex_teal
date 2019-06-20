@@ -212,6 +212,18 @@ defmodule ExTeal.Resource.Index do
   def filter_via_relationships(query, %{
         "via_resource" => resource_name,
         "via_resource_id" => resource_id,
+        "via_relationship" => _rel_name,
+        "relationship_type" => "ManyToMany"
+      }) do
+    from(q in query,
+      left_join: x in assoc(q, ^String.to_atom(resource_name)),
+      where: x.id == ^resource_id
+    )
+  end
+
+  def filter_via_relationships(query, %{
+        "via_resource" => resource_name,
+        "via_resource_id" => resource_id,
         "via_relationship" => rel_name
       }) do
     with {:ok, resource} <- ExTeal.resource_for(resource_name) do

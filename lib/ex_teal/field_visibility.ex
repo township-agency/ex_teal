@@ -88,4 +88,15 @@ defmodule ExTeal.FieldVisibility do
         show_on_index: true,
         show_on_new: false
     }
+
+  @doc """
+  Marks a relational field as searchable
+
+  Only applies to many to many relationships
+  """
+  @spec searchable(Field.t()) :: Field.t()
+  def searchable(%Field{type: ExTeal.Field.ManyToMany} = field),
+    do: put_in(field, [:options, :searchable], true)
+
+  def searchable(field), do: field
 end

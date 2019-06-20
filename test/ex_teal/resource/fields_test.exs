@@ -45,4 +45,16 @@ defmodule ExTeal.Resource.FieldsTest do
              ]
     end
   end
+
+  describe "field_for/2" do
+    test "returns the field in an ok tuple" do
+      [name | _] = SimplePostResource.fields()
+
+      assert {:ok, name} == Fields.field_for(SimplePostResource, "name")
+    end
+
+    test "returns an error tuple" do
+      assert {:error, :not_found} == Fields.field_for(SimplePostResource, "foo")
+    end
+  end
 end

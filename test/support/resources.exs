@@ -1,7 +1,7 @@
 defmodule TestExTeal.UserResource do
   use ExTeal.Resource
 
-  alias ExTeal.Fields.{ID, Text}
+  alias ExTeal.Fields.{ID, ManyToMany, Text}
 
   def model, do: TestExTeal.User
 
@@ -11,14 +11,14 @@ defmodule TestExTeal.UserResource do
     do: [
       ID.make(:id),
       Text.make(:name),
-      Text.make(:email)
+      Text.make(:email),
+      ManyToMany.make(:preferred_tags, TestExTeal.Tag)
     ]
 end
 
 defmodule TestExTeal.PostResource do
   use ExTeal.Resource
-
-  alias ExTeal.Fields.{BelongsTo, Boolean, ID, Text, TextArea}
+  alias ExTeal.Fields.{BelongsTo, Boolean, ID, ManyToMany, Text, TextArea}
 
   def model, do: TestExTeal.Post
 
@@ -28,10 +28,24 @@ defmodule TestExTeal.PostResource do
       Text.make(:name),
       TextArea.make(:body),
       Boolean.make(:published),
-      BelongsTo.make(:user)
+      BelongsTo.make(:user),
+      ManyToMany.make(:tags, TestExTeal.Tag)
     ]
 
   def filters(_conn), do: [TestExTeal.PublishedStatus]
 
   def actions(_), do: [TestExTeal.PublishAction]
+end
+
+defmodule TestExTeal.TagResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.Text
+
+  def model, do: TestExTeal.Tag
+
+  def fields,
+    do: [
+      Text.make(:name)
+    ]
 end
