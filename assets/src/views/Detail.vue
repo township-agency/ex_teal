@@ -118,6 +118,11 @@ export default {
   },
 
   watch: {
+    resourceName: function (newResource, oldResource) {
+      if (newResource !== oldResource) {
+        this.initializeComponent();
+      }
+    },
     resourceId: function (newResourceId, oldResourceId) {
       if (newResourceId != oldResourceId) {
         this.initializeComponent();
