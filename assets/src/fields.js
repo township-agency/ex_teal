@@ -108,6 +108,14 @@ import DetailHasMany from '@/components/Detail/HasMany.vue';
 
 Vue.component('detail-has-many', DetailHasMany);
 
+// HasOne...
+
+import IndexHasOne from '@/components/Index/HasOne.vue';
+import DetailHasOne from '@/components/Detail/HasOne.vue';
+
+Vue.component('index-has-one', IndexHasOne);
+Vue.component('detail-has-one', DetailHasOne);
+
 // MultiSelect...
 import FormMultiSelect from '@/components/Form/MultiSelect.vue';
 import DetailMultiSelect from '@/components/Detail/MultiSelect.vue';
