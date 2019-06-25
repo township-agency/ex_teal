@@ -134,6 +134,10 @@ defmodule ExTeal.Resource.Model do
         title = title_from_resource(struct.__struct__)
         "#{title} #{struct.id}"
 
+      [] ->
+        title = title_from_resource(struct.__struct__)
+        "#{title} #{struct.id}"
+
       list ->
         List.first(list)
     end
