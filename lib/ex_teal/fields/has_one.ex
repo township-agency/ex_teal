@@ -17,7 +17,7 @@ defmodule ExTeal.Fields.HasOne do
   """
 
   use ExTeal.Field
-  alias ExTeal.Field
+  alias ExTeal.{Field, Resource}
 
   def component, do: "has-one"
 
@@ -42,22 +42,16 @@ defmodule ExTeal.Fields.HasOne do
   end
 
   def apply_options_for(field, model) do
-    id =
-      case Map.get(model, field.field) do
-        nil -> nil
-        module -> Map.get(module, :id)
-      end
+    rel = model.__struct__.__schema__(:association, field.field)
 
-    with {:ok, resource} <- ExTeal.resource_for_model(field.relationship) do
-      rel = model.__struct__.__schema__(:association, field.field)
+    with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do
+      opts =
+        Map.merge(field.options, %{
+          has_one_relationship: field.field,
+          listable: true
+        })
 
-      Map.put(field, :options, %{
-        has_one_key: rel.owner_key,
-        has_one_relationship: resource.uri(),
-        has_one_id: id
-      })
-    else
-      {:error, _} -> field
+      Map.put(field, :options, Map.merge(Resource.to_json(resource), opts))
     end
   end
 end

@@ -10,7 +10,7 @@
       <div class="flex justify-between ml-auto">
         <!-- Search -->
         <div
-          v-if="resourceInformation.searchable"
+          v-if="resourceInformation.searchable && !viaHasOne"
           class="relative h-9 mb-6"
         >
           <icon
@@ -28,7 +28,7 @@
           >
         </div>
         <div class="index-action-bar">
-          <div v-if="shouldShowReorder">
+          <div v-if="shouldShowReorder && !viaHasOne">
             <button
               v-if="isSorting"
               :disabled="loading"
@@ -150,6 +150,7 @@
             :via-resource="viaResource"
             :via-resource-id="viaResourceId"
             :via-relationship="viaRelationship"
+            :can-create="!resourceIsFull"
             :relationship-type="relationshipType"
             classes="btn-lg"
           />
@@ -444,7 +445,7 @@ export default {
      * Determine whether to show the selection checkboxes for resources
      */
     shouldShowCheckBoxes () {
-      return Boolean(this.hasResources);
+      return Boolean(this.hasResources && !this.viaHasOne);
     },
 
     /**
@@ -469,7 +470,21 @@ export default {
      */
     shouldShowDeleteMenu () {
       return Boolean(this.selectedResources.length > 0);
-    }
+    },
+
+    /**
+     * Determine if the resource / relationship is "full".
+     */
+    resourceIsFull () {
+      return this.viaHasOne && this.resources.length > 0;
+    },
+
+    /**
+     * Determine if the current resource listing is via a has-one relationship.
+     */
+    viaHasOne () {
+      return this.relationshipType == 'hasOne';
+    },
   },
 
   /**
