@@ -7,7 +7,7 @@ defmodule ExTeal.Router do
 
   use Plug.Router
 
-  alias ExTeal.Api.ResourceResponder
+  alias ExTeal.Api.{ManyToMany, ResourceResponder}
   alias ExTeal.{GlobalSearch, View}
   alias ExTeal.Resource.Serializer
   alias Plug.Conn
@@ -64,11 +64,15 @@ defmodule ExTeal.Router do
   )
 
   get("/api/:resource_name/:resource_id/attachable/:field_name",
-    do: ResourceResponder.attachable(conn, resource_name, resource_id, field_name)
+    do: ManyToMany.attachable(conn, resource_name, resource_id, field_name)
   )
 
   post("/api/:resource_name/:resource_id/attach/:field_name",
-    do: ResourceResponder.attach(conn, resource_name, resource_id, field_name)
+    do: ManyToMany.attach(conn, resource_name, resource_id, field_name)
+  )
+
+  delete("/api/:resource_name/:resource_id/detach/:field_name/:field_id",
+    do: ManyToMany.detach(conn, resource_name, resource_id, field_name, field_id)
   )
 
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))

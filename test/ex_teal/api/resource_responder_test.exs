@@ -2,22 +2,7 @@ defmodule ExTeal.Api.ResourceResponderTest do
   use TestExTeal.ConnCase
   alias ExTeal.Api.ResourceResponder
   alias TestExTeal.{Post, Repo}
-
-  defmodule EmptyManifest do
-    use ExTeal.Manifest
-
-    def resources, do: []
-  end
-
-  defmodule DefaultManifest do
-    use ExTeal.Manifest
-    alias TestExTeal.PostResource
-
-    def resources,
-      do: [
-        PostResource
-      ]
-  end
+  alias TestExTeal.{DefaultManifest, EmptyManifest}
 
   describe "index/2" do
     @tag manifest: EmptyManifest
@@ -57,79 +42,6 @@ defmodule ExTeal.Api.ResourceResponderTest do
       conn = build_conn(:get, "/api/posts/1")
       resp = ResourceResponder.relatable(conn, "posts", "user")
       assert resp.status == 404
-    end
-  end
-
-  describe "attachable/4" do
-    @tag manifest: EmptyManifest
-    test "returns a 404 for an invalid resource" do
-      conn = build_conn(:get, "/api/posts/1/attachable/foo")
-      resp = ResourceResponder.attachable(conn, "posts", "1", "foo")
-      assert resp.status == 404
-    end
-
-    @tag manifest: DefaultManifest
-    test "returns a 404 for a missing field" do
-      conn = build_conn(:get, "/api/posts/1/attachable/foo")
-      resp = ResourceResponder.attachable(conn, "posts", "1", "foo")
-      assert resp.status == 404
-    end
-
-    @tag manifest: DefaultManifest
-    test "returns a 404 for an invalid field" do
-      conn = build_conn(:get, "/api/posts/1/attachable/title")
-      resp = ResourceResponder.attachable(conn, "posts", "1", "title")
-      assert resp.status == 404
-    end
-
-    @tag manifest: TestExTeal.DefaultManifest
-    test "returns a list of tags" do
-      p = insert(:post)
-      [t1, t2] = insert_pair(:tag)
-
-      conn = build_conn(:get, "/api/posts/#{p.id}/attachable/tags")
-      resp = ResourceResponder.attachable(conn, "posts", "#{p.id}", "tags")
-      assert resp.status == 200
-      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
-      assert Enum.map(body.data, & &1.value) == [t1.id, t2.id]
-    end
-  end
-
-  describe "attach/4" do
-    @tag manifest: EmptyManifest
-    test "returns a 404 when no resource available" do
-      conn = build_conn(:post, "/api/posts/1/attach/tags", %{})
-      resp = ResourceResponder.attach(conn, "posts", "1", "tags")
-      assert resp.status == 404
-    end
-
-    @tag manifest: DefaultManifest
-    test "returns a 404 for a missing field" do
-      conn = build_conn(:post, "/api/posts/1/attach/foo", %{})
-      resp = ResourceResponder.attach(conn, "posts", "1", "foo")
-      assert resp.status == 404
-    end
-
-    @tag manifest: DefaultManifest
-    test "returns a 404 for an invalid field" do
-      conn = build_conn(:post, "/api/posts/1/attach/title")
-      resp = ResourceResponder.attach(conn, "posts", "1", "title")
-      assert resp.status == 404
-    end
-
-    @tag manifest: TestExTeal.DefaultManifest
-    test "attachs a tag" do
-      [t1, t2] = insert_pair(:tag)
-      p = insert(:post, tags: [t1])
-
-      conn =
-        build_conn(:post, "/api/posts/#{p.id}/attach/tags", %{
-          "tags" => "#{t2.id}",
-          "viaRelationship" => "tags"
-        })
-
-      resp = ResourceResponder.attach(conn, "posts", "#{p.id}", "tags")
-      assert resp.status == 201
     end
   end
 

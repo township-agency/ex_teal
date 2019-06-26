@@ -10,3 +10,8 @@ defmodule TestExTeal.DefaultManifest do
 
   def plugins, do: []
 end
+
+defmodule TestExTeal.EmptyManifest do
+  use ExTeal.Manifest
+  def resources, do: []
+end

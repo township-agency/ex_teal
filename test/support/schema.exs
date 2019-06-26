@@ -20,7 +20,7 @@ defmodule TestExTeal.Post do
     field(:body, :string)
     field(:published, :boolean)
 
-    many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags")
+    many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 
     belongs_to(:user, TestExTeal.User)
 
