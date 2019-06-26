@@ -2,6 +2,7 @@
   <div class="create-resource-button">
     <!-- Create Related Models -->
     <router-link
+      v-if="shouldShowCreateButton"
       :class="classesWithOverrides"
       :to="{
         name: 'create',
@@ -52,12 +53,16 @@ export default {
     relationshipType: {
       type: String,
       default: ''
+    },
+    canCreate: {
+      type: Boolean,
+      default: true
     }
   },
 
   computed: {
     shouldShowCreateButton () {
-      return true;
+      return this.canCreate;
     },
 
     title () {
