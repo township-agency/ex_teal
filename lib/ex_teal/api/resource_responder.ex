@@ -52,23 +52,49 @@ defmodule ExTeal.Api.ResourceResponder do
   end
 
   def attachable(conn, resource_uri, resource_id, field_name) do
-    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
-         {:ok, field} <- Fields.field_for(resource, field_name),
-         model when not is_nil(model) <- resource.handle_show(conn, resource_id),
-         %Field{} = updated_field <- field.type.apply_options_for(field, model),
-         {:ok, related_resource} <-
-           ExTeal.resource_for_model(updated_field.private_options.rel.queryable) do
+    with {:ok, _resource, _model, field} <- attached(conn, resource_uri, resource_id, field_name),
+         {:ok, related_resource} <- ExTeal.resource_for_model(field.private_options.rel.queryable) do
       related_resource.model()
       |> related_resource.repo().all()
       |> Serializer.render_related_key_values(related_resource, conn)
     else
-      nil -> ErrorSerializer.handle_error(conn, {:error, :not_found})
-      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+      {:error, :not_found} = resp -> ErrorSerializer.handle_error(conn, resp)
     end
   end
 
-  def attach(conn, _resource_uri, _resource_id, _field_name) do
-    conn
+  def attach(conn, resource_uri, resource_id, field_name) do
+    with {:ok, resource, model, field} <- attached(conn, resource_uri, resource_id, field_name),
+         {:ok, related_resource} <-
+           ExTeal.resource_for_model(field.private_options.rel.queryable),
+         {:ok, related_id} <- Map.fetch(conn.params, field_name) do
+      # Preload the relationship on the model.
+      referenced_field = field.private_options.rel.field
+      model = resource.repo().preload(model, referenced_field)
+      result = related_resource.handle_show(conn, related_id)
+      new_content = Map.get(model, referenced_field) ++ [result]
+
+      {:ok, _} =
+        model
+        |> Ecto.Changeset.cast(%{}, [])
+        |> Ecto.Changeset.put_assoc(field.private_options.rel.field, new_content)
+        |> resource.repo().update()
+
+      {:ok, body} = Jason.encode(%{attached: true})
+      Serializer.as_json(conn, body, 201)
+    else
+      {:error, :not_found} = resp -> ErrorSerializer.handle_error(conn, resp)
+    end
+  end
+
+  defp attached(conn, resource_uri, resource_id, field_name) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         {:ok, field} <- Fields.field_for(resource, field_name),
+         model when not is_nil(model) <- resource.handle_show(conn, resource_id),
+         %Field{} = updated_field <- field.type.apply_options_for(field, model) do
+      {:ok, resource, model, updated_field}
+    else
+      _ -> {:error, :not_found}
+    end
   end
 
   def update_fields(conn, resource_uri, resource_id) do
