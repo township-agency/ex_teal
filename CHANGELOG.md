@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.2.4] - 2019-06-26
+
+### Changed
+- Changed the HasOne field to be represented by a simplified resource index table.
+
 ## [0.2.3] - 2019-06-25
 
 ### Added
