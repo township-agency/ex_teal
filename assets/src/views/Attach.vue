@@ -69,7 +69,7 @@ export default {
       required: true,
     },
     resourceId: {
-      type: String,
+      type: Number,
       required: true
     },
     relatedResourceName: {
@@ -82,7 +82,7 @@ export default {
     },
     viaResourceId: {
       type: String,
-      default: null 
+      default: null
     },
     viaRelationship: {
       type: String,

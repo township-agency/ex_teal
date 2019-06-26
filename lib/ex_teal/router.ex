@@ -71,8 +71,8 @@ defmodule ExTeal.Router do
     do: ManyToMany.attach(conn, resource_name, resource_id, field_name)
   )
 
-  delete("/api/:resource_name/:resource_id/detach/:field_name/:field_id",
-    do: ManyToMany.detach(conn, resource_name, resource_id, field_name, field_id)
+  delete("/api/:resource_name/:resource_id/detach/:field_name",
+    do: ManyToMany.detach(conn, resource_name, resource_id, field_name)
   )
 
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))

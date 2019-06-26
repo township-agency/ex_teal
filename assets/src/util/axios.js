@@ -13,7 +13,7 @@ instance.interceptors.response.use(
     const { status } = error.response;
     // Show the user a 500 error
     if (status >= 500) {
-      window.ExTeal.$emit('error', error.response.data.message);
+      window.ExTeal.$emit('error', 'An unknown server error has occurred');
     }
 
     // Handle Session Timeouts

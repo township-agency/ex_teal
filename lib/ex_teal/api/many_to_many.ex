@@ -68,17 +68,21 @@ defmodule ExTeal.Api.ManyToMany do
 
   This function detaches the tag with id 2 from the posts tags relationship.
   """
-  def detach(conn, resource_uri, resource_id, field_name, field_id) do
+  def detach(conn, resource_uri, resource_id, field_name) do
     with {:ok, resource, model, field} <- attached(conn, resource_uri, resource_id, field_name),
          {:ok, related_resource} <- related_for(field) do
       referenced_field = field.private_options.rel.field
       model = resource.repo().preload(model, referenced_field)
+      field_id = conn.params |> Map.get("resources")
       result = related_resource.handle_show(conn, field_id)
 
       current_ids = model |> Map.get(referenced_field) |> Enum.map(& &1.id)
 
       if Enum.member?(current_ids, result.id) do
-        new_content = Map.get(model, referenced_field) -- [result]
+        new_content =
+          model
+          |> Map.get(referenced_field)
+          |> Enum.reject(fn existing -> existing.id == result.id end)
 
         {:ok, _} =
           model

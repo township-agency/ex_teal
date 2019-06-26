@@ -81,22 +81,22 @@ defmodule ExTeal.Api.ManyToManyTest do
   describe "detach/4" do
     @tag manifest: EmptyManifest
     test "returns a 404 when no resource available" do
-      conn = build_conn(:delete, "/api/posts/1/detach/tags/1", %{})
-      resp = ManyToMany.detach(conn, "posts", "1", "tags", "1")
+      conn = build_conn(:delete, "/api/posts/1/detach/tags", %{})
+      resp = ManyToMany.detach(conn, "posts", "1", "tags")
       assert resp.status == 404
     end
 
     @tag manifest: DefaultManifest
     test "returns a 404 for a missing field" do
-      conn = build_conn(:delete, "/api/posts/1/detach/foo/1", %{})
-      resp = ManyToMany.detach(conn, "posts", "1", "foo", "1")
+      conn = build_conn(:delete, "/api/posts/1/detach/foo", %{})
+      resp = ManyToMany.detach(conn, "posts", "1", "foo")
       assert resp.status == 404
     end
 
     @tag manifest: DefaultManifest
     test "returns a 404 for an invalid field" do
-      conn = build_conn(:delete, "/api/posts/1/detach/title/1")
-      resp = ManyToMany.detach(conn, "posts", "1", "title", "1")
+      conn = build_conn(:delete, "/api/posts/1/detach/title", %{})
+      resp = ManyToMany.detach(conn, "posts", "1", "title")
       assert resp.status == 404
     end
 
@@ -104,8 +104,13 @@ defmodule ExTeal.Api.ManyToManyTest do
     test "returns a 404 for an unrelated field" do
       [t1, t2] = insert_pair(:tag)
       p = insert(:post, tags: [t1])
-      conn = build_conn(:delete, "/api/posts/#{p.id}/detach/tags/#{t2.id}")
-      resp = ManyToMany.detach(conn, "posts", "#{p.id}", "tags", "#{t2.id}")
+
+      conn =
+        build_conn(:delete, "/api/posts/#{p.id}/detach/tags", %{
+          "resources" => "#{t2.id}"
+        })
+
+      resp = ManyToMany.detach(conn, "posts", "#{p.id}", "tags")
       assert resp.status == 404
     end
 
@@ -113,8 +118,14 @@ defmodule ExTeal.Api.ManyToManyTest do
     test "returns a 204 after detaching the field" do
       t = insert(:tag)
       p = insert(:post, tags: [t])
-      conn = build_conn(:delete, "/api/posts/#{p.id}/detach/tags/#{t.id}")
-      resp = ManyToMany.detach(conn, "posts", "#{p.id}", "tags", "#{t.id}")
+
+      conn =
+        build_conn(:delete, "/api/posts/#{p.id}/detach/tags", %{
+          "resources" => "#{t.id}"
+        })
+
+      resp = ManyToMany.detach(conn, "posts", "#{p.id}", "tags")
+
       assert resp.status == 204
 
       post = Post |> Repo.get(p.id) |> Repo.preload(:tags)

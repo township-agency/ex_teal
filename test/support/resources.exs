@@ -46,6 +46,7 @@ defmodule TestExTeal.TagResource do
 
   def fields,
     do: [
-      Text.make(:name)
+      Text.make(:name),
+      ManyToMany.make(:posts, TestExTeal.Post)
     ]
 end

@@ -89,6 +89,10 @@
         :resource-name="resourceName"
         :should-show-check-boxes="shouldShowCheckBoxes"
         :update-selection-status="updateSelectionStatus"
+        :via-relationship="viaRelationship"
+        :via-resource="viaResource"
+        :via-resource-id="viaResourceId"
+        :via-many-to-many="viaManyToMany"
         :is-sorting="isSorting"
         :checked="selectedResources.indexOf(resource) > -1"
       />
@@ -109,6 +113,10 @@
         :delete-resource="deleteResource"
         :resource="resource"
         :resource-name="resourceName"
+        :via-relationship="viaRelationship"
+        :via-resource="viaResource"
+        :via-resource-id="viaResourceId"
+        :via-many-to-many="viaManyToMany"
         :should-show-check-boxes="false"
         :update-selection-status="updateSelectionStatus"
         :is-sorting="isSorting"
@@ -192,6 +200,22 @@ export default {
     selectAllMatchingChecked: {
       type: Boolean,
       default: false
+    },
+    viaResource: {
+      type: String,
+      default: ''
+    },
+    viaResourceId: {
+      type: Number,
+      default: null
+    },
+    viaRelationship: {
+      type: String,
+      default: ''
+    },
+    relationshipType: {
+      type: String,
+      default: null
     }
   },
 
@@ -210,11 +234,12 @@ export default {
       return this.resources;
     },
 
-    /**
-     * Determine if all resources are selected.
-     */
     selectAllChecked () {
       return this.selectedResources.length == this.resources.length;
+    },
+
+    viaManyToMany () {
+      return this.relationshipType == 'ManyToMany';
     }
   },
 

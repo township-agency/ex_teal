@@ -218,6 +218,10 @@
           :all-matching-resource-count="allMatchingResourceCount"
           :toggle-select-all="toggleSelectAll"
           :toggle-select-all-matching="toggleSelectAllMatching"
+          :relationship-type="relationshipType"
+          :via-resource="viaResource"
+          :via-resource-id="viaResourceId"
+          :via-relationship="viaRelationship"
           @order="orderByField"
           @delete="deleteResources"
         />
@@ -445,7 +449,7 @@ export default {
      * Determine whether to show the selection checkboxes for resources
      */
     shouldShowCheckBoxes () {
-      return Boolean(this.hasResources && !this.viaHasOne);
+      return Boolean(this.hasResources && !this.viaHasOne && !this.viaManyToMany);
     },
 
     /**
@@ -484,6 +488,13 @@ export default {
      */
     viaHasOne () {
       return this.relationshipType == 'hasOne';
+    },
+
+    /**
+     * Determine if the current resource listing is via a many-to-many relationship.
+     */
+    viaManyToMany () {
+      return this.relationshipType == 'ManyToMany';
     },
   },
 
