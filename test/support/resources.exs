@@ -40,7 +40,7 @@ end
 defmodule TestExTeal.TagResource do
   use ExTeal.Resource
 
-  alias ExTeal.Fields.Text
+  alias ExTeal.Fields.{ManyToMany, Text}
 
   def model, do: TestExTeal.Tag
 

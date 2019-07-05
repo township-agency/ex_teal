@@ -6,6 +6,7 @@ defmodule ExTeal.Resource.Fields do
   """
 
   alias ExTeal.{Field, Panel}
+  alias ExTeal.Fields.ManyToManyBelongsTo
 
   @doc """
   Used to get the fields available to the current action.
@@ -49,18 +50,30 @@ defmodule ExTeal.Resource.Fields do
     []
   end
 
-  def meta_for(:index, _data, all, total, resource, _conn) do
+  def meta_for(:index, _data, all, total, resource, conn) do
+    fields =
+      if Map.get(conn.params, "relationship_type") == "ManyToMany" do
+        fields_for_many_to_many(:index, resource, conn)
+      else
+        fields_for(:index, resource)
+      end
+
     %{
       label: resource.title(),
-      fields: fields_for(:index, resource),
+      fields: fields,
       total: total,
       all: all,
       sortable_by: resource.sortable_by() || false
     }
   end
 
-  def serialize_response(:index, resource, data, _conn) do
-    fields = fields_for(:index, resource)
+  def serialize_response(:index, resource, data, conn) do
+    fields =
+      if Map.get(conn.params, "relationship_type") == "ManyToMany" do
+        fields_for_many_to_many(:index, resource, conn)
+      else
+        fields_for(:index, resource)
+      end
 
     data
     |> Enum.map(fn x ->
@@ -89,6 +102,35 @@ defmodule ExTeal.Resource.Fields do
       fields: fields,
       panels: panels
     }
+  end
+
+  @doc """
+  Instead of returning the fields for an index table of a resource,
+  this function is called to render a simple belongs to field via a
+  `ManyToManyBelongsTo` field.  Eventually this function will look up pivot
+  fields and return them as well.
+
+  Given a many to many relationship between posts and tags, an index query
+  for the tags associated with a post should return a single many to many belongs to
+  field that represents a tag associated with the post.  The field will then have options
+  built up to make it behave like a belongs_to on the client side.
+  """
+  def fields_for_many_to_many(:index, _resource_queried, conn) do
+    with {:ok, queried_through_resource_key} <- Map.fetch(conn.params, "via_resource"),
+         {:ok, relationship} <- Map.fetch(conn.params, "via_relationship"),
+         {:ok, queried_resource} <- ExTeal.resource_for(queried_through_resource_key),
+         {:ok, related_resource} <-
+           ExTeal.resource_for_relationship(queried_resource, relationship) do
+      [
+        ManyToManyBelongsTo.make(
+          String.to_existing_atom(relationship),
+          related_resource,
+          queried_resource
+        )
+      ]
+    else
+      _ -> {:error, :not_found}
+    end
   end
 
   def fields_for(:index, resource) do

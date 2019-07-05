@@ -38,6 +38,37 @@ defmodule ExTeal.Resource.IndexTest do
     assert u.id == user.id
   end
 
+  @tag manifest: TestExTeal.DefaultManifest
+  test "can use a many to many relationship to return fields correctly" do
+    [t1, _t2] = insert_pair(:tag)
+    p = insert(:post, tags: [t1])
+
+    conn =
+      prep_conn(:get, "tags", %{
+        "via_resource" => "posts",
+        "via_resource_id" => "#{p.id}",
+        "via_relationship" => "tags",
+        "relationship_type" => "ManyToMany"
+      })
+
+    response = Index.call(TestExTeal.TagResource, conn)
+    assert 200 == response.status
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    [t] = json[:data]
+    assert t.id == t1.id
+
+    [field] = t.fields
+    assert field.attribute == "tags"
+    assert field.component == "belongs-to"
+    assert field.value == t1.name
+
+    assert field.options == %{
+             belongs_to_id: t1.id,
+             belongs_to_key: "id",
+             belongs_to_relationship: "tags"
+           }
+  end
+
   def prep_conn(method, path, params \\ %{}) do
     params = Map.merge(params, %{"_format" => "json"})
 

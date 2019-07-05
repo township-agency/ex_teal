@@ -171,6 +171,15 @@ defmodule ExTeal.Resource.Index do
   end
 
   @doc false
+  def sort(
+        query,
+        %{"order_by" => field, "order_by_direction" => dir, "via_relationship" => field},
+        _resource
+      )
+      when not is_nil(field) and not is_nil(dir) do
+    handle_sort(query, nil, :id, dir)
+  end
+
   def sort(query, %{"order_by" => field, "order_by_direction" => dir}, resource)
       when not is_nil(field) and not is_nil(dir) do
     field_struct = Enum.find(resource.fields(), &(&1.attribute == field))

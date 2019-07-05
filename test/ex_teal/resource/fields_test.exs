@@ -1,7 +1,8 @@
 defmodule ExTeal.Resource.FieldsTest do
-  use ExUnit.Case
-  alias ExTeal.Fields.Text
+  use TestExTeal.ConnCase
+  alias ExTeal.Fields.{ManyToManyBelongsTo, Text}
   alias ExTeal.Resource.Fields
+  alias TestExTeal.{PostResource, TagResource}
 
   defmodule SimplePostResource do
     use ExTeal.Resource
@@ -56,5 +57,34 @@ defmodule ExTeal.Resource.FieldsTest do
     test "returns an error tuple" do
       assert {:error, :not_found} == Fields.field_for(SimplePostResource, "foo")
     end
+  end
+
+  describe "fields_for_many_to_many/3" do
+    @tag manifest: TestExTeal.DefaultManifest
+    test "returns a belongs_to field for an index" do
+      [t1, _t2] = insert_pair(:tag)
+      p = insert(:post, tags: [t1])
+
+      conn =
+        prep_conn(:get, "tags", %{
+          "via_resource" => "posts",
+          "via_resource_id" => "#{p.id}",
+          "via_relationship" => "tags",
+          "relationship_type" => "ManyToMany"
+        })
+
+      [field] = Fields.fields_for_many_to_many(:index, PostResource, conn)
+      assert field.type == ManyToManyBelongsTo
+      assert field.relationship == TagResource
+      assert field.private_options.queried_resource == PostResource
+    end
+  end
+
+  def prep_conn(method, path, params \\ %{}) do
+    params = Map.merge(params, %{"_format" => "json"})
+
+    method
+    |> build_conn(path, params)
+    |> fetch_query_params
   end
 end
