@@ -70,7 +70,34 @@ defmodule ExTeal.Resource.IndexTest do
   end
 
   @tag manifest: TestExTeal.DefaultManifest
-  test "can use a many to many relationship to return pivot fields correctly" do
+  test "can use a many to many relationship to sort pivot fields correctly" do
+    [t1, t2] = insert_pair(:tag)
+    u = insert(:user)
+
+    insert(:preferred_tag, user: u, tag: t2, order: 5, notes: "bar")
+    insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
+
+    conn =
+      prep_conn(:get, "tags", %{
+        "via_resource" => "users",
+        "via_resource_id" => "#{u.id}",
+        "via_relationship" => "preferred_tags",
+        "relationship_type" => "ManyToMany",
+        "order_by" => "order",
+        "order_by_direction" => "asc"
+      })
+
+    response = Index.call(TestExTeal.TagResource, conn)
+    assert 200 == response.status
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    [result_1, result_2] = json[:data]
+
+    assert result_1.id == t1.id
+    assert result_2.id == t2.id
+  end
+
+  @tag manifest: TestExTeal.DefaultManifest
+  test "can sort by pivot fields" do
     [t1, _t2] = insert_pair(:tag)
     u = insert(:user)
 
@@ -89,14 +116,6 @@ defmodule ExTeal.Resource.IndexTest do
     json = Jason.decode!(response.resp_body, keys: :atoms!)
     [t] = json[:data]
     assert t.id == t1.id
-
-    [field, order, notes] = t.fields
-    assert field.attribute == "preferred_tags"
-    assert field.component == "belongs-to"
-    assert field.value == t1.name
-
-    assert order.value == 2
-    assert notes.value == "foo"
   end
 
   @tag manifest: TestExTeal.DefaultManifest

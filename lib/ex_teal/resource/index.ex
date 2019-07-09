@@ -182,6 +182,20 @@ defmodule ExTeal.Resource.Index do
     handle_sort(query, nil, :id, dir)
   end
 
+  def sort(
+        query,
+        %{"order_by" => field, "order_by_direction" => dir, "relationship_type" => "ManyToMany"} =
+          params,
+        resource
+      ) do
+    field = Enum.find(resource.fields(), &(&1.attribute == field))
+
+    case field do
+      nil -> sort_by_pivot(query, params, resource)
+      _ -> handle_sort(query, field, String.to_existing_atom(field), dir)
+    end
+  end
+
   def sort(query, %{"order_by" => field, "order_by_direction" => dir}, resource)
       when not is_nil(field) and not is_nil(dir) do
     field_struct = Enum.find(resource.fields(), &(&1.attribute == field))
@@ -202,6 +216,15 @@ defmodule ExTeal.Resource.Index do
   defp handle_sort(query, _, field, "asc"), do: from(query, order_by: ^[{:asc, field}])
   defp handle_sort(query, _, field, "desc"), do: from(query, order_by: ^[{:desc, field}])
   defp handle_sort(query, _, _, _), do: query
+
+  defp sort_by_pivot(query, params, _resource) do
+    with {:ok, field} <- Map.fetch(params, "order_by"),
+         {:ok, dir} <- Map.fetch(params, "order_by_direction"),
+         field_atom <- String.to_existing_atom(field),
+         dir_atom <- String.to_existing_atom(dir) do
+      order_by(query, [q, x], [{^dir_atom, field(x, ^field_atom)}])
+    end
+  end
 
   def search(query, %{"search" => term}, resource) when not is_nil(term) and term != "" do
     dynamic = false
