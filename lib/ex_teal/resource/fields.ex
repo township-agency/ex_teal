@@ -77,13 +77,9 @@ defmodule ExTeal.Resource.Fields do
 
     data
     |> Enum.map(fn x ->
-      fields =
-        fields
-        |> apply_values(x, nil, :index)
-
       %{
-        fields: apply_values(fields, x, nil, :index),
-        id: x.id
+        fields: apply_values(fields, x, resource, :index, nil),
+        id: id_for(x)
       }
     end)
   end
@@ -95,7 +91,7 @@ defmodule ExTeal.Resource.Fields do
     fields =
       :show
       |> fields_for(resource)
-      |> apply_values(model, default, :show)
+      |> apply_values(model, resource, :show, default)
 
     %{
       id: resource.identifier(model),
@@ -103,6 +99,9 @@ defmodule ExTeal.Resource.Fields do
       panels: panels
     }
   end
+
+  defp id_for(%{pivot: true, _row: %{id: id}}), do: id
+  defp id_for(%{id: id}), do: id
 
   @doc """
   Instead of returning the fields for an index table of a resource,
@@ -121,15 +120,36 @@ defmodule ExTeal.Resource.Fields do
          {:ok, queried_resource} <- ExTeal.resource_for(queried_through_resource_key),
          {:ok, related_resource} <-
            ExTeal.resource_for_relationship(queried_resource, relationship) do
-      [
+      primary = [
         ManyToManyBelongsTo.make(
           String.to_existing_atom(relationship),
           related_resource,
           queried_resource
         )
       ]
+
+      pivot =
+        pivot_fields_for(
+          queried_resource,
+          String.to_existing_atom(relationship),
+          related_resource
+        )
+
+      primary ++ pivot
     else
       _ -> {:error, :not_found}
+    end
+  end
+
+  def pivot_fields_for(related, rel, _queried) do
+    relationship_field = Enum.find(related.fields(), &(&1.field == rel))
+
+    case Map.get(relationship_field, :private_options) do
+      nil ->
+        []
+
+      options when is_map(options) ->
+        Map.get(options, :pivot_fields, [])
     end
   end
 
@@ -178,7 +198,14 @@ defmodule ExTeal.Resource.Fields do
   defp panel_fields(%Field{} = field), do: [field]
   defp panel_fields(%Panel{fields: fields}), do: fields
 
-  def apply_values(fields, model, panel \\ nil, type) do
+  def apply_values(fields, model, resource, type, panel \\ nil)
+
+  def apply_values(fields, %{pivot: true} = model, resource, type, panel) do
+    model = Map.merge(model._row, model._pivot)
+    apply_values(fields, model, resource, type, panel)
+  end
+
+  def apply_values(fields, model, _resource, type, panel) do
     fields
     |> Enum.map(fn field ->
       value = field.type.value_for(field, model, type)

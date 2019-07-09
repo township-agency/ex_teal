@@ -32,6 +32,7 @@ defmodule TestExTeal.Migrations do
     create table(:preferred_tags) do
       add(:user_id, references(:users))
       add(:tag_id, references(:tags))
+      add(:notes, :string)
       add(:order, :integer)
       timestamps()
     end

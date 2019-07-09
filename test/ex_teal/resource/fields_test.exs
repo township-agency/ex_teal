@@ -1,8 +1,9 @@
 defmodule ExTeal.Resource.FieldsTest do
   use TestExTeal.ConnCase
+
   alias ExTeal.Fields.{ManyToManyBelongsTo, Text}
   alias ExTeal.Resource.Fields
-  alias TestExTeal.{PostResource, TagResource}
+  alias TestExTeal.{PostResource, TagResource, UserResource}
 
   defmodule SimplePostResource do
     use ExTeal.Resource
@@ -77,6 +78,32 @@ defmodule ExTeal.Resource.FieldsTest do
       assert field.type == ManyToManyBelongsTo
       assert field.relationship == TagResource
       assert field.private_options.queried_resource == PostResource
+    end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "returns pivot fields for an index" do
+      [t1, t2] = insert_pair(:tag)
+      u = insert(:user)
+
+      insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
+      insert(:preferred_tag, user: u, tag: t2, order: 1, notes: "bar")
+
+      conn =
+        prep_conn(:get, "tags", %{
+          "via_resource" => "users",
+          "via_resource_id" => "#{u.id}",
+          "via_relationship" => "preferred_tags",
+          "relationship_type" => "ManyToMany"
+        })
+
+      [tag_field, order_field, note_field] =
+        Fields.fields_for_many_to_many(:index, UserResource, conn)
+
+      assert tag_field.type == ManyToManyBelongsTo
+      assert tag_field.relationship == TagResource
+      assert tag_field.private_options.queried_resource == UserResource
+      assert order_field.type == ExTeal.Fields.Number
+      assert note_field.type == ExTeal.Fields.Text
     end
   end
 

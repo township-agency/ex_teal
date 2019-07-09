@@ -44,4 +44,9 @@ defmodule ExTeal.Fields.ManyToMany do
       }
     end
   end
+
+  def with_pivot_fields(field, pivot_fields) do
+    pivot_fields = Enum.map(pivot_fields, &Map.put(&1, :pivot_field, true))
+    %{field | private_options: %{pivot_fields: pivot_fields}}
+  end
 end

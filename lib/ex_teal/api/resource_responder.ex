@@ -57,7 +57,7 @@ defmodule ExTeal.Api.ResourceResponder do
       fields =
         :edit
         |> Fields.fields_for(resource)
-        |> Fields.apply_values(model, nil, :edit)
+        |> Fields.apply_values(model, resource, :edit, nil)
 
       {:ok, body} = Jason.encode(%{fields: fields})
       Serializer.as_json(conn, body, 200)

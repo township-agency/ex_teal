@@ -3,6 +3,7 @@ defmodule ExTeal.Resource.Index do
   Behavior for handling index requests for a given resource
   """
 
+  alias Ecto.Association.ManyToMany
   alias ExTeal.Field
   alias ExTeal.Fields.BelongsTo
   alias ExTeal.Filter
@@ -72,6 +73,7 @@ defmodule ExTeal.Resource.Index do
   def call(resource, conn) do
     conn
     |> resource.handle_index(conn.params)
+    |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
     |> Index.filter(conn, resource)
     |> Index.sort(conn.params, resource)
@@ -218,16 +220,30 @@ defmodule ExTeal.Resource.Index do
     dynamic([q], ilike(field(q, ^f), ^"%#{term}%") or ^dynamic)
   end
 
+  def with_pivot_fields(
+        query,
+        %{
+          "via_resource" => resource_name,
+          "via_resource_id" => resource_id,
+          "via_relationship" => rel_name,
+          "relationship_type" => "ManyToMany"
+        },
+        _resource
+      ) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_name),
+         {:ok, resource_assoc} <- schema_assoc_for(resource, rel_name) do
+      pivot_query(query, resource_assoc, resource_id)
+    end
+  end
+
+  def with_pivot_fields(query, _params, _resource) do
+    query
+  end
+
   def filter_via_relationships(query, %{
-        "via_resource" => resource_name,
-        "via_resource_id" => resource_id,
-        "via_relationship" => _rel_name,
         "relationship_type" => "ManyToMany"
       }) do
-    from(q in query,
-      left_join: x in assoc(q, ^String.to_atom(resource_name)),
-      where: x.id == ^resource_id
-    )
+    query
   end
 
   def filter_via_relationships(query, %{
@@ -235,13 +251,48 @@ defmodule ExTeal.Resource.Index do
         "via_resource_id" => resource_id,
         "via_relationship" => rel_name
       }) do
-    with {:ok, resource} <- ExTeal.resource_for(resource_name) do
-      relationship = resource.model().__schema__(:association, String.to_atom(rel_name))
+    with {:ok, resource} <- ExTeal.resource_for(resource_name),
+         {:ok, relationship} <- schema_assoc_for(resource, rel_name) do
       from(query, where: ^[{relationship.related_key, resource_id}])
     end
   end
 
   def filter_via_relationships(query, _params), do: query
+
+  defp schema_assoc_for(resource, rel_name) do
+    associations = resource.model().__schema__(:associations)
+    rel = String.to_existing_atom(rel_name)
+
+    case Enum.member?(associations, rel) do
+      false ->
+        {:error, :not_found}
+
+      true ->
+        {:ok, resource.model().__schema__(:association, rel)}
+    end
+  end
+
+  defp pivot_query(query, %ManyToMany{join_through: join_through} = assoc, resource_id)
+       when is_bitstring(join_through) do
+    join_pivot_and_filter(query, assoc, resource_id)
+  end
+
+  defp pivot_query(query, assoc, resource_id) do
+    query
+    |> join_pivot_and_filter(assoc, resource_id)
+    |> select([q, x], %{_row: q, _pivot: x, pivot: true})
+  end
+
+  defp join_pivot_and_filter(query, assoc, resource_id) do
+    [{rel_1, _rel_2}, {pivot_id, id}] = assoc.join_keys
+
+    from(
+      q in query,
+      left_join: x in ^assoc.join_through,
+      on: field(x, ^pivot_id) == field(q, ^id),
+      where: field(x, ^rel_1) == ^String.to_integer(resource_id)
+    )
+  end
 
   @doc false
   def execute_query(%Plug.Conn{} = conn, _conn, _resource, _type), do: conn

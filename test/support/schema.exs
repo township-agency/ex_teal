@@ -5,7 +5,7 @@ defmodule TestExTeal.User do
     field(:email, :string)
     field(:name, :string)
 
-    many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferedTag)
+    many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
     timestamps()
   end
 end
@@ -44,6 +44,12 @@ defmodule TestExTeal.Tag do
   schema "tags" do
     field(:name, :string)
     many_to_many(:posts, TestExTeal.Post, join_through: "posts_tags", on_replace: :delete)
+
+    many_to_many(:users, TestExTeal.User,
+      join_through: TestExTeal.PreferredTag,
+      on_replace: :delete
+    )
+
     timestamps()
   end
 
@@ -60,13 +66,14 @@ defmodule TestExTeal.PreferredTag do
   alias TestExTeal.{PreferredTag, Tag, User}
 
   schema "preferred_tags" do
+    field(:notes, :string)
     field(:order, :integer)
     belongs_to(:user, User)
     belongs_to(:tag, Tag)
     timestamps()
   end
 
-  @fields ~w(user_id tag_id order)a
+  @fields ~w(user_id tag_id order notes)a
 
   def changeset(%PreferredTag{} = pt, params \\ %{}) do
     pt

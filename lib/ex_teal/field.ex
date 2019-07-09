@@ -17,6 +17,7 @@ defmodule ExTeal.Field do
             private_options: nil,
             prefix_component: nil,
             sortable: true,
+            pivot_field: false,
             text_align: "left",
             value: nil,
             panel: nil,
