@@ -51,6 +51,19 @@
             </select-control>
           </template>
         </default-field>
+
+        <!-- Pivot Fields -->
+        <div v-for="field in fields">
+          <component
+            :is="'form-' + field.component"
+            :resource-name="resourceName"
+            :field="field"
+            :errors="validationErrors"
+            :via-resource="viaResource"
+            :via-resource-id="viaResourceId"
+            :via-relationship="viaRelationship"
+          />
+        </div>
       </form>
     </card>
   </loading-view>
@@ -95,6 +108,7 @@ export default {
     submittedViaAttachAndAttachAnother: false,
     submittedViaAttachResource: false,
     field: null,
+    fields: [],
     validationErrors: new Errors(),
     selectedResource: null,
     selectedResourceId: null
@@ -109,6 +123,9 @@ export default {
     },
     attachmentFormData (){
       return tap(new FormData(), formData => {
+        this.fields.forEach(field => {
+          field.fill(formData);
+        });
         if (!this.selectedResource) {
           formData.append(this.relatedResourceName, '');
         } else {
@@ -127,6 +144,7 @@ export default {
     initializeComponent () {
       this.clearSelection();
       this.getField();
+      this.getPivotFields();
       this.resetErrors();
     },
 
@@ -140,7 +158,18 @@ export default {
           this.getAvailableResources();
           this.loading = false;
         });
+    },
 
+    getPivotFields () {
+      this.fields = [];
+      ExTeal.request()
+        .get(`/api/${this.resourceName}/creation-pivot-fields/${this.relatedResourceName}`)
+        .then(({ data }) => {
+          this.fields = data.fields;
+          this.fields.forEach((field) => {
+            field.fill = () => '';
+          });
+        });
     },
 
     resetErrors () {
@@ -180,6 +209,10 @@ export default {
     async attachResource () {
       this.submittedViaAttachResource = true;
 
+      if(!this.selectedResource) {
+        return;
+      }
+
       try {
         await this.attachRequest();
 
@@ -193,7 +226,7 @@ export default {
         });
       } catch (error) {
         this.submittedViaAttachResource = false;
-
+        this.handleInvalid(error);
         if (error.response.status === 422) {
           this.validationErrors = new Errors(error.response.data.errors);
         }
@@ -202,6 +235,11 @@ export default {
 
     async attachAndAttachAnother () {
       this.submittedViaAttachAndAttachAnother = true;
+
+      if(!this.selectedResource) {
+        return;
+      }
+
       try {
         await this.attachRequest();
 
@@ -209,15 +247,18 @@ export default {
         this.initializeComponent();
       } catch (error) {
         this.submittedViaAttachAndAttachAnother = false;
-
-        if (error.response.status === 422) {
-          this.validationErrors = new Errors(error.response.data.errors);
-        }
+        this.handleInvalid(error);
       }
     },
 
     attachRequest () {
       return ExTeal.request().post(`/api/${this.resourceName}/${this.resourceId}/attach/${this.relatedResourceName}`, this.attachmentFormData);
+    },
+
+    handleInvalid(error) {
+      let errors = error.response.data.errors;
+      ExTeal.$emit('error', `Unable to attach the ${this.relatedResourceLabel}`);
+      this.validationErrors = new Errors(errors);
     }
   },
 };

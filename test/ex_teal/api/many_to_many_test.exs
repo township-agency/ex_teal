@@ -1,7 +1,7 @@
 defmodule ExTeal.Api.ManyToManyTest do
   use TestExTeal.ConnCase
   alias ExTeal.Api.ManyToMany
-  alias TestExTeal.{DefaultManifest, EmptyManifest, Post, Repo}
+  alias TestExTeal.{DefaultManifest, EmptyManifest, Post, PreferredTag, Repo}
 
   describe "attachable/4" do
     @tag manifest: EmptyManifest
@@ -76,6 +76,50 @@ defmodule ExTeal.Api.ManyToManyTest do
       post = Post |> Repo.get(p.id) |> Repo.preload(:tags)
       assert post.tags == [t1, t2]
     end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "attaches with pivot data" do
+      tag = insert(:tag)
+      user = insert(:user)
+
+      conn =
+        build_conn(:post, "/api/users/#{user.id}/attach/preferred_tags", %{
+          "preferred_tags" => "#{tag.id}",
+          "order" => "2",
+          "notes" => "foo",
+          "viaRelationship" => "preferred_tags"
+        })
+
+      resp = ManyToMany.attach(conn, "users", "#{user.id}", "preferred_tags")
+      assert resp.status == 201
+
+      query =
+        from(
+          p in PreferredTag,
+          where: p.tag_id == ^tag.id,
+          where: p.user_id == ^user.id
+        )
+
+      [preferred] = Repo.all(query)
+      assert preferred.order == 2
+      assert preferred.notes == "foo"
+    end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "returns validation errors for bad params" do
+      tag = insert(:tag)
+      user = insert(:user)
+
+      conn =
+        build_conn(:post, "/api/users/#{user.id}/attach/preferred_tags", %{
+          "preferred_tags" => "#{tag.id}",
+          "notes" => "foo",
+          "viaRelationship" => "preferred_tags"
+        })
+
+      resp = ManyToMany.attach(conn, "users", "#{user.id}", "preferred_tags")
+      assert resp.status == 422
+    end
   end
 
   describe "detach/4" do
@@ -130,6 +174,48 @@ defmodule ExTeal.Api.ManyToManyTest do
 
       post = Post |> Repo.get(p.id) |> Repo.preload(:tags)
       assert post.tags == []
+    end
+  end
+
+  describe "creation_pivot_fields/3" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:get, "/api/posts/creation-pivot-fields/tags", %{})
+      resp = ManyToMany.creation_pivot_fields(conn, "posts", "tags")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for a missing field" do
+      conn = build_conn(:get, "/api/posts/creation-pivot-fields/foo", %{})
+      resp = ManyToMany.creation_pivot_fields(conn, "posts", "foo")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for an invalid field" do
+      conn = build_conn(:get, "/api/posts/creation-pivot-fields/title", %{})
+      resp = ManyToMany.creation_pivot_fields(conn, "posts", "title")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns an empty list for a relationship with no pivot fields" do
+      conn = build_conn(:get, "/api/posts/creation-pivot-fields/tags", %{})
+      resp = ManyToMany.creation_pivot_fields(conn, "posts", "tags")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      assert body == %{fields: []}
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns the pivot fields" do
+      conn = build_conn(:get, "/api/users/creation-pivot-fields/preferred_tags", %{})
+      resp = ManyToMany.creation_pivot_fields(conn, "users", "preferred_tags")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      [f1, _f2] = body.fields
+      assert f1.attribute == "order"
     end
   end
 end

@@ -40,7 +40,7 @@ defmodule ExTeal.Fields.ManyToMany do
       %{
         field
         | options: Map.merge(Resource.to_json(resource), opts),
-          private_options: %{rel: rel}
+          private_options: Map.merge(field.private_options, %{rel: rel})
       }
     end
   end

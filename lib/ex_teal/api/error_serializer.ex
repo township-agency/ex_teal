@@ -34,6 +34,11 @@ defmodule ExTeal.Api.ErrorSerializer do
 
   def render(data), do: !Jason.encode(data)
 
+  def handle_error(conn, {:error, %Changeset{} = cs}) do
+    body = cs |> render() |> Jason.encode!()
+    Serializer.as_json(conn, body, 422)
+  end
+
   def handle_error(conn, _reason) do
     body =
       Jason.encode!(%{

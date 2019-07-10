@@ -75,6 +75,10 @@ defmodule ExTeal.Router do
     do: ManyToMany.detach(conn, resource_name, resource_id, field_name)
   )
 
+  get("/api/:resource_name/creation-pivot-fields/:field_name",
+    do: ManyToMany.creation_pivot_fields(conn, resource_name, field_name)
+  )
+
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
 
   get("/api/:resource_name/actions", do: ResourceResponder.actions_for(conn, resource_name))

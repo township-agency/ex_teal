@@ -51,12 +51,13 @@ defmodule ExTeal.Resource.Fields do
   end
 
   def meta_for(:index, _data, all, total, resource, conn) do
+    is_many_to_many = Map.get(conn.params, "relationship_type") == "ManyToMany"
+
     fields =
-      if Map.get(conn.params, "relationship_type") == "ManyToMany" do
-        fields_for_many_to_many(:index, resource, conn)
-      else
-        fields_for(:index, resource)
-      end
+      if(is_many_to_many,
+        do: fields_for_many_to_many(:index, resource, conn),
+        else: fields_for(:index, resource)
+      )
 
     %{
       label: resource.title(),
@@ -184,10 +185,12 @@ defmodule ExTeal.Resource.Fields do
   end
 
   def field_for(resource, name) do
+    field_name = String.to_existing_atom(name)
+
     result =
       resource
       |> all_fields()
-      |> Enum.find(fn f -> f.field == String.to_existing_atom(name) end)
+      |> Enum.find(fn f -> f.field == field_name end)
 
     case result do
       nil -> {:error, :not_found}
