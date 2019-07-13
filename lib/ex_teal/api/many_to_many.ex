@@ -7,6 +7,7 @@ defmodule ExTeal.Api.ManyToMany do
   - `DELETE detach` - Removing a related resource
   - `GET creation-pivot-fields` - Fetch the pivot fields associated with a relationship
   """
+  import Ecto.Query, only: [from: 2]
 
   alias Ecto.Changeset
   alias ExTeal.Api.ErrorSerializer
@@ -147,6 +148,67 @@ defmodule ExTeal.Api.ManyToMany do
       Serializer.as_json(conn, body, 200)
     else
       {:error, :not_found} = resp -> ErrorSerializer.handle_error(conn, resp)
+    end
+  end
+
+  @doc """
+  Returns a list of fields associated with the pivot table of a many to many relationship
+  for an existing relationship.
+  """
+  def update_pivot_fields(conn, resource_uri, resource_id, field_name, related_id) do
+    with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
+         schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
+         {:ok, related_resource} <- ExTeal.resource_for_model(field.relationship),
+         related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
+         pivot <- field.type.apply_options_for(field, schema),
+         {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
+         {:ok, pivot_data} <- find_pivot_for(pivot, schema, related, resource.repo()) do
+      fields =
+        Enum.map(pivot_fields, fn field ->
+          value = field.type.value_for(field, pivot_data, :pivot)
+          Map.put(field, :value, value)
+        end)
+
+      {:ok, body} = Jason.encode(%{fields: fields})
+      Serializer.as_json(conn, body, 200)
+    else
+      nil ->
+        ErrorSerializer.handle_error(conn, {:error, :not_found})
+
+      :error ->
+        {:ok, body} = Jason.encode(%{fields: []})
+        Serializer.as_json(conn, body, 200)
+
+      {:error, :not_found} = resp ->
+        ErrorSerializer.handle_error(conn, resp)
+    end
+  end
+
+  defp find_pivot_for(%Field{} = pivot, primary, secondary, repo) do
+    rel = pivot.private_options.rel
+    [{primary_pivot, primary_fetch}, {secondary_pivot, secondary_fetch}] = rel.join_keys
+
+    field_identifiers =
+      pivot.private_options.pivot_fields
+      |> Enum.map(& &1.field)
+
+    primary_id = Map.get(primary, primary_fetch)
+    secondary_id = Map.get(secondary, secondary_fetch)
+
+    query =
+      from(
+        r in rel.join_through,
+        where: field(r, ^primary_pivot) == ^primary_id,
+        where: field(r, ^secondary_pivot) == ^secondary_id,
+        limit: 1,
+        select: map(r, ^field_identifiers)
+      )
+
+    result = repo.one(query)
+
+    case result do
+      nil -> {:error, :not_found}
+      result -> {:ok, result}
     end
   end
 
