@@ -1,7 +1,7 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
-  @version "0.2.4"
+  @version "0.3.0"
 
   @source "https://gitlab.motel-lab.com/teal/ex_teal"
 

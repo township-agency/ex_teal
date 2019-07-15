@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.3.0] - 2019-07-15
+
+### Adds
+- CSRF Protection (Thanks @lkoller)
+- ManyToMany Fields and Relationships with pivot fields and sorting.
+
 ## [0.2.4] - 2019-06-26
 
 ### Changed
