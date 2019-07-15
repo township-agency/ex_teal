@@ -12,6 +12,7 @@ defmodule ExTeal.View do
     user = apply(auth_provider, :current_user_for, [conn])
 
     assets = ExTeal.Asset.all_assets()
+    csrf_token = Plug.CSRFProtection.get_csrf_token()
 
     index(
       title: ExTeal.application_name(),
@@ -19,7 +20,8 @@ defmodule ExTeal.View do
       config: config,
       user: user,
       assets: assets,
-      plugin_scripts: ExTeal.all_scripts()
+      plugin_scripts: ExTeal.all_scripts(),
+      csrf_token: csrf_token
     )
   end
 
