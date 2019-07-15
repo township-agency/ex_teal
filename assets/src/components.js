@@ -28,6 +28,7 @@ import PanelItem from '@/components/PanelItem';
 import ResourceTable from '@/components/ResourceTable';
 import ResourceTableRow from '@/components/Index/ResourceTableRow';
 import SearchInput from '@/components/SearchInput';
+import SelectControl from '@/components/Controls/SelectControl';
 import SortableIcon from '@/components/Index/SortableIcon';
 import ValidationErrors from '@/components/ValidationErrors';
 
@@ -70,6 +71,7 @@ Vue.component('resource-index', Index);
 Vue.component('resource-table', ResourceTable);
 Vue.component('resource-table-row', ResourceTableRow);
 Vue.component('search-input', SearchInput);
+Vue.component('select-control', SelectControl);
 Vue.component('sortable-icon', SortableIcon);
 Vue.component('validation-errors', ValidationErrors);
 

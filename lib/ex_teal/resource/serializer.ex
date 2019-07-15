@@ -35,7 +35,7 @@ defmodule ExTeal.Resource.Serializer do
         conn
       ) do
     meta = resource.meta_for(:index, models, all, total, resource, conn)
-    data = resource.serialize_response(:index, resource, models)
+    data = resource.serialize_response(:index, resource, models, conn)
 
     {:ok, response} =
       Jason.encode(%{
@@ -59,20 +59,33 @@ defmodule ExTeal.Resource.Serializer do
     as_json(conn, response)
   end
 
+  def render_related_key_values(models, resource, conn) do
+    data =
+      Enum.map(models, fn model ->
+        %{
+          value: model.id,
+          label: resource.display_title(model)
+        }
+      end)
+
+    {:ok, response} = Jason.encode(%{data: data})
+    as_json(conn, response)
+  end
+
   def render_show(model, resource, conn) do
-    data = resource.serialize_response(:show, resource, model)
+    data = resource.serialize_response(:show, resource, model, conn)
     {:ok, response} = Jason.encode(data)
     as_json(conn, response)
   end
 
   def render_create(model, resource, conn) do
-    data = resource.serialize_response(:show, resource, model)
+    data = resource.serialize_response(:show, resource, model, conn)
     {:ok, response} = Jason.encode(data)
     as_json(conn, response, 201)
   end
 
   def render_update(model, resource, conn) do
-    data = resource.serialize_response(:show, resource, model)
+    data = resource.serialize_response(:show, resource, model, conn)
     {:ok, response} = Jason.encode(data)
     as_json(conn, response, 200)
   end

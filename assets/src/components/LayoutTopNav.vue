@@ -1,7 +1,7 @@
 <template>
   <header class="fixed flex z-50 h-16 pin-t pin-x">
     <aside
-      class="hidden lg:flex flex-none border-r border-grey bg-white lg:w-1/4 items-center px-4 text-black lg:max-w-sidebar"
+      class="hidden lg:flex lg:w-full flex-none border-r border-grey bg-white items-center px-4 text-black lg:max-w-sidebar"
     >
       <img
         v-if="config.logo"

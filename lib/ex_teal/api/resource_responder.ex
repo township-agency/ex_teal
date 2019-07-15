@@ -38,6 +38,18 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  def field(conn, resource_uri, field_name) do
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         {:ok, field} <- Fields.field_for(resource, field_name) do
+      new_schema = resource.model() |> struct(%{})
+      field = field.type.apply_options_for(field, new_schema)
+      {:ok, body} = Jason.encode(%{field: field})
+      Serializer.as_json(conn, body, 200)
+    else
+      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
   def update_fields(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri) do
       model = resource.handle_show(conn, resource_id)
@@ -45,7 +57,7 @@ defmodule ExTeal.Api.ResourceResponder do
       fields =
         :edit
         |> Fields.fields_for(resource)
-        |> Fields.apply_values(model, nil, :edit)
+        |> Fields.apply_values(model, resource, :edit, nil)
 
       {:ok, body} = Jason.encode(%{fields: fields})
       Serializer.as_json(conn, body, 200)

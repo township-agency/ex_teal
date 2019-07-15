@@ -73,7 +73,7 @@ export default {
 @screen lg {
   #sidebar {
     @apply .fixed .block;
-    @apply .pin-l .pt-0 .overflow-y-scroll .w-sidebar .mr-0;
+    @apply .pin-l .pt-0 .overflow-y-auto .w-sidebar .mr-0;
   }
 }
 

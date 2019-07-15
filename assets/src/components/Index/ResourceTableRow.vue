@@ -69,7 +69,30 @@
             />
           </router-link>
         </span>
-        <span class="table-action">
+        <span
+          v-if="viaManyToMany"
+          class="table-action"
+        >
+          <router-link
+            :to="{
+              name: 'edit-attached',
+              params: {
+                resourceName: viaResource,
+                resourceId: viaResourceId,
+                relatedResourceName: resourceName,
+                relatedResourceId: resourceId
+              }
+            }"
+            title="Edit Attached"
+            class="table-action-link primary"
+          >
+            <icon type="edit" />
+          </router-link>
+        </span>
+        <span
+          v-else
+          class="table-action"
+        >
           <router-link
             :to="{
               name: 'edit',
@@ -87,7 +110,7 @@
         <span class="table-action">
           <button
             class="appearance-none cursor-pointer table-action-link danger"
-            title="Delete"
+            :title="viaManyToMany ? 'Detach' : 'Delete'"
             @click.prevent="openDeleteModal"
           >
             <icon type="delete" />
@@ -97,12 +120,12 @@
           <transition name="fade">
             <delete-resource-modal
               v-if="deleteModalOpen"
-              mode="delete"
+              :mode="viaManyToMany ? 'detach' : 'delete'"
               @confirm="confirmDelete"
               @close="closeDeleteModal"
             >
               <div
-                slot-scope="{ uppercaseMode }"
+                slot-scope="{ uppercaseMode, mode }"
                 class="p-8"
               >
                 <heading
@@ -112,7 +135,7 @@
                   {{ uppercaseMode }} Resource
                 </heading>
                 <p class="text-80 leading-normal">
-                  Are you sure you want to delete this resource?
+                  Are you sure you want to  {{ mode }} this resource?
                 </p>
               </div>
             </delete-resource-modal>
@@ -153,7 +176,7 @@ export default {
       default: null
     },
     viaResourceId: {
-      type: String,
+      type: [ String, Number ],
       default: null
     },
     viaManyToMany: {

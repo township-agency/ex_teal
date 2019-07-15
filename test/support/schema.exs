@@ -4,6 +4,8 @@ defmodule TestExTeal.User do
   schema "users" do
     field(:email, :string)
     field(:name, :string)
+
+    many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
     timestamps()
   end
 end
@@ -18,6 +20,8 @@ defmodule TestExTeal.Post do
     field(:body, :string)
     field(:published, :boolean)
 
+    many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
+
     belongs_to(:user, TestExTeal.User)
 
     timestamps()
@@ -29,6 +33,54 @@ defmodule TestExTeal.Post do
     post
     |> cast(params, @fields)
     |> validate_required([:name])
+  end
+end
+
+defmodule TestExTeal.Tag do
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias TestExTeal.Tag
+
+  schema "tags" do
+    field(:name, :string)
+    many_to_many(:posts, TestExTeal.Post, join_through: "posts_tags", on_replace: :delete)
+
+    many_to_many(:users, TestExTeal.User,
+      join_through: TestExTeal.PreferredTag,
+      on_replace: :delete
+    )
+
+    timestamps()
+  end
+
+  def changeset(%Tag{} = tag, params \\ %{}) do
+    tag
+    |> cast(params, [:name])
+    |> validate_required([:name])
+  end
+end
+
+defmodule TestExTeal.PreferredTag do
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias TestExTeal.{PreferredTag, Tag, User}
+
+  schema "preferred_tags" do
+    field(:notes, :string)
+    field(:order, :integer)
+    belongs_to(:user, User)
+    belongs_to(:tag, Tag)
+    timestamps()
+  end
+
+  @fields ~w(user_id tag_id order notes)a
+
+  def changeset(%PreferredTag{} = pt, params \\ %{}) do
+    pt
+    |> cast(params, @fields)
+    |> validate_required(@fields)
+    |> assoc_constraint(:user)
+    |> assoc_constraint(:tag)
   end
 end
 

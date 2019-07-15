@@ -7,7 +7,6 @@
       <!-- Create Button -->
       <div class="flex ml-auto">
         <button
-          dusk="create-and-add-another-button"
           type="button"
           class="ml-auto btn btn-default btn-secondary mr-3"
           @click="createAndAddAnother"
@@ -16,7 +15,6 @@
         </button>
 
         <button
-          dusk="create-button"
           class="btn btn-default btn-primary"
           @click="createResource"
         >

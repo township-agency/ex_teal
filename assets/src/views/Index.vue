@@ -207,7 +207,7 @@
           :fields="meta.fields"
           :singular-name="singularName"
           :is-sorting="isSorting"
-          :sortable-by="sortableBy"
+          :sortable-by="sortableParameter"
           :resources-to-sort.sync="resourcesToSort"
           :should-show-check-boxes="shouldShowCheckBoxes"
           :selected-resources="selectedResources"
@@ -218,6 +218,10 @@
           :all-matching-resource-count="allMatchingResourceCount"
           :toggle-select-all="toggleSelectAll"
           :toggle-select-all-matching="toggleSelectAllMatching"
+          :relationship-type="relationshipType"
+          :via-resource="viaResource"
+          :via-resource-id="viaResourceId"
+          :via-relationship="viaRelationship"
           @order="orderByField"
           @delete="deleteResources"
         />
@@ -278,6 +282,10 @@ export default {
       default: ''
     },
     relationshipType: {
+      type: String,
+      default: ''
+    },
+    relSortableBy: {
       type: String,
       default: ''
     }
@@ -373,6 +381,13 @@ export default {
       return this.resourceName + '_filter';
     },
 
+    sortableParameter () {
+      if (this.viaManyToMany) {
+        return this.relSortableBy;
+      }
+      return this.sortableBy;
+    },
+
     /**
      * Get the current order by value from the query string.
      */
@@ -417,7 +432,7 @@ export default {
     },
 
     shouldShowReorder () {
-      return (this.sortable && this.sortableBy) || this.meta.sortable_by;
+      return (this.sortable && this.sortableBy && !this.viaManyToMany) || (this.viaManyToMany && this.relSortableBy) || this.meta.sortable_by;
     },
 
     /**
@@ -445,7 +460,7 @@ export default {
      * Determine whether to show the selection checkboxes for resources
      */
     shouldShowCheckBoxes () {
-      return Boolean(this.hasResources && !this.viaHasOne);
+      return Boolean(this.hasResources && !this.viaHasOne && !this.viaManyToMany);
     },
 
     /**
@@ -484,6 +499,13 @@ export default {
      */
     viaHasOne () {
       return this.relationshipType == 'hasOne';
+    },
+
+    /**
+     * Determine if the current resource listing is via a many-to-many relationship.
+     */
+    viaManyToMany () {
+      return this.relationshipType == 'ManyToMany';
     },
   },
 
@@ -623,8 +645,9 @@ export default {
           this.resources = data.data;
 
           this.loading = false;
+          const identifier = this.viaManyToMany ? this.relSortableBy : this.sortableBy;
           const index = _.findIndex(this.resources[0].fields, {
-            attribute: this.sortableBy
+            attribute: identifier
           });
 
           this.resourcesToSort = _.sortBy(this.resources, resource => {
@@ -650,6 +673,12 @@ export default {
         [this.perPageParameter]: this.perPageBeforeSort
       });
       this.updateQueryString({ [this.pageParameter]: this.pageBeforeSort });
+
+      if (this.viaManyToMany) {
+        this.savePivotSort();
+        return;
+      }
+
       const data = _.map(this.resourcesToSort, record => {
         const field = _.find(record.fields, { attribute: this.sortableBy });
         return {
@@ -662,6 +691,30 @@ export default {
       this.loading = true;
       ExTeal.request()
         .put(`/api/${this.resourceName}/reorder`, { data: data })
+        .then(() => {
+          this.isSorting = false;
+          this.$toasted.show(`The ${this.meta.label} were reordered`, {
+            type: 'success'
+          });
+          this.loading = false;
+
+          this.getResources();
+        });
+    },
+
+    savePivotSort () {
+      const data = _.map(this.resourcesToSort, record => {
+        const idField = _.find(record.fields, { attribute: this.viaRelationship });
+        const sortField = _.find(record.fields, { attribute: this.relSortableBy });
+        return {
+          [idField.options.belongs_to_relationship]: idField.options.belongs_to_id,
+          [this.relSortableBy]: sortField.value
+        };
+      });
+      console.log(data);
+      this.loading = true;
+      ExTeal.request()
+        .put(`/api/${this.viaResource}/${this.viaResourceId}/reorder/${this.resourceName}`, { data: data })
         .then(() => {
           this.isSorting = false;
           this.$toasted.show(`The ${this.meta.label} were reordered`, {

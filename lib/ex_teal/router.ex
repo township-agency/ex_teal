@@ -7,7 +7,7 @@ defmodule ExTeal.Router do
 
   use Plug.Router
 
-  alias ExTeal.Api.ResourceResponder
+  alias ExTeal.Api.{ManyToMany, ResourceResponder}
   alias ExTeal.{GlobalSearch, View}
   alias ExTeal.Resource.Serializer
   alias Plug.Conn
@@ -57,6 +57,58 @@ defmodule ExTeal.Router do
 
   get("/api/:resource_name/creation-fields",
     do: ResourceResponder.creation_fields(conn, resource_name)
+  )
+
+  get("/api/:resource_name/field/:field_name",
+    do: ResourceResponder.field(conn, resource_name, field_name)
+  )
+
+  get("/api/:resource_name/:resource_id/attachable/:field_name",
+    do: ManyToMany.attachable(conn, resource_name, resource_id, field_name)
+  )
+
+  post("/api/:resource_name/:resource_id/attach/:field_name",
+    do: ManyToMany.attach(conn, resource_name, resource_id, field_name)
+  )
+
+  delete("/api/:resource_name/:resource_id/detach/:field_name",
+    do: ManyToMany.detach(conn, resource_name, resource_id, field_name)
+  )
+
+  get("/api/:resource_name/creation-pivot-fields/:field_name",
+    do: ManyToMany.creation_pivot_fields(conn, resource_name, field_name)
+  )
+
+  get("/api/:resource_name/:resource_id/update-pivot-fields/:field_name/:related_resource_id",
+    do:
+      ManyToMany.update_pivot_fields(
+        conn,
+        resource_name,
+        resource_id,
+        field_name,
+        related_resource_id
+      )
+  )
+
+  put("/api/:resource_name/:resource_id/update-pivot/:field_name/:related_resource_id",
+    do:
+      ManyToMany.update_pivot(
+        conn,
+        resource_name,
+        resource_id,
+        field_name,
+        related_resource_id
+      )
+  )
+
+  put("/api/:resource_name/:resource_id/reorder/:field_name",
+    do:
+      ManyToMany.reorder(
+        conn,
+        resource_name,
+        resource_id,
+        field_name
+      )
   )
 
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
