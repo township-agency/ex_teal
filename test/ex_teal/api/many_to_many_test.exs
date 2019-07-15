@@ -219,7 +219,7 @@ defmodule ExTeal.Api.ManyToManyTest do
     end
   end
 
-  describe "update_pivot_fields/3" do
+  describe "update_pivot_fields/5" do
     @tag manifest: EmptyManifest
     test "returns a 404 for an invalid resource" do
       conn = build_conn(:get, "/api/posts/1/update-pivot-fields/tags/1", %{})
@@ -294,7 +294,7 @@ defmodule ExTeal.Api.ManyToManyTest do
     end
   end
 
-  describe "update_pivot/3" do
+  describe "update_pivot/5" do
     @tag manifest: EmptyManifest
     test "returns a 404 for an invalid resource" do
       conn = build_conn(:put, "/api/posts/1/update-pivot/tags/1", %{})
@@ -368,6 +368,60 @@ defmodule ExTeal.Api.ManyToManyTest do
 
       result = Repo.get(PreferredTag, pt.id)
       assert result.order == 1
+    end
+  end
+
+  describe "reorder/4" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 for an invalid resource" do
+      conn = build_conn(:put, "/api/posts/1/reorder/tags/1", %{})
+      resp = ManyToMany.reorder(conn, "posts", "1", "tags")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:put, "/api/posts/1/reorder/tags/1", %{})
+      resp = ManyToMany.reorder(conn, "posts", "1", "tags")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for an invalid field" do
+      conn = build_conn(:put, "/api/posts/1/reorder/tags/1", %{})
+      resp = ManyToMany.reorder(conn, "posts", "1", "title")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns the fields with their values" do
+      [t1, t2] = insert_pair(:tag)
+      u = insert(:user)
+      pt1 = insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
+      pt2 = insert(:preferred_tag, user: u, tag: t2, order: 1, notes: "bar")
+
+      conn =
+        build_conn(:put, "/api/users/#{u.id}/reorder/preferred_tags", %{
+          "data" => [
+            %{
+              "tags" => t1.id,
+              "order" => 5
+            },
+            %{
+              "tags" => t2.id,
+              "order" => 6
+            }
+          ]
+        })
+
+      resp = ManyToMany.reorder(conn, "users", "#{u.id}", "preferred_tags")
+      assert resp.status == 204
+
+      result = Repo.get(PreferredTag, pt1.id)
+      assert result.order == 5
+
+      result = Repo.get(PreferredTag, pt2.id)
+      assert result.order == 6
     end
   end
 end

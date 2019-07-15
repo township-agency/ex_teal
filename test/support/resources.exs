@@ -14,6 +14,7 @@ defmodule TestExTeal.UserResource do
       Text.make(:email),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
       |> ManyToMany.with_pivot_fields([Number.make(:order), Text.make(:notes)])
+      |> ManyToMany.sortable_by(:order)
     ]
 end
 

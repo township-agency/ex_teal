@@ -14,9 +14,8 @@ defmodule ExTeal.Fields.ManyToMany do
   alias ExTeal.Resource
 
   def make(relationship_name, module, label \\ nil) do
-    __MODULE__
-    |> Field.struct_from_field(relationship_name, label)
-    |> Map.put(:relationship, module)
+    field = Field.struct_from_field(__MODULE__, relationship_name, label)
+    %{field | options: Map.merge(field.options, %{has_pivot_fields: false}), relationship: module}
   end
 
   def component, do: "many-to-many"
@@ -47,6 +46,15 @@ defmodule ExTeal.Fields.ManyToMany do
 
   def with_pivot_fields(field, pivot_fields) do
     pivot_fields = Enum.map(pivot_fields, &Map.put(&1, :pivot_field, true))
-    %{field | private_options: %{pivot_fields: pivot_fields}}
+
+    %{
+      field
+      | private_options: %{pivot_fields: pivot_fields},
+        options: Map.merge(field.options, %{has_pivot_fields: true})
+    }
+  end
+
+  def sortable_by(field, pivot_field_name) do
+    %{field | options: Map.merge(field.options, %{sortable_by: pivot_field_name})}
   end
 end

@@ -9,7 +9,7 @@ defmodule ExTeal.Api.ManyToMany do
   """
   import Ecto.Query, only: [from: 2]
 
-  alias Ecto.Changeset
+  alias Ecto.{Changeset, Multi}
   alias ExTeal.Api.ErrorSerializer
   alias ExTeal.Field
   alias ExTeal.Resource.{Fields, Serializer}
@@ -235,6 +235,43 @@ defmodule ExTeal.Api.ManyToMany do
     end
   end
 
+  @doc """
+  Batch Updates a pivot schema's fields for reordering a relationship
+  """
+  def reorder(conn, resource_uri, resource_id, field_name) do
+    with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
+         schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
+         pivot <- field.type.apply_options_for(field, schema),
+         {:ok, _related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related) do
+      multi =
+        conn.params["data"]
+        |> Enum.reduce(Multi.new(), fn element, acc ->
+          id = Map.get(element, pivot.options.uri)
+          identifier = String.to_atom("update_#{pivot.options.uri}_#{id}")
+          field_name = Atom.to_string(pivot.options.sortable_by)
+          field = Map.get(element, field_name)
+          query = reorder_query(pivot, schema, id)
+
+          Multi.update_all(acc, identifier, query, set: [{pivot.options.sortable_by, field}])
+        end)
+
+      case resource.repo().transaction(multi) do
+        {:ok, _updated} ->
+          {:ok, body} = Jason.encode(%{updated: true})
+          Serializer.as_json(conn, body, 204)
+
+        {:error, _, _, _} ->
+          ErrorSerializer.handle_error(conn, {:error, :not_found})
+      end
+    else
+      nil ->
+        ErrorSerializer.handle_error(conn, {:error, :not_found})
+
+      {:error, :not_found} = resp ->
+        ErrorSerializer.handle_error(conn, resp)
+    end
+  end
+
   defp find_pivot_for(%Field{} = pivot, primary, secondary, repo) do
     field_identifiers =
       pivot.private_options.pivot_fields
@@ -254,6 +291,19 @@ defmodule ExTeal.Api.ManyToMany do
       nil -> {:error, :not_found}
       result -> {:ok, result}
     end
+  end
+
+  defp reorder_query(pivot, primary, secondary_id) do
+    rel = pivot.private_options.rel
+    [{primary_pivot, primary_fetch}, {secondary_pivot, _secondary_fetch}] = rel.join_keys
+    primary_id = Map.get(primary, primary_fetch)
+
+    from(
+      r in rel.join_through,
+      where: field(r, ^primary_pivot) == ^primary_id,
+      where: field(r, ^secondary_pivot) == ^secondary_id,
+      select: r
+    )
   end
 
   defp pivot_query(pivot, primary, secondary) do

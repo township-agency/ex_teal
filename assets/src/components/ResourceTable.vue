@@ -100,8 +100,8 @@
     <draggable
       v-else
       :list="sortableResources"
-      :options="draggableOptions"
-      element="tbody"
+      v-bind="getDraggableOptions()"
+      tag="tbody"
       @start="dragging"
       @end="reordered"
     >
@@ -220,13 +220,6 @@ export default {
   },
 
   computed: {
-    draggableOptions () {
-      return {
-        disabled: !this.isSorting,
-        sort: true
-      };
-    },
-
     sortableResources () {
       if (this.isSorting) {
         return this.resourcesToSort;
@@ -244,6 +237,13 @@ export default {
   },
 
   methods: {
+    getDraggableOptions () {
+      return {
+        disabled: !this.isSorting,
+        sort: true
+      };
+    },
+
     /**
      * Delete the given resource.
      */

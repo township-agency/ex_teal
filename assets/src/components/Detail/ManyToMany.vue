@@ -1,7 +1,6 @@
 <template>
   <resource-index
-    :sortable="field.options.sortable"
-    :sortable-by="field.options.sortable_by"
+    :rel-sortable-by="field.options.sortable_by"
     :resource-name="field.options.uri"
     :via-resource="resourceName"
     :via-resource-id="resourceId"
@@ -30,6 +29,11 @@ export default {
     field: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    sortable () {
+      return this.field.options.sortable_by !== null;
     }
   }
 };
