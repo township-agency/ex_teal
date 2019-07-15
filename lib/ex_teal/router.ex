@@ -90,6 +90,17 @@ defmodule ExTeal.Router do
       )
   )
 
+  put("/api/:resource_name/:resource_id/update-pivot/:field_name/:related_resource_id",
+    do:
+      ManyToMany.update_pivot(
+        conn,
+        resource_name,
+        resource_id,
+        field_name,
+        related_resource_id
+      )
+  )
+
   get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
 
   get("/api/:resource_name/actions", do: ResourceResponder.actions_for(conn, resource_name))

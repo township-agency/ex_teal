@@ -158,9 +158,9 @@ defmodule ExTeal.Api.ManyToMany do
   def update_pivot_fields(conn, resource_uri, resource_id, field_name, related_id) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
          schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
-         {:ok, related_resource} <- ExTeal.resource_for_model(field.relationship),
-         related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
          pivot <- field.type.apply_options_for(field, schema),
+         {:ok, related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related),
+         related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
          {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
          {:ok, pivot_data} <- find_pivot_for(pivot, schema, related, resource.repo()) do
       fields =
@@ -184,25 +184,69 @@ defmodule ExTeal.Api.ManyToMany do
     end
   end
 
-  defp find_pivot_for(%Field{} = pivot, primary, secondary, repo) do
-    rel = pivot.private_options.rel
-    [{primary_pivot, primary_fetch}, {secondary_pivot, secondary_fetch}] = rel.join_keys
+  @doc """
+  Returns a list of fields associated with the pivot table of a many to many relationship
+  for an existing relationship.
+  """
+  def update_pivot(conn, resource_uri, resource_id, field_name, related_id) do
+    with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
+         schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
+         pivot <- field.type.apply_options_for(field, schema),
+         {:ok, related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related),
+         related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
+         {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
+         {:ok, pivot_data} <- find_pivot_for(pivot, schema, related, resource.repo()) do
+      updates =
+        pivot_fields
+        |> Enum.reduce(%{}, fn field, acc ->
+          value = field.type.value_for(field, pivot_data, :pivot)
+          new_value = Map.get(conn.params, field.attribute)
 
+          cond do
+            is_nil(new_value) ->
+              acc
+
+            value == new_value ->
+              acc
+
+            true ->
+              Map.put_new(acc, String.to_existing_atom(field.attribute), new_value)
+          end
+        end)
+        |> Enum.into([])
+
+      {_updated, nil} =
+        pivot
+        |> pivot_query(schema, related)
+        |> resource.repo().update_all(set: updates)
+
+      {:ok, body} = Jason.encode(%{updated: true})
+      Serializer.as_json(conn, body, 204)
+    else
+      nil ->
+        ErrorSerializer.handle_error(conn, {:error, :not_found})
+
+      :error ->
+        {:ok, body} = Jason.encode(%{fields: []})
+        Serializer.as_json(conn, body, 200)
+
+      {:error, :not_found} = resp ->
+        ErrorSerializer.handle_error(conn, resp)
+    end
+  end
+
+  defp find_pivot_for(%Field{} = pivot, primary, secondary, repo) do
     field_identifiers =
       pivot.private_options.pivot_fields
       |> Enum.map(& &1.field)
 
-    primary_id = Map.get(primary, primary_fetch)
-    secondary_id = Map.get(secondary, secondary_fetch)
+    query = pivot_query(pivot, primary, secondary)
 
-    query =
-      from(
-        r in rel.join_through,
-        where: field(r, ^primary_pivot) == ^primary_id,
-        where: field(r, ^secondary_pivot) == ^secondary_id,
-        limit: 1,
-        select: map(r, ^field_identifiers)
-      )
+    from(
+      q in query,
+      limit: 1,
+      select: map(q, ^field_identifiers)
+    )
 
     result = repo.one(query)
 
@@ -210,6 +254,19 @@ defmodule ExTeal.Api.ManyToMany do
       nil -> {:error, :not_found}
       result -> {:ok, result}
     end
+  end
+
+  defp pivot_query(pivot, primary, secondary) do
+    rel = pivot.private_options.rel
+    [{primary_pivot, primary_fetch}, {secondary_pivot, secondary_fetch}] = rel.join_keys
+    primary_id = Map.get(primary, primary_fetch)
+    secondary_id = Map.get(secondary, secondary_fetch)
+
+    from(
+      r in rel.join_through,
+      where: field(r, ^primary_pivot) == ^primary_id,
+      where: field(r, ^secondary_pivot) == ^secondary_id
+    )
   end
 
   defp resource_and_field(resource_uri, field_name) do

@@ -293,4 +293,81 @@ defmodule ExTeal.Api.ManyToManyTest do
       assert f2.value == "foo"
     end
   end
+
+  describe "update_pivot/3" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 for an invalid resource" do
+      conn = build_conn(:put, "/api/posts/1/update-pivot/tags/1", %{})
+      resp = ManyToMany.update_pivot(conn, "posts", "1", "tags", "1")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:put, "/api/posts/1/update-pivot/tags/1", %{})
+      resp = ManyToMany.update_pivot(conn, "posts", "1", "tags", "1")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for an invalid field" do
+      conn = build_conn(:put, "/api/posts/1/update-pivot/tags/1", %{})
+      resp = ManyToMany.update_pivot(conn, "posts", "1", "title", "1")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for a related that doesn't exist" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:put, "/api/posts/#{p.id}/update-pivot/tags/1", %{
+          "posts" => "#{p.id}"
+        })
+
+      resp = ManyToMany.update_pivot(conn, "posts", "#{p.id}", "tags", "1")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 404 for a relationship that doesn't exist" do
+      t = insert(:tag)
+      u = insert(:user)
+
+      conn = build_conn(:put, "/api/users/#{u.id}/update-pivot/preferred_tags/#{t.id}", %{})
+
+      resp = ManyToMany.update_pivot(conn, "users", "#{t.id}", "preferred_tags", "#{t.id}")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns an empty list for a many to many without pivot fields" do
+      t = insert(:tag)
+      p = insert(:post, tags: [t])
+
+      conn = build_conn(:put, "/api/posts/#{p.id}/update-pivot/tags/#{t.id}", %{})
+      resp = ManyToMany.update_pivot(conn, "posts", "#{p.id}", "tags", "#{t.id}")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      assert body == %{fields: []}
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns the fields with their values" do
+      t = insert(:tag)
+      u = insert(:user)
+      pt = insert(:preferred_tag, user: u, tag: t, order: 2, notes: "foo")
+
+      conn =
+        build_conn(:put, "/api/users/#{u.id}/update-pivot/preferred_tags/#{t.id}", %{
+          "order" => "1"
+        })
+
+      resp = ManyToMany.update_pivot(conn, "users", "#{u.id}", "preferred_tags", "#{t.id}")
+      assert resp.status == 204
+
+      result = Repo.get(PreferredTag, pt.id)
+      assert result.order == 1
+    end
+  end
 end

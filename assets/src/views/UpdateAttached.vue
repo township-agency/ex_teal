@@ -2,22 +2,23 @@
   <loading-view :loading="loading">
     <div class="card-headline">
       <heading class="mb-3">
-        Attach {{ relatedResourceLabel }}
+        Updating Attached {{ relatedResourceLabel }}
       </heading>
+
       <div class="flex ml-auto">
         <button
           type="button"
           class="ml-auto btn btn-default btn-secondary mr-3"
-          @click="attachAndAttachAnother"
+          @click="updateAndContinueEditing"
         >
-          Attach &amp; Attach Another
+          Update &amp; Continue Editing
         </button>
 
         <button
           class="btn btn-default btn-primary"
-          @click="attachResource"
+          @click="updateAttached"
         >
-          Attach {{ relatedResourceLabel }}
+          Update {{ relatedResourceLabel }}
         </button>
       </div>
     </div>
@@ -39,12 +40,13 @@
               :class="{ 'border-danger': validationErrors.has(field.attribute) }"
               :options="availableResources"
               :selected="selectedResourceId"
+              disabled
               @change="selectResourceFromSelectControl"
             >
               <option
                 value=""
                 disabled
-                selected
+                selected="1"
               >
                 Choose {{ relatedResourceLabel }}
               </option>
@@ -92,13 +94,17 @@ export default {
       type: String,
       required: true
     },
+    relatedResourceId: {
+      type: [ String, Number ],
+      required: true
+    },
     viaResource: {
       type: String,
-      default: null
+      default: '',
     },
     viaResourceId: {
       type: String,
-      default: null
+      default: '',
     },
     viaRelationship: {
       type: String,
@@ -108,8 +114,8 @@ export default {
 
   data: () => ({
     loading: true,
-    submittedViaAttachAndAttachAnother: false,
-    submittedViaAttachResource: false,
+    submittedViaUpdateAndContinueEditing: false,
+    submittedViaUpdate: false,
     field: null,
     fields: [],
     validationErrors: new Errors(),
@@ -134,7 +140,6 @@ export default {
         } else {
           formData.append(this.relatedResourceName, this.selectedResource.value);
         }
-        formData.append('viaRelationship', this.viaRelationship);
       });
     }
   },
@@ -144,29 +149,32 @@ export default {
   },
 
   methods: {
-    initializeComponent () {
+    async initializeComponent () {
       this.clearSelection();
       this.getField();
-      this.getPivotFields();
-      this.resetErrors();
+
+      await this.getPivotFields();
+      await this.getAvailableResources();
+
+      this.selectedResourceId = this.relatedResourceId;
+      this.selectInitialResource();
     },
 
     getField () {
       this.field = null;
 
-      ExTeal.request()
-        .get(`/api/${this.resourceName}/field/${this.viaRelationship}`)
+      return ExTeal.request()
+        .get(`/api/${this.resourceName}/field/${this.relatedResourceName}`)
         .then(({ data }) => {
           this.field = data.field;
-          this.getAvailableResources();
           this.loading = false;
         });
     },
 
     getPivotFields () {
       this.fields = [];
-      ExTeal.request()
-        .get(`/api/${this.resourceName}/creation-pivot-fields/${this.relatedResourceName}`)
+      return ExTeal.request()
+        .get(`/api/${this.resourceName}/${this.resourceId}/update-pivot-fields/${this.relatedResourceName}/${this.relatedResourceId}`)
         .then(({ data }) => {
           this.fields = data.fields;
           this.fields.forEach((field) => {
@@ -175,8 +183,66 @@ export default {
         });
     },
 
-    resetErrors () {
-      this.validationErrors = new Errors();
+    getAvailableResources () {
+      return ExTeal.request()
+        .get(
+          `/api/${this.resourceName}/${this.resourceId}/attachable/${
+            this.relatedResourceName
+          }`,
+          {
+            params: {
+              current: this.selectedResourceId,
+            },
+          }
+        )
+        .then(({ data }) => {
+          this.availableResources = data.data;
+        });
+    },
+
+    async updateAndContinueEditing () {
+      this.updateAndContinueEditing = true;
+      try {
+        await this.updateRequest();
+        this.updateAndContinueEditing = false;
+        this.$toasted.show('The resource was updated!', { type: 'success' });
+        this.initializeComponent();
+      } catch (error) {
+        this.updateAndContinueEditing = false;
+        if (error.response.status == 422) {
+          this.validationErrors = new Errors(error.response.data.errors);
+        }
+      }
+    },
+
+    async updateAttached () {
+      this.updateAttached = true;
+      
+      try {
+        await this.updateRequest();
+        this.updateAttachedResource = false;
+        this.$toasted.show('The resource was updated!', { type: 'success' });
+        this.$router.push({
+          name: 'detail',
+          params: {
+            resourceName: this.resourceName,
+            resourceId: this.resourceId,
+          },
+        });
+      } catch (error) {
+        this.updateAttachedResource = false;
+
+        if (error.response.status == 422) {
+          this.validationErrors = new Errors(error.response.data.errors);
+        }
+      }
+    },
+
+    updateRequest () {
+      return ExTeal.request().put(
+        `/api/${this.resourceName}/${this.resourceId}/update-pivot/${this.relatedResourceName}/${this.relatedResourceId}`,
+        this.attachmentFormData
+      );
     },
 
     selectResourceFromSelectControl (e) {
@@ -189,81 +255,8 @@ export default {
         this.availableResources,
         r => r.value == this.selectedResourceId
       );
-    },
-
-    getAvailableResources (search = '') {
-      ExTeal.request()
-        .get(
-          `/api/${this.resourceName}/${this.resourceId}/attachable/${
-            this.relatedResourceName
-          }`,
-          {
-            params: {
-              search,
-              current: this.selectedResourceId,
-            },
-          }
-        )
-        .then(({ data }) => {
-          this.availableResources = data.data;
-        });
-    },
-
-    async attachResource () {
-      this.submittedViaAttachResource = true;
-
-      if (!this.selectedResource) {
-        return;
-      }
-
-      try {
-        await this.attachRequest();
-
-        this.submittedViaAttachResource = false;
-        this.$router.push({
-          name: 'detail',
-          params: {
-            resourceName: this.resourceName,
-            resourceId: this.resourceId
-          }
-        });
-      } catch (error) {
-        this.submittedViaAttachResource = false;
-        this.handleInvalid(error);
-        if (error.response.status === 422) {
-          this.validationErrors = new Errors(error.response.data.errors);
-        }
-      }
-    },
-
-    async attachAndAttachAnother () {
-      this.submittedViaAttachAndAttachAnother = true;
-
-      if (!this.selectedResource) {
-        return;
-      }
-
-      try {
-        await this.attachRequest();
-
-        this.submittedViaAttachAndAttachAnother = false;
-        this.initializeComponent();
-      } catch (error) {
-        this.submittedViaAttachAndAttachAnother = false;
-        this.handleInvalid(error);
-      }
-    },
-
-    attachRequest () {
-      return ExTeal.request().post(`/api/${this.resourceName}/${this.resourceId}/attach/${this.relatedResourceName}`, this.attachmentFormData);
-    },
-
-    handleInvalid (error) {
-      const errors = error.response.data.errors;
-      ExTeal.$emit('error', `Unable to attach the ${this.relatedResourceLabel}`);
-      this.validationErrors = new Errors(errors);
     }
-  },
-};
+  }
 
+};
 </script>

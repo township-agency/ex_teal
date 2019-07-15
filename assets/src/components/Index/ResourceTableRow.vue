@@ -70,7 +70,27 @@
           </router-link>
         </span>
         <span
-          v-if="!viaManyToMany"
+          v-if="viaManyToMany"
+          class="table-action"
+        >
+          <router-link
+            :to="{
+              name: 'edit-attached',
+              params: {
+                resourceName: viaResource,
+                resourceId: viaResourceId,
+                relatedResourceName: resourceName,
+                relatedResourceId: resourceId
+              }
+            }"
+            title="Edit Attached"
+            class="table-action-link primary"
+          >
+            <icon type="edit" />
+          </router-link>
+        </span>
+        <span
+          v-else
           class="table-action"
         >
           <router-link
