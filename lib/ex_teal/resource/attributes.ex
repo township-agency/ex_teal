@@ -8,6 +8,8 @@ defmodule ExTeal.Resource.Attributes do
     * ExTeal.Resource.Create
   """
 
+  alias ExTeal.Field
+
   @doc """
   Used to determine which attributes are permitted during create and update.
 
@@ -45,7 +47,20 @@ defmodule ExTeal.Resource.Attributes do
         @behaviour Attributes
 
         def permitted_attributes(_conn, attrs, _) do
-          Enum.into(attrs, %{}, &Attributes.filter_null/1)
+          fields =
+            __MODULE__.fields()
+            |> Enum.into(%{}, fn %Field{field: field} = f ->
+              {field, f}
+            end)
+
+          field_keys =
+            fields
+            |> Map.keys()
+            |> Enum.map(&Atom.to_string/1)
+
+          attrs
+          |> Enum.filter(fn {k, _v} -> Enum.member?(field_keys, k) end)
+          |> Enum.into(%{}, &Attributes.filter_null(&1, fields))
         end
 
         defoverridable permitted_attributes: 3
@@ -56,6 +71,27 @@ defmodule ExTeal.Resource.Attributes do
   @doc false
   def from_params(params), do: params
 
-  def filter_null({k, "null"}), do: {k, nil}
-  def filter_null(pair), do: pair
+  def filter_null({k, "null"}, _), do: {k, nil}
+
+  def filter_null({k, v}, fields) do
+    field = Map.get(fields, String.to_existing_atom(k))
+
+    case field do
+      nil -> {k, nil}
+      %Field{} = f -> {k, sanitize(f.sanitize, v)}
+    end
+  end
+
+  @valid_sanitizers ~w(noscrub basic_html html5 markdown_html strip_tags)a
+  def sanitize(false, value), do: value
+
+  def sanitize(key, value) when is_atom(key) and key in @valid_sanitizers do
+    apply(HtmlSanitizeEx, key, [value])
+  end
+
+  def sanitize_as(field, sanitizer) when sanitizer in @valid_sanitizers do
+    %{field | sanitize: sanitizer}
+  end
+
+  def raw_html(field), do: %{field | sanitize: false}
 end

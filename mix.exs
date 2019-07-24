@@ -43,7 +43,7 @@ defmodule ExTeal.MixProject do
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
-      {:html_sanitize_ex, "~> 1.3.0-rc3", only: :test},
+      {:html_sanitize_ex, "~> 1.3.0", only: :test},
       {:phoenix_ecto, "~> 4.0", only: :test},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]

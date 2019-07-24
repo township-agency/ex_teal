@@ -5,12 +5,18 @@ defmodule ExTeal.Resource.CreateTest do
 
   defmodule ProtectedResource do
     use ExTeal.Resource
+    alias ExTeal.Fields.Text
+
+    def fields, do: [Text.make(:name)]
     def repo, do: TestExTeal.Repo
     def handle_create(conn, _attrs), do: send_resp(conn, 401, "")
   end
 
   defmodule CustomResource do
     use ExTeal.Resource
+    alias ExTeal.Fields.Text
+
+    def fields, do: [Text.make(:name)]
     def repo, do: TestExTeal.Repo
 
     def handle_create(_c, %{"name" => "valid"}),
@@ -22,6 +28,9 @@ defmodule ExTeal.Resource.CreateTest do
 
   defmodule CustomResponseResource do
     use ExTeal.Resource
+    alias ExTeal.Fields.Text
+
+    def fields, do: [Text.make(:name)]
     def repo, do: TestExTeal.Repo
     def model, do: TestExTeal.Post
 
@@ -37,8 +46,10 @@ defmodule ExTeal.Resource.CreateTest do
   defmodule MultiCustomResource do
     use ExTeal.Resource
     alias Ecto.Multi
+    alias ExTeal.Fields.Text
     alias TestExTeal.{Post, Repo}
 
+    def fields, do: [Text.make(:name)]
     def repo, do: Repo
 
     def handle_create(_, params) do
