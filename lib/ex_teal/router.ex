@@ -33,10 +33,7 @@ defmodule ExTeal.Router do
 
   @doc false
   def call(conn, opts) do
-    conn =
-      conn
-      |> extract_namespace(opts)
-      |> Conn.put_private(:plug_skip_csrf_protection, true)
+    conn = extract_namespace(conn, opts)
 
     super(conn, opts)
   end
