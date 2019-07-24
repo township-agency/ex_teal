@@ -25,6 +25,7 @@ defmodule ExTeal.Field do
             show_on_detail: true,
             show_on_new: true,
             show_on_edit: true,
+            sanitize: :strip_tags,
             relationship: nil
 
   alias ExTeal.Naming

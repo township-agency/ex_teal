@@ -6,6 +6,9 @@ defmodule ExTeal.Resource.UpdateTest do
 
   defmodule CustomResource do
     use ExTeal.Resource
+    alias ExTeal.Fields.Text
+
+    def fields, do: [Text.make(:name)]
     def repo, do: TestExTeal.Repo
     def model, do: TestExTeal.Post
     def handle_update(c, nil, _attrs), do: send_resp(c, 420, "")
@@ -21,6 +24,9 @@ defmodule ExTeal.Resource.UpdateTest do
 
   defmodule CustomResponseResource do
     use ExTeal.Resource
+    alias ExTeal.Fields.Text
+
+    def fields, do: [Text.make(:name)]
     def repo, do: TestExTeal.Repo
     def model, do: TestExTeal.Post
 
@@ -37,7 +43,10 @@ defmodule ExTeal.Resource.UpdateTest do
     use ExTeal.Resource
 
     alias Ecto.Multi
+    alias ExTeal.Fields.Text
     alias TestExTeal.{Post, Repo}
+
+    def fields, do: [Text.make(:name)]
 
     def repo, do: Repo
     def model, do: Post
