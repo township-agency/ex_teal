@@ -33,9 +33,20 @@ defmodule ExTeal.Router do
 
   @doc false
   def call(conn, opts) do
-    conn = extract_namespace(conn, opts)
+    conn =
+      conn
+      |> extract_namespace(opts)
+      |> skip_csrf_for_assets(conn.path_info)
 
     super(conn, opts)
+  end
+
+  @endpoints_to_protect ~w(api plugins search)
+
+  defp skip_csrf_for_assets(conn, [first | _]) when first in @endpoints_to_protect, do: conn
+
+  defp skip_csrf_for_assets(conn, _) do
+    Conn.put_private(conn, :plug_skip_csrf_protection, true)
   end
 
   get "/api/configuration" do
