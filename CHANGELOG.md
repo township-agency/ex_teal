@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.3.4] - 2019-07-26
+
+### Fixes
+- Edge Cases in new Attribute Logic
+
 ## [0.3.3] - 2019-07-25
 
 ### Fixes
