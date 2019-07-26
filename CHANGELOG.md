@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.3.5] - 2019-07-26
+
+### Fixes
+- Don't attempt to sanitize non-bitstring params
+
 ## [0.3.4] - 2019-07-26
 
 ### Fixes
