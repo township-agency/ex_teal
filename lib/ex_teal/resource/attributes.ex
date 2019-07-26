@@ -59,8 +59,9 @@ defmodule ExTeal.Resource.Attributes do
             |> Enum.map(&Atom.to_string/1)
 
           attrs
-          |> Enum.filter(fn {k, _v} -> Enum.member?(field_keys, k) end)
-          |> Enum.into(%{}, &Attributes.filter_null(&1, fields))
+          |> Enum.map(&Attributes.sanitize_param(&1, fields))
+          |> Enum.reject(fn {k, v} -> is_nil(k) end)
+          |> Enum.into(%{})
         end
 
         defoverridable permitted_attributes: 3
@@ -71,14 +72,20 @@ defmodule ExTeal.Resource.Attributes do
   @doc false
   def from_params(params), do: params
 
-  def filter_null({k, "null"}, _), do: {k, nil}
+  def sanitize_param({k, "null"}, _), do: {k, nil}
 
-  def filter_null({k, v}, fields) do
-    field = Map.get(fields, String.to_existing_atom(k))
+  def sanitize_param({"_" <> _, _val}, _), do: {nil, nil}
 
-    case field do
-      nil -> {k, nil}
-      %Field{} = f -> {k, sanitize(f.sanitize, v)}
+  def sanitize_param({k, v}, fields) do
+    if String.ends_with?(k, "_id") do
+      {k, v}
+    else
+      field = Map.get(fields, String.to_existing_atom(k))
+
+      case field do
+        nil -> {nil, nil}
+        %Field{} = f -> {k, sanitize(f.sanitize, v)}
+      end
     end
   end
 
