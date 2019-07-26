@@ -84,4 +84,18 @@ defmodule ExTeal.Resource.AttributesTest do
     assert Attributes.sanitize(:strip_tags, param) == "text here"
     assert Attributes.sanitize(:strip_tags, safe_link) == "Google"
   end
+
+  test "bypasses non-bitstring fields" do
+    attrs = %{
+      "file" => %{
+        content_type: "image/jpeg",
+        filename: "IMG_1240.jpg",
+        path: "/tmp/plug-1564/multipart-1564173492-946871274981605-1"
+      }
+    }
+
+    params = DefaultResource.permitted_attributes(%Plug.Conn{}, attrs, :create)
+
+    assert attrs == params
+  end
 end
