@@ -34,7 +34,8 @@ defmodule ExTeal.Resource.AttributesTest do
     actual = DefaultResource.permitted_attributes(%Plug.Conn{}, attrs, :update)
 
     assert actual == %{
-             "title" => "a post"
+             "title" => "a post",
+             "category_id" => "1"
            }
   end
 
