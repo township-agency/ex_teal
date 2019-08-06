@@ -37,6 +37,10 @@
 
 /* purgecss start ignore */
 
+html {
+  box-sizing: border-box;
+}
+
 #app {
   @apply .font-sans;
 }
