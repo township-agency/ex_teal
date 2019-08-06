@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.3.6] - 2019-08-06
+
+### Fixes
+- Styles for a better nav layout
+- Global Search was broken
+- Field visibility for Pivot Fields
+
 ## [0.3.5] - 2019-07-26
 
 ### Fixes
