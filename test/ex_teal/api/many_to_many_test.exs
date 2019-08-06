@@ -285,12 +285,10 @@ defmodule ExTeal.Api.ManyToManyTest do
       resp = ManyToMany.update_pivot_fields(conn, "users", "#{u.id}", "preferred_tags", "#{t.id}")
       assert resp.status == 200
       {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
-      [f1, f2] = body.fields
+      [f1] = body.fields
 
       assert f1.attribute == "order"
       assert f1.value == 2
-      assert f2.attribute == "notes"
-      assert f2.value == "foo"
     end
   end
 
