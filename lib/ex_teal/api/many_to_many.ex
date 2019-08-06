@@ -164,7 +164,9 @@ defmodule ExTeal.Api.ManyToMany do
          {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
          {:ok, pivot_data} <- find_pivot_for(pivot, schema, related, resource.repo()) do
       fields =
-        Enum.map(pivot_fields, fn field ->
+        pivot_fields
+        |> Enum.filter(& &1.show_on_edit)
+        |> Enum.map(fn field ->
           value = field.type.value_for(field, pivot_data, :pivot)
           Map.put(field, :value, value)
         end)
