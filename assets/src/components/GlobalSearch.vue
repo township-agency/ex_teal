@@ -148,8 +148,10 @@ export default {
 
     formattedGroups () {
       const items = this.indexedResults.map(({ resourceName, resourceTitle }) => {
-        resourceName,
-        resourceTitle;
+        return {
+          resourceName,
+          resourceTitle
+        };
       });
 
       return uniqBy(items, 'resourceName');
