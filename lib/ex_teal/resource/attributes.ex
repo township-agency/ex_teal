@@ -74,6 +74,8 @@ defmodule ExTeal.Resource.Attributes do
 
   def sanitize_param({k, "null"}, _), do: {k, nil}
 
+  def sanitize_param({k, ""}, _), do: {k, nil}
+
   def sanitize_param({k, val}, _) when not is_bitstring(val), do: {k, val}
 
   def sanitize_param({"_" <> _, _val}, _), do: {nil, nil}

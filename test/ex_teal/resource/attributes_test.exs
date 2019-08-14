@@ -39,6 +39,18 @@ defmodule ExTeal.Resource.AttributesTest do
            }
   end
 
+  test "replaces an empty string with nil" do
+    attrs = %{
+      "title" => ""
+    }
+
+    actual = DefaultResource.permitted_attributes(%Plug.Conn{}, attrs, :update)
+
+    assert actual == %{
+             "title" => nil
+           }
+  end
+
   test "permitted attributes custom" do
     attrs = %{
       "type" => "post",
