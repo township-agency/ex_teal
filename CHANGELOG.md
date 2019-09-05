@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.4.0] - 2019-09-05
+
+### Adds
+- Value Metrics
+- Dashboards
+- A default dashboard
+- Pagination Labels to Resource Index Tables
+- Resource Index Tables can be searched
+- BelongsTo fields can be searched
+
+### Fixes
+- An empty string is now sanitized to nil
+
 ## [0.3.6] - 2019-08-06
 
 ### Fixes
