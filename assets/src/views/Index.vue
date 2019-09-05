@@ -6,22 +6,28 @@
         :level="1"
       >
         {{ meta.label }}
+        <span
+          v-if="resourceCountLabel"
+          class="text-sm text-grey ml-2 inline-block"
+        >
+          Viewing {{ resourceCountLabel }}
+        </span>
       </heading>
-      <div class="flex justify-between ml-auto">
+      <div class="flex justify-between ml-auto items-center">
         <!-- Search -->
         <div
           v-if="resourceInformation.searchable && !viaHasOne"
-          class="relative h-9 mb-6"
+          class="relative"
         >
           <icon
             type="search"
-            class="absolute search-icon-center ml-3 text-70"
+            class="absolute ml-2 mt-2 text-grey"
           />
 
           <input
             v-model="search"
-            :placeholder="Search"
-            class="appearance-none form-control form-input w-search pl-search"
+            placeholder="Search"
+            class="appearance-none form-control form-input form-input-bordered search"
             type="search"
             @keydown.stop="performSearch"
             @search="performSearch"
@@ -310,6 +316,7 @@ export default {
     allMatchingResourceCount: 0,
 
     isSorting: false,
+    search: '',
 
     sortable: false,
     sortableBy: null,
@@ -331,6 +338,7 @@ export default {
     resourceRequestQueryString () {
       return _.pickBy(
         {
+          search: this.currentSearch,
           filters: this.encodedFilters,
           order_by: this.currentOrderBy,
           order_by_direction: this.currentOrderByDirection,
@@ -407,6 +415,13 @@ export default {
      */
     currentSearch () {
       return this.$route.query[this.searchParameter] || '';
+    },
+
+    /**
+     * Get the name of the search query string variable.
+     */
+    searchParameter () {
+      return this.viaRelationship + '_search';
     },
 
     /**
@@ -507,12 +522,24 @@ export default {
     viaManyToMany () {
       return this.relationshipType == 'ManyToMany';
     },
+
+    resourceCountLabel () {
+      const first = this.perPage * (this.currentPage - 1);
+
+      return (
+        this.resources.length &&
+        `${first + 1}-${first + this.resources.length} of ${
+          this.allMatchingResourceCount
+        }`
+      );
+    }
   },
 
   /**
    * Mount the component and retrieve its initial data.
    */
   async created () {
+    this.initializeSearchFromQueryString();
     this.initializeOrderingFromQueryString();
     this.initializePerPageFromQueryString();
 
@@ -531,6 +558,7 @@ export default {
           this.currentOrderBy +
           this.currentOrderByDirection +
           this.currentPage +
+          this.currentSearch +
           this.currentPerPage
         );
       },
@@ -618,6 +646,10 @@ export default {
         [this.orderByParameter]: field.attribute,
         [this.orderByDirectionParameter]: direction
       });
+    },
+
+    initializeSearchFromQueryString () {
+      this.search = this.currentSearch;
     },
 
     /**
@@ -711,7 +743,6 @@ export default {
           [this.relSortableBy]: sortField.value
         };
       });
-      console.log(data);
       this.loading = true;
       ExTeal.request()
         .put(`/api/${this.viaResource}/${this.viaResourceId}/reorder/${this.resourceName}`, { data: data })
@@ -762,7 +793,6 @@ export default {
      * Toggle the selection of all matching resources in the database
      */
     toggleSelectAllMatching () {
-      console.log(this.selectAllMatchingResources);
       if (!this.selectAllMatchingResources) {
         this.selectAllResources();
         this.selectAllMatchingResources = true;
@@ -770,7 +800,24 @@ export default {
       }
 
       this.selectAllMatchingResources = false;
-    }
+    },
+
+    /**
+     * Execute a search against the resource.
+     */
+    performSearch (event) {
+      this.debouncer(() => {
+        // Only search if we're not tabbing into the field
+        if (event.which != 9) {
+          this.updateQueryString({
+            [this.pageParameter]: 1,
+            [this.searchParameter]: this.search,
+          });
+        }
+      });
+    },
+
+    debouncer: _.debounce(callback => callback(), 500),
   }
 };
 </script>

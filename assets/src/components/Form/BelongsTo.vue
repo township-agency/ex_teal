@@ -1,7 +1,37 @@
 <template>
   <default-field :field="field">
     <template slot="field">
+      <search-input
+        v-if="isSearchable && !isLocked"
+        :error="hasError"
+        :value="selectedResource"
+        :data="availableResources"
+        :is-searching="isSearching"
+        track-by="value"
+        search-by="display"
+        class="mb-3"
+        @input="performSearch"
+        @clear="clearSelection"
+        @selected="selectResource"
+      >
+        <div
+          v-if="selectedResource"
+          slot="default"
+          class="flex items-center"
+        >
+          {{ selectedResource.display_title }}
+        </div>
+
+        <div
+          slot="option"
+          slot-scope="{ option }"
+          class="flex items-center"
+        >
+          {{ option.display_title }}
+        </div>
+      </search-input>
       <select
+        v-else
         :class="{ 'border-danger': hasError }"
         :data-testid="`${field.resourceName}-select`"
         :disabled="isLocked"
@@ -69,7 +99,8 @@ export default {
     initializingWithExistingResource: false,
     selectedResource: null,
     selectedResourceId: null,
-    search: ''
+    search: '',
+    isSearching: false
   }),
 
   computed: {
@@ -103,7 +134,7 @@ export default {
      * Determine if the related resources is searchable
      */
     isSearchable () {
-      return false;
+      return this.field.options.searchable;
     },
 
     /**
@@ -133,8 +164,6 @@ export default {
 
   methods: {
     initializeComponent () {
-      this.withTrashed = false;
-
       // If a user is editing an existing resource with this relation
       // we'll have a belongsToId on the field, and we should prefill
       // that resource in this field
@@ -213,6 +242,7 @@ export default {
       ).then(({ data: { data: resources } }) => {
         this.initializingWithExistingResource = false;
         this.availableResources = resources;
+        this.isSearching = false;
       });
     },
 
@@ -230,6 +260,19 @@ export default {
       this.selectedResource = this.availableResources.find(
         r => r.id == this.selectedResourceId
       );
+    },
+
+    performSearch (search) {
+      this.search = search;
+
+      const trimmedSearch = search.trim();
+      if (trimmedSearch == '') {
+        return;
+      }
+      this.isSearching = true;
+      this.debouncer(() => {
+        this.getAvailableResources(trimmedSearch);
+      }, 500);
     }
   }
 };

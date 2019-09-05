@@ -43,6 +43,11 @@ defmodule ExTeal.Fields.BelongsTo do
     end
   end
 
+  def searchable(field) do
+    opts = Map.merge(field.options, %{searchable: true})
+    Map.put(field, :options, opts)
+  end
+
   def apply_options_for(field, model) do
     id =
       case Map.get(model, field.field) do
@@ -53,11 +58,14 @@ defmodule ExTeal.Fields.BelongsTo do
     with {:ok, resource} <- ExTeal.resource_for_model(field.relationship) do
       rel = model.__struct__.__schema__(:association, field.field)
 
-      Map.put(field, :options, %{
-        belongs_to_key: rel.owner_key,
-        belongs_to_relationship: resource.uri(),
-        belongs_to_id: id
-      })
+      opts =
+        Map.merge(field.options, %{
+          belongs_to_key: rel.owner_key,
+          belongs_to_relationship: resource.uri(),
+          belongs_to_id: id
+        })
+
+      Map.put(field, :options, opts)
     else
       {:error, _} -> field
     end

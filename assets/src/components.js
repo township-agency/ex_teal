@@ -41,6 +41,7 @@ import Edit from '@/components/Icons/Edit';
 import Filter from '@/components/Icons/Filter';
 import Link from '@/components/Icons/Link';
 import Reorder from '@/components/Icons/Reorder';
+import Search from '@/components/Icons/Search';
 import View from '@/components/Icons/View';
 
 Vue.component('action-selector', ActionSelector);
@@ -84,4 +85,5 @@ Vue.component('icon-edit', Edit);
 Vue.component('icon-filter', Filter);
 Vue.component('icon-link', Link);
 Vue.component('icon-reorder', Reorder);
+Vue.component('icon-search', Search);
 Vue.component('icon-view', View);

@@ -29,7 +29,8 @@ defmodule ExTeal.ResourceTest do
                  title: "Posts",
                  singular: "Post",
                  uri: "posts",
-                 hidden: true
+                 hidden: true,
+                 searchable: false
                }
              ]
     end

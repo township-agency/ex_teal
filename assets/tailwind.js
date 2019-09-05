@@ -73,15 +73,15 @@ let colors = {
   info: "var(--info)",
   warning: "var(--warning)",
 
-  "90-half": "var(--90-half)",
-  90: "var(--90)",
-  80: "var(--80)",
-  70: "var(--70)",
-  60: "var(--60)",
-  50: "var(--50)",
-  40: "var(--40)",
-  30: "var(--30)",
-  20: "var(--20)"
+  "90-half": "var(--grey-90-half)",
+  90: "var(--grey-90)",
+  80: "var(--grey-80)",
+  70: "var(--grey-70)",
+  60: "var(--grey-60)",
+  50: "var(--grey-50)",
+  40: "var(--grey-40)",
+  30: "var(--grey-30)",
+  20: "var(--grey-20)"
 };
 
 let svgFillColors = global.Object.assign({ current: "currentColor" }, colors);

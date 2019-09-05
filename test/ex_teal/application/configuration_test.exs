@@ -7,6 +7,8 @@ defmodule ExTeal.Application.ConfigurationTest do
     use ExTeal.Resource
 
     def model, do: FooSchema
+
+    def search, do: []
   end
 
   defmodule FakeManifest do
@@ -88,7 +90,8 @@ defmodule ExTeal.Application.ConfigurationTest do
                  title: "Foos",
                  singular: "Foo",
                  uri: "foos",
-                 hidden: false
+                 hidden: false,
+                 searchable: false
                }
              ]
     end

@@ -8,15 +8,14 @@
       <div class="relative">
         <icon
           type="search"
-          class="absolute search-icon-center ml-3 text-70"
+          class="absolute ml-2 mt-2 text-grey"
         />
-
         <input
           ref="input"
           v-model="searchTerm"
           type="search"
           placeholder="Search"
-          class="form-control form-input form-input-bordered w-full"
+          class="form-control form-input form-input-bordered search w-full"
           @input.stop="search"
           @keydown.stop=""
           @keydown.enter.stop="goToCurrentlySelectedResource"
