@@ -28,6 +28,8 @@ defmodule ExTeal.Resource do
 
   @callback sortable_by() :: String.t() | nil
 
+  @callback cards(Plug.Conn.t()) :: [module]
+
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Resource
@@ -44,7 +46,9 @@ defmodule ExTeal.Resource do
 
       def sortable_by, do: nil
 
-      defoverridable(hide_from_nav: 0, sortable_by: 0)
+      def cards(_conn), do: []
+
+      defoverridable(hide_from_nav: 0, sortable_by: 0, cards: 1)
     end
   end
 

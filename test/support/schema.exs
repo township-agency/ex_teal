@@ -111,3 +111,12 @@ defmodule TestExTeal.FailingOnDeletePost do
     }
   end
 end
+
+defmodule TestExTeal.Order do
+  use Ecto.Schema
+
+  schema "orders" do
+    field(:grand_total, :integer)
+    timestamps()
+  end
+end

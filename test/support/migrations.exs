@@ -24,6 +24,11 @@ defmodule TestExTeal.Migrations do
       timestamps()
     end
 
+    create table(:orders) do
+      add(:grand_total, :integer)
+      timestamps()
+    end
+
     create table(:posts_tags, primary_key: false) do
       add(:post_id, references(:posts))
       add(:tag_id, references(:tags))

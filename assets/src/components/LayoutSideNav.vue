@@ -5,6 +5,24 @@
         id="nav"
         class="sticky?lg:h-(screen-16)"
       >
+        <h3><span>Dashboards</span></h3>
+        <ul>
+          <li
+            v-for="dashboard in availableDashboards"
+            :key="dashboard.uri"
+          >
+            <router-link
+              :to="{
+                name: 'dashboard.custom',
+                params: {
+                  uri: dashboard.uri
+                }
+              }"
+            >
+              {{ dashboard.title }}
+            </router-link>
+          </li>
+        </ul>
         <h3><span>Resources</span></h3>
         <ul class="">
           <li
@@ -51,6 +69,12 @@ export default {
     availableResources () {
       return filter(this.config.resources, resource => {
         return !resource.hidden;
+      });
+    },
+
+    availableDashboards () {
+      return filter(this.config.dashboards, dashboard => {
+        return !dashboard.hidden;
       });
     },
 

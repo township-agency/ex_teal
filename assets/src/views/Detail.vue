@@ -1,5 +1,26 @@
 <template>
   <loading-view :loading="initialLoading">
+    <div v-if="shouldShowCards">
+      <cards
+        v-if="smallCards.length > 0"
+        :cards="smallCards"
+        class="mb-3"
+        :resource="resource"
+        :resource-id="resourceId"
+        :resource-name="resourceName"
+        :only-on-detail="true"
+      />
+
+      <cards
+        v-if="largeCards.length > 0"
+        :cards="largeCards"
+        size="large"
+        :resource="resource"
+        :resource-id="resourceId"
+        :resource-name="resourceName"
+        :only-on-detail="true"
+      />
+    </div>
     <div
       v-for="panel in availablePanels"
       :key="panel.key"
@@ -63,10 +84,10 @@
 </template>
 
 <script>
-import { Deleteable, InteractsWithResourceInformation } from 'ex-teal-js';
+import { Deleteable, HasCards, InteractsWithResourceInformation } from 'ex-teal-js';
 import _ from 'lodash';
 export default {
-  mixins: [ InteractsWithResourceInformation, Deleteable ],
+  mixins: [ InteractsWithResourceInformation, Deleteable, HasCards ],
   props: {
     resourceName: {
       type: String,
@@ -114,7 +135,10 @@ export default {
         return _.toArray(panels);
       }
       return [];
-    }
+    },
+    cardsEndpoint () {
+      return `/api/${this.resourceName}/cards`;
+    },
   },
 
   watch: {

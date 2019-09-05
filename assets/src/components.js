@@ -1,7 +1,10 @@
 import Vue from 'vue';
 
 import ActionSelector from '@/components/ActionSelector';
+import BaseValueMetric from '@/components/Metrics/Base/ValueMetric';
 import Card from '@/components/Card';
+import Cards from '@/components/Cards';
+import CardWrapper from '@/components/CardWrapper';
 import Checkbox from '@/components/Checkbox';
 import CheckboxWithLabel from '@/components/CheckboxWithLabel';
 import ConfirmActionModal from '@/components/Modals/ConfirmActionModal';
@@ -18,6 +21,7 @@ import FakeCheckbox from '@/components/FakeCheckbox';
 import FilterSelect from '@/components/FilterSelect';
 import FilterSelector from '@/components/FilterSelector';
 import Heading from '@/components/Heading';
+import HelpCard from '@/components/HelpCard';
 import Index from './views/Index';
 import Loader from '@/components/Icons/Loader';
 import LoadingCard from '@/components/LoadingCard';
@@ -31,6 +35,8 @@ import SearchInput from '@/components/SearchInput';
 import SelectControl from '@/components/Controls/SelectControl';
 import SortableIcon from '@/components/Index/SortableIcon';
 import ValidationErrors from '@/components/ValidationErrors';
+import ValueMetric from '@/components/Metrics/ValueMetric';
+
 
 import Icon from '@/components/Icons/Icon';
 import Action from '@/components/Icons/Action';
@@ -45,7 +51,10 @@ import Search from '@/components/Icons/Search';
 import View from '@/components/Icons/View';
 
 Vue.component('action-selector', ActionSelector);
+Vue.component('base-value-metric', BaseValueMetric);
 Vue.component('card', Card);
+Vue.component('cards', Cards);
+Vue.component('card-wrapper', CardWrapper);
 Vue.component('checkbox', Checkbox);
 Vue.component('checkbox-with-label', CheckboxWithLabel);
 Vue.component('confirm-action-modal', ConfirmActionModal);
@@ -62,6 +71,7 @@ Vue.component('fake-checkbox', FakeCheckbox);
 Vue.component('filter-select', FilterSelect);
 Vue.component('filter-selector', FilterSelector);
 Vue.component('heading', Heading);
+Vue.component('help-card', HelpCard);
 Vue.component('loader', Loader);
 Vue.component('loading-card', LoadingCard);
 Vue.component('loading-view', LoadingView);
@@ -74,6 +84,7 @@ Vue.component('resource-table-row', ResourceTableRow);
 Vue.component('search-input', SearchInput);
 Vue.component('select-control', SelectControl);
 Vue.component('sortable-icon', SortableIcon);
+Vue.component('value-metric', ValueMetric);
 Vue.component('validation-errors', ValidationErrors);
 
 Vue.component('icon', Icon);
