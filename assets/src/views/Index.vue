@@ -1,5 +1,20 @@
 <template>
   <loading-view :loading="initialLoading">
+    <div v-if="shouldShowCards">
+      <cards
+        v-if="smallCards.length > 0"
+        :cards="smallCards"
+        class="mb-3"
+        :resource-name="resourceName"
+      />
+
+      <cards
+        v-if="largeCards.length > 0"
+        :cards="largeCards"
+        size="large"
+        :resource-name="resourceName"
+      />
+    </div>
     <div class="card-headline">
       <heading
         v-if="meta.label"
@@ -253,6 +268,7 @@ import {
   Capitalize,
   Deleteable,
   Filterable,
+  HasCards,
   InteractsWithQueryString,
   InteractsWithResourceInformation,
   Minimum,
@@ -264,6 +280,7 @@ export default {
   mixins: [
     Deleteable,
     Filterable,
+    HasCards,
     InteractsWithResourceInformation,
     InteractsWithQueryString,
     Paginatable,
@@ -532,7 +549,22 @@ export default {
           this.allMatchingResourceCount
         }`
       );
-    }
+    },
+    
+    /**
+     * Determine if the resource should show any cards
+     */
+    shouldShowCards () {
+      // Don't show cards if this resource is beings shown via a relations
+      return this.cards.length > 0 && this.resourceName == this.$route.params.resourceName;
+    },
+
+    /**
+     * Get the endpoint for this resource's metrics.
+     */
+    cardsEndpoint () {
+      return `/api/${this.resourceName}/cards`;
+    },
   },
 
   /**

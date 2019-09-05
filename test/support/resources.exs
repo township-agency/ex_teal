@@ -7,6 +7,11 @@ defmodule TestExTeal.UserResource do
 
   def search, do: [:name]
 
+  def cards(_conn),
+    do: [
+      TestExTeal.NewUsersMetric
+    ]
+
   def fields,
     do: [
       ID.make(:id),

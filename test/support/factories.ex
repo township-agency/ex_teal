@@ -3,7 +3,7 @@ defmodule TestExTeal.Factory do
 
   use ExMachina.Ecto, repo: TestExTeal.Repo
 
-  alias TestExTeal.{Post, PreferredTag, Tag, User}
+  alias TestExTeal.{Order, Post, PreferredTag, Tag, User}
 
   def user_factory do
     %User{
@@ -33,6 +33,12 @@ defmodule TestExTeal.Factory do
       tag: build(:tag),
       order: sequence(:order, & &1),
       notes: "foo"
+    }
+  end
+
+  def order_factory do
+    %Order{
+      grand_total: 0
     }
   end
 end

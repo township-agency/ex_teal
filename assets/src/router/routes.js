@@ -1,4 +1,4 @@
-import Home from '@/views/Home.vue';
+import Dashboard from '@/views/Dashboard.vue';
 import Index from '@/views/Index.vue';
 import Detail from '@/views/Detail.vue';
 import Create from '@/views/Create.vue';
@@ -11,8 +11,21 @@ import UpdateAttached from '@/views/UpdateAttached.vue';
 export default [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    name: 'dashboard',
+    redirect: to => {
+      const uri = window.ExTeal.config.dashboards[0].uri;
+      return { name: 'dashboard.custom', params: { uri } };
+    }
+  },
+  {
+    path: '/dashboards/:uri',
+    name: 'dashboard.custom',
+    component: Dashboard,
+    props: route => {
+      return {
+        uri: route.params.uri
+      };
+    }
   },
   {
     path: '/resources/:resourceName',

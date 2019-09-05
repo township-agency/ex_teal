@@ -45,6 +45,47 @@ defmodule ExTeal do
     end
   end
 
+  @spec available_dashboards() :: [ExTeal.Dashboard.t()]
+  def available_dashboards do
+    case manifest() do
+      nil -> []
+      module -> module.dashboards()
+    end
+  end
+
+  @spec dashboard_for(String.t()) :: {:ok, ExTeal.Dashboard.t()} | {:error, :not_found}
+  def dashboard_for(uri) do
+    case Enum.find(available_dashboards(), fn x -> x.uri() == uri end) do
+      nil -> {:error, :not_found}
+      module -> {:ok, module}
+    end
+  end
+
+  @spec dashboard_metric_for(Conn.t(), String.t()) :: {:ok, module} | {:error, :not_found}
+  def dashboard_metric_for(conn, uri) do
+    all_metrics =
+      available_dashboards()
+      |> Enum.map(& &1.cards(conn))
+      |> Enum.concat()
+
+    case Enum.find(all_metrics, &(&1.uri() == uri)) do
+      nil -> {:error, :not_found}
+      module -> {:ok, module}
+    end
+  end
+
+  @spec resource_metric_for(Conn.t(), String.t(), String.t()) ::
+          {:ok, module, module} | {:error, :not_found}
+  def resource_metric_for(conn, resource_name, metric_uri) do
+    with {:ok, resource} <- resource_for(resource_name),
+         cards <- resource.cards(conn),
+         metric when not is_nil(metric) <- Enum.find(cards, &(&1.uri() == metric_uri)) do
+      {:ok, resource, metric}
+    else
+      _ -> {:error, :not_found}
+    end
+  end
+
   def auth_provider do
     case manifest() do
       nil -> []

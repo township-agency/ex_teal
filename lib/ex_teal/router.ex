@@ -7,7 +7,13 @@ defmodule ExTeal.Router do
 
   use Plug.Router
 
-  alias ExTeal.Api.{ManyToMany, ResourceResponder}
+  alias ExTeal.Api.{
+    CardResponder,
+    ManyToMany,
+    MetricResponder,
+    ResourceResponder
+  }
+
   alias ExTeal.{GlobalSearch, View}
   alias ExTeal.Resource.Serializer
   alias Plug.Conn
@@ -60,6 +66,20 @@ defmodule ExTeal.Router do
     |> GlobalSearch.run()
     |> GlobalSearch.render()
   end
+
+  get("/api/dashboards/:name", do: CardResponder.dashboard(conn, name))
+
+  get("/api/:resource_name/cards", do: CardResponder.resource(conn, resource_name))
+
+  get("/api/metrics/:uri", do: MetricResponder.get(conn, uri))
+
+  get("/api/:resource_name/metrics/:uri",
+    do: MetricResponder.resource_index(conn, resource_name, uri)
+  )
+
+  get("/api/:resource_name/:resource_id/metrics/:uri",
+    do: MetricResponder.resource_detail(conn, resource_name, resource_id, uri)
+  )
 
   get("/api/:resource_name", do: ResourceResponder.index(conn, resource_name))
 

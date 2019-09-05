@@ -10,9 +10,10 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@websanova/vue-auth": "^2.21.14-beta",
-    "ex-teal-js": "^1.0.2",
+    "ex-teal-js": "file:../../teal-js",
     "flatpickr": "^4.5.2",
     "form-backend-validation": "^2.3.3",
+    "numbro": "^2.1.2",
     "places.js": "^1.11.0",
     "popper.js": "^1.14.4",
     "portal-vue": "^1.3.0",

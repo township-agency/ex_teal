@@ -5,7 +5,7 @@ defmodule ExTeal.Application.Configuration do
   It relies on (and uses):
   """
 
-  alias ExTeal.Resource
+  alias ExTeal.{Dashboard, Resource}
 
   @doc """
   Returns the name of the teal application that is used in the html titles of all pages.
@@ -16,6 +16,11 @@ defmodule ExTeal.Application.Configuration do
   Returns the path to the logo that is used in the admin panel.
   """
   @callback logo_image_path() :: String.t()
+
+  @doc """
+  Returns an array of dashboards
+  """
+  @callback dashboards() :: []
 
   @doc """
   Returns the json configuration required for the vue app.
@@ -30,6 +35,7 @@ defmodule ExTeal.Application.Configuration do
   defmacro __using__(_) do
     quote do
       alias ExTeal.Application.Configuration
+      alias ExTeal.WelcomeDashboard
 
       @behaviour Configuration
 
@@ -38,6 +44,8 @@ defmodule ExTeal.Application.Configuration do
       def logo_image_path, do: "/teal/images/logo.svg"
 
       def path, do: "/teal"
+
+      def dashboards, do: [WelcomeDashboard]
 
       def json_configuration, do: Configuration.parse_json()
 
@@ -48,7 +56,8 @@ defmodule ExTeal.Application.Configuration do
         logo_image_path: 0,
         json_configuration: 0,
         auth_provider: 0,
-        path: 0
+        path: 0,
+        dashboards: 0
       )
     end
   end
@@ -60,6 +69,7 @@ defmodule ExTeal.Application.Configuration do
       logo: ExTeal.logo_image_path(),
       path: ExTeal.path(),
       resources: ExTeal.available_resources() |> Resource.map_to_json(),
+      dashboards: ExTeal.available_dashboards() |> Dashboard.map_to_json(),
       plugins: ExTeal.available_plugins(),
       authenticated: true
     }
