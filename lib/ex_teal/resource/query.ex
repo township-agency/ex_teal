@@ -12,6 +12,8 @@ defmodule ExTeal.Resource.Query do
       alias ExTeal.Resource.Query
 
       def display_title(schema), do: Query.default_display_title(schema)
+
+      defoverridable(display_title: 1)
     end
   end
 

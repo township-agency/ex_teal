@@ -24,15 +24,15 @@
   --secondary-10: rgba(241, 101, 34, 0.1);
   --logo: #252d37;
   --sidebar-icon: #b3c1d1;
-  --20: #F8F8F8;
-  --30: #E9E9E9;
-  --40: #eef1f4;
-  --50: #e3e7eb;
-  --60: #bacad6;
-  --70: #b3b9bf;
-  --80: #7c858e;
-  --90: #252d37;
-  --90-half: rgba(40, 54, 61, 0.5);
+  --grey-20: #F8F8F8;
+  --grey-30: #E9E9E9;
+  --grey-40: #eef1f4;
+  --grey-50: #e3e7eb;
+  --grey-60: #bacad6;
+  --grey-70: #b3b9bf;
+  --grey-80: #7c858e;
+  --grey-90: #252d37;
+  --grey-90-half: rgba(40, 54, 61, 0.5);
 }
 
 /* purgecss start ignore */
@@ -61,7 +61,7 @@ html {
 /* Card Components
 ---------------------------------------------------------------------------- */
 
-.card-headline{
+.card-headline {
   @apply .flex .items-center .mb-4 .capitalize;
 }
 
@@ -246,6 +246,10 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   @apply .bg-white .border .border-60 .px-2 .text-80;
 }
 
+.form-input-bordered.search {
+  @apply .pl-8;
+}
+
 .form-select {
   @apply .bg-white .border .border-60 .pl-3 .pr-8 .text-80 .shadow;
   appearance: none;
@@ -286,6 +290,9 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="#35393C" fill-rule="nonzero" d="M8.293.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4A1 1 0 0 1 1.707.293L5 3.586 8.293.293z"/></svg>');
 }
 
+.form-input.search-input {
+  @apply .px-0;
+}
 /* Checkbox
 ---------------------------------------------------------------------------- */
 .checkbox {

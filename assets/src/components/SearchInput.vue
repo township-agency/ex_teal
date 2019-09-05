@@ -1,8 +1,6 @@
 <template>
   <div
     v-on-clickaway="close"
-    :data-testid="dataTestid"
-    :dusk="dataTestid"
     :class="{ 'opacity-75': disabled }"
   >
     <div class="relative">
@@ -22,8 +20,9 @@
         />
 
         <slot name="default">
-          <div class="text-70">
-            {{ __("Click to choose") }}
+          <icon type="search" />
+          <div class="text-grey">
+            Click to search
           </div>
         </slot>
       </div>
@@ -52,7 +51,7 @@
       v-if="show"
       ref="dropdown"
       :style="{ width: inputWidth + 'px', zIndex: 2000 }"
-      class="form-input px-0 border border-60 absolute pin-t pin-l my-1 overflow-hidden"
+      class="form-input form-input-bordered search-input absolute pin-t pin-l my-1 overflow-hidden"
     >
       <div class="p-2 bg-grey-300">
         <input
@@ -60,7 +59,7 @@
           v-model="search"
           :disabled="disabled"
           placeholder="Search"
-          class="outline-none search-input-input w-full px-2 py-1.5 text-sm leading-normal bg-white rounded"
+          class="outline-none search-input-input w-full text-sm leading-normal bg-white"
           tabindex="-1"
           type="text"
           spellcheck="false"
@@ -70,18 +69,32 @@
           @keydown.up.prevent="move(-1)"
         >
       </div>
-
       <div
         ref="container"
-        class="search-input-options relative overflow-y-scroll scrolling-touch text-sm"
+        class="search-input-options relative overflow-y-auto scrolling-touch text-sm shadow"
         tabindex="-1"
         style="max-height: 155px;"
       >
         <div
+          v-if="shouldShowHelpText"
+          class="p-2"
+        >
+          Enter a search term more than {{ minSearchLength }} long.
+        </div>
+        <div
+          v-if="!isSearching && !shouldShowHelpText && data.length == 0"
+          class="p-2"
+        >
+          No results found
+        </div>
+        <div v-if="isSearching">
+          Searching
+        </div>
+
+        <div
           v-for="(option, index) in data"
           :key="getTrackedByKey(option)"
           :ref="index === selected ? 'selected' : null"
-          :dusk="dataTestid + '-result-' + index"
           :class="{
             [`search-input-item-${index}`]: true,
             'hover:bg-30': index !== selected,
@@ -111,18 +124,14 @@ export default {
   mixins: [ clickaway ],
   inheritAttrs: false,
   props: {
-    dataTestid: {
-      type: String,
-      default: null
-    },
     disabled: { default: false, type: Boolean },
     value: {
       default: null,
       type: [ Object, String ]
     },
     data: {
-      type: Object,
-      default: null
+      type: Array,
+      default: () => { return []; }
     },
     trackBy: {
       type: String,
@@ -139,6 +148,14 @@ export default {
     debounce: {
       type: Number,
       default: 500
+    },
+    minSearchLength: {
+      type: Number,
+      default: 3
+    },
+    isSearching: {
+      type: Boolean, 
+      default: false
     }
   },
 
@@ -153,13 +170,27 @@ export default {
   computed: {
     shouldShowDropdownArrow () {
       return this.value == '' || this.value == null;
+    },
+
+    shouldShowHelpText () {
+      return this.search == null || this.search == '' || this.search.length < this.minSearchLength; 
+    },
+
+    dataLength () {
+      return this.data ? this.data.length : false;
     }
   },
 
   watch: {
     search () {
       this.selected = 0;
-      this.$refs.container.scrollTop = 0;
+      if (this.$refs.container) {
+        this.$refs.container.scrollTop = 0;
+      }
+
+      if (this.show.length >= this.minSearchLength && this.popper) {
+        this.popper.update();
+      }
     },
     show (show) {
       if (show) {
@@ -192,6 +223,11 @@ export default {
       } else {
         if (this.popper) {this.popper.destroy();}
       }
+    },
+
+    dataLength () {
+      console.log('data changed');
+      if (this.popper) {this.popper.update(); }
     }
   },
 
@@ -281,9 +317,11 @@ export default {
      * Handle the input event of the search box
      */
     handleInput (e) {
-      this.debouncer(() => {
-        this.$emit('input', e.target.value);
-      });
+      if (e.target.value && e.target.value.length >= 3) {
+        this.debouncer(() => {
+          this.$emit('input', e.target.value);
+        });
+      }
     },
 
     /**

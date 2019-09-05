@@ -59,7 +59,8 @@ defmodule ExTeal.Resource do
       title: resource.title(),
       singular: singular,
       uri: resource.uri(),
-      hidden: resource.hide_from_nav()
+      hidden: resource.hide_from_nav(),
+      searchable: !Enum.empty?(resource.search())
     }
   end
 end
