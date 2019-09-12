@@ -53,10 +53,10 @@ export default {
   computed: {
     filteredCards () {
       if (this.onlyOnDetail) {
-        return this.cards.filter(c => c.only_on_detail == true && c.options.uri);
+        return this.cards.filter(c => c.only_on_detail == true);
       }
 
-      return this.cards.filter(c => c.only_on_detail == false && c.options.uri);
+      return this.cards.filter(c => c.only_on_detail == false);
     },
   },
 };

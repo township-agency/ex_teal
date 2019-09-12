@@ -33,25 +33,27 @@
     </p>
 
     <div class="flex items-center">
-      <p class="text-80 font-bold">
+      <p class="text-80 font-bold inline-flex items-center">
         <svg
           v-if="increaseOrDecreaseLabel == 'Decrease'"
           class="text-danger fill-current mr-2"
           width="20"
-          height="12"
+          height="20"
         >
           <path
-            d="M2 3a1 1 0 0 0-2 0v8a1 1 0 0 0 1 1h8a1 1 0 0 0 0-2H3.414L9 4.414l3.293 3.293a1 1 0 0 0 1.414 0l6-6A1 1 0 0 0 18.293.293L13 5.586 9.707 2.293a1 1 0 0 0-1.414 0L2 8.586V3z"
+            d="M1.25,18.75V0H0v20h20v-1.25H1.25z M9.3876,9.375l1.2374-1.2374l4.9372,4.9371H9.696v1.25h8v-8h-1.25v5.8661l-4.9371-4.9372
+    L10.625,6.3698L8.5037,8.4911L4.4378,4.4252L3.554,5.3091l4.9497,4.9497L9.3876,9.375z"
           />
         </svg>
         <svg
           v-if="increaseOrDecreaseLabel == 'Increase'"
           class="rotate-180 text-success fill-current mr-2"
           width="20"
-          height="12"
+          height="20"
         >
           <path
-            d="M2 3a1 1 0 0 0-2 0v8a1 1 0 0 0 1 1h8a1 1 0 0 0 0-2H3.414L9 4.414l3.293 3.293a1 1 0 0 0 1.414 0l6-6A1 1 0 0 0 18.293.293L13 5.586 9.707 2.293a1 1 0 0 0-1.414 0L2 8.586V3z"
+            d="M1.25,18.75V0H0v20h20v-1.25H1.25z M8.5037,10.2589l2.1213,2.1213l5.8211-5.821v5.8661h1.25v-8h-8v1.25h5.8661
+    l-4.9372,4.9372L9.3425,9.33L8.5037,8.4911L3.554,13.4409l0.8839,0.8839L8.5037,10.2589z"
           />
         </svg>
 

@@ -101,16 +101,16 @@
                 :href="metrics"
                 class="no-underline dim flex p-6"
               >
-                <div class="flex justify-center w-11 flex-no-shrink mr-6">
+                <div class="flex justify-center w-11 flex-no-shrink mr-6 fill-current text-primary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="37"
                     height="36"
-                    viewBox="0 0 37 36"
+                    viewBox="0 0 20 20"
                   >
                     <path
-                      fill="var(--primary)"
-                      d="M2 27h3c1.1045695 0 2 .8954305 2 2v5c0 1.1045695-.8954305 2-2 2H2c-1.1045695 0-2-.8954305-2-2v-5c0-1.1.9-2 2-2zm0 2v5h3v-5H2zm10-11h3c1.1045695 0 2 .8954305 2 2v14c0 1.1045695-.8954305 2-2 2h-3c-1.1045695 0-2-.8954305-2-2V20c0-1.1.9-2 2-2zm0 2v14h3V20h-3zM22 9h3c1.1045695 0 2 .8954305 2 2v23c0 1.1045695-.8954305 2-2 2h-3c-1.1045695 0-2-.8954305-2-2V11c0-1.1.9-2 2-2zm0 2v23h3V11h-3zM32 0h3c1.1045695 0 2 .8954305 2 2v32c0 1.1045695-.8954305 2-2 2h-3c-1.1045695 0-2-.8954305-2-2V2c0-1.1.9-2 2-2zm0 2v32h3V2h-3z"
+                      d="M1.25,18.75V0H0v20h20v-1.25H1.25z M15,5.375h-1.25v11H15V5.375z M12.5,9.375h-1.25v7h1.25V9.375z M17.5,2.375h-1.25v14
+    h1.25V2.375z M10,12.375H8.75v4H10V12.375z M5,10.375H3.75v6H5V10.375z M7.5,7.375H6.25v9H7.5V7.375z"
                     />
                   </svg>
                 </div>
