@@ -3286,10 +3286,10 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-ex-teal-js@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/ex-teal-js/-/ex-teal-js-1.0.3.tgz#6951cd87d2de2f422c021caa3f933eb37d0d0218"
-  integrity sha512-2in/CBXeJHhFuhL+yQdYNTAWGKJfDDD+SjQC2iqqZmXFYdh3xJDiQiMN9sqdoKuhnQUX3xt//7aNgmqKeyrZ+Q==
+ex-teal-js@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/ex-teal-js/-/ex-teal-js-1.0.4.tgz#faf7e5b2caa8cfeb5106b47f2b47988451876afe"
+  integrity sha512-gxmhct6BLj0fYBRK3hSpKkQKlZ3ctBaXeRo7REu/tXuBcaiv7NlX09VyrxBb6Iz/UzyDJJpKVlnlOxT7JwA6Bg==
   dependencies:
     "@babel/runtime" "^7.4.5"
     form-backend-validation "^2.3.8"
