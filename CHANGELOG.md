@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.4.1] - 2019-09-12
+
+### Fixes
+- Dashboard was missing cards
+
 ## [0.4.0] - 2019-09-05
 
 ### Adds
