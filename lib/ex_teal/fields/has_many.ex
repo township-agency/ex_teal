@@ -10,7 +10,6 @@ defmodule ExTeal.Fields.HasMany do
   """
 
   use ExTeal.Field
-  alias ExTeal.Field
   alias ExTeal.Resource
 
   def component, do: "has-many"
