@@ -41,6 +41,7 @@ defmodule ExTeal.Resource do
       use ExTeal.Resource.Query
 
       import ExTeal.FieldVisibility
+      import ExTeal.Field, only: [get: 2]
 
       def hide_from_nav, do: false
 

@@ -8,6 +8,8 @@ defmodule ExTeal.Field do
 
   @type t :: %__MODULE__{}
 
+  alias __MODULE__
+
   defstruct field: nil,
             attribute: nil,
             component: nil,
@@ -21,6 +23,7 @@ defmodule ExTeal.Field do
             text_align: "left",
             value: nil,
             panel: nil,
+            getter: nil,
             show_on_index: true,
             show_on_detail: true,
             show_on_new: true,
@@ -99,7 +102,19 @@ defmodule ExTeal.Field do
 
   def field_name(_, label), do: label
 
+  def value_for(%Field{getter: getter}, model, _type) when is_function(getter) do
+    getter.(model)
+  end
+
   def value_for(field, model, _type) do
     Map.get(model, field.field)
+  end
+
+  def get(field, func) do
+    field
+    |> Map.put(:getter, func)
+    |> Map.put(:sortable, false)
+    |> Map.put(:show_on_new, false)
+    |> Map.put(:show_on_edit, false)
   end
 end
