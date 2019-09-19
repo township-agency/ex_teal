@@ -99,4 +99,10 @@ defmodule ExTeal.FieldVisibility do
     do: put_in(field, [:options, :searchable], true)
 
   def searchable(field), do: field
+
+  @doc """
+  Marks the field as safe to render as html
+  """
+  @spec as_html(Field.t()) :: Field.t()
+  def as_html(field), do: %{field | as_html: true}
 end

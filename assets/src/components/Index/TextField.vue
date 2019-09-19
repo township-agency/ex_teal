@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="field.asHtml"
+    v-if="field.as_html"
     v-html="field.value"
   />
   <span
