@@ -10,13 +10,13 @@
     <div class="w-3/4 py-4">
       <slot name="value">
         <p
-          v-if="field.value && !field.asHtml"
+          v-if="field.value && !field.as_html"
           class="text-90"
         >
           {{ field.value }}
         </p>
         <div
-          v-else-if="field.value && field.asHtml"
+          v-else-if="field.value && field.as_html"
           v-html="field.value"
         />
         <p v-else>
