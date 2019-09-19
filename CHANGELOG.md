@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.4.2] - 2019-09-19
+
+### Adds
+- `as_html` field modifier
+- Computed fields with a new `get` field modifier
+
 ## [0.4.1] - 2019-09-12
 
 ### Fixes
