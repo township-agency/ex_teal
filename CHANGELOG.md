@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.4.3] - 2019-10-11
+
+### Fixes
+- Broken Form submission when panels are used
+- Broken Address Fields
+
 ## [0.4.2] - 2019-09-19
 
 ### Adds
