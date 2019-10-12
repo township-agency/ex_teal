@@ -83,6 +83,7 @@
 <script>
 import { HandlesValidationErrors, UsStates } from 'ex-teal-js';
 import places from 'places.js';
+import { find } from 'lodash';
 
 const defaultValue = {
   address: '',
@@ -192,7 +193,7 @@ export default {
         return state;
       }
 
-      return this.states.find(s => {
+      return find(this.states, s => {
         return s.name == state;
       }).abbr;
     },
@@ -206,7 +207,14 @@ export default {
      * field's internal value attribute
      */
     fill (form) {
-      return (form[this.field.attribute] = this.value || defaultValue);
+      const obj = this.value || defaultValue;
+
+      console.log(this.value);
+
+      Object.keys(obj).forEach((key) => {
+        const formKey = `${this.field.attribute}[${key}]`;
+        form.append(formKey, obj[key]);
+      });
     }
   }
 };

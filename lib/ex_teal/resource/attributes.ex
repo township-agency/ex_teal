@@ -9,6 +9,7 @@ defmodule ExTeal.Resource.Attributes do
   """
 
   alias ExTeal.Field
+  alias ExTeal.Panel
 
   @doc """
   Used to determine which attributes are permitted during create and update.
@@ -49,9 +50,12 @@ defmodule ExTeal.Resource.Attributes do
         def permitted_attributes(_conn, attrs, _) do
           fields =
             __MODULE__.fields()
-            |> Enum.into(%{}, fn %Field{field: field} = f ->
-              {field, f}
+            |> Enum.map(fn
+              %Field{} = f -> [f]
+              %Panel{fields: fields} -> fields
             end)
+            |> Enum.concat()
+            |> Enum.into(%{}, fn %Field{field: field} = f -> {field, f} end)
 
           field_keys =
             fields

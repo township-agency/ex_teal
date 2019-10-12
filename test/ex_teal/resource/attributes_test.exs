@@ -5,14 +5,31 @@ defmodule ExTeal.Resource.AttributesTest do
   defmodule DefaultResource do
     use ExTeal.Resource.Attributes
 
-    alias ExTeal.Fields.{Number, RichText, Text}
+    alias ExTeal.Fields.{Number, Place, RichText, Text}
     alias ExTeal.Resource.Attributes
 
     def fields,
       do: [
         Text.make(:title),
         Number.make(:order),
-        RichText.make(:body) |> Attributes.sanitize_as(:html5)
+        RichText.make(:body) |> Attributes.sanitize_as(:html5),
+        Place.make(:address)
+      ]
+  end
+
+  defmodule PanelResource do
+    use ExTeal.Resource.Attributes
+
+    alias ExTeal.Fields.{Number, Place, RichText, Text}
+    alias ExTeal.Panel
+    alias ExTeal.Resource.Attributes
+
+    def fields,
+      do: [
+        Text.make(:title),
+        Number.make(:order),
+        RichText.make(:body) |> Attributes.sanitize_as(:html5),
+        Panel.new("Address", [Place.make(:address)])
       ]
   end
 
@@ -24,18 +41,45 @@ defmodule ExTeal.Resource.AttributesTest do
     end
   end
 
+  @address %{
+    "address" => "1600 Pennsylvania Ave NW",
+    "address_line_2" => "",
+    "city" => "Washington",
+    "state" => "DC",
+    "zip" => "20500"
+  }
+
   test "permitted attributes default" do
     attrs = %{
       "type" => "post",
       "title" => "a post",
-      "category_id" => "1"
+      "category_id" => "1",
+      "address" => @address
     }
 
     actual = DefaultResource.permitted_attributes(%Plug.Conn{}, attrs, :update)
 
     assert actual == %{
              "title" => "a post",
-             "category_id" => "1"
+             "category_id" => "1",
+             "address" => @address
+           }
+  end
+
+  test "panels are ignored" do
+    attrs = %{
+      "type" => "post",
+      "title" => "a post",
+      "category_id" => "1",
+      "address" => @address
+    }
+
+    actual = PanelResource.permitted_attributes(%Plug.Conn{}, attrs, :update)
+
+    assert actual == %{
+             "title" => "a post",
+             "category_id" => "1",
+             "address" => @address
            }
   end
 
