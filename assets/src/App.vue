@@ -33,6 +33,7 @@
 import LayoutTopNav from '@/components/LayoutTopNav';
 import LayoutSideNav from '@/components/LayoutSideNav';
 import './assets/css/main.css';
+import './assets/css/flatpickr.css';
 import './assets/css/trix.css';
 
 export default {

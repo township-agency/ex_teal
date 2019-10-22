@@ -14,7 +14,6 @@
 <script>
 import flatpickr from 'flatpickr';
 import format from 'date-fns/format';
-import 'flatpickr/dist/themes/airbnb.css';
 
 export default {
   props: {
