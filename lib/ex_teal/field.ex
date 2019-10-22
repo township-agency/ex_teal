@@ -54,6 +54,8 @@ defmodule ExTeal.Field do
       def show_on_detail, do: true
       def show_on_new, do: true
       def show_on_edit, do: true
+      def sanitize_as, do: :strip_tags
+      def as_html, do: false
 
       def field_name(name, label) do
         Field.field_name(name, label)
@@ -72,6 +74,8 @@ defmodule ExTeal.Field do
         show_on_detail: 0,
         show_on_new: 0,
         show_on_edit: 0,
+        sanitize_as: 0,
+        as_html: 0,
         make: 2,
         make: 1,
         value_for: 3,
@@ -93,7 +97,9 @@ defmodule ExTeal.Field do
       show_on_index: implementation.show_on_index(),
       show_on_detail: implementation.show_on_detail(),
       show_on_new: implementation.show_on_new(),
-      show_on_edit: implementation.show_on_edit()
+      show_on_edit: implementation.show_on_edit(),
+      sanitize: implementation.sanitize_as(),
+      as_html: implementation.as_html()
     }
   end
 
