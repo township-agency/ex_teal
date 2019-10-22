@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.4.4] - 2019-10-22
+
+### Fixes
+- Excerpts were ignoring line breaks
+- Rich Text field content was being sanitized
+- Flatpickr date time styles were missing
+
 ## [0.4.3] - 2019-10-11
 
 ### Fixes
