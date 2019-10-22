@@ -9,7 +9,7 @@
     </a>
     <div
       v-if="expanded"
-      class="show-content"
+      class="show-content whitespace-pre-wrap"
       v-html="content"
     />
     <div
