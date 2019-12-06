@@ -19,7 +19,6 @@ import InteractsWithDateTimes from '@/mixins/InteractsWithDateTimes';
 
 export default {
   mixins: [ InteractsWithDateTimes ],
-
   props: {
     resourceName: {
       type: String,

@@ -28,17 +28,13 @@ defmodule ExTeal.Fields.DateTest do
     assert field.component == "date"
   end
 
-  describe "with_options/2" do
-    test "accepts a map and stores them as options" do
+  describe "format/2" do
+    test "can set the format for the index and detail pages" do
       field = Date.make(:published_at)
       assert field.options == %{}
 
-      options = %{
-        "format" => "MMM. D, YYYY"
-      }
-
-      field = Date.with_options(field, options)
-      assert field.options == options
+      field = Date.format(field, :short)
+      assert field.options == %{format: "date_short"}
     end
   end
 end

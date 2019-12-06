@@ -2,7 +2,6 @@
   <input
     ref="datePicker"
     :disabled="disabled"
-    :dusk="field.attribute"
     :class="{ '!cursor-not-allowed': disabled }"
     :value="value"
     :name="field.name"
@@ -13,7 +12,7 @@
 
 <script>
 import flatpickr from 'flatpickr';
-import format from 'date-fns/format';
+import { DateTime } from 'luxon';
 
 export default {
   props: {
@@ -22,14 +21,14 @@ export default {
       required: true
     },
     value: {
-      type: [ Date, String ],
+      type: String,
       required: false,
-      default: format(new Date(), 'YYYY-MM-DD')
+      default: null
     },
     placeholder: {
       type: String,
       default: () => {
-        return format(new Date(), 'YYYY-MM-DD kk:mm:ss');
+        return DateTime.local().toLocaleString(DateTime.DATETIME_MED);
       }
     },
     disabled: {
@@ -42,7 +41,7 @@ export default {
     },
     twelveHourTime: {
       type: Boolean,
-      default: false
+      default: true
     },
     enableTime: {
       type: Boolean,
@@ -62,17 +61,24 @@ export default {
         enableTime: this.enableTime,
         enableSeconds: this.enableSeconds,
         onClose: this.onChange,
-        dateFormat: this.dateFormat,
+        dateFormat: 'Z',
         allowInput: true,
+        altInput: true,
+        altFormat: this.dateFormat,
+
         time_24hr: !this.twelveHourTime
       });
     });
+  },
+
+  beforeDestroy () {
+    this.flatpickr.destroy();
   },
 
   methods: {
     onChange () {
       this.$emit('change', this.$refs.datePicker.value);
     }
-  }
+  },
 };
 </script>

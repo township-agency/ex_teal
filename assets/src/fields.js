@@ -137,6 +137,14 @@ Vue.component('form-date', FormDate);
 Vue.component('detail-date', DetailDate);
 Vue.component('index-date', IndexDate);
 
+// DateTime...
+import FormDateTime from '@/components/Form/DateTime.vue';
+import DetailDateTime from '@/components/Detail/DateTime.vue';
+import IndexDateTime from '@/components/Index/DateTime.vue';
+Vue.component('form-date-time', FormDateTime);
+Vue.component('detail-date-time', DetailDateTime);
+Vue.component('index-date-time', IndexDateTime);
+
 // Place...
 import FormPlaceField from '@/components/Form/PlaceField.vue';
 import DetailPlaceField from '@/components/Detail/PlaceField.vue';
