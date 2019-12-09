@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing here yet
 
+## [0.5.0] - 2019-12-09
+
+### Adds
+- DateTime field
+- `luxon` datetime library
+
+### Removes
+- `date-fns` date parsing
+
+### Changes
+- Refactors `Date`, and `DateTimePicker` fields
+
+### Depreciates
+- `Date.with_options/2` was depreciated in favor of `Date.format/2` and
+    `Date.picker_format/2`.  Will be removed in `1.0.0`
+
 ## [0.4.4] - 2019-10-22
 
 ### Fixes
