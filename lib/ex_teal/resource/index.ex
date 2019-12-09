@@ -86,8 +86,7 @@ defmodule ExTeal.Resource.Index do
     conn
     |> resource.handle_related(conn.params)
     |> Index.search(conn.params, resource)
-    |> Index.first(conn.params, resource)
-    |> Index.current(conn.params, resource)
+    |> Index.query_by_related(conn.params, resource)
     |> execute_query(conn, resource, :related)
     |> resource.render_related(resource, conn)
   end
@@ -245,18 +244,19 @@ defmodule ExTeal.Resource.Index do
     dynamic([q], ilike(field(q, ^f), ^"%#{term}%") or ^dynamic)
   end
 
-  def first(query, %{"first" => "true"}, _resource) do
-    limit(query, 1)
+  def query_by_related(query, %{"first" => "true", "current" => term}, _resource)
+      when term != "" do
+    query
+    |> limit(1)
+    |> where([q], q.id == ^term)
   end
 
-  def first(query, _, _), do: query
+  # def query_by_related(query, %{"current" => term, "search" => search}, _resource)
+  #     when term != "" and search == "" do
+  #   where(query, [q], q.id == ^term)
+  # end
 
-  def current(query, %{"current" => term, "search" => search}, _resource)
-      when term != "" and search == "" do
-    where(query, [q], q.id == ^term)
-  end
-
-  def current(query, _params, _resource), do: query
+  def query_by_related(query, _, _), do: query
 
   def with_pivot_fields(
         query,

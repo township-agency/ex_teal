@@ -11,7 +11,6 @@
         class="w-full form-control form-input form-input-bordered"
         :date-format="pickerFormat"
         :placeholder="placeholder"
-        :enable-time="false"
         @change="handleChange"
       />
     </template>
@@ -29,13 +28,17 @@ export default {
   data: () => ({ localizedValue: '' }),
 
   computed: {
+    format () {
+      return this.field.options.format || DateTime.DATETIME_FULL;
+    },
+
     placeholder () {
       return this.field.options.placeholder ||
         DateTime.local().toLocaleString(this.format);
     },
 
     pickerFormat () {
-      return this.field.options.picker_format || 'Y-m-d';
+      return this.field.options.picker_format || 'Y-m-d H:i:S';
     }
   },
 
@@ -54,7 +57,7 @@ export default {
     },
 
     fromUTC (value) {
-      return DateTime.fromISO(this.value).toLocaleString(DateTime.DATE_FULL);
+      return DateTime.fromISO(this.value).toLocaleString(DateTime.DATETIME_FULL);
     }
   }
 };

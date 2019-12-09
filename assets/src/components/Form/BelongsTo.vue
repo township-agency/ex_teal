@@ -33,7 +33,6 @@
       <select
         v-else
         :class="{ 'border-danger': hasError }"
-        :data-testid="`${field.resourceName}-select`"
         :disabled="isLocked"
         class="form-control form-select mb-3 w-full"
         @change="selectResourceFromSelectControl"
