@@ -31,8 +31,8 @@
           class="h-9 flex items-center"
         >
           <img
-            v-if="config.currentUser.gravatar"
-            :src="config.currentUser.gravatar"
+            v-if="config.currentUser.avatar_url"
+            :src="config.currentUser.avatar_url"
             class="rounded-full w-8 h-8 mr-3"
           >
 
@@ -44,14 +44,9 @@
           width="200"
           direction="rtl"
         >
-          <ul class="list-reset">
-            <li>
-              <a
-                href="/auth/logout"
-                class="block no-underline text-90 hover:bg-30 p-3"
-              >
-                Logout
-              </a>
+          <ul class="layout-top-nav--dropdown">
+            <li v-for="(dropdown, i) in config.dropdown" :key="i"
+            v-html="dropdown">
             </li>
           </ul>
         </dropdown-menu>

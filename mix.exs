@@ -39,6 +39,7 @@ defmodule ExTeal.MixProject do
       {:inflex, "~> 1.10.0"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.4"},
+      {:phoenix_html, ">= 2.11.0"},
       {:ecto_sql, "~> 3.0"},
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},

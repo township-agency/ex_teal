@@ -6,7 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-Nothing here yet
+### Adds
+- Adds a `dropdown_content` function to the `AuthProvider`.
+
+### Changes
+- [breaking] Changes `gravatar` to `avatar_url` for the current_user map
+
+### Fixes
+- Cleans up the spec for `current_user_for`
 
 ## [0.5.0] - 2019-12-09
 

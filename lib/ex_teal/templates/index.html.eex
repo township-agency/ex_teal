@@ -25,6 +25,7 @@
     <script type="text/javascript">
       window.config = <%= Jason.encode!(@config) %>;
       window.config.currentUser = <%= Jason.encode!(@user) %>;
+      window.config.dropdown = <%= Jason.encode!(@dropdown) %>;
     </script>
     <%= if @assets.compiled_assets do %>
       <%= for asset <- @assets.scripts do %>
