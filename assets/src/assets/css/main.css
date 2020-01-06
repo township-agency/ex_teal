@@ -558,4 +558,18 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   box-shadow: none;
   @apply .border .border-60;
 }
+
+/* Top Nav CSS */
+
+.layout-top-nav--dropdown {
+  @apply .list-reset;
+}
+
+.layout-top-nav--dropdown li a {
+  @apply .block .no-underline .text-90 .p-3;
+}
+
+.layout-top-nav--dropdown li a:hover {
+  @apply .bg-30;
+}
 /* purgecss end ignore */

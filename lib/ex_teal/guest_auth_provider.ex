@@ -5,6 +5,4 @@ defmodule ExTeal.GuestAuthProvider do
   """
 
   use ExTeal.AuthProvider
-
-  def current_user_for(_conn), do: nil
 end

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import ExTeal from './ExTeal';
 
 Vue.config.productionTip = false;
+import "phoenix_html";
 
 import './components';
 import './fields';
