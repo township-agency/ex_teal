@@ -92,6 +92,15 @@ import FormRichText from '@/components/Form/RichText.vue';
 Vue.component('detail-rich-text', DetailRichText);
 Vue.component('form-rich-text', FormRichText);
 
+// Array...
+import IndexArray from '@/components/Index/Array.vue';
+import DetailArray from '@/components/Detail/Array.vue';
+import FormArray from '@/components/Form/Array.vue';
+
+Vue.component('index-array', IndexArray);
+Vue.component('detail-array', DetailArray);
+Vue.component('form-array', FormArray);
+
 // BelongsTo...
 
 import IndexBelongsTo from '@/components/Index/BelongsTo.vue';
