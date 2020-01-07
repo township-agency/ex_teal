@@ -168,7 +168,6 @@ export default {
     },
 
     removeItem (index) {
-      console.log('click');
       this.items.splice(index, 1);
     }
   }
