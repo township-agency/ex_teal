@@ -70,6 +70,13 @@ defmodule ExTeal.Resource.Index do
   """
   @callback filters(Plug.Conn.t()) :: []
 
+  @doc """
+  Returns the actions available for a resource
+
+  Default implementation is an empty array.
+  """
+  @callback actions(Plug.Conn.t()) :: [module]
+
   def call(resource, conn) do
     conn
     |> resource.handle_index(conn.params)
