@@ -20,8 +20,8 @@ defmodule ExTeal.Fields.Array do
   @doc """
   Put the 'add item' at the bottom of the list instead of the tops
   """
-  @spec list_below(Field.t()) :: Field.t()
-  def list_below(%Field{options: options} = field) do
+  @spec list_above(Field.t()) :: Field.t()
+  def list_above(%Field{options: options} = field) do
     opts = Map.merge(options, %{list_first: false})
     %{field | options: opts}
   end
