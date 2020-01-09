@@ -212,8 +212,8 @@ defmodule ExTeal.Resource.Index do
 
   def sort(query, _params, resource) do
     case resource.sortable_by() do
-      nil -> from(q in query, order_by: :id)
-      field -> from(q in query, order_by: ^String.to_existing_atom(field))
+      field when not is_nil(field) -> from(q in query, order_by: ^String.to_existing_atom(field))
+      _ -> from(q in query, order_by: ^resource.default_order())
     end
   end
 

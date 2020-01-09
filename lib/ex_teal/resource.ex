@@ -24,11 +24,30 @@ defmodule ExTeal.Resource do
       end
   """
 
+  @type orderable_key ::
+          :asc | :asc_nulls_first | :asc_nulls_last | :desc | :desc_nulls_first | :desc_nulls_last
+
+  @type orderable_option :: {orderable_key, atom()}
+
+  @doc """
+  Hide the Resource from the sidenav in the user interface, defaults to false.
+  """
   @callback hide_from_nav() :: boolean()
 
+  @doc """
+  Specifies the field to use as the basis for a drag and drop interface for the collection.
+  """
   @callback sortable_by() :: String.t() | nil
 
+  @doc """
+  Provide a list of action cards to render them above the resource index
+  """
   @callback cards(Plug.Conn.t()) :: [module]
+
+  @doc """
+  Override the default ordering of the index.
+  """
+  @callback default_order() :: [orderable_option]
 
   defmacro __using__(_opts) do
     quote do
@@ -47,9 +66,11 @@ defmodule ExTeal.Resource do
 
       def sortable_by, do: nil
 
+      def default_order, do: [asc: :id]
+
       def cards(_conn), do: []
 
-      defoverridable(hide_from_nav: 0, sortable_by: 0, cards: 1)
+      defoverridable(hide_from_nav: 0, sortable_by: 0, default_order: 0, cards: 1)
     end
   end
 
