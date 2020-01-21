@@ -38,7 +38,7 @@ defmodule ExTeal.Field do
 
   @callback value_for(Field.t(), struct(), atom()) :: any()
 
-  @callback apply_options_for(Field.t(), module) :: Field.t()
+  @callback apply_options_for(Field.t(), module, atom()) :: Field.t()
 
   defmacro __using__(_opts) do
     quote do
@@ -63,7 +63,7 @@ defmodule ExTeal.Field do
 
       def value_for(field, model, method), do: Field.value_for(field, model, method)
 
-      def apply_options_for(field, _model), do: field
+      def apply_options_for(field, _model, _type), do: field
 
       defoverridable(
         options: 0,
@@ -79,7 +79,7 @@ defmodule ExTeal.Field do
         make: 2,
         make: 1,
         value_for: 3,
-        apply_options_for: 2
+        apply_options_for: 3
       )
     end
   end
