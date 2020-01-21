@@ -137,7 +137,7 @@ defmodule ExTeal.Api.ManyToMany do
   """
   def creation_pivot_fields(conn, resource_uri, field_name) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name) do
-      updated_field = field.type.apply_options_for(field, struct(resource.model()))
+      updated_field = field.type.apply_options_for(field, struct(resource.model()), :create)
 
       pivot_fields =
         updated_field.private_options
@@ -158,7 +158,7 @@ defmodule ExTeal.Api.ManyToMany do
   def update_pivot_fields(conn, resource_uri, resource_id, field_name, related_id) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
          schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
-         pivot <- field.type.apply_options_for(field, schema),
+         pivot <- field.type.apply_options_for(field, schema, :update),
          {:ok, related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related),
          related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
          {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
@@ -193,7 +193,7 @@ defmodule ExTeal.Api.ManyToMany do
   def update_pivot(conn, resource_uri, resource_id, field_name, related_id) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
          schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
-         pivot <- field.type.apply_options_for(field, schema),
+         pivot <- field.type.apply_options_for(field, schema, :update),
          {:ok, related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related),
          related when not is_nil(related) <- related_resource.handle_show(conn, related_id),
          {:ok, pivot_fields} <- Map.fetch(pivot.private_options, :pivot_fields),
@@ -243,7 +243,7 @@ defmodule ExTeal.Api.ManyToMany do
   def reorder(conn, resource_uri, resource_id, field_name) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
          schema when not is_nil(schema) <- resource.handle_show(conn, resource_id),
-         pivot <- field.type.apply_options_for(field, schema),
+         pivot <- field.type.apply_options_for(field, schema, :update),
          {:ok, _related_resource} <- ExTeal.resource_for_model(pivot.private_options.rel.related) do
       multi =
         conn.params["data"]
@@ -333,7 +333,7 @@ defmodule ExTeal.Api.ManyToMany do
   defp attached(conn, resource_uri, resource_id, field_name) do
     with {:ok, resource, field} <- resource_and_field(resource_uri, field_name),
          model when not is_nil(model) <- resource.handle_show(conn, resource_id),
-         %Field{} = updated_field <- field.type.apply_options_for(field, model) do
+         %Field{} = updated_field <- field.type.apply_options_for(field, model, :show) do
       {:ok, resource, model, updated_field}
     else
       _ -> {:error, :not_found}

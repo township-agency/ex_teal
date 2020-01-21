@@ -85,14 +85,14 @@ defmodule ExTeal.Resource.Fields do
     end)
   end
 
-  def serialize_response(:show, resource, model, _conn) do
+  def serialize_response(method, resource, model, _conn) do
     panels = Panel.gather_panels(resource)
     [default | _others] = panels
 
     fields =
       :show
       |> fields_for(resource)
-      |> apply_values(model, resource, :show, default)
+      |> apply_values(model, resource, method, default)
 
     %{
       id: resource.identifier(model),
@@ -216,8 +216,9 @@ defmodule ExTeal.Resource.Fields do
       field
       |> Map.put(:value, value)
       |> add_panel_key(panel)
-      |> field.type.apply_options_for(model)
+      |> field.type.apply_options_for(model, type)
     end)
+    |> Enum.reject(&is_nil/1)
   end
 
   def add_panel_key(%Field{panel: panel} = field, _) when not is_nil(panel), do: field

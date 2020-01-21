@@ -41,7 +41,7 @@ defmodule ExTeal.Fields.HasOne do
     end
   end
 
-  def apply_options_for(field, model) do
+  def apply_options_for(field, model, _type) do
     rel = model.__struct__.__schema__(:association, field.field)
 
     with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do

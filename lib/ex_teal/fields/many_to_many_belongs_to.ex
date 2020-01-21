@@ -23,7 +23,7 @@ defmodule ExTeal.Fields.ManyToManyBelongsTo do
     field.relationship.title_for_schema(model)
   end
 
-  def apply_options_for(field, model) do
+  def apply_options_for(field, model, _type) do
     queried = field.private_options.queried_resource
 
     rel = queried.model().__schema__(:association, field.field)
