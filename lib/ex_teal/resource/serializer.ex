@@ -79,7 +79,7 @@ defmodule ExTeal.Resource.Serializer do
   end
 
   def render_create(model, resource, conn) do
-    data = resource.serialize_response(:create, resource, model, conn)
+    data = resource.serialize_response(:show, resource, model, conn)
     {:ok, response} = Jason.encode(data)
     as_json(conn, response, 201)
   end
