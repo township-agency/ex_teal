@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.1] - 2020-01-09
+
+### Fixes
+
+- Fixes a regression in the update to `apply_options_for`
+
+## [0.7.0] - 2020-01-09
+
+### Breaking Changes
+- [breaking] Changes `ExTeal.Field.apply_options_for` to accept a third
+    argument.  See [!77](https://gitlab.motel-lab.com/Teal/ex_teal/merge_requests/77)
+
 ## [0.6.1] - 2020-01-09
 
 ### Adds

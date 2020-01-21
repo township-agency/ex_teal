@@ -30,7 +30,7 @@ defmodule ExTeal.Api.ResourceResponder do
       fields =
         Enum.map(fields, fn field ->
           new_schema = struct(schema, %{})
-          field.type.apply_options_for(field, new_schema)
+          field.type.apply_options_for(field, new_schema, :new)
         end)
 
       {:ok, body} = Jason.encode(%{fields: fields})
@@ -42,7 +42,7 @@ defmodule ExTeal.Api.ResourceResponder do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          {:ok, field} <- Fields.field_for(resource, field_name) do
       new_schema = resource.model() |> struct(%{})
-      field = field.type.apply_options_for(field, new_schema)
+      field = field.type.apply_options_for(field, new_schema, :show)
       {:ok, body} = Jason.encode(%{field: field})
       Serializer.as_json(conn, body, 200)
     else
