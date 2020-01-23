@@ -209,19 +209,35 @@ export default {
     },
 
     /**
+     * Download File from action
+     */
+    downloadFile (response) {
+      const link = document.createElement('a');
+      link.href = response.url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+
+    /**
      * Handle the action response. Typically either a message, download or a redirect.
      */
     handleActionResponse (response) {
-      if (response.message) {
+      if (response.type == 'success') {
         this.$emit('actionExecuted');
         this.$toasted.show(response.message, { type: 'success' });
+      } else if (response.type == 'download') {
+        this.downloadFile(response);
+        this.$toasted.show('File downloaded successfully', { type: 'success' });
       } else if (response.deleted) {
         this.$emit('actionExecuted');
-      } else if (response.error) {
+      } else if (response.type == 'error') {
         this.$emit('actionExecuted');
-        this.$toasted.show(response.error, { type: 'error' });
-      } else if (response.redirect) {
-        window.location = response.redirect;
+        this.$toasted.show(response.message, { type: 'error' });
+      } else if (response.type == 'redirect') {
+        window.location = response.url;
+      } else if (response.type == 'push') {
+        this.$router.push({ path: response.path });
       } else {
         this.$emit('actionExecuted');
         this.$toasted.show('The action ran successfully!', {

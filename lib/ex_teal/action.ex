@@ -1,7 +1,7 @@
 defmodule ExTeal.Action do
   @moduledoc """
-  ExTeal Actions allow you to scope your ExTeal Index queries with custom conditions. For example, you may
-  wish to define a filter to quickly view "Published" posts within your application:
+  ExTeal Actions allow you to perform one off tasks on your ExTeal Index resources with custom conditions.
+  For example you might want to batch update a group of articles to a published state.
 
   Each ExTeal action should contain a `commit/3` function.
 
@@ -13,21 +13,24 @@ defmodule ExTeal.Action do
   ```
   defmodule PortfolioWeb.ExTeal.PublishAction do
     use ExTeal.Action
+    alias ExTeal.ActionResponse
 
     def title, do: "Publish" // defaults to Publish Action
     def key, do: "publish" // default to publish-action
 
-    def commit(conn, fields, resources) do
-      for post <- resources do
-        Portfolio.Content.publish(post)
+    def commit(conn, fields, query) do
+      resources = Repo.all(query) //having the raw query gives you the option to batch large requests.
+
+      with {:ok, _results} <- Portfolio.Content.publish(resources) do //ideally the updates here are part of a Repo.transaction.
+        ActionResponse.success("Successfully published")
+       _ ->
+        ActionResponse.error("Error publishing")
       end
-      :ok
     end
   end
   ```
 
-  The commit should return an `:ok` or an `{:error, "error message"}` tuple.  You should not write the example above,
-  but wrap the database updates in at least a transaction inside your main context.
+  The commit should return an ActionResponse struct. The ActionResponse types that are available are 'success', 'error', 'redirect', 'download' and 'push'.
   """
 
   alias ExTeal.Resource.Index
@@ -35,7 +38,11 @@ defmodule ExTeal.Action do
 
   import Ecto.Query, only: [where: 3]
 
+  @type action_responses :: :ok | {:error, String.t()} | ExTeal.ActionResponse.t()
+
   @callback options(Conn.t()) :: list()
+
+  @callback commit(Plug.Conn.t(), [ExTeal.Field.t()], Ecto.Query.t()) :: action_responses()
 
   defmacro __using__(_) do
     quote do
@@ -78,39 +85,37 @@ defmodule ExTeal.Action do
 
   def apply_action(resource, %Conn{params: params} = conn) do
     with {:ok, action} <- action_for_key(resource.actions(conn), params["action"]),
-         {:ok, schemas} <- find_actionable(resource, conn) do
+         {:ok, query} <- actionable_query(resource, conn) do
       fields = Map.get(params, "fields", %{})
 
-      {:ok, action.commit(conn, fields, schemas)}
+      {:ok, action.commit(conn, fields, query)}
     else
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def find_actionable(resource, %Conn{params: %{"resources" => "all"}} = conn) do
-    results =
+  def actionable_query(resource, %Conn{params: %{"resources" => "all"}} = conn) do
+    query =
       resource.model()
       |> Index.filter(conn, resource)
-      |> resource.repo().all()
 
-    case results do
+    case query do
       [] -> {:error, :not_found}
-      results -> {:ok, results}
+      query -> {:ok, query}
     end
   end
 
-  def find_actionable(resource, %Conn{params: %{"resources" => ids}} = conn) do
+  def actionable_query(resource, %Conn{params: %{"resources" => ids}} = conn) do
     ids = ids |> String.split(",") |> Enum.map(&String.to_integer/1)
 
-    results =
+    query =
       resource.model()
       |> Index.filter(conn, resource)
       |> where([r], r.id in ^ids)
-      |> resource.repo().all()
 
-    case results do
+    case query do
       [] -> {:error, :not_found}
-      results -> {:ok, results}
+      query -> {:ok, query}
     end
   end
 

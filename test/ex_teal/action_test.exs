@@ -8,8 +8,11 @@ defmodule ExTeal.ActionTest do
     test "uses an action to apply changes" do
       [p1, p2, p3] = insert_list(3, :post, published: false)
 
-      expected = %{
-        message: "Marked 2 as Published"
+      expected = %ExTeal.ActionResponse{
+        message: "Marked 2 as Published",
+        path: nil,
+        type: "success",
+        url: nil
       }
 
       c =
@@ -39,7 +42,14 @@ defmodule ExTeal.ActionTest do
     end
 
     test "no schemas found" do
-      expected = {:error, :not_found}
+      expected =
+        {:ok,
+         %ExTeal.ActionResponse{
+           message: "Error not found",
+           path: nil,
+           type: "error",
+           url: nil
+         }}
 
       c =
         build_conn(:post, "foo", %{
