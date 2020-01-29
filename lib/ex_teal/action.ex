@@ -94,9 +94,10 @@ defmodule ExTeal.Action do
     end
   end
 
-  def actionable_query(resource, %Conn{params: %{"resources" => "all"}} = conn) do
+  def actionable_query(resource, %Conn{params: %{"resources" => "all"} = params} = conn) do
     query =
-      resource.model()
+      conn
+      |> resource.handle_index(params)
       |> Index.filter(conn, resource)
 
     case query do
@@ -105,11 +106,12 @@ defmodule ExTeal.Action do
     end
   end
 
-  def actionable_query(resource, %Conn{params: %{"resources" => ids}} = conn) do
+  def actionable_query(resource, %Conn{params: %{"resources" => ids} = params} = conn) do
     ids = ids |> String.split(",") |> Enum.map(&String.to_integer/1)
 
     query =
-      resource.model()
+      conn
+      |> resource.handle_index(params)
       |> Index.filter(conn, resource)
       |> where([r], r.id in ^ids)
 
