@@ -32,6 +32,8 @@ defmodule TestExTeal.PostResource do
 
   def model, do: TestExTeal.Post
 
+  def with, do: [:user]
+
   def fields,
     do: [
       ID.make(:id),

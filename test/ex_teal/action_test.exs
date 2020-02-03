@@ -60,4 +60,21 @@ defmodule ExTeal.ActionTest do
       assert ^expected = Action.apply_action(PostResource, c)
     end
   end
+
+  describe "actionable_query/2" do
+    test "preloads the relationships defined with a resources `with`" do
+      p = insert(:post, user: build(:user))
+
+      c =
+        build_conn(:post, "foo", %{
+          "action" => "publish-post",
+          "resources" => "#{p.id}"
+        })
+
+      {:ok, query} = Action.actionable_query(PostResource, c)
+
+      [found_post] = Repo.all(query)
+      assert found_post.user.id == p.user.id
+    end
+  end
 end
