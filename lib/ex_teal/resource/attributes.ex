@@ -62,15 +62,27 @@ defmodule ExTeal.Resource.Attributes do
             |> Map.keys()
             |> Enum.map(&Atom.to_string/1)
 
-          attrs
-          |> Enum.map(&Attributes.sanitize_param(&1, fields))
-          |> Enum.reject(fn {k, v} -> is_nil(k) end)
-          |> Enum.into(%{})
+          skip_sanitize = __MODULE__.skip_sanitize()
+          Attributes.maybe_sanitize(attrs, fields, skip_sanitize)
         end
 
         defoverridable permitted_attributes: 3
       end
     end
+  end
+
+  @spec maybe_sanitize(map(), map(), Boolean.t()) :: map()
+  def maybe_sanitize(attrs, _fields, true) do
+    attrs
+    |> Enum.reject(fn {k, _v} -> is_nil(k) end)
+    |> Enum.into(%{})
+  end
+
+  def maybe_sanitize(attrs, fields, _) do
+    attrs
+    |> Enum.map(&sanitize_param(&1, fields))
+    |> Enum.reject(fn {k, _v} -> is_nil(k) end)
+    |> Enum.into(%{})
   end
 
   @doc false
@@ -102,6 +114,10 @@ defmodule ExTeal.Resource.Attributes do
 
   def sanitize(key, value) when is_atom(key) and key in @valid_sanitizers do
     apply(HtmlSanitizeEx, key, [value])
+  end
+
+  def sanitize_as(field, :skip) do
+    %{field | sanitize: false}
   end
 
   def sanitize_as(field, sanitizer) when sanitizer in @valid_sanitizers do

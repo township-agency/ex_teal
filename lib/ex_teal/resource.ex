@@ -40,6 +40,11 @@ defmodule ExTeal.Resource do
   @callback sortable_by() :: String.t() | nil
 
   @doc """
+  Allows skipping sanitize for all fields on a resource
+  """
+  @callback skip_sanitize() :: boolean() | nil
+
+  @doc """
   Provide a list of action cards to render them above the resource index
   """
   @callback cards(Plug.Conn.t()) :: [module]
@@ -70,7 +75,15 @@ defmodule ExTeal.Resource do
 
       def cards(_conn), do: []
 
-      defoverridable(hide_from_nav: 0, sortable_by: 0, default_order: 0, cards: 1)
+      def skip_sanitize, do: false
+
+      defoverridable(
+        hide_from_nav: 0,
+        sortable_by: 0,
+        default_order: 0,
+        cards: 1,
+        skip_sanitize: 0
+      )
     end
   end
 
@@ -86,6 +99,7 @@ defmodule ExTeal.Resource do
       singular: singular,
       uri: resource.uri(),
       hidden: resource.hide_from_nav(),
+      skip_sanitize: resource.skip_sanitize(),
       searchable: !Enum.empty?(resource.search())
     }
   end

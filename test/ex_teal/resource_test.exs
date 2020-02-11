@@ -30,7 +30,8 @@ defmodule ExTeal.ResourceTest do
                  singular: "Post",
                  uri: "posts",
                  hidden: true,
-                 searchable: false
+                 searchable: false,
+                 skip_sanitize: false
                }
              ]
     end
