@@ -91,7 +91,8 @@ defmodule ExTeal.Application.ConfigurationTest do
                  singular: "Foo",
                  uri: "foos",
                  hidden: false,
-                 searchable: false
+                 searchable: false,
+                 skip_sanitize: false
                }
              ]
     end

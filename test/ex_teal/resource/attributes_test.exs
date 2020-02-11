@@ -3,7 +3,7 @@ defmodule ExTeal.Resource.AttributesTest do
   alias ExTeal.Resource.Attributes
 
   defmodule DefaultResource do
-    use ExTeal.Resource.Attributes
+    use ExTeal.Resource
 
     alias ExTeal.Fields.{Number, Place, RichText, Text}
     alias ExTeal.Resource.Attributes
@@ -18,7 +18,7 @@ defmodule ExTeal.Resource.AttributesTest do
   end
 
   defmodule PanelResource do
-    use ExTeal.Resource.Attributes
+    use ExTeal.Resource
 
     alias ExTeal.Fields.{Number, Place, RichText, Text}
     alias ExTeal.Panel
@@ -34,7 +34,7 @@ defmodule ExTeal.Resource.AttributesTest do
   end
 
   defmodule CustomResource do
-    use ExTeal.Resource.Attributes
+    use ExTeal.Resource
 
     def permitted_attributes(_conn, attrs, _) do
       Map.take(attrs, ~w(title))
