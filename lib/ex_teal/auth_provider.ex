@@ -4,8 +4,8 @@ defmodule ExTeal.AuthProvider do
   """
 
   @type user_payload :: %{
-          name: String.t(),
-          avatar_url: String.t()
+          name: String.t() | nil,
+          avatar_url: String.t() | nil
         }
 
   @doc """

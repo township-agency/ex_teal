@@ -10,7 +10,11 @@ defmodule ExTeal.Dashboard do
 
   @callback uri() :: String.t()
 
-  @callback cards(Plug.Conn.t()) :: []
+  @doc """
+  Return the modules that represent cards on the
+  dashboard.
+  """
+  @callback cards(Plug.Conn.t()) :: [module()]
 
   defmacro __using__(_) do
     quote do

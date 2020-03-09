@@ -24,23 +24,27 @@ defmodule ExTeal.Fields.HasOne do
   def show_on_new, do: false
   def show_on_edit, do: false
 
+  @impl true
   def make(relationship_name, module, label \\ nil) do
     __MODULE__
     |> Field.struct_from_field(relationship_name, label)
     |> Map.put(:relationship, module)
   end
 
+  @impl true
   def value_for(field, model, _type) do
     schema = Map.get(model, field.field)
 
-    with {:ok, resource_for_schema} <- ExTeal.resource_for_model(field.relationship) do
-      resource_for_schema.title_for_schema(schema)
-    else
+    case ExTeal.resource_for_model(field.relationship) do
+      {:ok, resource} ->
+        resource.title_for_schema(schema)
+
       {:error, :not_found} ->
         nil
     end
   end
 
+  @impl true
   def apply_options_for(field, model, _type) do
     rel = model.__struct__.__schema__(:association, field.field)
 

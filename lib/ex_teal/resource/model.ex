@@ -130,10 +130,6 @@ defmodule ExTeal.Resource.Model do
       |> Enum.reject(fn x -> is_nil(x) end)
 
     case values do
-      nil ->
-        title = title_from_resource(struct.__struct__)
-        "#{title} #{struct.id}"
-
       [] ->
         title = title_from_resource(struct.__struct__)
         "#{title} #{struct.id}"

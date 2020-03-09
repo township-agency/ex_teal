@@ -32,7 +32,13 @@ defmodule ExTeal.Api.ErrorSerializer do
     }
   end
 
-  def render(data), do: !Jason.encode(data)
+  def render(data) do
+    if Keyword.keyword?(data) do
+      data |> Enum.into(%{}) |> Jason.encode!()
+    else
+      Jason.encode(data)
+    end
+  end
 
   def handle_error(conn, {:error, %Changeset{} = cs}) do
     body = cs |> render() |> Jason.encode!()

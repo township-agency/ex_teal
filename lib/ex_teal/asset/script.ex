@@ -6,4 +6,6 @@ defmodule ExTeal.Asset.Script do
   """
 
   defstruct [:plugin_uri, :path]
+
+  @type t :: %__MODULE__{}
 end

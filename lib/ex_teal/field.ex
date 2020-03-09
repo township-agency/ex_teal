@@ -38,7 +38,7 @@ defmodule ExTeal.Field do
 
   @callback value_for(Field.t(), struct(), atom()) :: any()
 
-  @callback apply_options_for(Field.t(), module, atom()) :: Field.t()
+  @callback apply_options_for(Field.t(), struct(), atom()) :: Field.t()
 
   defmacro __using__(_opts) do
     quote do

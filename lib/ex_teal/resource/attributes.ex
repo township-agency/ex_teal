@@ -71,7 +71,7 @@ defmodule ExTeal.Resource.Attributes do
     end
   end
 
-  @spec maybe_sanitize(map(), map(), Boolean.t()) :: map()
+  @spec maybe_sanitize(map(), map(), boolean()) :: map()
   def maybe_sanitize(attrs, _fields, true) do
     attrs
     |> Enum.reject(fn {k, _v} -> is_nil(k) end)

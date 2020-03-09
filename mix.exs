@@ -42,11 +42,12 @@ defmodule ExTeal.MixProject do
       {:phoenix_html, ">= 2.11.0"},
       {:ecto_sql, "~> 3.0"},
       {:ex_machina, "~> 2.2", only: :test},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.3.0"},
       {:phoenix_ecto, "~> 4.0", only: :test},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false}
     ]
   end
 
