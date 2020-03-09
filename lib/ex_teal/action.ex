@@ -40,7 +40,7 @@ defmodule ExTeal.Action do
 
   @type action_responses :: :ok | {:error, String.t()} | ExTeal.ActionResponse.t()
 
-  @callback options(Conn.t()) :: list()
+  @callback options(Plug.Conn.t()) :: list()
 
   @callback commit(Plug.Conn.t(), [ExTeal.Field.t()], Ecto.Query.t()) :: action_responses()
 
@@ -115,10 +115,7 @@ defmodule ExTeal.Action do
       |> Index.filter(conn, resource)
       |> where([r], r.id in ^ids)
 
-    case query do
-      [] -> {:error, :not_found}
-      query -> {:ok, query}
-    end
+    {:ok, query}
   end
 
   def message(message), do: %{message: message}

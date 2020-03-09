@@ -8,4 +8,6 @@ defmodule ExTeal.Metric.ValueResult do
   @derive {Jason.Encoder, only: @serialized}
 
   defstruct [:uri, :current, :previous, :ranges, :range, :prefix, :suffix, :format]
+
+  @type t :: %__MODULE__{}
 end

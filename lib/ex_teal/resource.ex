@@ -29,6 +29,18 @@ defmodule ExTeal.Resource do
 
   @type orderable_option :: {orderable_key, atom()}
 
+  @type attributes :: map()
+
+  @type id :: String.t() | integer()
+
+  @type record :: struct()
+
+  @type records :: [record()]
+
+  @type t :: module()
+
+  @type validation_errors :: Ecto.Changeset.t() | keyword()
+
   @doc """
   Hide the Resource from the sidenav in the user interface, defaults to false.
   """

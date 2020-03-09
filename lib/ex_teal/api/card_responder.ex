@@ -10,22 +10,26 @@ defmodule ExTeal.Api.CardResponder do
   alias ExTeal.Resource.Serializer
 
   def dashboard(conn, name) do
-    with {:ok, dashboard} <- ExTeal.dashboard_for(name) do
-      cards = Dashboard.cards_to_json(dashboard, conn)
-      {:ok, body} = Jason.encode(cards)
-      Serializer.as_json(conn, body, 200)
-    else
-      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    case ExTeal.dashboard_for(name) do
+      {:ok, dashboard} ->
+        cards = Dashboard.cards_to_json(dashboard, conn)
+        {:ok, body} = Jason.encode(cards)
+        Serializer.as_json(conn, body, 200)
+
+      {:error, reason} ->
+        ErrorSerializer.handle_error(conn, reason)
     end
   end
 
   def resource(conn, resource_name) do
-    with {:ok, resource} <- ExTeal.resource_for(resource_name) do
-      cards = Dashboard.cards_to_json(resource, conn)
-      {:ok, body} = Jason.encode(cards)
-      Serializer.as_json(conn, body, 200)
-    else
-      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+    case ExTeal.resource_for(resource_name) do
+      {:ok, resource} ->
+        cards = Dashboard.cards_to_json(resource, conn)
+        {:ok, body} = Jason.encode(cards)
+        Serializer.as_json(conn, body, 200)
+
+      {:error, reason} ->
+        ErrorSerializer.handle_error(conn, reason)
     end
   end
 end

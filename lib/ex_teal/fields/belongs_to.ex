@@ -26,28 +26,27 @@ defmodule ExTeal.Fields.BelongsTo do
 
   def component, do: "belongs-to"
 
+  @impl true
   def make(relationship_name, module, label \\ nil) do
     __MODULE__
     |> Field.struct_from_field(relationship_name, label)
     |> Map.put(:relationship, module)
   end
 
+  @impl true
   def value_for(field, model, _type) do
     schema = Map.get(model, field.field)
 
-    with {:ok, resource_for_schema} <- ExTeal.resource_for_model(field.relationship) do
-      resource_for_schema.title_for_schema(schema)
-    else
+    case ExTeal.resource_for_model(field.relationship) do
+      {:ok, resource} ->
+        resource.title_for_schema(schema)
+
       {:error, :not_found} ->
         nil
     end
   end
 
-  def searchable(field) do
-    opts = Map.merge(field.options, %{searchable: true})
-    Map.put(field, :options, opts)
-  end
-
+  @impl true
   def apply_options_for(field, model, _type) do
     id =
       case Map.get(model, field.field) do
@@ -55,19 +54,31 @@ defmodule ExTeal.Fields.BelongsTo do
         module -> Map.get(module, :id)
       end
 
-    with {:ok, resource} <- ExTeal.resource_for_model(field.relationship) do
-      rel = model.__struct__.__schema__(:association, field.field)
+    case ExTeal.resource_for_model(field.relationship) do
+      {:ok, resource} ->
+        rel = model.__struct__.__schema__(:association, field.field)
 
-      opts =
-        Map.merge(field.options, %{
-          belongs_to_key: rel.owner_key,
-          belongs_to_relationship: resource.uri(),
-          belongs_to_id: id
-        })
+        opts =
+          Map.merge(field.options, %{
+            belongs_to_key: rel.owner_key,
+            belongs_to_relationship: resource.uri(),
+            belongs_to_id: id
+          })
 
-      Map.put(field, :options, opts)
-    else
-      {:error, _} -> field
+        Map.put(field, :options, opts)
+
+      {:error, _} ->
+        field
     end
+  end
+
+  @doc """
+  Mark a Belongs To Field as searchable, allowing the UX to
+  search the related resource for matches in the create and update forms
+  """
+  @spec searchable(Field.t()) :: Field.t()
+  def searchable(field) do
+    opts = Map.merge(field.options, %{searchable: true})
+    Map.put(field, :options, opts)
   end
 end

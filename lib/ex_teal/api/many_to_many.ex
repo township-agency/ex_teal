@@ -136,18 +136,20 @@ defmodule ExTeal.Api.ManyToMany do
   relationship.  Fields are only for attaching to a many to many
   """
   def creation_pivot_fields(conn, resource_uri, field_name) do
-    with {:ok, resource, field} <- resource_and_field(resource_uri, field_name) do
-      updated_field = field.type.apply_options_for(field, struct(resource.model()), :create)
+    case resource_and_field(resource_uri, field_name) do
+      {:ok, resource, field} ->
+        updated_field = field.type.apply_options_for(field, struct(resource.model()), :create)
 
-      pivot_fields =
-        updated_field.private_options
-        |> Map.get(:pivot_fields, [])
-        |> Enum.filter(& &1.show_on_new)
+        pivot_fields =
+          updated_field.private_options
+          |> Map.get(:pivot_fields, [])
+          |> Enum.filter(& &1.show_on_new)
 
-      {:ok, body} = Jason.encode(%{fields: pivot_fields})
-      Serializer.as_json(conn, body, 200)
-    else
-      {:error, :not_found} = resp -> ErrorSerializer.handle_error(conn, resp)
+        {:ok, body} = Jason.encode(%{fields: pivot_fields})
+        Serializer.as_json(conn, body, 200)
+
+      {:error, :not_found} = resp ->
+        ErrorSerializer.handle_error(conn, resp)
     end
   end
 

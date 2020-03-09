@@ -8,6 +8,8 @@ defmodule ExTeal.Metric.ValueRequest do
 
   defstruct [:range, :uri, :resource_id, :resource]
 
+  @type t :: %__MODULE__{}
+
   def from_conn(conn, metric, resource) do
     struct(__MODULE__, %{
       uri: Map.get(conn.params, "uri"),

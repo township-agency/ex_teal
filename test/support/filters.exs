@@ -5,10 +5,12 @@ defmodule TestExTeal.PublishedStatus do
   import Ecto.Query, only: [from: 2]
 
   def apply_query(_conn, query, value) do
-    with {:ok, val} <- to_bool(value) do
-      from(q in query, where: q.published == ^val)
-    else
-      :error -> query
+    case to_bool(value) do
+      {:ok, val} ->
+        from(q in query, where: q.published == ^val)
+
+      _ ->
+        query
     end
   end
 

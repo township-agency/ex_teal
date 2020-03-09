@@ -1,6 +1,7 @@
 defmodule ExTeal do
   @moduledoc false
   alias ExTeal.Plugin
+  alias Plug.Conn
 
   @type record :: map() | Ecto.Schema.t()
   @type records :: module | Ecto.Query.t() | list(record)
@@ -45,7 +46,7 @@ defmodule ExTeal do
     end
   end
 
-  @spec available_dashboards() :: [ExTeal.Dashboard.t()]
+  @spec available_dashboards() :: [module()]
   def available_dashboards do
     case manifest() do
       nil -> []
@@ -53,7 +54,7 @@ defmodule ExTeal do
     end
   end
 
-  @spec dashboard_for(String.t()) :: {:ok, ExTeal.Dashboard.t()} | {:error, :not_found}
+  @spec dashboard_for(String.t()) :: {:ok, module()} | {:error, :not_found}
   def dashboard_for(uri) do
     case Enum.find(available_dashboards(), fn x -> x.uri() == uri end) do
       nil -> {:error, :not_found}

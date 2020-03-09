@@ -6,10 +6,10 @@ defmodule ExTeal.Auth.GuestProvider do
 
   use ExTeal.AuthProvider
 
-  alias ExTeal.Auth.Guest
   alias Plug.Conn
 
+  @impl true
   def current_user_for(%Conn{} = _conn) do
-    {:ok, %Guest{}}
+    %{name: nil, avatar_url: nil}
   end
 end
