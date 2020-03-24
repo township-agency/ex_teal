@@ -36,6 +36,9 @@
       tag="button"
     >
       <icon type="create" />
+      <span v-if="withText">
+        {{ title }}
+      </span>
     </router-link>
   </div>
 </template>
@@ -74,6 +77,10 @@ export default {
     canCreate: {
       type: Boolean,
       default: true
+    },
+    withText: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -91,9 +98,12 @@ export default {
     },
 
     classesWithOverrides () {
-      return `btn btn-default btn-primary capitalize btn-only-icon ${
-        this.classes
-      }`;
+      return {
+        'btn btn-default btn-primary capitalize': true,
+        [this.classes]: true,
+        'btn-only-icon': !this.withText,
+        'btn-icon-inline': this.withText
+      };
     }
   }
 };

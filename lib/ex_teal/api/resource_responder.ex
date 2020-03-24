@@ -5,6 +5,7 @@ defmodule ExTeal.Api.ResourceResponder do
   """
   alias ExTeal.Api.ErrorSerializer
   alias ExTeal.Resource.{Create, Delete, Fields, Index, Serializer, Show, Update}
+  alias ExTeal.FieldFilter
 
   def index(conn, resource_uri) do
     case ExTeal.resource_for(resource_uri) do
@@ -154,6 +155,16 @@ defmodule ExTeal.Api.ResourceResponder do
     case ExTeal.resource_for(resource_uri) do
       {:ok, resource} ->
         Update.batch_update(resource, conn)
+
+      {:error, reason} ->
+        ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
+  def field_filters(conn, resource_uri) do
+    case ExTeal.resource_for(resource_uri) do
+      {:ok, resource} ->
+        FieldFilter.for_resource(resource, conn)
 
       {:error, reason} ->
         ErrorSerializer.handle_error(conn, reason)

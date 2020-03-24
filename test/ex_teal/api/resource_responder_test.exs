@@ -165,4 +165,20 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert Repo.get(Post, p3.id)
     end
   end
+
+  describe "field_filters/2" do
+    @tag manifest: EmptyManifest
+    test "returns a 404 when no resource available" do
+      conn = build_conn(:get, "/api/posts/field-filters")
+      resp = ResourceResponder.field_filters(conn, "posts")
+      assert resp.status == 404
+    end
+
+    @tag manifest: DefaultManifest
+    test "returns a 200 with data" do
+      conn = build_conn(:get, "/api/posts/field-filters")
+      resp = ResourceResponder.field_filters(conn, "posts")
+      assert resp.status == 200
+    end
+  end
 end

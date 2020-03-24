@@ -28,155 +28,116 @@
           Viewing {{ resourceCountLabel }}
         </span>
       </heading>
-      <div class="flex justify-between ml-auto items-center">
-        <!-- Search -->
-        <div
-          v-if="resourceInformation.searchable && !viaHasOne"
-          class="relative"
+    </div>
+    <div
+      class="flex justify-between ml-auto items-center border-t border-r border-l rounded-t"
+    >
+      <!-- Search -->
+      <div
+        v-if="resourceInformation.searchable && !viaHasOne"
+        class="relative flex-1 border-r">
+        <icon
+          type="search"
+          class="absolute ml-2 mt-2 text-grey"
+        />
+
+        <input
+          v-model="search"
+          placeholder="Search"
+          class="appearance-none form-control form-input search rounded-tl w-full"
+          type="search"
+          @keydown.stop="performSearch"
+          @search="performSearch"
+        >
+      </div>
+      <div v-else />
+      <div class="flex items-center justify-end">
+        <div v-if="shouldShowReorder && !viaHasOne">
+          <button
+            class="border-l border-r hover:bg-grey-light px-2 h-8"
+            @click="showSort"
+          >
+            <icon
+              type="reorder"
+              class="text-grey-darker"
+            />
+          </button>
+        </div>
+
+        <!-- Action Selector -->
+        <action-selector
+          v-if="selectedResources.length > 0"
+          :resource-name="resourceName"
+          :actions="actions"
+          :query-string="{
+            currentSearch,
+            encodedFilters,
+            viaResource,
+            viaResourceId,
+            viaRelationship
+          }"
+          :selected-resources="selectedResourcesForActionSelector"
+          @actionExecuted="getResources"
+        />
+
+        <button
+          v-if="shouldShowFilters"
+          class="border-r hover:bg-grey-light px-2 h-8 flex items-center"
+          @click="toggleFilters"
         >
           <icon
-            type="search"
-            class="absolute ml-2 mt-2 text-grey"
+            type="filter"
+            class="text-grey-darker"
           />
+        </button>
 
-          <input
-            v-model="search"
-            placeholder="Search"
-            class="appearance-none form-control form-input form-input-bordered search"
-            type="search"
-            @keydown.stop="performSearch"
-            @search="performSearch"
-          >
-        </div>
-        <div class="index-action-bar">
-          <div v-if="shouldShowReorder && !viaHasOne">
-            <button
-              v-if="isSorting"
-              :disabled="loading"
-              class="btn btn-default btn-primary"
-              @click="saveSorting"
-            >
-              Save Changes
-            </button>
-            <button
-              v-if="isSorting"
-              :disabled="loading"
-              class="btn btn-default btn-secondary ml-4"
-              @click="cancelSorting"
-            >
-              Cancel
-            </button>
-            <button
-              v-if="!isSorting"
-              class="bg-grey-lighter hover:bg-grey-light rounded px-2 mr-4 h-8"
-              @click="showSort"
-            >
-              <icon
-                type="reorder"
-                class="text-grey-darker"
-              />
-            </button>
-          </div>
+        <delete-menu
+          v-if="shouldShowDeleteMenu"
+          :resources="resources"
+          :selected-resources="selectedResources"
+          :all-matching-resource-count="allMatchingResourceCount"
+          :all-matching-selected="selectAllMatchingChecked"
+          @deleteSelected="deleteSelectedResources"
+          @deleteAllMatching="deleteAllMatchingResources"
+          @close="deleteModalOpen = false"
+        />
 
-          <!-- Action Selector -->
-          <action-selector
-            v-if="selectedResources.length > 0"
-            :resource-name="resourceName"
-            :actions="actions"
-            :query-string="{
-              currentSearch,
-              encodedFilters,
-              viaResource,
-              viaResourceId,
-              viaRelationship
-            }"
-            :selected-resources="selectedResourcesForActionSelector"
-            @actionExecuted="getResources"
-          />
-
-          <dropdown
-            v-if="shouldShowFilterDropdown"
-            class="bg-white border hover:bg-grey-light rounded"
-          >
-            <dropdown-trigger
-              slot-scope="{ toggle }"
-              :handle-click="toggle"
-              class="px-3"
-            >
-              <icon
-                type="filter"
-                class="text-grey-darker"
-              />
-              <span class="text-grey-darker text-sm mx-2">Filter</span>
-            </dropdown-trigger>
-
-            <dropdown-menu
-              slot="menu"
-              :dark="true"
-              width="290"
-              direction="rtl"
-            >
-              <!-- Filters -->
-              <filter-selector
-                :filters="filters"
-                :current-filters.sync="currentFilters"
-                @changed="filterChanged"
-              />
-
-              <!-- Per Page -->
-              <filter-select v-if="!viaResource">
-                <h3
-                  slot="default"
-                  class="small-header"
-                >
-                  Per Page:
-                </h3>
-
-                <select
-                  slot="select"
-                  v-model="perPage"
-                  dusk="per-page-select"
-                  class="block w-full form-control-sm form-select"
-                  @change="perPageChanged"
-                >
-                  <option value="25">
-                    25
-                  </option>
-                  <option value="50">
-                    50
-                  </option>
-                  <option value="100">
-                    100
-                  </option>
-                </select>
-              </filter-select>
-            </dropdown-menu>
-          </dropdown>
-
-          <delete-menu
-            v-if="shouldShowDeleteMenu"
-            :resources="resources"
-            :selected-resources="selectedResources"
-            :all-matching-resource-count="allMatchingResourceCount"
-            :all-matching-selected="selectAllMatchingChecked"
-            @deleteSelected="deleteSelectedResources"
-            @deleteAllMatching="deleteAllMatchingResources"
-            @close="deleteModalOpen = false"
-          />
-
-          <!-- Create / Attach Button -->
-          <create-resource-button
-            :singular-name="singularName"
-            :resource-name="resourceName"
-            :via-resource="viaResource"
-            :via-resource-id="viaResourceId"
-            :via-relationship="viaRelationship"
-            :can-create="!resourceIsFull"
-            :relationship-type="relationshipType"
-            classes="btn-lg"
-          />
-        </div>
+        <!-- Create / Attach Button -->
+        <create-resource-button
+          :singular-name="singularName"
+          :resource-name="resourceName"
+          :via-resource="viaResource"
+          :via-resource-id="viaResourceId"
+          :via-relationship="viaRelationship"
+          :can-create="!resourceIsFull"
+          :relationship-type="relationshipType"
+          classes="rounded-tr border-none"
+        />
       </div>
+    </div>
+
+    <div
+      v-if="shouldShowReorder && isSorting"
+      class="border-t border-r border-l p-2"
+    >
+      <button
+        :disabled="loading"
+        class="btn btn-default btn-primary"
+        @click="saveSorting"
+      >
+        Save Changes
+      </button>
+      <button
+        :disabled="loading"
+        class="btn btn-default btn-secondary ml-4"
+        @click="cancelSorting"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <div v-if="showFilters">
+
     </div>
 
     <loading-card
@@ -215,8 +176,19 @@
           </svg>
 
           <h3 class="text-base text-80 font-normal mb-6">
-            No {{ resourceInformation.title.toLowerCase() }} matched the given
-            criteria.
+            No {{ resourceInformation.title.toLowerCase() }} matched the given criteria.
+
+            <create-resource-button
+              :singular-name="singularName"
+              :resource-name="resourceName"
+              :via-resource="viaResource"
+              :via-resource-id="viaResourceId"
+              :via-relationship="viaRelationship"
+              :can-create="!resourceIsFull"
+              :relationship-type="relationshipType" 
+              classes="mt-2"
+              :with-text="true"
+            />            
           </h3>
         </div>
       </div>
@@ -255,7 +227,9 @@
         :resources="resources"
         :resource-response="resourceResponse"
         :current-page="currentPage"
+        :per-page="currentPerPage"
         @previous="selectPreviousPage"
+        @perPageChanged="perPageChanged"
         @next="selectNextPage"
       />
     </loading-card>
@@ -326,8 +300,9 @@ export default {
     orderBy: '',
     orderByDirection: '',
     filters: [],
+    fieldFilters: [],
     actions: [],
-
+    showFilters: false,
     selectedResources: [],
     selectAllMatchingResources: false,
     allMatchingResourceCount: 0,
@@ -445,7 +420,7 @@ export default {
      * Determine if there any filters for this resource
      */
     hasFilters () {
-      return Boolean(this.filters.length > 0);
+      return Boolean(this.filters.length > 0) || Boolean(this.fieldFilters.length > 0);
     },
 
     /**
@@ -455,12 +430,8 @@ export default {
       return Boolean(this.resources.length > 0);
     },
 
-    shouldShowFilterDropdown () {
-      if (this.isSorting) {
-        return false;
-      }
-
-      return this.filters.length > 0 || !this.viaResource;
+    shouldShowFilters () {
+      return !this.isSorting && this.hasFilters;
     },
 
     shouldShowReorder () {
@@ -565,6 +536,10 @@ export default {
     cardsEndpoint () {
       return `/api/${this.resourceName}/cards`;
     },
+
+    currentPerPage () {
+      return parseInt(this.$route.query[this.perPageParameter]) || 25;
+    }
   },
 
   /**
@@ -577,6 +552,7 @@ export default {
 
     await this.getResources();
     await this.getFilters();
+    this.getFieldFilters();
 
     this.getActions();
 
@@ -655,6 +631,22 @@ export default {
           this.filters = response.data.filters;
           this.initializeFilterValuesFromQueryString();
         });
+    },
+
+    getFieldFilters () {
+      this.fieldFilters = [];
+      this.currentFieldFilters = [];
+
+      return ExTeal.request()
+        .get(`/api/${this.resourceName}/field-filters`)
+        .then(response => {
+          this.fieldFilters = response.data.filters;
+          this.initializeFilterValuesFromQueryString();
+        });
+    },
+
+    toggleFilters () {
+      this.showFilters = !this.showFilters;
     },
 
     getActions () {
@@ -847,6 +839,11 @@ export default {
           });
         }
       });
+    },
+
+    perPageChanged (value) {
+      this.perPage = value;
+      this.updateQueryString({ [this.perPageParameter]: this.perPage });
     },
 
     debouncer: _.debounce(callback => callback(), 500),

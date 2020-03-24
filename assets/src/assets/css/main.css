@@ -246,7 +246,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   @apply .bg-white .border .border-60 .px-2 .text-80;
 }
 
-.form-input-bordered.search {
+.form-input.search {
   @apply .pl-8;
 }
 
@@ -307,8 +307,9 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 /* Buttons
 ---------------------------------------------------------------------------- */
 .btn {
-  @apply .inline-block .no-underline .font-bold .rounded;
+  @apply .inline-block .no-underline .font-bold;
 }
+
 .btn,.cursor-pointer{
     transition: .5s all;
 }
@@ -361,6 +362,10 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 .btn-only-icon {
   @apply .flex .items-center .text-white .justify-center .h-8 .w-8 .px-0 .py-0;
+}
+
+.btn-icon-inline svg {
+  @apply .mr-2;
 }
 
 .btn-lg {
