@@ -34,20 +34,21 @@ defmodule ExTeal.MixProject do
     [
       {:plug, "~> 1.7"},
       {:corsica, "~> 1.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.15.0"},
       {:jason, "~> 1.1"},
       {:inflex, "~> 1.10.0"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix, "~> 1.4"},
       {:phoenix_html, ">= 2.11.0"},
-      {:ecto_sql, "~> 3.0"},
+      {:ecto, "~> 3.3"},
+      {:ecto_sql, "~> 3.3"},
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.3.0"},
-      {:phoenix_ecto, "~> 4.0", only: :test},
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false}
+      {:phoenix_ecto, "~> 4.1", only: :test},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false}
     ]
   end
 
