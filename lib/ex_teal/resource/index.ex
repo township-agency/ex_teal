@@ -55,6 +55,13 @@ defmodule ExTeal.Resource.Index do
   @callback handle_related(Plug.Conn.t(), map) :: Plug.Conn.t() | ExTeal.records()
 
   @doc """
+  Defines the search adapter to use while building a search query:
+
+  Defaults to the `ExTeal.Search.SimpleSearch` module
+  """
+  @callback search_adapter(Ecto.Query.t(), module(), String.t()) :: Ecto.Query.t()
+
+  @doc """
   Returns the filters available for a resource.
 
   Default implementation is an empty array.
@@ -106,6 +113,7 @@ defmodule ExTeal.Resource.Index do
 
       alias ExTeal.Resource.Pagination
       alias ExTeal.Resource.Serializer
+      alias ExTeal.Search.SimpleSearch
       alias Phoenix.Controller
 
       @behaviour ExTeal.Resource.Index
@@ -140,13 +148,17 @@ defmodule ExTeal.Resource.Index do
         |> Enum.map(fn action_module -> action_module.build_for(conn) end)
       end
 
+      def search_adapter(query, resource, search_term),
+        do: SimpleSearch.build(query, resource, search_term)
+
       defoverridable(
         filters: 1,
         filters_for: 1,
         actions: 1,
         actions_for: 1,
         handle_index: 2,
-        handle_related: 2
+        handle_related: 2,
+        search_adapter: 3
       )
     end
   end
@@ -235,21 +247,10 @@ defmodule ExTeal.Resource.Index do
   end
 
   def search(query, %{"search" => term}, resource) when not is_nil(term) and term != "" do
-    dynamic = false
-
-    dynamic =
-      Enum.reduce(resource.search(), dynamic, fn field, dynamic ->
-        attempt_to_search_by(field, dynamic, resource, term)
-      end)
-
-    from(query, where: ^dynamic)
+    resource.search_adapter(query, resource, term)
   end
 
   def search(query, _params, _resource), do: query
-
-  defp attempt_to_search_by(f, dynamic, _resource, term) do
-    dynamic([q], ilike(field(q, ^f), ^"%#{term}%") or ^dynamic)
-  end
 
   def query_by_related(query, %{"first" => "true", "current" => term}, _resource)
       when term != "" do
