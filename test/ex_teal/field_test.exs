@@ -11,4 +11,11 @@ defmodule ExTeal.FieldTest do
       assert Field.field_name(:created_at, "Foo") == "Foo"
     end
   end
+
+  describe "help_text/2" do
+    test "adds the text to the options" do
+      field = Field.help_text(%Field{}, "Foo Bar")
+      assert field.options.help_text == "Foo Bar"
+    end
+  end
 end
