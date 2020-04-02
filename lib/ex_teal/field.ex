@@ -124,4 +124,7 @@ defmodule ExTeal.Field do
     |> Map.put(:show_on_new, false)
     |> Map.put(:show_on_edit, false)
   end
+
+  def help_text(%Field{options: options} = f, text),
+    do: %{f | options: Map.put_new(options, :help_text, text)}
 end
