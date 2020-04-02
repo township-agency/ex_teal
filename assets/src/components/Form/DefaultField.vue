@@ -28,7 +28,7 @@ export default {
 
   computed: {
     helpText () {
-      return this.field.optioins.help_text;
+      return this.field.options.help_text;
     },
     canShowHelpText () {
       return this.showHelpText && this.helpText;
