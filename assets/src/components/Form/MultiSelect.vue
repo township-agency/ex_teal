@@ -40,9 +40,11 @@ export default {
     this.options = this.field.options;
 
     this.field.fill = formData => {
-      this.value.forEach((option) => {
-        formData.append(`${this.field.attribute}[]`, option.value);
-      });
+      if (this.value) {
+        this.value.forEach((option) => {
+          formData.append(`${this.field.attribute}[]`, option.value);
+        });
+      }
     };
   }
 };
