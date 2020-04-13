@@ -6,7 +6,7 @@ defmodule ExTeal.Fields.ID do
 
   def component, do: "text-field"
 
-  def filterable_as, do: :number
+  def filterable_as, do: ExTeal.FieldFilter.Number
 
   def make(name, label \\ nil) do
     field = Field.struct_from_field(__MODULE__, name, label)

@@ -6,5 +6,5 @@ defmodule ExTeal.Fields.TextArea do
 
   def show_on_index, do: false
 
-  def filterable_as, do: "text"
+  def filterable_as, do: ExTeal.FieldFilter.Text
 end

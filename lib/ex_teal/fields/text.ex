@@ -4,5 +4,5 @@ defmodule ExTeal.Fields.Text do
 
   def component, do: "text-field"
 
-  def filterable_as, do: "text"
+  def filterable_as, do: ExTeal.FieldFilter.Text
 end

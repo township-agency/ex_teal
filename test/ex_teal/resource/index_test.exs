@@ -27,6 +27,19 @@ defmodule ExTeal.Resource.IndexTest do
     assert [_] = json[:data]
   end
 
+  test "is able to filter records based on field filters" do
+    insert(:post, name: "Foo")
+    insert(:post)
+    filters = [%{"field" => "name", "operator" => "=", "operand" => "Foo"}]
+    encoded_filters = filters |> Jason.encode!() |> :base64.encode()
+    conn = prep_conn(:get, "/posts/", %{"field_filters" => encoded_filters})
+    response = Index.call(PostResource, conn)
+    assert 200 == response.status
+
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    assert [_] = json[:data]
+  end
+
   test "can search with very basic ilikes across string fields" do
     user = insert(:user, name: "Scott Taylor")
     insert(:user, name: "Other")

@@ -4,9 +4,8 @@ defmodule ExTeal.Resource.Index do
   """
 
   alias Ecto.Association.ManyToMany
-  alias ExTeal.Field
+  alias ExTeal.{Field, FieldFilter, Filter}
   alias ExTeal.Fields.BelongsTo
-  alias ExTeal.Filter
   alias ExTeal.Resource.Index
 
   import Ecto.Query
@@ -90,6 +89,7 @@ defmodule ExTeal.Resource.Index do
     |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
     |> Index.filter(conn, resource)
+    |> Index.field_filters(conn.params, resource)
     |> Index.sort(conn.params, resource)
     |> Index.search(conn.params, resource)
     |> execute_query(conn, resource, :index)
@@ -179,6 +179,17 @@ defmodule ExTeal.Resource.Index do
   end
 
   def filter(query, _conn, _resource), do: query
+
+  def field_filters(query, %{"field_filters" => filters}, resource) do
+    with {:ok, filters} <- filters |> :base64.decode() |> Jason.decode(),
+         false <- Enum.empty?(filters) do
+      FieldFilter.query(query, filters, resource)
+    else
+      _ -> query
+    end
+  end
+
+  def field_filters(query, _params, _resource), do: query
 
   defp apply_filter(filter, query, conn, resource_filters) do
     filter_module = Filter.filter_for_key(resource_filters, Map.get(filter, "key"))

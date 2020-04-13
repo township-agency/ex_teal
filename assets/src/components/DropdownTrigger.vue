@@ -1,6 +1,6 @@
 <template>
   <a
-    class="dropdown-trigger h-8 flex items-center cursor-pointer select-none rounded"
+    class="dropdown-trigger"
     @click="handleClick"
   >
     <slot />

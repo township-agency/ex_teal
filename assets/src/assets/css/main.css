@@ -256,7 +256,6 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   background-repeat: no-repeat;
   background-size: 10px 6px;
   background-position: center right 0.75rem;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="#35393C" fill-rule="nonzero" d="M8.293.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4A1 1 0 0 1 1.707.293L5 3.586 8.293.293z"/></svg>');
 }
 
 .form-input:active:disabled,
@@ -310,7 +309,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   @apply .inline-block .no-underline .font-bold;
 }
 
-.btn,.cursor-pointer{
+.btn, .cursor-pointer{
     transition: .5s all;
 }
 
@@ -371,6 +370,11 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 .btn-lg {
   height: 36px;
   width: 36px;
+}
+
+.btn-sm {
+  @apply .text-sm .px-2;
+  height: 32px;
 }
 
 /* Checkbox toggle
@@ -461,8 +465,60 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   padding-bottom: 1px;
 }
 
-/* Fade Transition
----------------------------------------------------------------------------- */
+.dropdown-trigger {
+  @apply .h-8 .flex .items-center .cursor-pointer .select-none .rounded;
+}
+
+/* Field Filter Triggers ---------------------------------------------------------------------------- */
+
+.dropdown-trigger.field-filter-trigger {
+  @apply .rounded-none .border-t .border-b .border-r .border-primary .px-2 .uppercase .text-xs .font-bold .text-primary-dark .bg-primary-10;
+}
+
+.field-filter-trigger.no-operand {
+  @apply .border-r;
+}
+
+
+.dropdown-trigger.field-drop {
+  @apply .border-l .rounded-l;
+}
+
+.field-filter-dropdown p {
+  @apply .text-xs .font-bold .uppercase .border-t;
+}
+
+.field-filter-dropdown p:hover {
+  @apply .bg-30;
+}
+
+.field-filter-dropdown .dropdown-menu a {
+  @apply .block .cursor-pointer .p-2;
+}
+
+.field-filter-operand-input {
+  @apply .px-2 .rounded-r .border-t .border-b .border-r .border-primary .bg-primary-10;
+}
+
+.number-field-filter .field-filter-operand-input {
+  width: 100px;
+}
+
+.field-filter-trigger.no-operand {
+  @apply .rounded-r;
+}
+
+.field-filter-delete-with-and {
+  position: absolute;
+  right: 24px;
+}
+
+.field-filter-delete {
+  @apply .relative .ml-2;
+}
+
+.filter-drop
+/* Fade Transition ---------------------------------------------------------------------------- */
 
 .fade-enter-active,
 .fade-leave-active {

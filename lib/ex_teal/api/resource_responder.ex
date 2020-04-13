@@ -4,8 +4,8 @@ defmodule ExTeal.Api.ResourceResponder do
   and returns the resources response as serialized json
   """
   alias ExTeal.Api.ErrorSerializer
-  alias ExTeal.Resource.{Create, Delete, Fields, Index, Serializer, Show, Update}
   alias ExTeal.FieldFilter
+  alias ExTeal.Resource.{Create, Delete, Fields, Index, Serializer, Show, Update}
 
   def index(conn, resource_uri) do
     case ExTeal.resource_for(resource_uri) do

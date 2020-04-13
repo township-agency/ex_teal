@@ -136,8 +136,28 @@
       </button>
     </div>
 
-    <div v-if="showFilters">
-
+    <div
+      v-if="showFilters"
+      class="border-t border-r border-l pr-2 pb-2 pl-2"
+    >
+      <div class="flex flex-wrap">
+        <field-filter
+          v-for="(filter, index) in currentFieldFilters"
+          :index="index"
+          :key="index"
+          :total-filters="currentFieldFilters.length"
+          :filter="filter"
+          :filters="fieldFilters"
+          @fieldFilterUpdated="updateFieldFilter"
+          @delete="deleteFieldFilter"
+        />
+      </div>
+      <button
+        class="mt-2 btn btn-primary btn-sm"
+        @click="addNewFilter"
+      >
+        <span>Add Filter</span>
+      </button>
     </div>
 
     <loading-card
@@ -185,10 +205,10 @@
               :via-resource-id="viaResourceId"
               :via-relationship="viaRelationship"
               :can-create="!resourceIsFull"
-              :relationship-type="relationshipType" 
+              :relationship-type="relationshipType"
               classes="mt-2"
               :with-text="true"
-            />            
+            />
           </h3>
         </div>
       </div>
@@ -250,6 +270,8 @@ import {
   PerPageable
 } from 'ex-teal-js';
 
+import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters'; 
+
 export default {
   mixins: [
     Deleteable,
@@ -257,6 +279,7 @@ export default {
     HasCards,
     InteractsWithResourceInformation,
     InteractsWithQueryString,
+    InteractsWithFieldFilters,
     Paginatable,
     PerPageable
   ],
@@ -301,8 +324,9 @@ export default {
     orderByDirection: '',
     filters: [],
     fieldFilters: [],
+    currentFieldFilters: [],
     actions: [],
-    showFilters: false,
+    showFilters: true,
     selectedResources: [],
     selectAllMatchingResources: false,
     allMatchingResourceCount: 0,
@@ -332,6 +356,7 @@ export default {
         {
           search: this.currentSearch,
           filters: this.encodedFilters,
+          fieldFiliters: this.encodedFieldFilters,
           order_by: this.currentOrderBy,
           order_by_direction: this.currentOrderByDirection,
           per_page: this.currentPerPage,
@@ -379,6 +404,13 @@ export default {
      */
     filterParameter () {
       return this.resourceName + '_filter';
+    },
+
+    /**
+     * Get the name of the field filter query string variable.
+     */
+    fieldFilterParameter () {
+      return this.resourceName + '_field_filter';
     },
 
     sortableParameter () {
@@ -521,7 +553,7 @@ export default {
         }`
       );
     },
-    
+
     /**
      * Determine if the resource should show any cards
      */
@@ -549,6 +581,7 @@ export default {
     this.initializeSearchFromQueryString();
     this.initializeOrderingFromQueryString();
     this.initializePerPageFromQueryString();
+    this.initializeFieldFilterValuesFromQueryString();
 
     await this.getResources();
     await this.getFilters();
@@ -563,6 +596,7 @@ export default {
         return (
           this.resourceName +
           this.encodedFilters +
+          this.encodedFieldFilters +
           this.currentOrderBy +
           this.currentOrderByDirection +
           this.currentPage +
@@ -576,6 +610,7 @@ export default {
         this.initializeOrderingFromQueryString();
         this.initializePerPageFromQueryString();
         this.initializeFilterValuesFromQueryString();
+        this.initializeFieldFilterValuesFromQueryString();
       }
     );
 
@@ -585,6 +620,7 @@ export default {
       },
       () => {
         this.getFilters();
+        this.getFieldFilters();
         this.getActions();
       }
     );
@@ -635,13 +671,16 @@ export default {
 
     getFieldFilters () {
       this.fieldFilters = [];
-      this.currentFieldFilters = [];
 
       return ExTeal.request()
         .get(`/api/${this.resourceName}/field-filters`)
         .then(response => {
           this.fieldFilters = response.data.filters;
+          console.log(response.data.filters);
           this.initializeFilterValuesFromQueryString();
+          if (this.currentFieldFilters[0].field === null) {
+            this.currentFieldFilters[0].field = this.fieldFilters[0].field;
+          }
         });
     },
 
