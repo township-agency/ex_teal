@@ -518,6 +518,12 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   right: 32px;
 }
 
+.belongs-to-field-filter .form-control.form-input-bordered {
+  background: none;
+  border: none;
+  height: 30px;
+}
+
 .filter-drop
 /* Fade Transition ---------------------------------------------------------------------------- */
 

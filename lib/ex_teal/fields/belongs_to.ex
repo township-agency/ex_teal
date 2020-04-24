@@ -27,6 +27,9 @@ defmodule ExTeal.Fields.BelongsTo do
   def component, do: "belongs-to"
 
   @impl true
+  def filterable_as, do: ExTeal.FieldFilter.BelongsTo
+
+  @impl true
   def make(relationship_name, module, label \\ nil) do
     __MODULE__
     |> Field.struct_from_field(relationship_name, label)

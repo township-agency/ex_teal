@@ -7,7 +7,7 @@ defmodule ExTeal.FieldFilter.Boolean do
   * `true`
   * `false`
   """
-  @behaviour ExTeal.FieldFilter
+  use ExTeal.FieldFilter
   import Ecto.Query
 
   @impl true
@@ -21,13 +21,13 @@ defmodule ExTeal.FieldFilter.Boolean do
   def interface_type, do: nil
 
   @impl true
-  def filter(query, %{"operator" => "true"}, field_name) do
+  def filter(query, %{"operator" => "true"}, field_name, _) do
     where(query, [q], field(q, ^field_name) == true)
   end
 
-  def filter(query, %{"operator" => "false"}, field_name) do
+  def filter(query, %{"operator" => "false"}, field_name, _) do
     where(query, [q], field(q, ^field_name) == false)
   end
 
-  def filter(query, _, _), do: query
+  def filter(query, _, _, _), do: query
 end

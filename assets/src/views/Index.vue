@@ -152,6 +152,7 @@
           :total-filters="currentFieldFilters.length"
           :filter="filter"
           :filters="fieldFilters"
+          :resource-name="resourceName"
           @fieldFilterUpdated="updateFieldFilter"
           @delete="deleteFieldFilter"
         />

@@ -24,7 +24,10 @@
         </p>
       </dropdown-menu>
     </dropdown>
-    <div class="inline-flex">
+    <div
+      v-if="hasOperators"
+      class="inline-flex"
+    >
       <dropdown
         v-if="selectedFieldFilter"
         class="field-filter-dropdown"
@@ -55,6 +58,8 @@
       :is="selectedFieldFilter.as + '-field-filter'"
       v-if="hasOperand" 
       :filter="filter"
+      :field-filter="selectedFieldFilter"
+      :resource-name="resourceName"
       @change="updateFilter"
     />
     <button
@@ -92,6 +97,10 @@ export default {
     totalFilters: {
       type: Number,
       required: true
+    },
+    resourceName: {
+      type: String,
+      required: true
     }
   },
 
@@ -118,6 +127,13 @@ export default {
       }
       return this.selectedOperator.no_operand !== null && !this.selectedOperator.no_operand;
     },
+
+    hasOperators () {
+      if (!this.selectedFieldFilter) {
+        return false;
+      }
+      return this.selectedFieldFilter.operators !== [];
+    }
   },
 
   methods: {

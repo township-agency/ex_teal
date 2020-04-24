@@ -2,7 +2,7 @@ defmodule ExTeal.FieldFilterTest do
   use TestExTeal.ConnCase
 
   alias ExTeal.FieldFilter
-  alias ExTeal.FieldFilter.{Boolean, Number, Text}
+  alias ExTeal.FieldFilter.{BelongsTo, Boolean, Number, Text}
   alias TestExTeal.{Post, PostResource}
 
   test "for_resource/2 returns a list of potential field filters" do
@@ -36,6 +36,12 @@ defmodule ExTeal.FieldFilterTest do
                "field" => "published",
                "operators" => Boolean.operators(),
                "label" => "Published"
+             },
+             %{
+               "as" => "belongs-to",
+               "field" => "user",
+               "label" => "User",
+               "operators" => BelongsTo.operators()
              }
            ]
   end

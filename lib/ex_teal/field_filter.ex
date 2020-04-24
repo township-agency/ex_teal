@@ -18,8 +18,9 @@ defmodule ExTeal.FieldFilter do
       the user that is being performed
     - "operand" a string or map representing the value to apply against the operand and query
   - An atom representing the name of the field being queried.
+  - The resource module for the resource being queried
   """
-  @callback filter(Ecto.Queryable.t(), map(), atom()) :: Ecto.Queryable.t()
+  @callback filter(Ecto.Queryable.t(), map(), atom(), module()) :: Ecto.Queryable.t()
 
   @doc """
   Type of filter component to use in the user interface.
@@ -37,6 +38,35 @@ defmodule ExTeal.FieldFilter do
   """
   @callback operators() :: [map()]
 
+  @type serialized_filter :: %{
+          required(:as) => String.t(),
+          required(:field) => String.t(),
+          required(:label) => String.t(),
+          required(:operators) => [map()],
+          optional(any()) => any()
+        }
+
+  @doc """
+  Builds the map that allows the user interface to represent the field filter
+  and all of it's configuration.
+
+  Can be configured for customization on a per filter basis.
+  """
+  @callback serialize(Field.t(), module) :: serialized_filter()
+
+  defmacro __using__(_opts) do
+    quote do
+      @behaviour ExTeal.FieldFilter
+      alias ExTeal.Field
+
+      @impl true
+      def serialize(field, _resource),
+        do: ExTeal.FieldFilter.default_serialization(field, interface_type(), operators())
+
+      defoverridable(serialize: 2)
+    end
+  end
+
   @doc """
   Iterates over a resources fields, and serializes them into a response
   that can be used by the vue app to build some logic
@@ -45,7 +75,7 @@ defmodule ExTeal.FieldFilter do
     filters =
       resource
       |> filters_for_resource()
-      |> Enum.map(&to_filter/1)
+      |> Enum.map(&to_filter(&1, resource))
 
     Serializer.send(conn, :index, %{filters: filters})
   end
@@ -61,7 +91,19 @@ defmodule ExTeal.FieldFilter do
       |> filters_for_resource()
       |> Enum.into(%{}, fn %Field{field: name} = f -> {name, f} end)
 
-    Enum.reduce(filter_params, query, &build_and_query_filter(&1, &2, filters))
+    Enum.reduce(filter_params, query, &build_and_query_filter(&1, &2, filters, resource))
+  end
+
+  @doc """
+  Default serialization of a field filter
+  """
+  def default_serialization(%Field{field: name}, interface_type, operators) do
+    %{
+      as: interface_type,
+      field: name,
+      label: name |> Naming.humanize() |> String.capitalize(),
+      operators: operators
+    }
   end
 
   defp filters_for_resource(resource) do
@@ -70,16 +112,11 @@ defmodule ExTeal.FieldFilter do
     |> Enum.filter(& &1.filterable)
   end
 
-  defp to_filter(%Field{filterable: filter_type, field: name}) do
-    %{
-      as: filter_type.interface_type(),
-      field: name,
-      label: name |> Naming.humanize() |> String.capitalize(),
-      operators: filter_type.operators()
-    }
+  defp to_filter(%Field{filterable: filter_type} = field, resource) do
+    filter_type.serialize(field, resource)
   end
 
-  defp build_and_query_filter(%{"field" => f} = filter_param, query, filters) do
+  defp build_and_query_filter(%{"field" => f} = filter_param, query, filters, resource) do
     field = f |> String.downcase() |> String.to_existing_atom()
 
     case Map.get(filters, field) do
@@ -87,7 +124,7 @@ defmodule ExTeal.FieldFilter do
         query
 
       %Field{filterable: filter_type} ->
-        filter_type.filter(query, filter_param, field)
+        filter_type.filter(query, filter_param, field, resource)
     end
   end
 end

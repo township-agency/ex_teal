@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 import ActionSelector from '@/components/ActionSelector';
 import BaseValueMetric from '@/components/Metrics/Base/ValueMetric';
+import BelongsToFieldFilter from '@/components/FieldFilters/BelongsToFieldFilter';
 import Card from '@/components/Card';
 import Cards from '@/components/Cards';
 import CardWrapper from '@/components/CardWrapper';
@@ -55,6 +56,7 @@ import View from '@/components/Icons/View';
 
 Vue.component('action-selector', ActionSelector);
 Vue.component('base-value-metric', BaseValueMetric);
+Vue.component('belongs-to-field-filter', BelongsToFieldFilter);
 Vue.component('card', Card);
 Vue.component('cards', Cards);
 Vue.component('card-wrapper', CardWrapper);
