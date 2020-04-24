@@ -45,9 +45,11 @@
           direction="rtl"
         >
           <ul class="layout-top-nav--dropdown">
-            <li v-for="(dropdown, i) in config.dropdown" :key="i"
-            v-html="dropdown">
-            </li>
+            <li
+              v-for="(dropdown, i) in config.dropdown"
+              :key="i"
+              v-html="dropdown"
+            />
           </ul>
         </dropdown-menu>
       </dropdown>

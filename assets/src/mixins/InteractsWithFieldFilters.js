@@ -37,11 +37,21 @@ const InteractsWithFieldFilters = {
 
     addNewFilter () {
       const lastFilter =  this.currentFieldFilters[this.currentFieldFilters.length - 1];
-      this.currentFieldFilters.push(lastFilter); 
+      if (lastFilter) {
+        this.currentFieldFilters.push(lastFilter);         
+      } else if (this.fieldFilters.length > 0) {
+        this.currentFieldFilters = [ { field: this.fieldFilters[0].field, operator: null, operand: null } ];
+      }
+      this.fieldFilterChanged();
     },
 
     deleteFieldFilter (index) {
-      this.$delete(this.currentFieldFilters, index);
+      if (this.currentFieldFilters.length === 1) {
+        this.currentFieldFilters = [];
+      } else {
+        this.$delete(this.currentFieldFilters, index);
+      }
+      this.fieldFilterChanged();
     }
   },
 

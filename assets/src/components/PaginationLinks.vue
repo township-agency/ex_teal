@@ -11,7 +11,6 @@
         :options="options"
         @change="selectPerPage"
       />
-      </select>
       <!-- Previous Link -->
       <button
         :disabled="!hasPreviousPages"

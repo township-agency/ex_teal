@@ -6,7 +6,7 @@
         :handle-click="toggle"
         class="field-filter-trigger field-drop"
       >
-        {{ selectedFieldFilterType }}
+        {{ selectedFieldFilterLabel }}
       </dropdown-trigger>
       <dropdown-menu
         slot="menu"
@@ -19,23 +19,47 @@
           <a 
             @click="selectFilter(f)"
           >
-            {{ f.field }}
+            {{ f.label }}
           </a>
         </p>
       </dropdown-menu>
     </dropdown>
+    <div class="inline-flex">
+      <dropdown
+        v-if="selectedFieldFilter"
+        class="field-filter-dropdown"
+      >
+        <dropdown-trigger
+          slot-scope="{ toggle }"
+          :handle-click="toggle"
+          :class="{'field-filter-trigger': true, 'field-filter-operator': true, 'no-operand group-hover:rounded-none': !hasOperand}"
+        >
+          {{ filter.operator }}
+        </dropdown-trigger>
+        <dropdown-menu
+          slot="menu"
+          width="150"
+        >
+          <p
+            v-for="o in selectedFieldFilter.operators"
+            :key="o.op"
+          >
+            <a @click="selectOperator(o)">
+              {{ o.op }}
+            </a>
+          </p>
+        </dropdown-menu>
+      </dropdown>
+    </div>
     <component
       :is="selectedFieldFilter.as + '-field-filter'"
-      v-if="selectedFieldFilter" 
+      v-if="hasOperand" 
       :filter="filter"
       @change="updateFilter"
     />
     <button
-      v-if="canDelete"
       :class="{
-        'hidden group-hover:block rounded border border-danger text-danger text-xs h-8 w-8 border-infotransition bg-grey-lightest': true,
-        'field-filter-delete-with-and': notLastFilter,
-        'field-filter-delete': !notLastFilter
+        'hidden group-hover:block rounded-r border border-danger text-danger text-xs h-8 w-8 bg-grey-lightest': true
       }"
       @click="deleteFilter"
     >
@@ -73,7 +97,6 @@ export default {
 
   computed: {
     selectedFieldFilterType () {
-      console.log(this.filter);
       return this.filter.field;
     },
 
@@ -85,9 +108,16 @@ export default {
       return this.index !== this.totalFilters - 1;
     },
 
-    canDelete () {
-      return this.totalFilters > 1;
-    }
+    selectedOperator () {
+      return this.selectedFieldFilter ? this.selectedFieldFilter.operators.find(o => o.op == this.filter.operator) : false;
+    },
+
+    hasOperand () {
+      if (!this.selectedOperator) {
+        return false;
+      }
+      return this.selectedOperator.no_operand !== null && !this.selectedOperator.no_operand;
+    },
   },
 
   methods: {
@@ -99,7 +129,15 @@ export default {
     },
     deleteFilter () {
       this.$emit('delete', this.index);
+    },
+
+    selectOperator (o) {
+      if (o.no_operand) {
+        this.$emit('fieldFilterUpdated', { ...this.filter, operator: o.op, operand: null, valid: true }, this.index);
+        return;
+      }
+      this.$emit('fieldFilterUpdated', { ...this.filter, operator: o.op }, this.index);
     }
   }
-}
+};
 </script>

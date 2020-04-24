@@ -510,11 +510,12 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 .field-filter-delete-with-and {
   position: absolute;
-  right: 24px;
+  right: 64px;
 }
 
 .field-filter-delete {
-  @apply .relative .ml-2;
+  @apply .relative;
+  right: 32px;
 }
 
 .filter-drop

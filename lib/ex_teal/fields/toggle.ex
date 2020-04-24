@@ -5,6 +5,8 @@ defmodule ExTeal.Fields.Toggle do
 
   def component, do: "toggle"
 
+  def filterable_as, do: ExTeal.FieldFilter.Boolean
+
   def make(name, label \\ nil) do
     field = Field.struct_from_field(__MODULE__, name, label)
     Map.put(field, :text_align, "center")

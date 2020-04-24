@@ -35,7 +35,8 @@
       <!-- Search -->
       <div
         v-if="resourceInformation.searchable && !viaHasOne"
-        class="relative flex-1 border-r">
+        class="relative flex-1 border-r"
+      >
         <icon
           type="search"
           class="absolute ml-2 mt-2 text-grey"
@@ -140,11 +141,14 @@
       v-if="showFilters"
       class="border-t border-r border-l pr-2 pb-2 pl-2"
     >
-      <div class="flex flex-wrap">
+      <div
+        v-if="currentFieldFilters.length > 0"
+        class="flex flex-wrap"
+      >
         <field-filter
           v-for="(filter, index) in currentFieldFilters"
-          :index="index"
           :key="index"
+          :index="index"
           :total-filters="currentFieldFilters.length"
           :filter="filter"
           :filters="fieldFilters"
@@ -676,11 +680,6 @@ export default {
         .get(`/api/${this.resourceName}/field-filters`)
         .then(response => {
           this.fieldFilters = response.data.filters;
-          console.log(response.data.filters);
-          this.initializeFilterValuesFromQueryString();
-          if (this.currentFieldFilters[0].field === null) {
-            this.currentFieldFilters[0].field = this.fieldFilters[0].field;
-          }
         });
     },
 

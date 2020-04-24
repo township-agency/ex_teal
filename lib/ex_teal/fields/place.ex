@@ -4,6 +4,8 @@ defmodule ExTeal.Fields.Place do
 
   def component, do: "place-field"
 
+  def filterable_as, do: ExTeal.FieldFilter.Text
+
   def value_for(field, model, view)
       when view in [:show, :index] do
     place = Map.get(model, field.field)

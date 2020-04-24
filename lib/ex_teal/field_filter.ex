@@ -73,7 +73,8 @@ defmodule ExTeal.FieldFilter do
   defp to_filter(%Field{filterable: filter_type, field: name}) do
     %{
       as: filter_type.interface_type(),
-      field: name |> Naming.humanize() |> String.capitalize(),
+      field: name,
+      label: name |> Naming.humanize() |> String.capitalize(),
       operators: filter_type.operators()
     }
   end

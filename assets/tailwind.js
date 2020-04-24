@@ -805,7 +805,7 @@ module.exports = {
     backgroundSize: ["responsive"],
     borderCollapse: [],
     borderColors: ["responsive", "hover", "focus"],
-    borderRadius: ["responsive"],
+    borderRadius: ["responsive", "group-hover"],
     borderStyle: ["responsive"],
     borderWidths: ["responsive"],
     cursor: ["responsive"],

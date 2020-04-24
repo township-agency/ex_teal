@@ -2,7 +2,7 @@ defmodule ExTeal.FieldFilterTest do
   use TestExTeal.ConnCase
 
   alias ExTeal.FieldFilter
-  alias ExTeal.FieldFilter.{Number, Text}
+  alias ExTeal.FieldFilter.{Boolean, Number, Text}
   alias TestExTeal.{Post, PostResource}
 
   test "for_resource/2 returns a list of potential field filters" do
@@ -13,9 +13,30 @@ defmodule ExTeal.FieldFilterTest do
     json = Jason.decode!(response.resp_body)
 
     assert json["filters"] == [
-             %{"as" => "number", "field" => "Id", "operators" => Number.operators()},
-             %{"as" => "text", "field" => "Name", "operators" => Text.operators()},
-             %{"as" => "text", "field" => "Body", "operators" => Text.operators()}
+             %{
+               "as" => "number",
+               "field" => "id",
+               "operators" => Number.operators(),
+               "label" => "Id"
+             },
+             %{
+               "as" => "text",
+               "field" => "name",
+               "operators" => Text.operators(),
+               "label" => "Name"
+             },
+             %{
+               "as" => "text",
+               "field" => "body",
+               "operators" => Text.operators(),
+               "label" => "Body"
+             },
+             %{
+               "as" => nil,
+               "field" => "published",
+               "operators" => Boolean.operators(),
+               "label" => "Published"
+             }
            ]
   end
 

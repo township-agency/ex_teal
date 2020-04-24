@@ -1,26 +1,6 @@
 <template>
   <div class="text-field-filter inline-flex">
-    <dropdown class="field-filter-dropdown">
-      <dropdown-trigger
-        slot-scope="{ toggle }"
-        :handle-click="toggle"
-        :class="{'field-filter-trigger': true, 'field-filter-operator': true, 'no-operand': !hasOperand}"
-      >
-        {{ filter.operator }}
-      </dropdown-trigger>
-      <dropdown-menu slot="menu" width="150">
-        <p
-          v-for="o in operators"
-          :key="o"
-        >
-          <a @click="selectOperator(o)">
-            {{ o }}
-          </a>
-        </p>
-      </dropdown-menu>
-    </dropdown>
     <input
-      v-if="hasOperand"
       type="text"
       :value="filter.operand"
       class="form-control field-filter-operand-input"
@@ -38,6 +18,7 @@ export default {
       type: Object
     }
   },
+<<<<<<< HEAD
   data () {
     return {
       operators: operators,
@@ -56,14 +37,17 @@ export default {
     }
   },
 
+=======
+  
+>>>>>>> 55a029f... Text, Number, and Boolean Filters
   methods: {
-    selectOperator (o) {
-      this.$emit('change', { ...this.filter, operator: o, operand: '' });
-    },
-
     setOperand (e) {
-      this.$emit('change', { ...this.filter, operand: e.target.value });
+      this.$emit('change', { ...this.filter, operand: e.target.value, valid: true });
     }
   }
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> 55a029f... Text, Number, and Boolean Filters
 </script>

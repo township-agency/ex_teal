@@ -29,19 +29,19 @@ defmodule ExTeal.FieldFilter.Text do
   def interface_type, do: "text"
 
   @impl true
-  def filter(query, %{"operator" => "=", "operand" => val}, field_name) do
+  def filter(query, %{"operator" => "=", "operand" => val}, field_name) when val != "" and not is_nil(val) do
     where(query, [q], field(q, ^field_name) == ^val)
   end
 
-  def filter(query, %{"operator" => "!=", "operand" => val}, field_name) do
+  def filter(query, %{"operator" => "!=", "operand" => val}, field_name) when val != "" and not is_nil(val)  do
     where(query, [q], field(q, ^field_name) != ^val)
   end
 
-  def filter(query, %{"operator" => "contains", "operand" => val}, field_name) do
+  def filter(query, %{"operator" => "contains", "operand" => val}, field_name) when val != "" and not is_nil(val)  do
     where(query, [q], ilike(field(q, ^field_name), ^"%#{val}%"))
   end
 
-  def filter(query, %{"operator" => "does not contains", "operand" => val}, field_name) do
+  def filter(query, %{"operator" => "does not contains", "operand" => val}, field_name) when val != "" and not is_nil(val)  do
     where(query, [q], not ilike(field(q, ^field_name), ^"%#{val}%"))
   end
 
