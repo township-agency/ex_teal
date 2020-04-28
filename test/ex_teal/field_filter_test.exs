@@ -2,7 +2,7 @@ defmodule ExTeal.FieldFilterTest do
   use TestExTeal.ConnCase
 
   alias ExTeal.FieldFilter
-  alias ExTeal.FieldFilter.{BelongsTo, Boolean, Number, Text}
+  alias ExTeal.FieldFilter.Number
   alias TestExTeal.{Post, PostResource}
 
   test "for_resource/2 returns a list of potential field filters" do
@@ -11,38 +11,23 @@ defmodule ExTeal.FieldFilterTest do
     assert 200 == response.status
 
     json = Jason.decode!(response.resp_body)
+    [id | _others] = json["filters"]
 
-    assert json["filters"] == [
-             %{
-               "as" => "number",
-               "field" => "id",
-               "operators" => Number.operators(),
-               "label" => "Id"
-             },
-             %{
-               "as" => "text",
-               "field" => "name",
-               "operators" => Text.operators(),
-               "label" => "Name"
-             },
-             %{
-               "as" => "text",
-               "field" => "body",
-               "operators" => Text.operators(),
-               "label" => "Body"
-             },
-             %{
-               "as" => nil,
-               "field" => "published",
-               "operators" => Boolean.operators(),
-               "label" => "Published"
-             },
-             %{
-               "as" => "belongs-to",
-               "field" => "user",
-               "label" => "User",
-               "operators" => BelongsTo.operators()
-             }
+    assert id == %{
+             "as" => "number",
+             "field" => "id",
+             "operators" => Number.operators(),
+             "label" => "Id"
+           }
+
+    assert Enum.map(json["filters"], &Map.get(&1, "field")) == [
+             "id",
+             "name",
+             "body",
+             "published",
+             "published_at",
+             "deleted_at",
+             "user"
            ]
   end
 

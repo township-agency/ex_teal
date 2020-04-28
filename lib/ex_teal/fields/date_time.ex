@@ -5,6 +5,8 @@ defmodule ExTeal.Fields.DateTime do
 
   def component, do: "date-time"
 
+  def filterable_as, do: ExTeal.FieldFilter.DateTime
+
   @doc """
   Set the format of the flatpickr datetime picker.
 

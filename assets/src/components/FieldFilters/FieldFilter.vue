@@ -138,17 +138,19 @@ export default {
 
   methods: {
     selectFilter (f) {
-      this.$emit('fieldFilterUpdated', { ...this.filter, field: f.field }, this.index);
+      this.$emit('fieldFilterUpdated', { ...this.filter, field: f.field, operator: f.operators[0].op, operand: null }, this.index);
     },
+
     updateFilter (filter) {
       this.$emit('fieldFilterUpdated', filter, this.index);
     },
+
     deleteFilter () {
       this.$emit('delete', this.index);
     },
 
     selectOperator (o) {
-      if (o.no_operand) {
+      if (o.no_operand || this.selectedFieldFilter.operators.find(op => op.op == o.op) === null) {
         this.$emit('fieldFilterUpdated', { ...this.filter, operator: o.op, operand: null, valid: true }, this.index);
         return;
       }

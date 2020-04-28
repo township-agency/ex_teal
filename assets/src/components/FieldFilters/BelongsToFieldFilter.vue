@@ -7,7 +7,7 @@
       :is-searching="isSearching"
       track-by="value"
       search-by="display"
-      class="block appearance-none w-64 text-primary-dark bg-primary-10 text-sm field-filter-operand-input group-hover:rounded-none"
+      class="block appearance-none w-64 bg-primary-10 text-sm field-filter-operand-input group-hover:rounded-none"
       @input="performSearch"
       @clear="clearSelection"
       @selected="selectResource"
@@ -81,19 +81,6 @@ export default {
     isSearching: false
   }),
 
-  watch: {
-    fieldFilter(oldFilter, newFilter) {
-      console.log('change', oldFilter, newFilter);
-      if (oldFilter.field !== newFilter.field) {
-        this.availableResources = [];
-        this.selectedResource = null;
-        this.selectedResourceId = null;
-        this.search = '';
-        this.initializeComponent();
-      }
-    }
-  },
-
   computed: {
     /**
      * Determine if the related resources is searchable
@@ -113,6 +100,18 @@ export default {
         }
       };
     },
+  },
+
+  watch: {
+    fieldFilter (oldFilter, newFilter) {
+      if (oldFilter.field !== newFilter.field) {
+        this.availableResources = [];
+        this.selectedResource = null;
+        this.selectedResourceId = null;
+        this.search = '';
+        this.initializeComponent();
+      }
+    }
   },
 
   /**

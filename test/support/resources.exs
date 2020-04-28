@@ -28,7 +28,7 @@ end
 
 defmodule TestExTeal.PostResource do
   use ExTeal.Resource
-  alias ExTeal.Fields.{BelongsTo, Boolean, ID, ManyToMany, Text, TextArea}
+  alias ExTeal.Fields.{BelongsTo, Boolean, DateTime, ID, ManyToMany, Text, TextArea}
 
   def model, do: TestExTeal.Post
 
@@ -40,6 +40,8 @@ defmodule TestExTeal.PostResource do
       Text.make(:name),
       TextArea.make(:body),
       Boolean.make(:published),
+      DateTime.make(:published_at),
+      DateTime.make(:deleted_at),
       BelongsTo.make(:user),
       ManyToMany.make(:tags, TestExTeal.Tag)
     ]
