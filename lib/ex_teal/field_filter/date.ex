@@ -18,7 +18,7 @@ defmodule ExTeal.FieldFilter.Date do
   alias ExTeal.FieldFilter
 
   @impl true
-  def operators,
+  def operators(_),
     do: [
       %{"op" => "="},
       %{"op" => "!="},
@@ -76,7 +76,7 @@ defmodule ExTeal.FieldFilter.Date do
 
   @impl true
   def serialize(field, _resource) do
-    defaults = FieldFilter.default_serialization(field, interface_type(), operators())
+    defaults = FieldFilter.default_serialization(field, interface_type(), operators(field))
 
     Map.merge(
       defaults,

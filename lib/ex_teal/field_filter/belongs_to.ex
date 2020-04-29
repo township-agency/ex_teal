@@ -8,7 +8,7 @@ defmodule ExTeal.FieldFilter.BelongsTo do
   alias ExTeal.FieldFilter
 
   @impl true
-  def operators,
+  def operators(_),
     do: [
       %{"op" => "="},
       %{"op" => "!="},
@@ -46,7 +46,7 @@ defmodule ExTeal.FieldFilter.BelongsTo do
 
   @impl true
   def serialize(field, resource) do
-    defaults = FieldFilter.default_serialization(field, interface_type(), operators())
+    defaults = FieldFilter.default_serialization(field, interface_type(), operators(field))
 
     case ExTeal.resource_for_model(field.relationship) do
       {:ok, related_resource} ->

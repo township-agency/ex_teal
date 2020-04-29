@@ -1,6 +1,7 @@
 defmodule ExTeal.FieldFilterTest do
   use TestExTeal.ConnCase
 
+  alias ExTeal.Field
   alias ExTeal.FieldFilter
   alias ExTeal.FieldFilter.Number
   alias TestExTeal.{Post, PostResource}
@@ -16,7 +17,7 @@ defmodule ExTeal.FieldFilterTest do
     assert id == %{
              "as" => "number",
              "field" => "id",
-             "operators" => Number.operators(),
+             "operators" => Number.operators(%Field{}),
              "label" => "Id"
            }
 

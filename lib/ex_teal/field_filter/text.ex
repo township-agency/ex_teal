@@ -15,7 +15,7 @@ defmodule ExTeal.FieldFilter.Text do
   import Ecto.Query
 
   @impl true
-  def operators,
+  def operators(_),
     do: [
       %{"op" => "="},
       %{"op" => "!="},

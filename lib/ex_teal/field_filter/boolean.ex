@@ -11,7 +11,7 @@ defmodule ExTeal.FieldFilter.Boolean do
   import Ecto.Query
 
   @impl true
-  def operators,
+  def operators(_),
     do: [
       %{"op" => "true", "no_operand" => true},
       %{"op" => "false", "no_operand" => true}

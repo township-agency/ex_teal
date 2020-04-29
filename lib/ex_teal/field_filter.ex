@@ -36,7 +36,7 @@ defmodule ExTeal.FieldFilter do
   - `component` (optional) override the default operand component, which defaults to a string field.
 
   """
-  @callback operators() :: [map()]
+  @callback operators(ExTeal.Field.t()) :: [map()]
 
   @type serialized_filter :: %{
           required(:as) => String.t(),
@@ -61,7 +61,7 @@ defmodule ExTeal.FieldFilter do
 
       @impl true
       def serialize(field, _resource),
-        do: ExTeal.FieldFilter.default_serialization(field, interface_type(), operators())
+        do: ExTeal.FieldFilter.default_serialization(field, interface_type(), operators(field))
 
       defoverridable(serialize: 2)
     end
