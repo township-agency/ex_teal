@@ -4,7 +4,7 @@ defmodule ExTeal.Resource.Index do
   """
 
   alias Ecto.Association.ManyToMany
-  alias ExTeal.{Field, FieldFilter, Filter}
+  alias ExTeal.{Field, FieldFilter}
   alias ExTeal.Fields.BelongsTo
   alias ExTeal.Resource.Index
 
@@ -61,22 +61,6 @@ defmodule ExTeal.Resource.Index do
   @callback search_adapter(Ecto.Query.t(), module(), String.t()) :: Ecto.Query.t()
 
   @doc """
-  Returns the filters available for a resource.
-
-  Default implementation is an empty array.
-
-  `filters/1` can alternatively use the conn to guard certain filters:
-
-      def filters(conn) do
-        case conn.assigns[:current_user] do
-          nil -> []
-          user -> [MyPostsFilter]
-        end
-      end
-  """
-  @callback filters(Plug.Conn.t()) :: []
-
-  @doc """
   Returns the actions available for a resource
 
   Default implementation is an empty array.
@@ -88,7 +72,6 @@ defmodule ExTeal.Resource.Index do
     |> resource.handle_index(conn.params)
     |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
-    |> Index.filter(conn, resource)
     |> Index.field_filters(conn.params, resource)
     |> Index.sort(conn.params, resource)
     |> Index.search(conn.params, resource)
@@ -132,14 +115,6 @@ defmodule ExTeal.Resource.Index do
 
       def handle_related(conn, _params), do: records(conn, __MODULE__)
 
-      def filters(_conn), do: []
-
-      def filters_for(conn) do
-        conn
-        |> filters()
-        |> Enum.map(fn filter_module -> filter_module.build_for(conn) end)
-      end
-
       def actions(_conn), do: []
 
       def actions_for(conn) do
@@ -152,8 +127,6 @@ defmodule ExTeal.Resource.Index do
         do: SimpleSearch.build(query, resource, search_term)
 
       defoverridable(
-        filters: 1,
-        filters_for: 1,
         actions: 1,
         actions_for: 1,
         handle_index: 2,
@@ -162,23 +135,6 @@ defmodule ExTeal.Resource.Index do
       )
     end
   end
-
-  def filter(query, %Plug.Conn{params: %{"filters" => filter}} = conn, resource)
-      when not is_nil(filter) do
-    resource_filters = resource.filters(conn)
-
-    with {:ok, filters} <- filter |> :base64.decode() |> Jason.decode(),
-         false <- Enum.empty?(filters) do
-      Enum.reduce(filters, query, fn filter, acc ->
-        apply_filter(filter, acc, conn, resource_filters)
-      end)
-    else
-      {:error, _} -> query
-      true -> query
-    end
-  end
-
-  def filter(query, _conn, _resource), do: query
 
   def field_filters(query, %{"field_filters" => filters}, resource) do
     with {:ok, filters} <- filters |> :base64.decode() |> Jason.decode(),
@@ -190,18 +146,6 @@ defmodule ExTeal.Resource.Index do
   end
 
   def field_filters(query, _params, _resource), do: query
-
-  defp apply_filter(filter, query, conn, resource_filters) do
-    filter_module = Filter.filter_for_key(resource_filters, Map.get(filter, "key"))
-
-    case filter_module do
-      nil ->
-        query
-
-      module ->
-        module.apply_query(conn, query, Map.get(filter, "value"))
-    end
-  end
 
   @doc false
   def sort(

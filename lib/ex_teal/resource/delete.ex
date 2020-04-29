@@ -94,14 +94,14 @@ defmodule ExTeal.Resource.Delete do
 
   defp find_deleteable(resource, %Conn{params: %{"resources" => "all"}} = conn) do
     resource.model()
-    |> Index.filter(conn, resource)
+    |> Index.field_filters(conn.params, resource)
   end
 
   defp find_deleteable(resource, %Conn{params: %{"resources" => ids}} = conn) do
     ids = ids |> String.split(",") |> Enum.map(&String.to_integer/1)
 
     resource.model()
-    |> Index.filter(conn, resource)
+    |> Index.field_filters(conn.params, resource)
     |> where([r], r.id in ^ids)
   end
 end

@@ -143,8 +143,6 @@ defmodule ExTeal.Router do
       )
   )
 
-  get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
-
   get("/api/:resource_name/actions", do: ResourceResponder.actions_for(conn, resource_name))
   post("/api/:resource_name/actions", do: ResourceResponder.commit_action(conn, resource_name))
 

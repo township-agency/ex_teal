@@ -46,8 +46,6 @@ defmodule TestExTeal.PostResource do
       ManyToMany.make(:tags, TestExTeal.Tag)
     ]
 
-  def filters(_conn), do: [TestExTeal.PublishedStatus]
-
   def actions(_), do: [TestExTeal.PublishAction]
 end
 

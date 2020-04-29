@@ -145,24 +145,26 @@ defmodule ExTeal.Api.ResourceResponderTest do
 
     @tag manifest: DefaultManifest
     test "returns a 204 for all with filter" do
-      [p1, p2] = insert_pair(:post, published: true)
-      p3 = insert(:post, published: false)
+      p = insert(:post, name: "Foo", user: nil)
+      p2 = insert(:post, name: "Bar", user: nil)
 
-      filters = [%{"key" => "published_status", "value" => 1}]
+      filters = [
+        %{"field" => "name", "operator" => "=", "operand" => "Foo"}
+      ]
+
       encoded_filters = filters |> Jason.encode!() |> :base64.encode()
 
       conn =
         build_conn(:delete, "/api/posts", %{
           "resources" => "all",
-          "filters" => encoded_filters
+          "field_filters" => encoded_filters
         })
 
       resp = ResourceResponder.delete(conn, "posts")
       assert resp.status == 204
 
-      refute Repo.get(Post, p1.id)
-      refute Repo.get(Post, p2.id)
-      assert Repo.get(Post, p3.id)
+      refute Repo.get(Post, p.id)
+      assert Repo.get(Post, p2.id)
     end
   end
 

@@ -266,7 +266,6 @@ import _ from 'lodash';
 import {
   Capitalize,
   Deleteable,
-  Filterable,
   HasCards,
   InteractsWithQueryString,
   InteractsWithResourceInformation,
@@ -280,7 +279,6 @@ import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters';
 export default {
   mixins: [
     Deleteable,
-    Filterable,
     HasCards,
     InteractsWithResourceInformation,
     InteractsWithQueryString,
@@ -327,7 +325,6 @@ export default {
 
     orderBy: '',
     orderByDirection: '',
-    filters: [],
     fieldFilters: [],
     currentFieldFilters: [],
     actions: [],
@@ -361,7 +358,7 @@ export default {
         {
           search: this.currentSearch,
           filters: this.encodedFilters,
-          fieldFiliters: this.encodedFieldFilters,
+          field_filters: this.encodedFieldFilters,
           order_by: this.currentOrderBy,
           order_by_direction: this.currentOrderByDirection,
           per_page: this.currentPerPage,
@@ -402,13 +399,6 @@ export default {
      */
     pageParameter () {
       return this.resourceName + '_page';
-    },
-
-    /**
-     * Get the name of the filter query string variable.
-     */
-    filterParameter () {
-      return this.resourceName + '_filter';
     },
 
     /**
@@ -457,7 +447,7 @@ export default {
      * Determine if there any filters for this resource
      */
     hasFilters () {
-      return Boolean(this.filters.length > 0) || Boolean(this.fieldFilters.length > 0);
+      return Boolean(this.fieldFilters.length > 0);
     },
 
     /**
@@ -589,7 +579,6 @@ export default {
     this.initializeFieldFilterValuesFromQueryString();
 
     await this.getResources();
-    await this.getFilters();
     this.getFieldFilters();
 
     this.getActions();
@@ -600,7 +589,6 @@ export default {
       () => {
         return (
           this.resourceName +
-          this.encodedFilters +
           this.encodedFieldFilters +
           this.currentOrderBy +
           this.currentOrderByDirection +
@@ -614,7 +602,6 @@ export default {
 
         this.initializeOrderingFromQueryString();
         this.initializePerPageFromQueryString();
-        this.initializeFilterValuesFromQueryString();
         this.initializeFieldFilterValuesFromQueryString();
       }
     );
@@ -624,7 +611,6 @@ export default {
         return this.resourceName;
       },
       () => {
-        this.getFilters();
         this.getFieldFilters();
         this.getActions();
       }
@@ -657,21 +643,6 @@ export default {
           this.loading = false;
         });
       });
-    },
-
-    /**
-     * Get the filters available for the current resource.
-     */
-    getFilters () {
-      this.filters = [];
-      this.currentFilters = [];
-
-      return ExTeal.request()
-        .get(`/api/${this.resourceName}/filters`)
-        .then(response => {
-          this.filters = response.data.filters;
-          this.initializeFilterValuesFromQueryString();
-        });
     },
 
     getFieldFilters () {
