@@ -124,12 +124,25 @@ defmodule ExTeal.Field do
     Map.get(model, field.field)
   end
 
+  @doc """
+  Use a getter function to display a computed field on the resource.
+
+  The getter function is given a schema and expects a string result
+  """
   def get(field, func) do
     field
     |> Map.put(:getter, func)
     |> Map.put(:sortable, false)
     |> Map.put(:show_on_new, false)
     |> Map.put(:show_on_edit, false)
+  end
+
+  @doc """
+  Override the default filter for the field.
+  """
+  @spec filter_as(Field.t(), module) :: Field.t()
+  def filter_as(field, filter_module) do
+    Map.put(field, :filterable, filter_module)
   end
 
   def help_text(%Field{options: options} = f, text),

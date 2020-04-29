@@ -18,4 +18,12 @@ defmodule ExTeal.FieldTest do
       assert field.options.help_text == "Foo Bar"
     end
   end
+
+  describe "filter_as/2" do
+    test "a field can have it's filterable type replaced" do
+      field = %Field{filterable: ExTeal.FieldFilter.Date}
+      result = Field.filter_as(field, ExTeal.FieldFilter.Text)
+      assert result.filterable == ExTeal.FieldFilter.Text
+    end
+  end
 end
