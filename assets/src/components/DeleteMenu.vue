@@ -1,42 +1,21 @@
 <template>
   <div>
-    <dropdown
-      class="ml-3 bg-danger hover:bg-danger-dark text-white rounded border border-danger"
+    <button
+      class="btn btn-default btn-only-icon bg-danger text-white"
+      @click="confirmDeleteSelectedResources"
     >
-      <dropdown-trigger
-        slot-scope="{ toggle }"
-        :handle-click="toggle"
-        class="px-3"
-      >
-        <icon
-          type="delete"
-          class="text-white"
-        />
-      </dropdown-trigger>
-
-      <dropdown-menu
-        slot="menu"
-        direction="rtl"
-        width="250"
-      >
-        <div class="px-3">
-          <!-- Delete Menu -->
-          <button
-            class="text-left w-full leading-normal dim my-2 text-danger"
-            @click="confirmDeleteSelectedResources"
-          >
-            Delete Selected ({{ selectedResourcesCount }})
-          </button>
-        </div>
-      </dropdown-menu>
-    </dropdown>
+      <icon
+        type="delete"
+        class="text-white"
+      />
+    </button>
 
     <portal to="modals">
       <transition name="fade">
         <delete-resource-modal
           v-if="deleteSelectedModalOpen"
           :mode="'delete'"
-          close="closeDeleteSelectedModal"
+          @close="closeDeleteSelectedModal"
           @confirm="deleteSelectedResources"
         />
       </transition>

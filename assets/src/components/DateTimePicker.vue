@@ -4,7 +4,7 @@
     :disabled="disabled"
     :class="{ '!cursor-not-allowed': disabled }"
     :value="value"
-    :name="field.name"
+    :name="fieldName"
     :placeholder="placeholder"
     type="text"
   >
@@ -16,8 +16,8 @@ import { DateTime } from 'luxon';
 
 export default {
   props: {
-    field: {
-      type: Object,
+    fieldName: {
+      type: String,
       required: true
     },
     value: {

@@ -98,7 +98,7 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
-      |> Index.filter(conn, resource)
+      |> Index.field_filters(conn.params, resource)
 
     case query do
       [] -> {:error, :not_found}
@@ -112,7 +112,7 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
-      |> Index.filter(conn, resource)
+      |> Index.field_filters(conn.params, resource)
       |> where([r], r.id in ^ids)
 
     {:ok, query}

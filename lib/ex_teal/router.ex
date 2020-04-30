@@ -91,6 +91,10 @@ defmodule ExTeal.Router do
     do: ResourceResponder.field(conn, resource_name, field_name)
   )
 
+  get("/api/:resource_name/field-filters",
+    do: ResourceResponder.field_filters(conn, resource_name)
+  )
+
   get("/api/:resource_name/:resource_id/attachable/:field_name",
     do: ManyToMany.attachable(conn, resource_name, resource_id, field_name)
   )
@@ -138,8 +142,6 @@ defmodule ExTeal.Router do
         field_name
       )
   )
-
-  get("/api/:resource_name/filters", do: ResourceResponder.filters_for(conn, resource_name))
 
   get("/api/:resource_name/actions", do: ResourceResponder.actions_for(conn, resource_name))
   post("/api/:resource_name/actions", do: ResourceResponder.commit_action(conn, resource_name))

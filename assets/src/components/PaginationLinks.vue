@@ -1,9 +1,16 @@
 <template>
-  <div class="border-t  bg-grey-lightest">
+  <div class="border-t bg-grey-lightest flex justify-end">
     <nav
       v-if="resources.length > 0"
-      class="flex"
     >
+      <span class="text-80 mr-2">Per Page:</span>
+      <select-control
+        :value="currentAsString"
+        label="value"
+        class="form-control form-select form-sm"
+        :options="options"
+        @change="selectPerPage"
+      />
       <!-- Previous Link -->
       <button
         :disabled="!hasPreviousPages"
@@ -57,8 +64,21 @@ export default {
     currentPage: {
       type: Number,
       default: 1
+    },
+    perPage: {
+      type: Number,
+      default: 25
     }
   },
+
+  data: () => ({
+    options: [
+      { value: '10' },
+      { value: '25' },
+      { value: '50' },
+      { value: '100' }
+    ]
+  }),
 
   computed: {
     /**
@@ -76,6 +96,9 @@ export default {
         this.resourceResponse &&
           this.resourceResponse.meta.total > this.currentPage
       );
+    },
+    currentAsString () {
+      return `${this.perPage}`;
     }
   },
 
@@ -92,6 +115,10 @@ export default {
      */
     selectNextPage () {
       this.$emit('next');
+    },
+
+    selectPerPage (e) {
+      this.$emit('perPageChanged', parseInt(e.target.value));
     }
   }
 };

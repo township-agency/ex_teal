@@ -19,6 +19,8 @@ defmodule TestExTeal.Post do
     field(:name, :string)
     field(:body, :string)
     field(:published, :boolean)
+    field(:published_at, :naive_datetime)
+    field(:deleted_at, :utc_datetime)
 
     many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 
@@ -27,7 +29,7 @@ defmodule TestExTeal.Post do
     timestamps()
   end
 
-  @fields ~w(name body published user_id)a
+  @fields ~w(name body published published_at deleted_at user_id)a
 
   def changeset(%Post{} = post, params \\ %{}) do
     post

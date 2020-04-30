@@ -1,13 +1,10 @@
 <template>
   <div>
-    <dropdown
-      v-if="actions.length > 0"
-      class="bg-white border rounded"
-    >
+    <dropdown v-if="actions.length > 0">
       <dropdown-trigger
         slot-scope="{ toggle }"
         :handle-click="toggle"
-        class="px-3"
+        class="px-3 border-r rounded-none"
       >
         <icon
           type="action"

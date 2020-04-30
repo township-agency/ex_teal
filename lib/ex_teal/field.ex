@@ -19,6 +19,7 @@ defmodule ExTeal.Field do
             private_options: %{},
             prefix_component: nil,
             sortable: true,
+            filterable: false,
             pivot_field: false,
             text_align: "left",
             value: nil,
@@ -40,6 +41,8 @@ defmodule ExTeal.Field do
 
   @callback apply_options_for(Field.t(), struct(), atom()) :: Field.t()
 
+  @callback filterable_as :: ExTeal.FieldFilter.valid_type()
+
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Field
@@ -56,6 +59,8 @@ defmodule ExTeal.Field do
       def show_on_edit, do: true
       def sanitize_as, do: :strip_tags
       def as_html, do: false
+
+      def filterable_as, do: false
 
       def field_name(name, label) do
         Field.field_name(name, label)
@@ -76,6 +81,7 @@ defmodule ExTeal.Field do
         show_on_edit: 0,
         sanitize_as: 0,
         as_html: 0,
+        filterable_as: 0,
         make: 2,
         make: 1,
         value_for: 3,
@@ -99,7 +105,8 @@ defmodule ExTeal.Field do
       show_on_new: implementation.show_on_new(),
       show_on_edit: implementation.show_on_edit(),
       sanitize: implementation.sanitize_as(),
-      as_html: implementation.as_html()
+      as_html: implementation.as_html(),
+      filterable: implementation.filterable_as()
     }
   end
 
@@ -117,12 +124,25 @@ defmodule ExTeal.Field do
     Map.get(model, field.field)
   end
 
+  @doc """
+  Use a getter function to display a computed field on the resource.
+
+  The getter function is given a schema and expects a string result
+  """
   def get(field, func) do
     field
     |> Map.put(:getter, func)
     |> Map.put(:sortable, false)
     |> Map.put(:show_on_new, false)
     |> Map.put(:show_on_edit, false)
+  end
+
+  @doc """
+  Override the default filter for the field.
+  """
+  @spec filter_as(Field.t(), module) :: Field.t()
+  def filter_as(field, filter_module) do
+    Map.put(field, :filterable, filter_module)
   end
 
   def help_text(%Field{options: options} = f, text),

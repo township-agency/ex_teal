@@ -16,6 +16,8 @@ defmodule ExTeal.Fields.Date do
 
   @type valid_format :: :short | :med | :full | :huge
 
+  def filterable_as, do: ExTeal.FieldFilter.Date
+
   @doc """
   Set the format that the date is rendered with on the detail and index components.
 

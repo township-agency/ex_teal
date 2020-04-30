@@ -51,4 +51,6 @@ defmodule ExTeal.Fields.Select do
   end
 
   def value_for(field, model, view), do: Field.value_for(field, model, view)
+
+  def filterable_as, do: ExTeal.FieldFilter.Select
 end
