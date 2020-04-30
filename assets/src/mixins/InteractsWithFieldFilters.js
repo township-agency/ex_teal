@@ -11,7 +11,9 @@ const InteractsWithFieldFilters = {
       if (this.encodedFieldFilters) {
         this.currentFieldFilters = JSON.parse(atob(this.encodedFieldFilters));
       }
-      this.currentFieldFilters.push({ field: null, operator: null, operand: null });
+      if (this.currentFieldFilters.length > 0) {
+        this.showFilters = true;
+      }
     },
 
     /**
@@ -25,14 +27,23 @@ const InteractsWithFieldFilters = {
      * Handle a field filter state change.
      */
     fieldFilterChanged () {
-      this.updateQueryString({
-        [this.pageParameter]: 1,
-        [this.fieldFilterParameter]: btoa(JSON.stringify(this.currentFieldFilters))
-      });
+      if (this.currentFieldFilters.length === 0) {
+        const query = Object.assign({}, this.$route.query);
+        query[this.pageParameter] = 1;
+        delete query[this.fieldFilterParameter];
+        this.$router.replace({ query });
+        this.showFilters = false;
+      } else {
+        this.updateQueryString({
+          [this.pageParameter]: 1,
+          [this.fieldFilterParameter]: btoa(JSON.stringify(this.currentFieldFilters))
+        }); 
+      }
     },
 
     updateFieldFilter (filter, index) {
       this.currentFieldFilters = this.currentFieldFilters.map((item, i) => i === index ? filter : item);
+      this.fieldFilterChanged();
     },
 
     addNewFilter () {
@@ -40,7 +51,7 @@ const InteractsWithFieldFilters = {
       if (lastFilter) {
         this.currentFieldFilters.push(lastFilter);         
       } else if (this.fieldFilters.length > 0) {
-        this.currentFieldFilters = [ { field: this.fieldFilters[0].field, operator: null, operand: null } ];
+        this.currentFieldFilters = [ { field: this.fieldFilters[0].field, operator: this.fieldFilters[0].operators[0].op, operand: null } ];
       }
       this.fieldFilterChanged();
     },

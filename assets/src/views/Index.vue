@@ -83,6 +83,7 @@
 
         <button
           v-if="shouldShowFilters"
+          :class="{'bg-grey-lighter': shouldShowFilters }"
           class="border-r hover:bg-grey-light px-2 h-8 flex items-center"
           @click="toggleFilters"
         >
@@ -139,7 +140,7 @@
 
     <div
       v-if="showFilters"
-      class="border-t border-r border-l pr-2 pb-2 pl-2"
+      class="border-t border-r border-l pr-2 pb-2 pl-2 bg-grey-lighter"
     >
       <div
         v-if="currentFieldFilters.length > 0"
@@ -328,7 +329,7 @@ export default {
     fieldFilters: [],
     currentFieldFilters: [],
     actions: [],
-    showFilters: true,
+    showFilters: false,
     selectedResources: [],
     selectAllMatchingResources: false,
     allMatchingResourceCount: 0,
@@ -656,6 +657,10 @@ export default {
     },
 
     toggleFilters () {
+      if (!this.showFilters && this.currentFieldFilters.length === 0 && this.fieldFilters.length > 0) {
+        this.currentFieldFilters = [ { field: this.fieldFilters[0].field, operator: this.fieldFilters[0].operators[0].op, operand: null } ];
+        this.fieldFilterChanged();
+      }
       this.showFilters = !this.showFilters;
     },
 

@@ -105,6 +105,10 @@ export default {
   },
 
   computed: {
+    selectedFieldFilterLabel () {
+      return this.selectedFieldFilter ? this.selectedFieldFilter.label : null;
+    },
+
     selectedFieldFilterType () {
       return this.filter.field;
     },
