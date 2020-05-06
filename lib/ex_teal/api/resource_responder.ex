@@ -5,7 +5,7 @@ defmodule ExTeal.Api.ResourceResponder do
   """
   alias ExTeal.Api.ErrorSerializer
   alias ExTeal.FieldFilter
-  alias ExTeal.Resource.{Create, Delete, Fields, Index, Serializer, Show, Update}
+  alias ExTeal.Resource.{Create, Delete, Export, Fields, Index, Serializer, Show, Update}
 
   def index(conn, resource_uri) do
     case ExTeal.resource_for(resource_uri) do
@@ -116,6 +116,16 @@ defmodule ExTeal.Api.ResourceResponder do
       {:ok, body} = Jason.encode(resp)
       Serializer.as_json(conn, body, 200)
     else
+      {:error, reason} ->
+        ErrorSerializer.handle_error(conn, reason)
+    end
+  end
+
+  def export(conn, resource_uri) do
+    case ExTeal.resource_for(resource_uri) do
+      {:ok, resource} ->
+        Export.stream(resource, conn)
+
       {:error, reason} ->
         ErrorSerializer.handle_error(conn, reason)
     end

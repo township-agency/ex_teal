@@ -70,7 +70,7 @@ export default {
       type: Object,
       default: () => ({
         currentSearch: '',
-        encodedFilters: '',
+        encodedFieldFilters: '',
         viaResource: '',
         viaResourceId: '',
         viaRelationship: ''
@@ -100,7 +100,7 @@ export default {
       return {
         action: this.selectedActionKey,
         search: this.queryString.currentSearch,
-        filters: this.queryString.encodedFilters,
+        field_filters: this.queryString.encodedFieldFilters,
         viaResource: this.queryString.viaResource,
         viaResourceId: this.queryString.viaResourceId,
         viaRelationship: this.queryString.viaRelationship
