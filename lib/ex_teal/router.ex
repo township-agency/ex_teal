@@ -67,6 +67,8 @@ defmodule ExTeal.Router do
     |> GlobalSearch.render()
   end
 
+  get("/export/:resource_name", do: ResourceResponder.export(conn, resource_name))
+
   get("/api/dashboards/:name", do: CardResponder.dashboard(conn, name))
 
   get("/api/:resource_name/cards", do: CardResponder.resource(conn, resource_name))

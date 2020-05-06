@@ -65,6 +65,18 @@
           </button>
         </div>
 
+        <div v-if="selectedResources.length > 0">
+          <button
+            class="border-l border-r hover:bg-grey-light px-2 h-8"
+            @click="exportResults"
+          >
+            <icon
+              type="download"
+              class="text-grey-darker"
+            />
+          </button>
+        </div>
+
         <!-- Action Selector -->
         <action-selector
           v-if="selectedResources.length > 0"
@@ -72,7 +84,7 @@
           :actions="actions"
           :query-string="{
             currentSearch,
-            encodedFilters,
+            encodedFieldFilters,
             viaResource,
             viaResourceId,
             viaRelationship
@@ -839,6 +851,34 @@ export default {
       }
 
       this.selectAllMatchingResources = false;
+    },
+
+    exportResults () {
+      const query = {
+        search: this.currentSearch,
+        field_filters: this.encodedFieldFilters,
+        viaResource: this.viaResource,
+        viaResourceId: this.viaResourceId,
+        viaRelationship: this.viaRelationship,
+        order_by: this.currentOrderBy,
+        order_by_direction: this.currentOrderByDirection,
+        resources: this.selectedResourcesForActionSelector,
+      };
+      const queryString = Object.keys(query).map((key) => {
+        if (query[key]) {
+          return key + '=' + encodeURIComponent(query[key]);
+        }
+        return null;
+      }).filter(v => !!v).join('&');
+
+      const url = `${window.location.origin}${ExTeal.config.path}/export/${this.resourceName}?${queryString}`;
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
 
     /**
