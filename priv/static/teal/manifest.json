@@ -2,7 +2,7 @@
   "npm.babel.js": "/js/0.a2bd6a75a12644617485.chunk.js",
   "npm.regenerator-runtime.js": "/js/1.5e59e0bf0bee3cc63fff.chunk.js",
   "main.css": "/css/main.css",
-  "main.js": "/js/c7f3eca654c80f5d2900.js",
+  "main.js": "/js/cfa11fd46b847bb44d59.js",
   "npm.algoliasearch.js": "/js/3.0590c56cb66bbb4f42b9.chunk.js",
   "npm.autocomplete.js.js": "/js/4.ece888dad2d1c7979b42.chunk.js",
   "npm.axios.js": "/js/5.b6fe3a1902cc7a5f8c3f.chunk.js",
@@ -19,7 +19,7 @@
   "npm.inherits.js": "/js/16.c4e4b2a66ff341af2f52.chunk.js",
   "npm.insert-css.js": "/js/17.78c1cdf4eeac4c4fd197.chunk.js",
   "npm.is-buffer.js": "/js/18.f24607be4ade955c917a.chunk.js",
-  "npm.lodash.js": "/js/19.8c36191955c1236f3f23.chunk.js",
+  "npm.lodash.js": "/js/19.29c4775a6d5c7df0a835.chunk.js",
   "npm.luxon.js": "/js/20.ae6d66ba7447d130d8d7.chunk.js",
   "npm.ms.js": "/js/21.ab2700a653d7480f5d9c.chunk.js",
   "npm.numbro.js": "/js/22.e2ea2fa09bd37087333a.chunk.js",
@@ -51,8 +51,8 @@
   "images/logo.svg": "/images/logo.svg",
   "js/10.3e6491c961049d7b3cce.chunk.js.br": "/js/10.3e6491c961049d7b3cce.chunk.js.br",
   "js/10.3e6491c961049d7b3cce.chunk.js.gz": "/js/10.3e6491c961049d7b3cce.chunk.js.gz",
-  "js/19.8c36191955c1236f3f23.chunk.js.br": "/js/19.8c36191955c1236f3f23.chunk.js.br",
-  "js/19.8c36191955c1236f3f23.chunk.js.gz": "/js/19.8c36191955c1236f3f23.chunk.js.gz",
+  "js/19.29c4775a6d5c7df0a835.chunk.js.br": "/js/19.29c4775a6d5c7df0a835.chunk.js.br",
+  "js/19.29c4775a6d5c7df0a835.chunk.js.gz": "/js/19.29c4775a6d5c7df0a835.chunk.js.gz",
   "js/20.ae6d66ba7447d130d8d7.chunk.js.br": "/js/20.ae6d66ba7447d130d8d7.chunk.js.br",
   "js/20.ae6d66ba7447d130d8d7.chunk.js.gz": "/js/20.ae6d66ba7447d130d8d7.chunk.js.gz",
   "js/22.e2ea2fa09bd37087333a.chunk.js.br": "/js/22.e2ea2fa09bd37087333a.chunk.js.br",
@@ -85,6 +85,6 @@
   "js/5.b6fe3a1902cc7a5f8c3f.chunk.js.gz": "/js/5.b6fe3a1902cc7a5f8c3f.chunk.js.gz",
   "js/6.503088aaa8384cc76e69.chunk.js.br": "/js/6.503088aaa8384cc76e69.chunk.js.br",
   "js/6.503088aaa8384cc76e69.chunk.js.gz": "/js/6.503088aaa8384cc76e69.chunk.js.gz",
-  "js/c7f3eca654c80f5d2900.js.br": "/js/c7f3eca654c80f5d2900.js.br",
-  "js/c7f3eca654c80f5d2900.js.gz": "/js/c7f3eca654c80f5d2900.js.gz"
+  "js/cfa11fd46b847bb44d59.js.br": "/js/cfa11fd46b847bb44d59.js.br",
+  "js/cfa11fd46b847bb44d59.js.gz": "/js/cfa11fd46b847bb44d59.js.gz"
 }

@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2020-05-06
+
+### Added
+
+Teal has removed the concept of static, per-field filters for automatically
+build `field_filters`.  These filters can now be combined, extended and can use
+far more advanced and useful customizable operators.
+
+- New dynamic filters.  See below for required changes.
+- New Table UX
+- Export as a CSV
+
+### Depreciated
+
+To update to 0.8.0:
+
+1. Remove the `filters/0` functions from your resources
+2. Remove old filters
+3. If you need to extend the logic of the included field filters, use the
+   `ExTeal.Field.filter_as/2` function to modify the appropriate field and
+   define a custom module that implements the behaviour of
+   `ExTeal.FieldFilter`
+
 ## [0.7.9] - 2020-04-13
 
 ### Fixes
