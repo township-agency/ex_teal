@@ -56,7 +56,7 @@ defmodule ExTeal.Resource.Export do
       conn
       |> put_resp_header(
         "content-disposition",
-        "attachment; filename=export-#{resource.title()}.csv"
+        "attachment; filename=export-#{resource.uri()}.csv"
       )
       |> put_resp_content_type("text/csv")
       |> send_chunked(200)
