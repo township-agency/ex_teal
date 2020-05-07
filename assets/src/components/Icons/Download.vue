@@ -1,3 +1,3 @@
 <template functional>
-  <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" />
+  <path stroke="#838383" fill="none" stroke-linecap="square" stroke-miterlimit="10" d="M15.864 9L9.5 15.364 3.136 9M9.5.5v14.472M.5 18.5h18"/>
 </template>

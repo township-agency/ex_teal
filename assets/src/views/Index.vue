@@ -67,12 +67,14 @@
 
         <div v-if="selectedResources.length > 0">
           <button
-            class="border-l border-r hover:bg-grey-light px-2 h-8"
+            class="border-r hover:bg-grey-light px-2 h-8 flex items-center"
             @click="exportResults"
           >
             <icon
               type="download"
-              class="text-grey-darker"
+              view-box="0 0 19 19"
+              width="19"
+              height="19"
             />
           </button>
         </div>
