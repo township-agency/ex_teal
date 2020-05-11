@@ -34,7 +34,28 @@ defmodule ExTeal.Api.ManyToManyTest do
       resp = ManyToMany.attachable(conn, "posts", "#{p.id}", "tags")
       assert resp.status == 200
       {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
-      assert Enum.map(body.data, & &1.value) == [t1.id, t2.id]
+      assert Enum.map(body.data, & &1.id) == [t1.id, t2.id]
+    end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "can be searched" do
+      p = insert(:post)
+      t1 = insert(:tag, name: "Apple")
+      insert(:tag, name: "Banana")
+
+      conn = build_conn(:get, "/api/posts/#{p.id}/attachable/tags", %{"search" => "Ap"})
+      resp = ManyToMany.attachable(conn, "posts", "#{p.id}", "tags")
+      assert resp.status == 200
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+
+      assert body.data == [
+               %{
+                 id: t1.id,
+                 title: t1.name,
+                 subtitle: nil,
+                 thumbnail: nil
+               }
+             ]
     end
   end
 

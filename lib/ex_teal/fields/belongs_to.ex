@@ -7,18 +7,6 @@ defmodule ExTeal.Fields.BelongsTo do
       alias ExTeal.Fields.BelongsTo
 
       BelongsTo.make(:user)
-
-  # Title Attributes
-
-  When a `BelongsTo` field is shown on a resource creation/update screen, a drop-down
-  selection menu or search menu will display the "title" of the resource.  For example, a
-  `User` resource may display the `name` attribute as it's title.  Then, when the resource
-  is shown in a `BelongsTo` selection menu, that attribute will be displayed.  You can override
-  the title displayed by overriding the display_title/1 function:
-
-      def display_title(schema) do
-        String.capitalize(schema.name)
-      end
   """
 
   use ExTeal.Field

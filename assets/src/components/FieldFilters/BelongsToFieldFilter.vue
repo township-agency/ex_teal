@@ -5,7 +5,7 @@
       :value="selectedResource"
       :data="availableResources"
       :is-searching="isSearching"
-      track-by="value"
+      track-by="id"
       search-by="display"
       class="block appearance-none w-64 bg-primary-10 text-sm field-filter-operand-input group-hover:rounded-none"
       @input="performSearch"
@@ -17,7 +17,20 @@
         slot="default"
         class="flex items-center"
       >
-        {{ selectedResource.display_title }}
+        <div
+          v-if="selectedResource.thumbnail"
+          class="mr-3"
+        >
+          <img
+            :src="selectedResource.thumbnail"
+            class="w-4 h-4 rounded block"
+          >
+        </div>
+        <div class="flex">
+          <p class="text-90">
+            {{ selectedResource.title }}
+          </p>
+        </div>
       </div>
 
       <div
@@ -25,7 +38,26 @@
         slot-scope="{ option }"
         class="flex items-center"
       >
-        {{ option.display_title }}
+        <div
+          v-if="option.thumbnail"
+          class="mr-3"
+        >
+          <img
+            :src="option.thumbnail"
+            class="w-8 h-8 rounded block"
+          >
+        </div>
+        <div>
+          <p class="text-90">
+            {{ option.title }}
+          </p>
+          <p
+            v-if="option.subtitle"
+            class="text-xs mt-1 text-80"
+          >
+            {{ option.subtitle }}
+          </p>
+        </div>
       </div>
     </search-input>
     <select
@@ -47,7 +79,7 @@
         :value="resource.id"
         :selected="selectedResourceId == resource.id"
       >
-        {{ resource.display_title }}
+        {{ resource.title }}
       </option>
     </select>
   </div>

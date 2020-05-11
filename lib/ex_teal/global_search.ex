@@ -41,14 +41,12 @@ defmodule ExTeal.GlobalSearch do
       results
       |> Enum.map(fn {resource, result} ->
         Enum.map(result, fn r ->
-          %{
-            title: resource.title_for_schema(r),
-            subtitle: resource.subtitle_for_schema(r),
-            thumbnail: resource.thumbnail_for_schema(r),
-            resourceName: resource.uri(),
-            resourceId: r.id,
-            resourceTitle: resource.title()
-          }
+          r
+          |> Serializer.schema_summary(resource)
+          |> Map.merge(%{
+            resource_name: resource.uri(),
+            resource_title: resource.title()
+          })
         end)
       end)
       |> Enum.concat()

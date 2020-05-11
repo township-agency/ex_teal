@@ -41,6 +41,7 @@
               :options="availableResources"
               :selected="selectedResourceId"
               disabled
+              label="title"
               @change="selectResourceFromSelectControl"
             >
               <option

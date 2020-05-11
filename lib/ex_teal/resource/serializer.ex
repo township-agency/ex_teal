@@ -47,29 +47,22 @@ defmodule ExTeal.Resource.Serializer do
   end
 
   def render_related(models, resource, conn) do
-    data =
-      Enum.map(models, fn model ->
-        %{
-          id: model.id,
-          display_title: resource.display_title(model)
-        }
-      end)
-
+    data = Enum.map(models, &schema_summary(&1, resource))
     {:ok, response} = Jason.encode(%{data: data})
     as_json(conn, response)
   end
 
-  def render_related_key_values(models, resource, conn) do
-    data =
-      Enum.map(models, fn model ->
-        %{
-          value: model.id,
-          label: resource.display_title(model)
-        }
-      end)
-
-    {:ok, response} = Jason.encode(%{data: data})
-    as_json(conn, response)
+  @doc """
+  Generates a map that summarizes the specified schema
+  for global and relational searches.
+  """
+  def schema_summary(schema, resource) do
+    %{
+      id: schema.id,
+      title: resource.title_for_schema(schema),
+      subtitle: resource.subtitle_for_schema(schema),
+      thumbnail: resource.thumbnail_for_schema(schema)
+    }
   end
 
   def render_show(model, resource, conn) do
