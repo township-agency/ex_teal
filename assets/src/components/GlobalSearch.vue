@@ -55,12 +55,12 @@
       >
         <div
           v-for="group in formattedResults"
-          :key="group.resourceName"
+          :key="group.resource_name"
         >
           <h3
             class="text-xs uppercase tracking-wide text-80 bg-grey-lighter py-2 px-3"
           >
-            {{ group.resourceTitle }}
+            {{ group.resource_title }}
           </h3>
 
           <ul class="list-reset">
@@ -146,23 +146,23 @@ export default {
     },
 
     formattedGroups () {
-      const items = this.indexedResults.map(({ resourceName, resourceTitle }) => {
+      const items = this.indexedResults.map(({ resource_name, resource_title }) => {
         return {
-          resourceName,
-          resourceTitle
+          resource_name,
+          resource_title
         };
       });
 
-      return uniqBy(items, 'resourceName');
+      return uniqBy(items, 'resource_name');
     },
 
     formattedResults () {
       return this.formattedGroups.map((group) => {
-        const items = this.indexedResults.filter(item => item.resourceTitle == group.resourceTitle);
+        const items = this.indexedResults.filter(item => item.resource_title === group.resource_title);
         return {
-          resourceName: group.resourceName,
-          resourceTitle: group.resourceTitle,
-          items        
+          resource_name: group.resource_name,
+          resource_title: group.resource_title,
+          items
         };
       });
     }
@@ -303,8 +303,8 @@ export default {
       this.$router.push({
         name: 'detail',
         params: {
-          resourceName: resource.resourceName,
-          resourceId: resource.resourceId
+          resourceName: resource.resource_name,
+          resourceId: resource.id
         }
       });
 

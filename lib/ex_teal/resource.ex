@@ -75,7 +75,6 @@ defmodule ExTeal.Resource do
       use ExTeal.Resource.Update
       use ExTeal.Resource.Delete
       use ExTeal.Resource.Export
-      use ExTeal.Resource.Query
 
       import ExTeal.FieldVisibility
       import ExTeal.Field, only: [get: 2]

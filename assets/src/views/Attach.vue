@@ -34,11 +34,38 @@
         >
           <template>{{ relatedResourceLabel }}</template>
           <template slot="field">
+            <search-input
+              v-if="field.options.searchable"
+              :value="selectedResource"
+              :data="availableResources"
+              track-by="value"
+              class="mb-3"
+              @input="performSearch"
+              @clear="clearSelection"
+              @selected="selectResource"
+            >
+              <div
+                v-if="selectedResource"
+                slot="default"
+                class="flex items-center"
+              >
+                {{ selectedResource.title }}
+              </div>
+              <div
+                slot="option"
+                slot-scope="{ option }"
+                class="flex items-center"
+              >
+                {{ option.title }}
+              </div>
+            </search-input>
             <select-control
+              v-else
               class="form-control form-select mb-3 w-full"
               :class="{ 'border-danger': validationErrors.has(field.attribute) }"
               :options="availableResources"
               :selected="selectedResourceId"
+              label="title"
               @change="selectResourceFromSelectControl"
             >
               <option
@@ -132,7 +159,7 @@ export default {
         if (!this.selectedResource) {
           formData.append(this.relatedResourceName, '');
         } else {
-          formData.append(this.relatedResourceName, this.selectedResource.value);
+          formData.append(this.relatedResourceName, this.selectedResource.id);
         }
         formData.append('viaRelationship', this.viaRelationship);
       });
@@ -260,6 +287,7 @@ export default {
 
     handleInvalid (error) {
       const errors = error.response.data.errors;
+      console.log(error);
       ExTeal.$emit('error', `Unable to attach the ${this.relatedResourceLabel}`);
       this.validationErrors = new Errors(errors);
     }

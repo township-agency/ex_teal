@@ -56,6 +56,8 @@ defmodule TestExTeal.TagResource do
 
   def model, do: TestExTeal.Tag
 
+  def search, do: [:name]
+
   def fields,
     do: [
       Text.make(:name),

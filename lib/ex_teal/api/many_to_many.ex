@@ -12,7 +12,7 @@ defmodule ExTeal.Api.ManyToMany do
   alias Ecto.{Changeset, Multi}
   alias ExTeal.Api.ErrorSerializer
   alias ExTeal.Field
-  alias ExTeal.Resource.{Fields, Serializer}
+  alias ExTeal.Resource.{Fields, Index, Serializer}
 
   @doc """
   Given a request of `GET /api/resource_uri/resource_id/attachable/field_name`
@@ -22,8 +22,9 @@ defmodule ExTeal.Api.ManyToMany do
     with {:ok, _resource, _model, field} <- attached(conn, resource_uri, resource_id, field_name),
          {:ok, related_resource} <- related_for(field) do
       related_resource.model()
+      |> Index.search(conn.params, related_resource)
       |> related_resource.repo().all()
-      |> Serializer.render_related_key_values(related_resource, conn)
+      |> Serializer.render_related(related_resource, conn)
     else
       {:error, :not_found} = resp -> ErrorSerializer.handle_error(conn, resp)
     end

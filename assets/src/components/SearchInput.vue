@@ -226,7 +226,6 @@ export default {
     },
 
     dataLength () {
-      console.log('data changed');
       if (this.popper) {this.popper.update(); }
     }
   },
@@ -275,21 +274,21 @@ export default {
       Vue.nextTick(() => {
         if (this.$refs.selected) {
           if (
-            this.$refs.selected[0].offsetTop >
+            this.$refs.selected.offsetTop >
             this.$refs.container.scrollTop +
               this.$refs.container.clientHeight -
-              this.$refs.selected[0].clientHeight
+              this.$refs.selected.clientHeight
           ) {
             this.$refs.container.scrollTop =
-              this.$refs.selected[0].offsetTop +
-              this.$refs.selected[0].clientHeight -
+              this.$refs.selected.offsetTop +
+              this.$refs.selected.clientHeight -
               this.$refs.container.clientHeight;
           }
 
           if (
-            this.$refs.selected[0].offsetTop < this.$refs.container.scrollTop
+            this.$refs.selected.offsetTop < this.$refs.container.scrollTop
           ) {
-            this.$refs.container.scrollTop = this.$refs.selected[0].offsetTop;
+            this.$refs.container.scrollTop = this.$refs.selected.offsetTop;
           }
         }
       });
