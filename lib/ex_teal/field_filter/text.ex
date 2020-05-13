@@ -31,12 +31,12 @@ defmodule ExTeal.FieldFilter.Text do
   @impl true
   def filter(query, %{"operator" => "=", "operand" => val}, field_name, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) == ^val)
+    where(query, [q], fragment("lower(?)", field(q, ^field_name)) == ^String.downcase(val))
   end
 
   def filter(query, %{"operator" => "!=", "operand" => val}, field_name, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) != ^val)
+    where(query, [q], fragment("lower(?)", field(q, ^field_name)) != ^String.downcase(val))
   end
 
   def filter(query, %{"operator" => "contains", "operand" => val}, field_name, _)

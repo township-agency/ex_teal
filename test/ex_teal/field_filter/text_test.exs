@@ -9,16 +9,16 @@ defmodule ExTeal.FieldFilter.TextTest do
   end
 
   describe "filter/3" do
-    test "=" do
+    test "= is case insensitive" do
       %Post{id: id} = insert(:post, name: "Foo")
-      [result] = find_post("=", "Foo")
+      [result] = find_post("=", "foo")
       assert result.id == id
     end
 
-    test "!=" do
+    test "!= is case insensitive" do
       %Post{id: _id} = insert(:post, name: "Foo")
       %Post{id: id_b} = insert(:post, name: "Bar")
-      [result] = find_post("!=", "Foo")
+      [result] = find_post("!=", "FOO")
       assert result.id == id_b
     end
 
