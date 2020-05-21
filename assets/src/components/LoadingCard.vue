@@ -2,7 +2,7 @@
   <card class="relative">
     <div
       v-if="loading"
-      class="flex items-center justify-center absolute pin z-50"
+      class="flex items-center justify-center absolute inset-0 z-50"
     >
       <loader class="text-60" />
     </div>

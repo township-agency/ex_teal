@@ -25,7 +25,14 @@ defmodule ExTeal.Application.Configuration do
   @doc """
   Returns the json configuration required for the vue app.
   """
-  @callback json_configuration() :: map()
+  @callback json_configuration(Plug.Conn.t()) :: map()
+
+  @doc """
+  Define the order in which groups are shown in the sidebar.  By default only the 
+  general 'Resources' group is used, but by overriding the `nav_groups/1` function in the manifest,
+  you can define the order of the groups.
+  """
+  @callback nav_groups(Plug.Conn.t()) :: [String.t()]
 
   @doc """
   Returns the base path that the teal app is located.
@@ -47,29 +54,32 @@ defmodule ExTeal.Application.Configuration do
 
       def dashboards, do: [WelcomeDashboard]
 
-      def json_configuration, do: Configuration.parse_json()
+      def json_configuration(conn), do: Configuration.parse_json(conn)
+
+      def nav_groups(_conn), do: ["Resources"]
 
       def auth_provider, do: ExTeal.GuestAuthProvider
 
       defoverridable(
         application_name: 0,
         logo_image_path: 0,
-        json_configuration: 0,
+        json_configuration: 1,
         auth_provider: 0,
         path: 0,
-        dashboards: 0
+        dashboards: 0,
+        nav_groups: 1
       )
     end
   end
 
-  def parse_json do
+  def parse_json(conn \\ nil) do
     %{
-      version: "0.1.0",
       name: ExTeal.application_name(),
       logo: ExTeal.logo_image_path(),
       path: ExTeal.path(),
-      resources: ExTeal.available_resources() |> Resource.map_to_json(),
+      resources: ExTeal.available_resources() |> Resource.map_to_json(conn),
       dashboards: ExTeal.available_dashboards() |> Dashboard.map_to_json(),
+      nav_groups: ExTeal.available_nav_groups(conn),
       plugins: ExTeal.available_plugins(),
       authenticated: true
     }

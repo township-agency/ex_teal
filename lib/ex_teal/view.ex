@@ -6,7 +6,7 @@ defmodule ExTeal.View do
 
   def render(conn) do
     base = Application.get_env(:ex_teal, :base_url)
-    config = ExTeal.json_configuration()
+    config = ExTeal.json_configuration(conn)
     auth_provider = ExTeal.auth_provider()
 
     user = apply(auth_provider, :current_user_for, [conn])

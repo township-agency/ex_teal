@@ -47,6 +47,12 @@ defmodule ExTeal.Resource do
   @callback hide_from_nav() :: boolean()
 
   @doc """
+  If you would like to separate resources into different sidebar groups, you can
+  override the `nav_group/1` function on the resource.
+  """
+  @callback nav_group(Plug.Conn.t()) :: String.t() | nil
+
+  @doc """
   Specifies the field to use as the basis for a drag and drop interface for the collection.
   """
   @callback sortable_by() :: String.t() | nil
@@ -81,6 +87,8 @@ defmodule ExTeal.Resource do
 
       def hide_from_nav, do: false
 
+      def nav_group(_), do: nil
+
       def sortable_by, do: nil
 
       def default_order, do: [asc: :id]
@@ -91,6 +99,7 @@ defmodule ExTeal.Resource do
 
       defoverridable(
         hide_from_nav: 0,
+        nav_group: 1,
         sortable_by: 0,
         default_order: 0,
         cards: 1,
@@ -99,16 +108,17 @@ defmodule ExTeal.Resource do
     end
   end
 
-  def map_to_json(resources) do
-    Enum.map(resources, &to_json/1)
+  def map_to_json(resources, conn \\ nil) do
+    Enum.map(resources, &to_json(&1, conn))
   end
 
-  def to_json(resource) do
+  def to_json(resource, conn \\ nil) do
     singular = resource.title |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
 
     %{
       title: resource.title(),
       singular: singular,
+      group: resource.nav_group(conn),
       uri: resource.uri(),
       hidden: resource.hide_from_nav(),
       skip_sanitize: resource.skip_sanitize(),

@@ -25,7 +25,7 @@
         v-if="items.length" 
         ref="itemslist"
         :style="maxHeight" 
-        class="list-reset border border-40 py-2"
+        class="border border-40 py-2"
       >
         <draggable
           v-model="items"

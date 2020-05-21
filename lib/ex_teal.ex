@@ -30,11 +30,11 @@ defmodule ExTeal do
     end
   end
 
-  @spec json_configuration() :: map()
-  def json_configuration do
+  @spec json_configuration(Plug.Conn.t()) :: map()
+  def json_configuration(conn) do
     case manifest() do
       nil -> %{}
-      module -> module.json_configuration()
+      module -> module.json_configuration(conn)
     end
   end
 
@@ -51,6 +51,14 @@ defmodule ExTeal do
     case manifest() do
       nil -> []
       module -> module.dashboards()
+    end
+  end
+
+  @spec available_nav_groups(Plug.Conn.t()) :: [String.t()]
+  def available_nav_groups(conn) do
+    case manifest() do
+      nil -> []
+      module -> module.nav_groups(conn)
     end
   end
 

@@ -1,7 +1,7 @@
 <template>
   <div
     v-on-clickaway="closeSearch"
-    class="relative z-50 w-full max-w-xs"
+    class="relative w-full max-w-xs"
   >
     <div class="relative">
       <!-- Search -->
@@ -29,7 +29,7 @@
       <!-- Loader -->
       <div
         v-if="loading"
-        class="bg-white py-3 overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
+        class="bg-white py-3 overflow-hidden z-40 absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto z-40"
       >
         <loader
           class="text-60"
@@ -40,18 +40,18 @@
       <!-- No Results Found -->
       <div
         v-if="shouldShowNoResults"
-        class="bg-white overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
+        class="bg-white overflow-hidden z-40 absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
         <h3 class="text-xs uppercase tracking-wide text-80 bg-40 py-4 px-3">
           No Results Found
         </h3>
-      </div>
+      </div>  
 
       <!-- Results -->
       <div
         v-if="shouldShowResults"
         ref="container"
-        class="overflow-hidden absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
+        class="overflow-hidden z-40 absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
         <div
           v-for="group in formattedResults"
@@ -63,7 +63,7 @@
             {{ group.resource_title }}
           </h3>
 
-          <ul class="list-reset">
+          <ul>
             <li
               v-for="item in group.items"
               :key="item.resourceName + ' ' + item.index"
