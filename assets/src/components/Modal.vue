@@ -1,12 +1,12 @@
 <template>
   <div
-    class="modal select-none fixed pin flex justify-center items-center z-50"
+    class="modal select-none fixed inset-0 flex justify-center items-center z-50"
   >
     <div class="relative z-20 bg-white shadow-lg overflow-hidden">
       <slot />
     </div>
     <div
-      class="absolute pin bg-80 z-0 opacity-25"
+      class="absolute inset-0 bg-80 z-0 opacity-25"
       @click="close"
     />
   </div>

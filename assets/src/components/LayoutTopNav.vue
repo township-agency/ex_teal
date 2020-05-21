@@ -1,58 +1,51 @@
 <template>
-  <header class="fixed flex z-50 h-16 pin-t pin-x">
-    <aside
-      class="hidden lg:flex lg:w-full flex-none border-r border-grey bg-white
-      items-center px-6 text-black lg:max-w-sidebar"
+  <header class="relative flex items-center h-16 border-b border-grey bg-grey-lightest px-4 sm:px-6 md:px-8">
+    <button
+      class="hover:bg-grey-lightest md:hidden flex-grow-0 mr-4 z-10"
+      @click="openSideNav"
     >
-      <img
-        v-if="config.logo"
-        :src="config.logo"
-        :alt="config.title"
-        class="max-h-full py-1"
-      >
-      <div v-else>
-        {{ config.title }}
-      </div>
-    </aside>
+      <icon type="menu" />
+    </button>
     <nav
-      class="flex items-center justify-between flex-grow border-b border-grey bg-grey-lightest px-5"
+      class="flex items-center justify-between flex-1"
     >
       <div class="search w-1/2">
         <GlobalSearch />
       </div>
-      <dropdown
-        v-if="config.currentUser"
-        class="ml-auto h-9 flex items-center"
-        style="right: 20px"
-      >
-        <dropdown-trigger
-          slot-scope="{ toggle }"
-          :handle-click="toggle"
-          class="h-9 flex items-center"
+      <div>
+        <dropdown
+          v-if="config.currentUser"
+          class="ml-auto h-9 flex items-center"
         >
-          <img
-            v-if="config.currentUser.avatar_url"
-            :src="config.currentUser.avatar_url"
-            class="rounded-full w-8 h-8 mr-3"
+          <dropdown-trigger
+            slot-scope="{ toggle }"
+            :handle-click="toggle"
+            class="h-9 flex items-center"
           >
+            <img
+              v-if="config.currentUser.avatar_url"
+              :src="config.currentUser.avatar_url"
+              class="rounded-full w-8 h-8 mr-3"
+            >
 
-          <span class="text-90"> {{ config.currentUser.name }} </span>
-        </dropdown-trigger>
+            <span class="text-90"> {{ config.currentUser.name }} </span>
+          </dropdown-trigger>
 
-        <dropdown-menu
-          slot="menu"
-          width="200"
-          direction="rtl"
-        >
-          <ul class="layout-top-nav--dropdown">
-            <li
-              v-for="(dropdown, i) in config.dropdown"
-              :key="i"
-              v-html="dropdown"
-            />
-          </ul>
-        </dropdown-menu>
-      </dropdown>
+          <dropdown-menu
+            slot="menu"
+            width="200"
+            direction="rtl"
+          >
+            <ul class="layout-top-nav--dropdown">
+              <li
+                v-for="(dropdown, i) in config.dropdown"
+                :key="i"
+                v-html="dropdown"
+              />
+            </ul>
+          </dropdown-menu>
+        </dropdown>
+      </div>
     </nav>
   </header>
 </template>
@@ -74,6 +67,12 @@ export default {
           currentUser: false
         };
       }
+    }
+  },
+
+  methods: {
+    openSideNav () {
+      this.$emit('openNav');
     }
   }
 };

@@ -9,6 +9,12 @@ defmodule ExTeal.ResourceTest do
     def hide_from_nav, do: true
   end
 
+  defmodule ExTealTest.GroupResource do
+    use ExTeal.Resource
+
+    def nav_group(_), do: "Admin"
+  end
+
   defmodule ExTealTest.TestResource do
     use ExTeal.Resource
   end
@@ -22,14 +28,31 @@ defmodule ExTeal.ResourceTest do
     end
   end
 
+  describe "group_resource/1" do
+    test "can be overriden" do
+      refute ExTealTest.TestResource.nav_group(%{})
+      assert ExTealTest.GroupResource.nav_group(%{}) == "Admin"
+    end
+  end
+
   describe "map_to_json/1" do
     test "returns serialized versions" do
-      assert Resource.map_to_json([ExTealTest.PostResource]) == [
+      assert Resource.map_to_json([ExTealTest.PostResource, ExTealTest.GroupResource], %{}) == [
                %{
                  title: "Posts",
                  singular: "Post",
                  uri: "posts",
+                 group: nil,
                  hidden: true,
+                 searchable: false,
+                 skip_sanitize: false
+               },
+               %{
+                 title: "Groups",
+                 singular: "Group",
+                 uri: "groups",
+                 group: "Admin",
+                 hidden: false,
                  searchable: false,
                  skip_sanitize: false
                }

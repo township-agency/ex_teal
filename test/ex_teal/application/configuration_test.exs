@@ -12,10 +12,11 @@ defmodule ExTeal.Application.ConfigurationTest do
   end
 
   defmodule FakeManifest do
-    use ExTeal.Application.Configuration
+    use ExTeal.Manifest
     def resources, do: [FooResource]
     def application_name, do: "Fake App"
     def plugins, do: []
+    def nav_groups(_), do: ~w(Foo Resources Bar)
   end
 
   setup do
@@ -48,6 +49,22 @@ defmodule ExTeal.Application.ConfigurationTest do
     end
   end
 
+  describe "nav_groups/1" do
+    defmodule CustomGroups do
+      use ExTeal.Manifest
+    end
+
+    test "defaults to only the default group" do
+      assert CustomGroups.nav_groups(%{}) == ["Resources"]
+    end
+
+    test "Can be overriden" do
+      assert FakeManifest.nav_groups(%{}) == ~w(Foo Resources Bar)
+      json = Configuration.parse_json(%{})
+      assert json.nav_groups == ~w(Foo Resources Bar)
+    end
+  end
+
   describe "logo_image_path/0" do
     defmodule ExTealTest.CustomLogoConfig do
       use ExTeal.Application.Configuration
@@ -67,11 +84,6 @@ defmodule ExTeal.Application.ConfigurationTest do
   end
 
   describe "parse_json/0" do
-    test "includes the project version" do
-      resp = Configuration.parse_json()
-      assert resp.version == "0.1.0"
-    end
-
     test "includes the name of the application" do
       resp = Configuration.parse_json()
       assert resp.name == "Fake App"
@@ -90,6 +102,7 @@ defmodule ExTeal.Application.ConfigurationTest do
                  title: "Foos",
                  singular: "Foo",
                  uri: "foos",
+                 group: nil,
                  hidden: false,
                  searchable: false,
                  skip_sanitize: false

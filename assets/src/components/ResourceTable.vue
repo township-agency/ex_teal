@@ -30,7 +30,7 @@
                 override="table-check-menu"
               >
                 <div class="p-4">
-                  <ul class="list-reset">
+                  <ul>
                     <li class="flex items-center mb-4">
                       <checkbox-with-label
                         :checked="selectAllChecked"

@@ -16,7 +16,7 @@
       >
         <div
           v-if="shouldShowDropdownArrow"
-          class="search-input-trigger absolute pin select-box"
+          class="search-input-trigger absolute inset select-box"
         />
 
         <slot name="default">
@@ -51,7 +51,7 @@
       v-if="show"
       ref="dropdown"
       :style="{ width: inputWidth + 'px', zIndex: 2000 }"
-      class="form-input form-input-bordered search-input absolute pin-t pin-l my-1 overflow-hidden"
+      class="form-input form-input-bordered search-input absolute top-0 left-0 my-1 overflow-hidden"
     >
       <div class="p-2 bg-grey-300">
         <input
@@ -154,7 +154,7 @@ export default {
       default: 3
     },
     isSearching: {
-      type: Boolean, 
+      type: Boolean,
       default: false
     }
   },
@@ -173,7 +173,7 @@ export default {
     },
 
     shouldShowHelpText () {
-      return this.search == null || this.search == '' || this.search.length < this.minSearchLength; 
+      return this.search == null || this.search == '' || this.search.length < this.minSearchLength;
     },
 
     dataLength () {

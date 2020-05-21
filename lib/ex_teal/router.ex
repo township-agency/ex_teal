@@ -56,7 +56,7 @@ defmodule ExTeal.Router do
   end
 
   get "/api/configuration" do
-    config = ExTeal.json_configuration() |> Jason.encode!()
+    config = ExTeal.json_configuration(conn) |> Jason.encode!()
     Serializer.as_json(conn, config, 200)
   end
 

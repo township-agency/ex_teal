@@ -20,7 +20,7 @@
         width="270"
         direction="rtl"
       >
-        <ul class="list-reset px-2 py-1">
+        <ul class="px-2 py-1">
           <li
             v-for="action in actions"
             :key="action.key"

@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{ 'overflow-hidden': loading }"
-    class="relative pin-y pin-x"
+    class="relative inset"
   >
     <div
       v-if="loading"

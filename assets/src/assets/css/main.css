@@ -1,4 +1,4 @@
-@tailwind preflight;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -318,7 +318,8 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .btn-default {
-  @apply .h-10 .px-3 .leading-36;
+  @apply .h-10 .px-3;
+  line-height: 36px;
 }
 
 .btn-default:focus,
@@ -392,7 +393,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
     transition: background-color 0.2s ease-in;
 }
 .form-switch-label:before {
-    @apply .absolute .block .bg-white .pin-y .w-6;
+    @apply .absolute .block .bg-white .inset-y-0 .w-6;
     @apply .border .rounded-full .-ml-1;
 
     right: 50%;
@@ -407,7 +408,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
     @apply .bg-success .shadow-none;
 }
 .form-switch-checkbox:checked + .form-switch-label:before {
-    @apply .pin-r;
+    @apply .right-0;
 }
 
 /* File Upload
@@ -434,7 +435,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 .form-file-input:focus + .form-file-btn {
   outline: none;
-  box-shadow: 0 0 8px config('colors.primary');
+  box-shadow: 0 0 8px theme('colors.primary');
 }
 
 /* Dropdown
@@ -629,15 +630,27 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 /* Top Nav CSS */
 
-.layout-top-nav--dropdown {
-  @apply .list-reset;
-}
-
 .layout-top-nav--dropdown li a {
   @apply .block .no-underline .text-90 .p-3;
 }
 
 .layout-top-nav--dropdown li a:hover {
   @apply .bg-30;
+}
+
+.layout-side-nav--nav h3 {
+  @apply mb-2 text-xs text-70 font-normal px-4;
+}
+
+.layout-side-nav--nav a {
+  @apply .px-6 .py-1 .text-base .text-black .no-underline .block;
+}
+
+.layout-side-nav--nav a:hover {
+  @apply .text-90 .bg-grey-lightest;
+}
+
+.layout-side-nav--nav a.router-link-active {
+  @apply .bg-primary .text-white;
 }
 /* purgecss end ignore */
