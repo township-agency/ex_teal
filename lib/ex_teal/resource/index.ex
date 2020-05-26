@@ -58,7 +58,7 @@ defmodule ExTeal.Resource.Index do
 
   Defaults to the `ExTeal.Search.SimpleSearch` module
   """
-  @callback search_adapter(Ecto.Query.t(), module(), String.t()) :: Ecto.Query.t()
+  @callback search_adapter(Ecto.Query.t(), module(), map()) :: Ecto.Query.t()
 
   @doc """
   Returns the actions available for a resource
@@ -82,8 +82,8 @@ defmodule ExTeal.Resource.Index do
   def query_for_related(resource, conn) do
     conn
     |> resource.handle_related(conn.params)
-    |> Index.search(conn.params, resource)
     |> Index.query_by_related(conn.params, resource)
+    |> Index.search(conn.params, resource)
     |> execute_query(conn, resource, :related)
     |> resource.render_related(resource, conn)
   end
@@ -123,8 +123,8 @@ defmodule ExTeal.Resource.Index do
         |> Enum.map(fn action_module -> action_module.build_for(conn) end)
       end
 
-      def search_adapter(query, resource, search_term),
-        do: SimpleSearch.build(query, resource, search_term)
+      def search_adapter(query, resource, params),
+        do: SimpleSearch.build(query, resource, params)
 
       defoverridable(
         actions: 1,
@@ -201,23 +201,25 @@ defmodule ExTeal.Resource.Index do
     end
   end
 
-  def search(query, %{"search" => term}, resource) when not is_nil(term) and term != "" do
-    resource.search_adapter(query, resource, term)
+  def search(query, params, resource) do
+    case Map.get(params, "search") do
+      nil ->
+        query
+
+      "" ->
+        query
+
+      _ ->
+        resource.search_adapter(query, resource, params)
+    end
   end
 
-  def search(query, _params, _resource), do: query
-
-  def query_by_related(query, %{"first" => "true", "current" => term}, _resource)
-      when term != "" do
+  def query_by_related(query, %{"first" => "true", "current" => id}, _resource)
+      when id != "" do
     query
     |> limit(1)
-    |> where([q], q.id == ^term)
+    |> where([q], q.id == ^id)
   end
-
-  # def query_by_related(query, %{"current" => term, "search" => search}, _resource)
-  #     when term != "" and search == "" do
-  #   where(query, [q], q.id == ^term)
-  # end
 
   def query_by_related(query, _, _), do: query
 
