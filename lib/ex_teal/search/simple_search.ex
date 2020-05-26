@@ -10,8 +10,8 @@ defmodule ExTeal.Search.SimpleSearch do
   Build a dynamic ecto where statement by reducing over the resource's
   searchable fields and creating an ilike where expression
   """
-  @spec build(Ecto.Query.t(), module(), String.t()) :: Ecto.Query.t()
-  def build(query, resource, term) do
+  @spec build(Ecto.Query.t(), module(), map()) :: Ecto.Query.t()
+  def build(query, resource, %{"search" => term}) do
     dynamic =
       Enum.reduce(resource.search(), false, fn field_name, dynamic ->
         dynamic([q], ilike(field(q, ^field_name), ^"%#{term}%") or ^dynamic)
