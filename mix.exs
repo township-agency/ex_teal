@@ -32,24 +32,24 @@ defmodule ExTeal.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug, "~> 1.7"},
-      {:corsica, "~> 1.0"},
-      {:postgrex, ">= 0.15.0"},
-      {:jason, "~> 1.1"},
-      {:inflex, "~> 2.0"},
-      {:plug_cowboy, "~> 2.0"},
-      {:phoenix, "~> 1.4"},
+      {:phoenix, ">= 1.3.0 and < 1.6.0"},
       {:phoenix_html, ">= 2.11.0"},
+      {:plug, "~> 1.10"},
+      {:corsica, "~> 1.1"},
+      {:postgrex, ">= 0.15.0"},
+      {:jason, ">= 0.0.0"},
+      {:inflex, "~> 2.0"},
+      {:plug_cowboy, "~> 2.0 or ~> 2.1"},
       {:ecto, "~> 3.3"},
       {:ecto_sql, "~> 3.3"},
       {:csv, "~> 2.3"},
-      {:ex_machina, "~> 2.2", only: :test},
-      {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
-      {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.3.0"},
-      {:phoenix_ecto, "~> 4.1", only: :test},
+      {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
+      {:hound, "~> 1.0", only: :test},
+      {:ex_machina, "~> 2.2", only: :test},
+      {:phoenix_ecto, "~> 4.1", only: :test}
     ]
   end
 
