@@ -3,7 +3,7 @@ defmodule ExTeal.MixProject do
 
   @version "0.8.4"
 
-  @source "https://gitlab.motel-lab.com/teal/ex_teal"
+  @source "https://github.com/township-agency/ex_teal"
 
   def project do
     [
@@ -42,14 +42,14 @@ defmodule ExTeal.MixProject do
       {:phoenix_html, ">= 2.11.0"},
       {:ecto, "~> 3.3"},
       {:ecto_sql, "~> 3.3"},
-      {:csv, "~> 2.3"},
       {:ex_machina, "~> 2.2", only: :test},
       {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.3.0"},
       {:phoenix_ecto, "~> 4.1", only: :test},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
+      {:nimble_csv, "~> 0.7"}
     ]
   end
 
@@ -84,7 +84,7 @@ by Motel."
         "Scott Taylor"
       ],
       licenses: ["MIT"],
-      links: %{"GitLab" => @source},
+      links: %{"GitHub" => @source},
       organization: "motel"
     ]
   end

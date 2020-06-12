@@ -20,12 +20,12 @@ defmodule ExTeal.Resource.Export do
   @callback export_fields :: [atom()]
 
   @doc """
-  Parse a row into a CSV Encodeable map.
+  Parse a row into a CSV Encodeable list of fields
 
   Useful for modifying database columns into serializeable strings
   before the row is passed to CSV.encode/2
   """
-  @callback parse_export_row(map()) :: map()
+  @callback parse_export_row(db_record :: map(), fields :: [atom()]) :: [any()]
 
   defmacro __using__(_) do
     quote do
@@ -38,9 +38,9 @@ defmodule ExTeal.Resource.Export do
 
       def export_fields, do: Export.default_export_fields(__MODULE__)
 
-      def parse_export_row(row), do: row
+      def parse_export_row(record, fields), do: Export.default_parse(record, fields)
 
-      defoverridable handle_export_query: 2, export_fields: 0, parse_export_row: 1
+      defoverridable handle_export_query: 2, export_fields: 0, parse_export_row: 2
     end
   end
 
@@ -83,14 +83,19 @@ defmodule ExTeal.Resource.Export do
   defp stream_response_to_conn(resource, conn) do
     fields = resource.export_fields()
     repo = resource.repo()
-    header = fields_to_header(fields)
+    header_stream = fields_to_header(fields)
 
-    resource
-    |> exportable_query(conn)
-    |> repo.stream()
-    |> Stream.map(&resource.parse_export_row/1)
-    |> Stream.map(&stringify_keys/1)
-    |> CSV.encode(headers: header)
+    parser = Application.get_env(:ex_teal, :export_module)
+
+    resource_stream =
+      resource
+      |> exportable_query(conn)
+      |> repo.stream()
+      |> Stream.map(&resource.parse_export_row(&1, fields))
+
+    stream = Stream.concat([[header_stream], resource_stream])
+
+    apply(parser, :dump_to_stream, [stream])
   end
 
   defp chunk_or_halt(data, conn) do
@@ -111,6 +116,16 @@ defmodule ExTeal.Resource.Export do
   def default_export_query(query, resource) do
     fields = resource.export_fields()
     select(query, [q], map(q, ^fields))
+  end
+
+  @doc """
+  Turns a record represented as a map and a list of atoms representing
+  the ordered fields in the CSV into a list of values in the same order
+  as the list of fields
+  """
+  @spec default_parse(map(), [atom()]) :: [any()]
+  def default_parse(record, fields) do
+    Enum.map(fields, &Map.get(record, &1))
   end
 
   @spec exportable_query(module, Conn.t()) :: Ecto.Queryable.t()
