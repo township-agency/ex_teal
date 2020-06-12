@@ -15,7 +15,7 @@ config :ex_teal, TestExTeal.Repo,
   username: System.get_env("DB_USERNAME") || "postgres",
   password: System.get_env("DB_PASSWORD") || "postgres",
   database: "teal_test",
-  hostname: if(System.get_env("CI"), do: "postgres", else: "localhost"),
+  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :ex_teal,

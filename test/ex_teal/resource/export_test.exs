@@ -5,30 +5,61 @@ defmodule ExTeal.Resource.ExportTest do
   defmodule CustomResource do
     use ExTeal.Resource
     import Ecto.Query
+    @impl true
     def repo, do: TestExTeal.Repo
+    @impl true
     def model, do: TestExTeal.Post
 
+    @impl true
     def export_fields, do: [:id, :name]
 
+    @impl true
     def handle_export_query(query, _conn) do
       select(query, [q], map(q, [:name, :id]))
     end
   end
 
-  defmodule CustomRowResource do
+  defmodule CustomExportModuleResource do
     use ExTeal.Resource
     import Ecto.Query
+    @impl true
     def repo, do: TestExTeal.Repo
+    @impl true
     def model, do: TestExTeal.Post
 
-    def export_fields, do: [:id, :name, :fake]
+    @impl true
+    def export_fields, do: [:id, :name]
 
+    @impl true
     def handle_export_query(query, _conn) do
       select(query, [q], map(q, [:name, :id]))
     end
 
-    def parse_export_row(row) do
-      Map.put_new(row, :fake, "foo")
+    @impl true
+    def export_module, do: NimbleCSV.Spreadsheet
+  end
+
+  defmodule CustomRowResource do
+    use ExTeal.Resource
+    import Ecto.Query
+
+    @impl true
+    def repo, do: TestExTeal.Repo
+
+    @impl true
+    def model, do: TestExTeal.Post
+
+    @impl true
+    def export_fields, do: [:id, :name, :fake]
+
+    @impl true
+    def handle_export_query(query, _conn) do
+      select(query, [q], map(q, [:name, :id]))
+    end
+
+    @impl true
+    def parse_export_row(row, _fields) do
+      [row.id, row.name, "foo"]
     end
   end
 
@@ -36,11 +67,17 @@ defmodule ExTeal.Resource.ExportTest do
     use ExTeal.Resource
     import Ecto.Query
     alias TestExTeal.User
+
+    @impl true
     def repo, do: TestExTeal.Repo
+
+    @impl true
     def model, do: TestExTeal.Post
 
+    @impl true
     def export_fields, do: [:id, :name, :email]
 
+    @impl true
     def handle_export_query(query, _conn) do
       query
       |> join(:left, [p], u in User, on: p.user_id == u.id)
@@ -54,7 +91,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
 
       assert header ==
                "id,name,body,published,published_at,deleted_at,user_id,inserted_at,updated_at"
@@ -63,12 +100,30 @@ defmodule ExTeal.Resource.ExportTest do
       assert String.contains?(p2_csv, "#{p2.id},#{p2.name}")
     end
 
+    test "can override the format of the export" do
+      [p1, p2] = insert_pair(:post)
+      conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
+      conn = Export.stream(CustomExportModuleResource, conn)
+      data = response(conn, 200)
+
+      assert data ==
+               utf16le_bom() <>
+                 utf16le("""
+                 id\tname
+                 #{p1.id}\t#{p2.name}
+                 #{p2.id}\t#{p2.name}
+                 """)
+    end
+
+    defp utf16le(binary), do: :unicode.characters_to_binary(binary, :utf8, {:utf16, :little})
+    defp utf16le_bom, do: :unicode.encoding_to_bom({:utf16, :little})
+
     test "can limit to a specific set of ids" do
       [p1, _p2] = insert_pair(:post)
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "#{p1.id}"})
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [_header, p1_csv] = String.split(data, "\r\n", trim: true)
+      [_header, p1_csv] = String.split(data, "\n", trim: true)
 
       assert String.contains?(p1_csv, "#{p1.id},#{p1.name}")
     end
@@ -80,7 +135,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/users/exports", %{"resources" => "all", "search" => "Bern"})
       conn = Export.stream(TestExTeal.UserResource, conn)
       data = response(conn, 200)
-      [_header, u1_csv] = String.split(data, "\r\n", trim: true)
+      [_header, u1_csv] = String.split(data, "\n", trim: true)
 
       assert String.contains?(u1_csv, "#{u.id}")
     end
@@ -98,7 +153,7 @@ defmodule ExTeal.Resource.ExportTest do
 
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
 
       assert header ==
                "id,name,body,published,published_at,deleted_at,user_id,inserted_at,updated_at"
@@ -112,7 +167,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
 
       assert header == "id,name"
       assert p1_csv == "#{p1.id},#{p1.name}"
@@ -126,7 +181,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomRelatedResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
 
       assert header == "id,name,email"
       assert p1_csv == "#{p1.id},#{p1.name},foo"
@@ -180,21 +235,28 @@ defmodule ExTeal.Resource.ExportTest do
     end
   end
 
-  describe "parse_export_row/1" do
+  describe "parse_export_row/2" do
     test "by defaults passes the row through" do
-      assert %{} == TestExTeal.PostResource.parse_export_row(%{})
+      assert [] == TestExTeal.PostResource.parse_export_row(%{}, [])
     end
 
     test "can be overriden to modify the row before being encoded" do
-      assert %{fake: "foo", id: 1} == CustomRowResource.parse_export_row(%{id: 1})
+      assert [1, "foo", "foo"] == CustomRowResource.parse_export_row(%{id: 1, name: "foo"}, [])
       p1 = insert(:post)
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomRowResource, conn)
       data = response(conn, 200)
-      [header, p1_csv] = String.split(data, "\r\n", trim: true)
+      [header, p1_csv] = String.split(data, "\n", trim: true)
 
       assert header == "id,name,fake"
       assert p1_csv == "#{p1.id},#{p1.name},foo"
+    end
+  end
+
+  describe "default_parse/2" do
+    test "returns a list of values" do
+      result = Export.default_parse(%{foo: "bar", baz: true, bar: 0}, [:foo, :bar, :baz])
+      assert result == ["bar", 0, true]
     end
   end
 

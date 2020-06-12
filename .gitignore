@@ -26,3 +26,6 @@ teal-*.tar
 /assets/node_modules/
 
 /screenshots
+
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
