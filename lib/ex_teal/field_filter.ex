@@ -9,6 +9,8 @@ defmodule ExTeal.FieldFilter do
   alias ExTeal.Resource.Serializer
   alias Phoenix.Naming
 
+  @type valid_type :: module() | false
+
   @doc """
   Build a field filter by extending the incoming query with the following arguments:
 
@@ -25,7 +27,7 @@ defmodule ExTeal.FieldFilter do
   @doc """
   Type of filter component to use in the user interface.
   """
-  @callback interface_type() :: String.t()
+  @callback interface_type() :: String.t() | nil
 
   @doc """
   Define the available operators for the filter and the behaviour of each.

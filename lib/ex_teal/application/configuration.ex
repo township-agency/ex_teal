@@ -28,7 +28,7 @@ defmodule ExTeal.Application.Configuration do
   @callback json_configuration(Plug.Conn.t()) :: map()
 
   @doc """
-  Define the order in which groups are shown in the sidebar.  By default only the 
+  Define the order in which groups are shown in the sidebar.  By default only the
   general 'Resources' group is used, but by overriding the `nav_groups/1` function in the manifest,
   you can define the order of the groups.
   """
@@ -72,7 +72,8 @@ defmodule ExTeal.Application.Configuration do
     end
   end
 
-  def parse_json(conn \\ nil) do
+  @spec parse_json(Plug.Conn.t()) :: map()
+  def parse_json(conn) do
     %{
       name: ExTeal.application_name(),
       logo: ExTeal.logo_image_path(),

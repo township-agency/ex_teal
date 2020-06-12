@@ -24,13 +24,13 @@ defmodule ExTeal.Place do
     field(:country, :string)
   end
 
-  @fields ~w(address city state zip country address_line_2 company)
+  @fields ~w(address city state zip country address_line_2 company)a
 
   @required_fields ~w(address city state zip country)a
 
   @spec changeset(Place.t(), map()) :: Changeset.t()
-  def changeset(address, params) do
-    address
+  def changeset(place, params \\ %{}) do
+    place
     |> cast(params, @fields)
     |> validate_required(@required_fields)
   end
