@@ -1,5 +1,6 @@
 defmodule ExTeal.Application.ConfigurationTest do
   use ExUnit.Case
+  import Phoenix.ConnTest, only: [build_conn: 0]
 
   alias ExTeal.Application.Configuration
 
@@ -83,19 +84,19 @@ defmodule ExTeal.Application.ConfigurationTest do
     end
   end
 
-  describe "parse_json/0" do
+  describe "parse_json/1" do
     test "includes the name of the application" do
-      resp = Configuration.parse_json()
+      resp = Configuration.parse_json(build_conn())
       assert resp.name == "Fake App"
     end
 
     test "includes the path to teal" do
-      resp = Configuration.parse_json()
+      resp = Configuration.parse_json(build_conn())
       assert resp.path == "/teal"
     end
 
     test "a list of resources" do
-      resp = Configuration.parse_json()
+      resp = Configuration.parse_json(build_conn())
 
       assert resp.resources == [
                %{
