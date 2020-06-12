@@ -18,7 +18,10 @@ defmodule ExTeal.MixProject do
       package: package(),
       description: description(),
       name: "ExTeal",
-      source_url: @source
+      source_url: @source,
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      ]
     ]
   end
 
