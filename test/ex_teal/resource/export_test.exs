@@ -19,6 +19,26 @@ defmodule ExTeal.Resource.ExportTest do
     end
   end
 
+  defmodule CustomExportModuleResource do
+    use ExTeal.Resource
+    import Ecto.Query
+    @impl true
+    def repo, do: TestExTeal.Repo
+    @impl true
+    def model, do: TestExTeal.Post
+
+    @impl true
+    def export_fields, do: [:id, :name]
+
+    @impl true
+    def handle_export_query(query, _conn) do
+      select(query, [q], map(q, [:name, :id]))
+    end
+
+    @impl true
+    def export_module, do: NimbleCSV.Spreadsheet
+  end
+
   defmodule CustomRowResource do
     use ExTeal.Resource
     import Ecto.Query
@@ -79,6 +99,24 @@ defmodule ExTeal.Resource.ExportTest do
       assert String.contains?(p1_csv, "#{p1.id},#{p1.name}")
       assert String.contains?(p2_csv, "#{p2.id},#{p2.name}")
     end
+
+    test "can override the format of the export" do
+      [p1, p2] = insert_pair(:post)
+      conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
+      conn = Export.stream(CustomExportModuleResource, conn)
+      data = response(conn, 200)
+
+      assert data ==
+               utf16le_bom() <>
+                 utf16le("""
+                 id\tname
+                 #{p1.id}\t#{p2.name}
+                 #{p2.id}\t#{p2.name}
+                 """)
+    end
+
+    defp utf16le(binary), do: :unicode.characters_to_binary(binary, :utf8, {:utf16, :little})
+    defp utf16le_bom, do: :unicode.encoding_to_bom({:utf16, :little})
 
     test "can limit to a specific set of ids" do
       [p1, _p2] = insert_pair(:post)

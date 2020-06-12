@@ -27,6 +27,14 @@ defmodule ExTeal.Resource.Export do
   """
   @callback parse_export_row(db_record :: map(), fields :: [atom()]) :: [any()]
 
+  @doc """
+  Define an override to the default parser, as defined in the `ex_teal` config
+
+  Expects the parser to have a dump_to_stream/1 function that accepts a stream
+  of rows and returns a stream of rows.
+  """
+  @callback export_module() :: module()
+
   defmacro __using__(_) do
     quote do
       use ExTeal.Resource.Repo
@@ -40,7 +48,12 @@ defmodule ExTeal.Resource.Export do
 
       def parse_export_row(record, fields), do: Export.default_parse(record, fields)
 
-      defoverridable handle_export_query: 2, export_fields: 0, parse_export_row: 2
+      def export_module, do: Application.get_env(:ex_teal, :export_module)
+
+      defoverridable handle_export_query: 2,
+                     export_fields: 0,
+                     parse_export_row: 2,
+                     export_module: 0
     end
   end
 
@@ -85,7 +98,7 @@ defmodule ExTeal.Resource.Export do
     repo = resource.repo()
     header_stream = fields_to_header(fields)
 
-    parser = Application.get_env(:ex_teal, :export_module)
+    parser = resource.export_module()
 
     resource_stream =
       resource
