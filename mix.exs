@@ -51,7 +51,7 @@ defmodule ExTeal.MixProject do
       {:html_sanitize_ex, "~> 1.3.0"},
       {:phoenix_ecto, "~> 4.1", only: :test},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:nimble_csv, "~> 0.7"}
     ]
   end
