@@ -124,7 +124,7 @@ defmodule ExTeal.Api.ManyToMany do
           |> resource.repo().update()
 
         {:ok, body} = Jason.encode(%{detached: true})
-        Serializer.as_json(conn, body, 204)
+        Serializer.as_json(conn, body, 200)
       else
         ErrorSerializer.handle_error(conn, {:error, :not_found})
       end
@@ -221,13 +221,15 @@ defmodule ExTeal.Api.ManyToMany do
         end)
         |> Enum.into([])
 
-      {_updated, nil} =
-        pivot
-        |> pivot_query(schema, related)
-        |> resource.repo().update_all(set: updates)
+      if !Enum.empty?(updates) do
+        {_updated, nil} =
+          pivot
+          |> pivot_query(schema, related)
+          |> resource.repo().update_all(set: updates)
+      end
 
       {:ok, body} = Jason.encode(%{updated: true})
-      Serializer.as_json(conn, body, 204)
+      Serializer.as_json(conn, body, 200)
     else
       nil ->
         ErrorSerializer.handle_error(conn, {:error, :not_found})
@@ -264,7 +266,7 @@ defmodule ExTeal.Api.ManyToMany do
       case resource.repo().transaction(multi) do
         {:ok, _updated} ->
           {:ok, body} = Jason.encode(%{updated: true})
-          Serializer.as_json(conn, body, 204)
+          Serializer.as_json(conn, body, 200)
 
         {:error, _, _, _} ->
           ErrorSerializer.handle_error(conn, {:error, :not_found})

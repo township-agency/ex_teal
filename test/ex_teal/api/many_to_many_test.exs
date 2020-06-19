@@ -180,7 +180,7 @@ defmodule ExTeal.Api.ManyToManyTest do
     end
 
     @tag manifest: DefaultManifest
-    test "returns a 204 after detaching the field" do
+    test "returns a 200 after detaching the field" do
       t = insert(:tag)
       p = insert(:post, tags: [t])
 
@@ -191,7 +191,7 @@ defmodule ExTeal.Api.ManyToManyTest do
 
       resp = ManyToMany.detach(conn, "posts", "#{p.id}", "tags")
 
-      assert resp.status == 204
+      assert resp.status == 200
 
       post = Post |> Repo.get(p.id) |> Repo.preload(:tags)
       assert post.tags == []
@@ -383,7 +383,7 @@ defmodule ExTeal.Api.ManyToManyTest do
         })
 
       resp = ManyToMany.update_pivot(conn, "users", "#{u.id}", "preferred_tags", "#{t.id}")
-      assert resp.status == 204
+      assert resp.status == 200
 
       result = Repo.get(PreferredTag, pt.id)
       assert result.order == 1
@@ -434,7 +434,7 @@ defmodule ExTeal.Api.ManyToManyTest do
         })
 
       resp = ManyToMany.reorder(conn, "users", "#{u.id}", "preferred_tags")
-      assert resp.status == 204
+      assert resp.status == 200
 
       result = Repo.get(PreferredTag, pt1.id)
       assert result.order == 5
