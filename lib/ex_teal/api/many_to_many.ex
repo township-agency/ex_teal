@@ -23,6 +23,7 @@ defmodule ExTeal.Api.ManyToMany do
          {:ok, related_resource} <- related_for(field) do
       related_resource.model()
       |> Index.search(conn.params, related_resource)
+      |> Index.query_by_related(conn.params, related_resource)
       |> related_resource.repo().all()
       |> Serializer.render_related(related_resource, conn)
     else

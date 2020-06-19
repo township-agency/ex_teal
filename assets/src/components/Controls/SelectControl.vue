@@ -1,7 +1,7 @@
 <template>
   <select
     v-bind="$attrs"
-    :value="value"
+    :value="selected"
     v-on="inputListeners"
   >
     <slot />
@@ -22,7 +22,7 @@
       <template v-else>
         <option
           v-for="option in gOptions"
-          :key="option.value"
+          :key="option.id"
           v-bind="attrsFor(option)"
         >
           {{ labelFor(option) }}
@@ -44,16 +44,16 @@ export default {
       }
     },
     selected: {
-      type: String,
+      type: [ Number, String ],
       default: null
     },
     label: {
       type: String,
       default: 'label',
     },
-    value: {
+    valueKey: {
       type: String,
-      default: null
+      default: 'value'
     },
   },
 
@@ -80,8 +80,8 @@ export default {
       return assign(
         {},
         option.attrs || {},
-        { value: option.value },
-        this.selected !== void 0 ? { selected: this.selected == option.value } : {}
+        { value: option[this.valueKey] },
+        this.selected !== void 0 ? { selected: this.selected == option[this.valueKey] } : {}
       );
     },
   },

@@ -37,11 +37,11 @@
           <template slot="field">
             <select-control
               class="form-control form-select mb-3 w-full"
-              :class="{ 'border-danger': validationErrors.has(field.attribute) }"
               :options="availableResources"
               :selected="selectedResourceId"
               disabled
               label="title"
+              value-key="id"
               @change="selectResourceFromSelectControl"
             >
               <option
@@ -157,7 +157,7 @@ export default {
       await this.getPivotFields();
       await this.getAvailableResources();
 
-      this.selectedResourceId = this.relatedResourceId;
+      this.selectedResourceId = parseInt(this.relatedResourceId);
       this.selectInitialResource();
     },
 
@@ -187,13 +187,12 @@ export default {
     getAvailableResources () {
       return ExTeal.request()
         .get(
-          `/api/${this.resourceName}/${this.resourceId}/attachable/${
-            this.relatedResourceName
-          }`,
+          `/api/${this.resourceName}/${this.resourceId}/attachable/${this.relatedResourceName}`,
           {
             params: {
-              current: this.selectedResourceId,
-            },
+              current: this.relatedResourceId,
+              first: true
+            }
           }
         )
         .then(({ data }) => {
@@ -218,7 +217,7 @@ export default {
 
     async updateAttached () {
       this.updateAttached = true;
-      
+
       try {
         await this.updateRequest();
         this.updateAttachedResource = false;
@@ -252,9 +251,10 @@ export default {
     },
 
     selectInitialResource () {
+      console.log('hi');
       this.selectedResource = find(
         this.availableResources,
-        r => r.value == this.selectedResourceId
+        r => r.id == this.selectedResourceId
       );
     }
   }
