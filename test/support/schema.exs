@@ -122,3 +122,15 @@ defmodule TestExTeal.Order do
     timestamps()
   end
 end
+
+defmodule TestExTeal.SinglePostUser do
+  use Ecto.Schema
+
+  schema "users" do
+    field(:email, :string)
+
+    has_one(:post, TestExTeal.Post, foreign_key: :user_id)
+
+    timestamps()
+  end
+end

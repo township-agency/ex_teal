@@ -64,3 +64,17 @@ defmodule TestExTeal.TagResource do
       ManyToMany.make(:posts, TestExTeal.Post)
     ]
 end
+
+defmodule TestExTeal.SinglePostUserResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{HasOne, ID}
+
+  def model, do: TestExTeal.SinglePostUser
+
+  def fields,
+    do: [
+      ID.make(:id),
+      HasOne.make(:post, TestExTeal.Post)
+    ]
+end

@@ -5,7 +5,7 @@
         :to="{
           name: 'detail',
           params: {
-            resourceName: field.options.has_one_relationship,
+            resourceName: field.options.uri,
             resourceId: field.options.has_one_id
           }
         }"

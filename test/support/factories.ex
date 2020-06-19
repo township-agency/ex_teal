@@ -3,7 +3,7 @@ defmodule TestExTeal.Factory do
 
   use ExMachina.Ecto, repo: TestExTeal.Repo
 
-  alias TestExTeal.{Order, Post, PreferredTag, Tag, User}
+  alias TestExTeal.{Order, Post, PreferredTag, SinglePostUser, Tag, User}
 
   def user_factory do
     %User{
@@ -18,6 +18,13 @@ defmodule TestExTeal.Factory do
       body: "Bacon Ipsum Lorem",
       published: true,
       user: build(:user)
+    }
+  end
+
+  def single_post_user_factory do
+    %SinglePostUser{
+      email: "foo@gmail.com",
+      post: build(:post)
     }
   end
 

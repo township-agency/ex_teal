@@ -49,9 +49,12 @@ defmodule ExTeal.Fields.HasOne do
     rel = model.__struct__.__schema__(:association, field.field)
 
     with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do
+      related = Map.get(model, field.field)
+
       opts =
         Map.merge(field.options, %{
           has_one_relationship: field.field,
+          has_one_id: Map.get(related, :id),
           listable: true
         })
 
