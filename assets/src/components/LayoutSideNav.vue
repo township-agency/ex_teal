@@ -20,7 +20,10 @@
         </router-link>
       </li>
     </ul>
-    <div v-for="(resources, group) in groupedResources" :key="group">
+    <div
+      v-for="(resources, group) in groupedResources"
+      :key="group"
+    >
       <h3 class="text-xl my-2 text-xs text-70 font-normal px-4">
         <span>{{ group }}</span>
       </h3>

@@ -5,8 +5,8 @@
     >
       <span class="text-80 mr-2">Per Page:</span>
       <select-control
-        :value="currentAsString"
         label="value"
+        :selected="perPage"        
         class="form-control form-select form-sm"
         :options="options"
         @change="selectPerPage"
@@ -73,10 +73,10 @@ export default {
 
   data: () => ({
     options: [
-      { value: '10' },
-      { value: '25' },
-      { value: '50' },
-      { value: '100' }
+      { value: 10 },
+      { value: 25 },
+      { value: 50 },
+      { value: 100 }
     ]
   }),
 
