@@ -66,6 +66,7 @@
               :options="availableResources"
               :selected="selectedResourceId"
               label="title"
+              value-key="id"
               @change="selectResourceFromSelectControl"
             >
               <option
