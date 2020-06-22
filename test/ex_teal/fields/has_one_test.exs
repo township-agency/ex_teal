@@ -13,5 +13,14 @@ defmodule ExTeal.Fields.HasOneTest do
       assert field.options.has_one_relationship == :post
       assert field.options.has_one_id == post.id
     end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "returns with an empty relationship" do
+      [_, field] = TestExTeal.SinglePostUserResource.fields()
+      user = insert(:single_post_user, post: nil)
+      field = HasOne.apply_options_for(field, user, :index)
+      assert field.options.has_one_relationship == :post
+      assert field.options.has_one_id == nil
+    end
   end
 end
