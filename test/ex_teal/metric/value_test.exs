@@ -1,6 +1,6 @@
 defmodule ExTeal.Metric.ValueTest do
   use TestExTeal.ConnCase
-  alias ExTeal.Metric.{ValueRequest, ValueResult}
+  alias ExTeal.Metric.{Request, ValueResult}
   alias TestExTeal.{Order, User}
 
   defmodule TestExTeal.NewUserMetric do
@@ -31,7 +31,7 @@ defmodule ExTeal.Metric.ValueTest do
 
   describe "count/2" do
     test "returns a value result" do
-      {:ok, result} = TestExTeal.NewUserMetric.count(%ValueRequest{range: 30}, User)
+      {:ok, result} = TestExTeal.NewUserMetric.count(%Request{range: 30}, User)
       assert result
     end
   end
@@ -56,7 +56,7 @@ defmodule ExTeal.Metric.ValueTest do
     end
 
     test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
+      {:ok, result} = TestExTeal.OrderAverageMetric.count(%Request{range: 30}, Order)
       assert result.prefix == "$"
     end
   end
@@ -71,7 +71,7 @@ defmodule ExTeal.Metric.ValueTest do
     end
 
     test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
+      {:ok, result} = TestExTeal.OrderAverageMetric.count(%Request{range: 30}, Order)
       assert result.suffix == "Total"
     end
   end
@@ -86,7 +86,7 @@ defmodule ExTeal.Metric.ValueTest do
     end
 
     test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
+      {:ok, result} = TestExTeal.OrderAverageMetric.count(%Request{range: 30}, Order)
       assert result.format == "0,0"
     end
   end
@@ -108,7 +108,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
       {:ok, result} =
-        TestExTeal.NewUserMetric.average(%ValueRequest{range: 30}, Order, :grand_total)
+        TestExTeal.NewUserMetric.average(%Request{range: 30}, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 5
@@ -116,7 +116,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
 
       {:ok, second_result} =
-        TestExTeal.NewUserMetric.average(%ValueRequest{range: 30}, Order, :grand_total)
+        TestExTeal.NewUserMetric.average(%Request{range: 30}, Order, :grand_total)
 
       assert second_result.previous == 3.33
     end
@@ -129,7 +129,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
       {:ok, result} =
-        TestExTeal.NewUserMetric.maximum(%ValueRequest{range: 30}, Order, :grand_total)
+        TestExTeal.NewUserMetric.maximum(%Request{range: 30}, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 10
@@ -143,7 +143,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
       {:ok, result} =
-        TestExTeal.NewUserMetric.minimum(%ValueRequest{range: 30}, Order, :grand_total)
+        TestExTeal.NewUserMetric.minimum(%Request{range: 30}, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 0
@@ -156,7 +156,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert(:order, grand_total: 5, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      {:ok, result} = TestExTeal.NewUserMetric.sum(%ValueRequest{range: 30}, Order, :grand_total)
+      {:ok, result} = TestExTeal.NewUserMetric.sum(%Request{range: 30}, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 15
@@ -169,7 +169,7 @@ defmodule ExTeal.Metric.ValueTest do
       insert_pair(:user, inserted_at: days_ago(45))
 
       {:ok, %ValueResult{} = result} =
-        %ValueRequest{range: 30, uri: "new-user"}
+        %Request{range: 30, uri: "new-user"}
         |> TestExTeal.NewUserMetric.calculate()
 
       assert result.uri == TestExTeal.NewUserMetric.uri()

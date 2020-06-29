@@ -1,4 +1,4 @@
-defmodule ExTeal.Metric.ValueRequest do
+defmodule ExTeal.Metric.Request do
   @moduledoc """
   Data Structure for building a Value Query
 

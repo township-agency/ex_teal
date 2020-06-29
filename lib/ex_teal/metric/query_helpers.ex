@@ -4,7 +4,7 @@ defmodule ExTeal.Metric.QueryHelpers do
   """
 
   import Ecto.Query
-  alias ExTeal.Metric.{ValueRequest, ValueResult}
+  alias ExTeal.Metric.{Request, ValueResult}
 
   def query_for_with_result(metric, request, module, aggregate, field) do
     metric
@@ -41,23 +41,23 @@ defmodule ExTeal.Metric.QueryHelpers do
 
   def parse(%Decimal{} = val), do: val |> Decimal.round(2) |> Decimal.to_float()
 
-  def where_before(query, :current, %ValueRequest{range: range})
+  def where_before(query, :current, %Request{range: range})
       when is_integer(range) do
     where(query, [q], q.inserted_at >= ^days_ago(range))
   end
 
-  def where_before(query, :previous, %ValueRequest{range: range})
+  def where_before(query, :previous, %Request{range: range})
       when is_integer(range) do
     where(query, [q], q.inserted_at >= ^days_ago(range * 2))
   end
 
-  def where_after(query, :current, %ValueRequest{range: range})
+  def where_after(query, :current, %Request{range: range})
       when is_integer(range) do
     now = DateTime.utc_now()
     where(query, [q], q.inserted_at < ^now)
   end
 
-  def where_after(query, :previous, %ValueRequest{range: range}) do
+  def where_after(query, :previous, %Request{range: range}) do
     where(query, [q], q.inserted_at < ^days_ago(range))
   end
 

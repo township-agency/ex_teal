@@ -11,11 +11,11 @@ defmodule ExTeal.Metric.Value do
   of the metric.
   """
 
-  alias ExTeal.Metric.ValueRequest
+  alias ExTeal.Metric.Request
 
   @type range_key :: String.t() | integer
 
-  @callback calculate(ExTeal.Metric.ValueRequest.t()) :: {:ok, ExTeal.Metric.ValueResult.t()}
+  @callback calculate(ExTeal.Metric.Request.t()) :: {:ok, ExTeal.Metric.ValueResult.t()}
 
   @callback ranges() :: %{required(range_key) => String.t()}
 
@@ -39,7 +39,7 @@ defmodule ExTeal.Metric.Value do
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(ExTeal.Metric.ValueRequest.t(), module()) ::
+      @spec count(ExTeal.Metric.Request.t(), module()) ::
               {:ok, ExTeal.Metric.ValueResult.t()}
       def count(request, module) do
         result = query_for_with_result(__MODULE__, request, module, :count, :id)
@@ -50,7 +50,7 @@ defmodule ExTeal.Metric.Value do
       Performs an average query against the specified schema for the requested
       range specified field
       """
-      @spec average(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
+      @spec average(ExTeal.Metric.Request.t(), module(), atom()) ::
               {:ok, ExTeal.Metric.ValueResult.t()}
       def average(request, module, field) do
         result = query_for_with_result(__MODULE__, request, module, :avg, field)
@@ -61,7 +61,7 @@ defmodule ExTeal.Metric.Value do
       Performs a max query against the specified schema for the requested
       range specified field
       """
-      @spec maximum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
+      @spec maximum(ExTeal.Metric.Request.t(), module(), atom()) ::
               {:ok, ExTeal.Metric.ValueResult.t()}
       def maximum(request, module, field) do
         result = query_for_with_result(__MODULE__, request, module, :max, field)
@@ -72,7 +72,7 @@ defmodule ExTeal.Metric.Value do
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
+      @spec minimum(ExTeal.Metric.Request.t(), module(), atom()) ::
               {:ok, ExTeal.Metric.ValueResult.t()}
       def minimum(request, module, field) do
         result = query_for_with_result(__MODULE__, request, module, :min, field)
@@ -83,7 +83,7 @@ defmodule ExTeal.Metric.Value do
       Performs a sum query against the specified schema for the requested
       range specified field
       """
-      @spec sum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
+      @spec sum(ExTeal.Metric.Request.t(), module(), atom()) ::
               {:ok, ExTeal.Metric.ValueResult.t()}
       def sum(request, module, field) do
         result = query_for_with_result(__MODULE__, request, module, :sum, field)
@@ -114,7 +114,7 @@ defmodule ExTeal.Metric.Value do
 
       def width, do: "1/3"
 
-      def request(conn, metric \\ nil), do: ValueRequest.from_conn(conn, __MODULE__, metric)
+      def request(conn, metric \\ nil), do: Request.from_conn(conn, __MODULE__, metric)
 
       def prefix, do: nil
 

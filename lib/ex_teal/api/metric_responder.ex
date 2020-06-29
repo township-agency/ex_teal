@@ -4,7 +4,7 @@ defmodule ExTeal.Api.MetricResponder do
   """
 
   alias ExTeal.Api.ErrorSerializer
-  alias ExTeal.Metric.ValueRequest
+  alias ExTeal.Metric.Request
   alias ExTeal.Resource.Serializer
 
   @doc """
@@ -12,7 +12,7 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def get(conn, uri) do
     with {:ok, metric_module} <- ExTeal.dashboard_metric_for(conn, uri),
-         %ValueRequest{} = request <- metric_module.request(conn),
+         %Request{} = request <- metric_module.request(conn),
          {:ok, result} <- metric_module.calculate(request) do
       {:ok, body} = Jason.encode(%{metric: result})
       Serializer.as_json(conn, body, 200)
@@ -26,7 +26,7 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def resource_index(conn, resource_name, uri) do
     with {:ok, resource, metric} <- ExTeal.resource_metric_for(conn, resource_name, uri),
-         %ValueRequest{} = request <- metric.request(conn, resource),
+         %Request{} = request <- metric.request(conn, resource),
          {:ok, result} <- metric.calculate(request) do
       {:ok, body} = Jason.encode(%{metric: result})
       Serializer.as_json(conn, body, 200)
@@ -40,7 +40,7 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def resource_detail(conn, resource_name, _resource_id, uri) do
     with {:ok, resource, metric} <- ExTeal.resource_metric_for(conn, resource_name, uri),
-         %ValueRequest{} = request <- metric.request(conn, resource),
+         %Request{} = request <- metric.request(conn, resource),
          {:ok, result} <- metric.calculate(request) do
       {:ok, body} = Jason.encode(%{metric: result})
       Serializer.as_json(conn, body, 200)
