@@ -10,6 +10,7 @@ defmodule ExTeal.Metric.Request do
 
   @type t :: %__MODULE__{}
 
+  @spec from_conn(Plug.Conn.t(), module(), module() | nil) :: t()
   def from_conn(conn, metric, resource) do
     struct(__MODULE__, %{
       uri: Map.get(conn.params, "uri"),
