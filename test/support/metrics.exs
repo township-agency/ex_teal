@@ -14,3 +14,11 @@ defmodule TestExTeal.NewUsersMetric do
 
   def uri, do: "new_users"
 end
+
+defmodule TestExTeal.NewUserTrend do
+  use ExTeal.Metric.Trend
+
+  def calculate(request) do
+    count(request, User)
+  end
+end
