@@ -12,7 +12,7 @@ defmodule ExTeal.Metric.Request do
 
   alias __MODULE__
 
-  @spec from_conn(Plug.Conn.t(), module(), module() | nil) :: t()
+  @spec from_conn(Plug.Conn.t(), module(), module() | nil) :: Request.t()
   def from_conn(conn, metric, resource \\ nil) do
     struct(__MODULE__, %{
       uri: Map.get(conn.params, "uri"),

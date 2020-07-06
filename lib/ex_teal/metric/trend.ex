@@ -20,15 +20,6 @@ defmodule ExTeal.Metric.Trend do
   defaults for the maximum number of results returned.
 
   It would also be nice to be able to display multiple trends on the same graph.
-
-  To do this, a user would specify a calculate like:
-
-  ```
-  %{
-    paid: count(request, from(Us
-
-  }
-  ```
   """
 
   @type data :: map()
@@ -40,6 +31,8 @@ defmodule ExTeal.Metric.Trend do
   @callback date_field() :: atom()
 
   @callback date_field_type() :: :naive_date_time | :utc_datetime
+
+  @callback precision :: integer()
 
   defmacro __using__(_opts) do
     quote do
@@ -59,6 +52,8 @@ defmodule ExTeal.Metric.Trend do
       def date_field, do: :inserted_at
 
       def date_field_type, do: :naive_datetime
+
+      def precision, do: 0
 
       @doc """
       Performs a count query against the specified schema for the requested
@@ -105,7 +100,7 @@ defmodule ExTeal.Metric.Trend do
         Trend.aggregate(__MODULE__, request, queryable, :sum, field)
       end
 
-      defoverridable twelve_hour_time: 0, date_field: 0
+      defoverridable twelve_hour_time: 0, date_field: 0, precision: 0
     end
   end
 
@@ -115,19 +110,74 @@ defmodule ExTeal.Metric.Trend do
 
   @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: data()
   def aggregate(metric, request, query, aggregate_type, field) do
-    timezone = Request.resolve_timezone(request)
+    timezone = Request.resolve_timezone(request.conn)
     twelve_hour_time = metric.twelve_hour_time()
     {starting_dt, end_dt} = get_aggregate_datetimes(request, timezone)
     possible_results = get_possible_results(starting_dt, end_dt, request, twelve_hour_time)
 
-    query
-    |> TrendExpressionFactory.make(metric, timezone, request.range)
+    results =
+      query
+      |> aggregate_as(aggregate_type, field)
+      |> TrendExpressionFactory.make(metric, timezone, request.range)
+      |> between(
+        start_dt: starting_dt,
+        end_dt: end_dt,
+        metric: metric
+      )
+      |> metric.repo().all()
+      |> Enum.into(%{}, &format_result_data(&1, request.range, twelve_hour_time))
+
+    precision = metric.precision()
+
+    Enum.map(possible_results, fn k ->
+      value = results |> Map.get(k, 0) |> Decimal.new()
+
+      %{date: k, value: Decimal.round(value, precision)}
+    end)
   end
 
   @year_format "{YYYY}"
   @month_format "{YYYY}-{0M}"
   @day_format "{YYYY}-{M}-{D}"
   @dt_format "{YYYY}-{0M}-{0D} {h24}:{m}:{s}"
+
+  @doc """
+  Takes a database record transforms it into a two-tuple of the date_result
+  parsed into an appropriate format and a
+  """
+  @spec format_result_data(map(), String.t(), boolean()) :: {String.t(), number}
+  def format_result_data(%{date_result: date, aggregate: val}, unit, twelve_hour) do
+    date =
+      case unit do
+        "year" ->
+          date
+
+        "month" ->
+          {:ok, dt} = Timex.parse(date, @month_format)
+          to_result_date(dt, "month", false)
+
+        "week" ->
+          {:ok, dt} = Timex.parse(date, "{YYYY}-{Wiso}")
+          to_result_date(dt, "week", false)
+
+        "day" ->
+          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D}")
+          to_result_date(dt, "day", false)
+
+        "hour" ->
+          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D} {h24}:{m}")
+          to_result_date(dt, "hour", twelve_hour)
+
+        "minute" ->
+          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
+          to_result_date(dt, "minute", twelve_hour)
+
+        true ->
+          nil
+      end
+
+    {date, val}
+  end
 
   @doc """
   Parse the start and end params
@@ -184,6 +234,51 @@ defmodule ExTeal.Metric.Trend do
     [from: start_dt, until: end_dt, step: step_for(request.range)]
     |> Interval.new()
     |> Enum.map(&to_result_date(&1, request.range, twelve_hour_time))
+  end
+
+  @type between_options :: [start_dt: DateTime.t(), end_dt: DateTime.t(), metric: module()]
+
+  @doc """
+  Set the boundaries of an aggregate queries
+  """
+  @spec between(Ecto.Queryable.t(), between_options()) :: Ecto.Queryable.t()
+  def between(query, start_dt: start, end_dt: end_dt, metric: metric) do
+    dt_field = metric.date_field()
+
+    field_type = metric.date_field_type()
+
+    query
+    |> where([q], field(q, ^dt_field) >= ^to_dt_field_type(start, field_type))
+    |> where([q], field(q, ^dt_field) <= ^to_dt_field_type(end_dt, field_type))
+  end
+
+  @doc """
+  Build a select for the field and aggregate type
+  """
+  @spec aggregate_as(Ecto.Queryable.t(), atom(), atom()) :: Ecto.Queryable.t()
+  def aggregate_as(query, :count, f) do
+    select(query, [q], %{aggregate: count(field(q, ^f))})
+  end
+
+  def aggregate_as(query, :sum, f) do
+    select(query, [q], %{aggregate: sum(field(q, ^f))})
+  end
+
+  def aggregate_as(query, :min, f) do
+    select(query, [q], %{aggregate: min(field(q, ^f))})
+  end
+
+  def aggregate_as(query, :max, f) do
+    select(query, [q], %{aggregate: max(field(q, ^f))})
+  end
+
+  def aggregate_as(query, :avg, f) do
+    select(query, [q], %{aggregate: avg(field(q, ^f))})
+  end
+
+  defp to_dt_field_type(value, :naive_datetime) do
+    utc = Timezone.get("Etc/UTC", value)
+    Timezone.convert(value, utc)
   end
 
   def to_result_date(datetime, "year", _), do: Timex.format!(datetime, "{YYYY}")

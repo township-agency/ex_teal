@@ -1,9 +1,90 @@
 defmodule ExTeal.Metric.TrendTest do
   use TestExTeal.ConnCase
   use Timex
+  import Ecto.Query
 
+  alias Decimal, as: D
   alias ExTeal.Metric.{Request, Trend}
-  alias TestExTeal.NewUserTrend
+  alias TestExTeal.{NewUserTrend, RevenueTrend}
+  alias TestExTeal.{Order, User}
+
+  describe "aggregate/5" do
+    test "returns data by year" do
+      request =
+        Request.from_conn(
+          build_conn(:get, "/foo", %{
+            "uri" => "new-user-trend",
+            "range" => "year",
+            "start" => "2016",
+            "end" => "2017"
+          }),
+          NewUserTrend
+        )
+
+      insert(:user, inserted_at: from_erl({{2017, 1, 5}, {0, 0, 0}}))
+
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+
+      assert result == [
+               %{date: "2016", value: D.new(0)},
+               %{date: "2017", value: D.new(1)}
+             ]
+    end
+
+    test "returns data by month" do
+      request =
+        Request.from_conn(
+          build_conn(:get, "/foo", %{
+            "uri" => "new-user-trend",
+            "range" => "month",
+            "start" => "2020-01",
+            "end" => "2020-04"
+          }),
+          NewUserTrend
+        )
+
+      insert(:user, inserted_at: from_erl({{2020, 1, 5}, {0, 0, 0}}))
+      insert_pair(:user, inserted_at: from_erl({{2020, 3, 5}, {0, 0, 0}}))
+
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+
+      assert result == [
+               %{date: "January 2020", value: D.new(1)},
+               %{date: "February 2020", value: D.new(0)},
+               %{date: "March 2020", value: D.new(2)},
+               %{date: "April 2020", value: D.new(0)}
+             ]
+    end
+
+    test "can return sum aggregations by week" do
+      request =
+        Request.from_conn(
+          build_conn(:get, "/foo", %{
+            "uri" => "revenue-trend",
+            "range" => "week",
+            "start" => "2020-07-06",
+            "end" => "2020-07-13"
+          }),
+          RevenueTrend
+        )
+
+      insert(:order, grand_total: 100, inserted_at: from_erl({{2020, 7, 7}, {0, 0, 0}}))
+      insert_pair(:order, grand_total: 23, inserted_at: from_erl({{2020, 7, 14}, {0, 0, 0}}))
+
+      result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
+
+      assert result == [
+               %{date: "July 6 - July 12", value: D.new(100)},
+               %{date: "July 13 - July 19", value: D.new(46)}
+             ]
+    end
+  end
+
+  def from_erl(erl, tz \\ "Etc/UTC") do
+    erl
+    |> NaiveDateTime.from_erl!()
+    |> DateTime.from_naive!(tz)
+  end
 
   describe "get_aggregate_datetimes/2" do
     test "for a year range with UTC" do
@@ -287,6 +368,107 @@ defmodule ExTeal.Metric.TrendTest do
       assert Trend.to_result_date(dt, "hour", false) == "July 6 2020 15:00"
       assert Trend.to_result_date(dt, "minute", true) == "July 6 2020 3:05 pm"
       assert Trend.to_result_date(dt, "minute", false) == "July 6 2020 15:05"
+    end
+  end
+
+  describe "format_result_date/3" do
+    test "year unit" do
+      result =
+        %{date_result: "2020", aggregate: 5}
+        |> Trend.format_result_data("year", false)
+
+      assert result == {"2020", 5}
+    end
+
+    test "month unit" do
+      result =
+        %{date_result: "2020-01", aggregate: 5}
+        |> Trend.format_result_data("month", false)
+
+      assert result == {"January 2020", 5}
+    end
+
+    test "week unit" do
+      result =
+        %{date_result: "2020-10", aggregate: 5}
+        |> Trend.format_result_data("week", false)
+
+      assert result == {"March 2 - March 8", 5}
+    end
+
+    test "day unit" do
+      result =
+        %{date_result: "2020-07-06", aggregate: 5}
+        |> Trend.format_result_data("day", false)
+
+      assert result == {"July 6 2020", 5}
+    end
+
+    test "hour unit with 12hr time" do
+      result =
+        %{date_result: "2020-07-06 13:00", aggregate: 5}
+        |> Trend.format_result_data("hour", true)
+
+      assert result == {"July 6 2020 1:00 pm", 5}
+    end
+
+    test "hour unit with 24hr time" do
+      result =
+        %{date_result: "2020-07-06 13:00", aggregate: 5}
+        |> Trend.format_result_data("hour", false)
+
+      assert result == {"July 6 2020 13:00", 5}
+    end
+
+    test "minute unit with 12hr time" do
+      result =
+        %{date_result: "2020-07-06 13:07:00", aggregate: 5}
+        |> Trend.format_result_data("minute", true)
+
+      assert result == {"July 6 2020 1:07 pm", 5}
+    end
+
+    test "minute unit with 24hr time" do
+      result =
+        %{date_result: "2020-07-06 13:42:00", aggregate: 5}
+        |> Trend.format_result_data("minute", false)
+
+      assert result == {"July 6 2020 13:42", 5}
+    end
+  end
+
+  describe "between/2" do
+    test "converts DateTimes with Timezones into naive time zones" do
+      start = Timex.to_datetime({{2020, 7, 06}, {15, 5, 0}}, "America/Chicago")
+      utc = Timezone.get("Etc/UTC")
+      insert_at = Timezone.convert(start, utc)
+      u = insert(:user, inserted_at: insert_at |> Timex.shift(minutes: 10))
+      insert(:user, inserted_at: insert_at |> Timex.shift(minutes: -10))
+
+      result =
+        User
+        |> Trend.between(
+          start_dt: start,
+          end_dt: start |> Timex.shift(hours: 1),
+          metric: NewUserTrend
+        )
+        |> Repo.all()
+
+      assert result == [u]
+    end
+  end
+
+  describe "aggregate_as/3" do
+    test "builds an aggregate with a select" do
+      insert(:user)
+
+      result =
+        User
+        |> group_by([q], q.id)
+        |> Trend.aggregate_as(:count, :id)
+        |> Repo.all()
+
+      assert result == [%{aggregate: 1}]
     end
   end
 end

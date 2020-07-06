@@ -2,7 +2,6 @@ defmodule ExTeal.Metric.RequestTest do
   use TestExTeal.ConnCase
 
   alias ExTeal.Metric.Request
-  alias TestExTeal.NewUserTrend
 
   describe "resolve_timezone/1" do
     test "fetches the timezone from the request conn" do

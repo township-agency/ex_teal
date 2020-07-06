@@ -4,19 +4,19 @@ defmodule ExTeal.Metric.TrendExpressionFactory do
   based on the specific database adapter (and database).
   """
 
-  alias ExTeal.Metric.{PostgresTrend}
+  alias ExTeal.Metric.PostgresTrendExpression
 
   @doc """
   Based on the adapter, select a trend factory and build
   a date expression to be used in a Ecto Query fragment for the query
   """
-  def make(query, metric, timezone) do
+  def make(query, metric, timezone, unit) do
     case metric.repo().__adapter__ do
-      Ecto.Adapter.Postgres ->
-        PostgresTrend.generate(query, metric, timezone)
+      Ecto.Adapters.Postgres ->
+        PostgresTrendExpression.generate(query, metric, timezone, unit)
 
-      _ ->
-        raise ArgumentError, message: "Adapter does not support trend metrics"
+      adapter ->
+        raise ArgumentError, message: "Adapter #{adapter} does not support trend metrics"
     end
   end
 end

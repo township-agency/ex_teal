@@ -1,4 +1,7 @@
 defmodule ExTeal.Metric.PostgresTrendExpression do
+  @moduledoc """
+  Trend Expressions for Postgresql databases
+  """
   use ExTeal.Metric.TrendExpression
 
   @impl true
@@ -64,11 +67,12 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
     )
   end
 
-  defp select_with_positive_interval(query, ts_field, interval, format) do
-  end
-
   defp date_format("year"), do: "YYYY"
   defp date_format("month"), do: "YYYY-MM"
+  defp date_format("week"), do: "IYYY-IW"
+  defp date_format("day"), do: "YYYY-MM-DD"
+  defp date_format("hour"), do: "YYYY-MM-DD HH24:00"
+  defp date_format("minute"), do: "YYYY-MM-DD HH24:mi:00"
 
   defp positive_or_negative(offset) when offset > 0, do: "+"
   defp positive_or_negative(offset) when offset == 0, do: ""

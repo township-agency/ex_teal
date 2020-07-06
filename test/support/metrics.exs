@@ -19,6 +19,14 @@ defmodule TestExTeal.NewUserTrend do
   use ExTeal.Metric.Trend
 
   def calculate(request) do
-    count(request, User)
+    count(request, TestExTeal.User)
+  end
+end
+
+defmodule TestExTeal.RevenueTrend do
+  use ExTeal.Metric.Trend
+
+  def calculate(request) do
+    sum(request, TestExTeal.Order, :grand_total)
   end
 end
