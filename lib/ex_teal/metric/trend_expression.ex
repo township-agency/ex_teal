@@ -27,7 +27,9 @@ defmodule ExTeal.Metric.TrendExpression do
 
   use Timex
 
-  @spec fetch_offset(String.t()) :: integer()
+  @type valid_timezone :: String.t() | integer() | :utc | :local
+
+  @spec fetch_offset(String.t()) :: float()
   def fetch_offset(timezone) do
     seconds =
       timezone

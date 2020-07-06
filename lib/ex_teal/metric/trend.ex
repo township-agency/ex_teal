@@ -108,7 +108,7 @@ defmodule ExTeal.Metric.Trend do
   import Ecto.Query
   alias ExTeal.Metric.{Request, TrendExpressionFactory}
 
-  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: data()
+  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: [map()]
   def aggregate(metric, request, query, aggregate_type, field) do
     timezone = Request.resolve_timezone(request.conn)
     twelve_hour_time = metric.twelve_hour_time()
