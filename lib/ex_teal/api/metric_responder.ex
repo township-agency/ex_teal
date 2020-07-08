@@ -12,9 +12,9 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def get(conn, uri) do
     with {:ok, metric} <- ExTeal.dashboard_metric_for(conn, uri),
-         %Request{} = request <- build_request(conn, metric),
+         %Request{} = request <- build_request(conn),
          data <- metric.calculate(request),
-         result <- build_result(request, metric, data) do
+         result <- Result.build(metric, data) do
       send_result(conn, result)
     else
       {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
@@ -26,9 +26,9 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def resource_index(conn, resource_name, uri) do
     with {:ok, resource, metric} <- ExTeal.resource_metric_for(conn, resource_name, uri),
-         %Request{} = request <- build_request(conn, metric, resource),
+         %Request{} = request <- build_request(conn, resource),
          data <- metric.calculate(request),
-         result <- build_result(request, metric, data) do
+         result <- Result.build(metric, data) do
       send_result(conn, result)
     else
       {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
@@ -40,22 +40,16 @@ defmodule ExTeal.Api.MetricResponder do
   """
   def resource_detail(conn, resource_name, _resource_id, uri) do
     with {:ok, resource, metric} <- ExTeal.resource_metric_for(conn, resource_name, uri),
-         %Request{} = request <- build_request(conn, metric, resource),
+         %Request{} = request <- build_request(conn, resource),
          data <- metric.calculate(request),
-         result <- build_result(request, metric, data) do
+         result <- Result.build(metric, data) do
       send_result(conn, result)
     else
       {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
     end
   end
 
-  defp build_request(conn, metric, resource \\ nil), do: Request.from_conn(conn, metric, resource)
-
-  defp build_result(request, metric, data) do
-    metric
-    |> Result.base_result(request)
-    |> Result.put_data(data)
-  end
+  defp build_request(conn, resource \\ nil), do: Request.from_conn(conn, resource)
 
   defp send_result(conn, result) do
     {:ok, body} = Jason.encode(%{metric: result})

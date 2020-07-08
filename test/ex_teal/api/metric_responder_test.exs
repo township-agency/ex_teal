@@ -21,7 +21,7 @@ defmodule ExTeal.Api.MetricResponderTest do
 
     @tag manifest: MetricManifest
     test "returns a 200 for an valid metric" do
-      conn = build_conn(:get, "/api/metrics/new_users")
+      conn = build_conn(:get, "/api/metrics/new_users", params())
       resp = MetricResponder.get(conn, "new_users")
       assert resp.status == 200
     end
@@ -44,16 +44,23 @@ defmodule ExTeal.Api.MetricResponderTest do
 
     @tag manifest: DefaultManifest
     test "returns a 404 for an invalid metric" do
-      conn = build_conn(:get, "/api/resources/users/metrics/foo")
+      conn = build_conn(:get, "/api/resources/users/metrics/foo", params())
       resp = MetricResponder.resource_index(conn, "users", "foo")
       assert resp.status == 404
     end
 
     @tag manifest: DefaultManifest
     test "returns a metric" do
-      conn = build_conn(:get, "/api/resources/users/metrics/new_users")
+      conn = build_conn(:get, "/api/resources/users/metrics/new_users", params())
       resp = MetricResponder.resource_index(conn, "users", "new_users")
       assert resp.status == 200
     end
   end
+
+  def params,
+    do: %{
+      "unit" => "year",
+      "start_at" => "2016",
+      "end_at" => "2017"
+    }
 end

@@ -6,17 +6,19 @@ defmodule ExTeal.Metric.Request do
   that is turned into a Metric Result
   """
 
-  defstruct [:range, :uri, :resource_id, :resource, :conn, :timezone]
+  defstruct [:unit, :uri, :resource_id, :resource, :conn, :timezone, :start_at, :end_at]
 
   @type t :: %__MODULE__{}
 
   alias __MODULE__
 
-  @spec from_conn(Plug.Conn.t(), module(), module() | nil) :: Request.t()
-  def from_conn(conn, metric, resource \\ nil) do
+  @spec from_conn(Plug.Conn.t(), module() | nil) :: Request.t()
+  def from_conn(conn, resource \\ nil) do
     struct(__MODULE__, %{
       uri: Map.get(conn.params, "uri"),
-      range: range_for(metric, Map.get(conn.params, "range")),
+      unit: Map.get(conn.params, "unit"),
+      start_at: Map.get(conn.params, "start_at"),
+      end_at: Map.get(conn.params, "end_at"),
       resource: resource,
       resource_id: Map.get(conn.params, "resource_id"),
       conn: conn,
@@ -37,22 +39,6 @@ defmodule ExTeal.Metric.Request do
 
       true ->
         "Etc/UTC"
-    end
-  end
-
-  def range_for(metric, nil) do
-    {k, _v} =
-      metric.ranges()
-      |> Enum.into([])
-      |> hd()
-
-    k
-  end
-
-  def range_for(_metric, val) do
-    case Integer.parse(val) do
-      {value, _} -> value
-      :error -> val
     end
   end
 end

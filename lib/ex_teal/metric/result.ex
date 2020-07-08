@@ -4,29 +4,22 @@ defmodule ExTeal.Metric.Result do
   Value Metric Query
   """
 
-  @serialized ~w(uri data ranges range prefix suffix format)a
+  @serialized ~w(data prefix suffix format)a
   @derive {Jason.Encoder, only: @serialized}
 
   alias __MODULE__
 
-  defstruct [:uri, :data, :ranges, :range, :prefix, :suffix, :format]
+  defstruct [:data, :prefix, :suffix, :format]
 
   @type t :: %__MODULE__{}
 
-  @spec base_result(module, ExTeal.Metric.Request.t()) :: Result.t()
-  def base_result(metric, request) do
+  @spec build(module, any()) :: Result.t()
+  def build(metric, data) do
     %Result{
-      uri: metric.uri(),
-      ranges: metric.ranges(),
-      range: request.range,
       prefix: metric.prefix(),
       suffix: metric.suffix(),
-      format: metric.format()
+      format: metric.format(),
+      data: data
     }
-  end
-
-  @spec put_data(t) :: t
-  def put_data(%Result{} = result, data \\ %{}) do
-    Map.put(result, :data, data)
   end
 end

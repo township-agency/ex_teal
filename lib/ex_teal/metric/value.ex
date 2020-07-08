@@ -11,21 +11,14 @@ defmodule ExTeal.Metric.Value do
   of the metric.
   """
 
-  @type range_key :: String.t() | integer
-
   @type data :: %{current: term(), previous: term()}
 
   @callback calculate(ExTeal.Metric.Request.t()) :: data()
 
-  @callback ranges() :: %{required(range_key) => String.t()}
-
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Metric.Value
-      use ExTeal.Resource.Repo
-      use ExTeal.Metric.Card
-
-      import Ecto.Query, only: [from: 2]
+      use ExTeal.Metric
 
       alias ExTeal.Metric.{Request, Result, Value}
 
@@ -35,53 +28,55 @@ defmodule ExTeal.Metric.Value do
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(Request.t(), module(), atom()) :: Value.data()
-      def count(request, module, field \\ :id) do
-        Value.aggregate(__MODULE__, request, module, :count, field)
+      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      def count(request, query, field \\ :id) do
+        Value.aggregate(__MODULE__, request, query, :count, field)
       end
 
       @doc """
       Performs an average query against the specified schema for the requested
       range specified field
       """
-      @spec average(Request.t(), module(), atom()) :: Value.data()
-      def average(request, module, field) do
-        Value.aggregate(__MODULE__, request, module, :avg, field)
+      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      def average(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :avg, field)
       end
 
       @doc """
       Performs a max query against the specified schema for the requested
       range specified field
       """
-      @spec maximum(Request.t(), module(), atom()) :: Value.data()
-      def maximum(request, module, field) do
-        Value.aggregate(__MODULE__, request, module, :max, field)
+      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      def maximum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :max, field)
       end
 
       @doc """
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(Request.t(), module(), atom()) :: Value.data()
-      def minimum(request, module, field) do
-        Value.aggregate(__MODULE__, request, module, :min, field)
+      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      def minimum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :min, field)
       end
 
       @doc """
       Performs a sum query against the specified schema for the requested
       range specified field
       """
-      @spec sum(Request.t(), module(), atom()) :: Value.data()
-      def sum(request, module, field) do
-        Value.aggregate(__MODULE__, request, module, :sum, field)
+      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      def sum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :sum, field)
       end
     end
   end
 
+  use Timex
   alias ExTeal.Metric.Request
-  import Ecto.Query, only: [where: 3]
   import ExTeal.Metric.QueryHelpers
+  import ExTeal.Metric.Ranges
 
+  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: map()
   def aggregate(metric_module, request, queryable, aggregate_type, field) do
     %{
       previous: query_for(:previous, metric_module, request, queryable, aggregate_type, field),
@@ -89,36 +84,27 @@ defmodule ExTeal.Metric.Value do
     }
   end
 
+  @spec query_for(atom(), module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) ::
+          integer() | float()
   def query_for(current, metric, request, queryable, aggregate_type, field) do
+    timezone = Request.resolve_timezone(request.conn)
+    {start_dt, end_dt} = get_aggregate_datetimes(request, timezone)
+
     queryable
-    |> where_before(current, request)
-    |> where_after(current, request)
+    |> between_current(current, start_dt: start_dt, end_dt: end_dt, metric: metric)
     |> metric.repo().aggregate(aggregate_type, field)
     |> parse()
   end
 
-  def where_before(query, :current, %Request{range: range})
-      when is_integer(range) do
-    where(query, [q], q.inserted_at >= ^days_ago(range))
+  def between_current(query, :current, options) do
+    between(query, options)
   end
 
-  def where_before(query, :previous, %Request{range: range})
-      when is_integer(range) do
-    where(query, [q], q.inserted_at >= ^days_ago(range * 2))
-  end
+  def between_current(query, :previous, start_dt: start_dt, end_dt: end_dt, metric: metric) do
+    duration =
+      Interval.new(from: start_dt, until: end_dt)
+      |> Interval.duration(:duration)
 
-  def where_after(query, :current, %Request{range: range})
-      when is_integer(range) do
-    now = DateTime.utc_now()
-    where(query, [q], q.inserted_at < ^now)
-  end
-
-  def where_after(query, :previous, %Request{range: range}) do
-    where(query, [q], q.inserted_at < ^days_ago(range))
-  end
-
-  defp days_ago(days) do
-    DateTime.utc_now()
-    |> DateTime.add(-1 * 60 * 60 * 24 * days, :second)
+    between(query, start_dt: Timex.subtract(start_dt, duration), end_dt: start_dt, metric: metric)
   end
 end

@@ -10,12 +10,6 @@ defmodule ExTeal.Metric.ValueTest do
       count(request, User)
     end
 
-    def ranges,
-      do: %{
-        30 => "30 Days",
-        90 => "90 Days"
-      }
-
     def uri, do: "new-user"
     def title, do: "New Users"
   end
@@ -23,16 +17,20 @@ defmodule ExTeal.Metric.ValueTest do
   defmodule TestExTeal.OrderAverageMetric do
     use ExTeal.Metric.Value
     def calculate(request), do: average(request, Order, :grand_total)
-    def ranges, do: %{30 => "30 Days"}
     def prefix, do: "$"
     def suffix, do: "Total"
     def format, do: "0,0"
   end
 
+  setup context do
+    {:ok, request: request_for_between(Map.get(context, :start, 10), Map.get(context, :end, 0))}
+  end
+
   describe "count/2" do
-    test "returns a value result" do
-      result = TestExTeal.NewUserMetric.count(%Request{range: 30}, User)
-      assert result
+    test "returns a value result", %{request: request} do
+      result = TestExTeal.NewUserMetric.count(request, User)
+      assert result.current == 0
+      assert result.previous == 0
     end
   end
 
@@ -87,31 +85,27 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "average/3" do
-    test "calculates the average" do
+    @tag start: 30
+    test "calculates the average", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      result = TestExTeal.NewUserMetric.average(%Request{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.average(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 5
-
-      insert(:order, grand_total: 0, inserted_at: days_ago(45))
-
-      second_result = TestExTeal.NewUserMetric.average(%Request{range: 30}, Order, :grand_total)
-
-      assert second_result.previous == 3.33
     end
   end
 
   describe "maximum/3" do
-    test "calculates the max" do
+    @tag start: 30
+    test "calculates the max", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      result = TestExTeal.NewUserMetric.maximum(%Request{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.maximum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 10
@@ -119,12 +113,13 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "minimum/3" do
-    test "calculates the max" do
+    @tag start: 30
+    test "calculates the min", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      result = TestExTeal.NewUserMetric.minimum(%Request{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.minimum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 0
@@ -132,12 +127,13 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "sum/3" do
-    test "calculates the sum" do
+    @tag start: 30
+    test "calculates the sum", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 5, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      result = TestExTeal.NewUserMetric.sum(%Request{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.sum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 15
@@ -147,5 +143,22 @@ defmodule ExTeal.Metric.ValueTest do
   defp days_ago(days) do
     DateTime.utc_now()
     |> DateTime.add(-1 * days * 60 * 60 * 24)
+  end
+
+  defp days_ago_as_str(days) do
+    days
+    |> days_ago()
+    |> Timex.format!("{YYYY}-{0M}-{0D}")
+  end
+
+  defp request_for_between(start_days, end_days) do
+    :get
+    |> build_conn("/foo", %{
+      "uri" => "new-user",
+      "unit" => "day",
+      "start_at" => days_ago_as_str(start_days),
+      "end_at" => days_ago_as_str(end_days)
+    })
+    |> Request.from_conn()
   end
 end
