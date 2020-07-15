@@ -87,8 +87,7 @@ defmodule ExTeal.Metric.Value do
   @spec query_for(atom(), module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) ::
           integer() | float()
   def query_for(current, metric, request, queryable, aggregate_type, field) do
-    timezone = Request.resolve_timezone(request.conn)
-    {start_dt, end_dt} = get_aggregate_datetimes(request, timezone)
+    {start_dt, end_dt} = get_aggregate_datetimes(request)
 
     queryable
     |> between_current(current, start_dt: start_dt, end_dt: end_dt, metric: metric)

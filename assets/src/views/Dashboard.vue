@@ -1,22 +1,27 @@
 <template>
   <div>
-    <heading
-      v-if="cards.length > 1"
-      class="mb-6"
-    >
-      Dashboard
-    </heading>
+    <div class="flex items-center justify-between mb-6 pb-6 w-full">
+      <heading class="flex items-center">
+        {{ dashboard.title }}
+        <span
+          v-if="startAt"
+          class="text-70 text-sm ml-4"
+        >{{ timeRange }}</span>
+      </heading>
+      <metric-time-control
+        v-if="!!selectedRange"
+        :ago-ranges="ranges"
+        :unit="unit"
+        :selected-range="selectedRange"
+        @update-interval="updateInterval"
+      />
+    </div>
 
     <div v-if="shouldShowCards">
       <cards
-        v-if="smallCards.length > 0"
-        :cards="smallCards"
-        class="mb-3"
-      />
-      <cards
-        v-if="largeCards.length > 0"
-        :cards="largeCards"
-        size="large"
+        v-if="cards.length > 0"
+        :cards="cards"
+        :metric-data="metricData"
       />
     </div>
   </div>
@@ -24,6 +29,11 @@
 
 <script>
 import { HasCards } from 'ex-teal-js';
+import find from 'lodash/find';
+import { DateTime } from 'luxon';
+import Duration from 'luxon/src/duration';
+import Interval from 'luxon/src/interval';
+
 export default {
   mixins: [ HasCards ],
 
@@ -35,10 +45,71 @@ export default {
     }
   },
 
+  data () {
+    return {
+      startAt: null,
+      endAt: null,
+      unit: null,
+      timezone: null,
+      selectedRange: null
+    };
+  },
+
   computed: {
     cardsEndpoint () {
       return `/api/dashboards/${this.uri}`;
     },
+
+    dashboard () {
+      return find(ExTeal.config.dashboards, dashboard => dashboard.uri == this.uri);
+    },
+
+    ranges () {
+      return this.dashboard.ranges;
+    },
+
+    timeRange () {
+      return `${this.startAt.toLocaleString(DateTime.DATETIME_SHORT)} to ${this.endAt.toLocaleString(DateTime.DATETIME_SHORT)}`;
+    },
+
+    shouldShowCards () {
+      return this.cards.length > 0;
+    },
+
+    metricData () {
+      return {
+        unit: this.unit,
+        startAt: this.startAt,
+        endAt: this.endAt,
+        timezone: this.timezone
+      };
+    }
+  },
+
+  created () {
+    this.selectedRange = this.dashboard.default_range;
+    this.unit = this.selectedRange.unit;
+    this.timezone = DateTime.local().zoneName;
+    this.startAt = this.startAtFromRange(this.selectedRange);
+    this.endAt = DateTime.local();
+  },
+
+  methods: {
+    updateInterval ({ start, end, unit, range }) {
+      this.startAt = start;
+      this.endAt = end;
+      this.unit = unit;
+      this.selectedRange = range;
+    },
+
+    startAtFromRange (range) {
+      const now = DateTime.local();
+      const durationObj = {};
+
+      durationObj[`${range.unit}s`] = range.value;
+
+      return now.minus(Duration.fromObject(durationObj));
+    }
   }
 };
 </script>

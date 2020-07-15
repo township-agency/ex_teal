@@ -21,24 +21,7 @@ defmodule ExTeal.Metric.Request do
       end_at: Map.get(conn.params, "end_at"),
       resource: resource,
       resource_id: Map.get(conn.params, "resource_id"),
-      conn: conn,
-      timezone: resolve_timezone(conn)
+      conn: conn
     })
-  end
-
-  @spec resolve_timezone(Plug.Conn.t()) :: String.t()
-  def resolve_timezone(%Plug.Conn{params: params}) do
-    application_override = Application.get_env(:ex_teal, :user_timezone_override)
-
-    cond do
-      not is_nil(application_override) ->
-        application_override
-
-      not is_nil(Map.get(params, "timezone")) ->
-        Map.get(params, "timezone")
-
-      true ->
-        "Etc/UTC"
-    end
   end
 end

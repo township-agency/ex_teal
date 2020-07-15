@@ -1,19 +1,24 @@
 <template>
-  <loading-card :loading="loading">
-    <BaseValueMetric :data="data" />
+  <loading-card
+    :loading="loading"
+  >
+    <div class="m-4">
+      <area-chart
+        :data="areaData"
+        :prefix="prefix"
+        :suffix="suffix"
+      />
+    </div>
   </loading-card>
 </template>
 
 <script>
 import { Minimum } from 'ex-teal-js';
-import BaseValueMetric from './Base/ValueMetric';
+import BaseTrendMetric from './Base/TrendMetric';
 
 export default {
-  name: 'ValueMetric',
+  name: 'TrendMetric',
 
-  components: {
-    BaseValueMetric,
-  },
 
   props: {
     card: {
@@ -29,28 +34,22 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: '',
+    },
+
+    metricData: {
+      type: Object,
+      required: true
     }
   },
 
   data: () => ({
     loading: true,
-    format: '(0[.]00a)',
-    value: 0,
-    previous: 0,
+    data: [],
     prefix: '',
     suffix: '',
-    selectedRangeKey: null,
   }),
 
   computed: {
-    hasRanges () {
-      return Object.keys(this.card.options.ranges).length > 0;
-    },
-
-    rangePayload () {
-      return this.hasRanges ? { params: { range: this.selectedRangeKey } } : {};
-    },
-
     metricEndpoint () {
       const uri = this.card.options.uri;
       if (this.resourceName && this.resourceId) {
@@ -61,12 +60,23 @@ export default {
         return `/api/metrics/${uri}`;
       }
     },
+
+    areaData () {
+      return this.data.reduce((acc, { date, value }) => {
+        acc[date] = value;
+        return acc;
+      }, {});
+    }
   },
 
   watch: {
     resourceId () {
       this.fetch();
     },
+
+    metricData () {
+      this.fetch();
+    }
   },
 
   mounted () {
@@ -76,17 +86,21 @@ export default {
   methods: {
     fetch () {
       this.loading = true;
-      Minimum(ExTeal.request().get(this.metricEndpoint, this.rangePayload)).then(
+      const { startAt, endAt, unit, timezone } = this.metricData;
+      Minimum(ExTeal.request().get(this.metricEndpoint, { params: {
+        start_at: startAt.toISO({ suppressMilliseconds: true }),
+        end_at: endAt.toISO({ suppressMilliseconds: true }),
+        unit,
+        timezone
+      } })).then(
         ({
           data: {
-            metric: { current, previous, prefix, suffix, format },
+            metric: { data, prefix, suffix },
           },
         }) => {
-          this.value = current;
-          this.format = format || this.format;
           this.prefix = prefix || this.prefix;
           this.suffix = suffix || this.suffix;
-          this.previous = previous;
+          this.data = data;
           this.loading = false;
         }
       );

@@ -10,12 +10,12 @@ defmodule ExTeal.Metric.RangesTest do
           build_conn(:get, "/foo", %{
             "uri" => "new-user-trend",
             "unit" => "year",
-            "start_at" => "2016",
-            "end_at" => "2016"
+            "start_at" => "2016-01-05T02:03:44-00:00",
+            "end_at" => "2016-01-06T02:04:56-00:00"
           })
         )
 
-      assert Ranges.get_aggregate_datetimes(request, "Etc/UTC") ==
+      assert Ranges.get_aggregate_datetimes(request) ==
                {~U[2016-01-01 00:00:00Z], ~U[2016-12-31 23:59:59Z]}
     end
 
@@ -25,54 +25,15 @@ defmodule ExTeal.Metric.RangesTest do
           build_conn(:get, "/foo", %{
             "uri" => "new-user-trend",
             "unit" => "year",
-            "timezone" => "America/Chicago",
-            "start_at" => "2015",
-            "end_at" => "2020"
+            "start_at" => "2015-01-05T02:03:44-06:00",
+            "end_at" => "2020-01-06T02:04:56-06:00"
           })
         )
 
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2015, 1, 1}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 12, 31}, {23, 59, 59}}, "America/Chicago")
-               }
-    end
-
-    test "for a start, end and a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "timezone" => "America/Chicago",
-            "start_at" => "2015",
-            "end_at" => "2020"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
-               {
-                 Timex.to_datetime({{2015, 1, 1}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 12, 31}, {23, 59, 59}}, "America/Chicago")
-               }
-    end
-
-    test "for a year unit with a user override" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "timezone" => "America/Chicago",
-            "start_at" => "2015",
-            "end_at" => "2017"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/New_York") ==
-               {
-                 Timex.to_datetime({{2015, 1, 1}, {0, 0, 0}}, "America/New_York"),
-                 Timex.to_datetime({{2017, 12, 31}, {23, 59, 59}}, "America/New_York")
+                 Timex.to_datetime({{2015, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2020, 12, 31}, {23, 59, 59}}, "Etc/GMT+6")
                }
     end
 
@@ -82,12 +43,12 @@ defmodule ExTeal.Metric.RangesTest do
           build_conn(:get, "/foo", %{
             "uri" => "new-user-trend",
             "unit" => "month",
-            "start_at" => "1989-03",
-            "end_at" => "1992-05"
+            "start_at" => "1989-03-01T02:03:44-00:00",
+            "end_at" => "1992-05-31T02:04:56-00:00"
           })
         )
 
-      assert Ranges.get_aggregate_datetimes(request, "Etc/UTC") ==
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
                  Timex.to_datetime({{1989, 3, 1}, {0, 0, 0}}, "Etc/UTC"),
                  Timex.to_datetime({{1992, 5, 31}, {23, 59, 59}}, "Etc/UTC")
@@ -100,17 +61,15 @@ defmodule ExTeal.Metric.RangesTest do
           build_conn(:get, "/foo", %{
             "uri" => "new-user-trend",
             "unit" => "month",
-            "timezone" => "America/Chicago",
-            "start_at" => "1989-04",
-            "end_at" => "1989-05"
+            "start_at" => "2015-03-04T02:03:44-06:00",
+            "end_at" => "2020-05-29T02:04:56-06:00"
           })
         )
 
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
-               {
-                 Timex.to_datetime({{1989, 4, 1}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{1989, 5, 31}, {23, 59, 59}}, "America/Chicago")
-               }
+      assert Ranges.get_aggregate_datetimes(request) == {
+               Timex.to_datetime({{2015, 3, 1}, {0, 0, 0}}, "Etc/GMT+6"),
+               Timex.to_datetime({{2020, 5, 31}, {23, 59, 59}}, "Etc/GMT+6")
+             }
     end
 
     test "for a month unit with a user override" do
@@ -138,15 +97,15 @@ defmodule ExTeal.Metric.RangesTest do
           build_conn(:get, "/foo", %{
             "uri" => "new-user-trend",
             "unit" => "week",
-            "start_at" => "2020-07-15",
-            "end_at" => "2020-07-20"
+            "start_at" => "2020-01",
+            "end_at" => "2020-02"
           })
         )
 
       assert Ranges.get_aggregate_datetimes(request, "Etc/UTC") ==
                {
-                 ~U[2020-07-13 00:00:00Z],
-                 ~U[2020-07-26 23:59:59Z]
+                 ~U[2019-12-30 00:00:00Z],
+                 ~U[2020-01-12 23:59:59Z]
                }
     end
 
@@ -157,15 +116,15 @@ defmodule ExTeal.Metric.RangesTest do
             "uri" => "new-user-trend",
             "unit" => "week",
             "timezone" => "America/Chicago",
-            "start_at" => "2020-07-13",
-            "end_at" => "2020-07-20"
+            "start_at" => "2020-01",
+            "end_at" => "2020-02"
           })
         )
 
       assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
                {
-                 Timex.to_datetime({{2020, 7, 13}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 7, 26}, {23, 59, 59}}, "America/Chicago")
+                 Timex.to_datetime({{2019, 12, 30}, {0, 0, 0}}, "America/Chicago"),
+                 Timex.to_datetime({{2020, 1, 12}, {23, 59, 59}}, "America/Chicago")
                }
     end
 
@@ -245,6 +204,16 @@ defmodule ExTeal.Metric.RangesTest do
         |> Repo.all()
 
       assert result == [u]
+    end
+  end
+
+  @dt_format "{YYYY}-{0M}-{0D} {h24}:{m}:{s}"
+
+  describe "parse_dt/3" do
+    test "parses a param in the timezone it's given, falling back to UTC" do
+      start = Timex.to_datetime({{2020, 7, 06}, {15, 5, 0}}, "America/Chicago")
+
+      assert start == Ranges.parse_dt("2020-07-06 15:05:00", @dt_format, "America/Chicago")
     end
   end
 end

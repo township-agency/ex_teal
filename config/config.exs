@@ -20,11 +20,10 @@ use Mix.Config
 #
 #     config :logger, level: :info
 #
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 config :ex_teal,
   export_module: NimbleCSV.RFC4180
-
-config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

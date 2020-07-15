@@ -10,58 +10,68 @@ defmodule ExTeal.Metric.Ranges do
 
   @year_format "{YYYY}"
   @month_format "{YYYY}-{0M}"
-  @day_format "{YYYY}-{M}-{D}"
+  @week_format "{YYYY}-{Wiso}"
+  @day_format "{YYYY}-{0M}-{0D}"
   @dt_format "{YYYY}-{0M}-{0D} {h24}:{m}:{s}"
 
   @doc """
   Parse the start and end params
   """
-  @spec get_aggregate_datetimes(
-          request :: Request.t(),
-          timezone :: String.t()
-        ) ::
-          {start :: DateTime.t(), end_dt :: DateTime.t()}
-  def get_aggregate_datetimes(
-        %Request{unit: unit, start_at: start_param, end_at: end_param},
-        timezone
-      ) do
-    case unit do
-      "year" ->
-        {
-          start_param |> parse_dt(@year_format, timezone) |> Timex.beginning_of_year(),
-          end_param |> parse_dt(@year_format, timezone) |> Timex.end_of_year()
-        }
+  @spec get_aggregate_datetimes(request :: Request.t()) ::
+          {start_dt :: DateTime.t(), end_dt :: DateTime.t()}
+  def get_aggregate_datetimes(%Request{unit: unit} = request) do
+    request
+    |> to_datetimes()
+    |> aggregate_as(unit)
+  end
 
-      "month" ->
-        {
-          start_param |> parse_dt(@month_format, timezone) |> Timex.beginning_of_month(),
-          end_param |> parse_dt(@month_format, timezone) |> Timex.end_of_month()
-        }
+  defp to_datetimes(%Request{start_at: start_param, end_at: end_param}) do
+    {
+      Timex.parse!(start_param, "{ISO:Extended}"),
+      Timex.parse!(end_param, "{ISO:Extended}")
+    }
+  end
 
-      "week" ->
-        {
-          start_param |> parse_dt(@day_format, timezone) |> Timex.beginning_of_week(),
-          end_param |> parse_dt(@day_format, timezone) |> Timex.end_of_week()
-        }
+  defp aggregate_as({start_at, end_at}, "year") do
+    {
+      Timex.beginning_of_year(start_at),
+      Timex.end_of_year(end_at)
+    }
+  end
 
-      "day" ->
-        {
-          start_param |> parse_dt(@day_format, timezone) |> Timex.beginning_of_day(),
-          end_param |> parse_dt(@day_format, timezone) |> Timex.end_of_day()
-        }
+  defp aggregate_as({start_at, end_at}, "month") do
+    {
+      Timex.beginning_of_month(start_at),
+      Timex.end_of_month(end_at)
+    }
+  end
 
-      "hour" ->
-        {
-          start_param |> parse_dt(@dt_format, timezone) |> start_of_hour(),
-          end_param |> parse_dt(@dt_format, timezone) |> end_of_hour()
-        }
+  defp aggregate_as({start_at, end_at}, "week") do
+    {
+      Timex.beginning_of_week(start_at),
+      Timex.end_of_week(end_at)
+    }
+  end
 
-      "minute" ->
-        {
-          start_param |> parse_dt(@dt_format, timezone) |> start_of_minute(),
-          end_param |> parse_dt(@dt_format, timezone) |> end_of_minute()
-        }
-    end
+  defp aggregate_as({start_at, end_at}, "day") do
+    {
+      Timex.beginning_of_day(start_at),
+      Timex.end_of_day(end_at)
+    }
+  end
+
+  defp aggregate_as({start_at, end_at}, "hour") do
+    {
+      beginning_of_hour(start_at),
+      end_of_hour(end_at)
+    }
+  end
+
+  defp aggregate_as({start_at, end_at}, "minute") do
+    {
+      beginning_of_minute(start_at),
+      end_of_minute(end_at)
+    }
   end
 
   @type between_options :: [start_dt: DateTime.t(), end_dt: DateTime.t(), metric: module()]
@@ -74,19 +84,22 @@ defmodule ExTeal.Metric.Ranges do
     dt_field = metric.date_field()
 
     field_type = metric.date_field_type()
+    start_time = to_dt_field_type(start, field_type)
+    end_time = to_dt_field_type(end_dt, field_type)
 
     query
-    |> where([q], field(q, ^dt_field) >= ^to_dt_field_type(start, field_type))
-    |> where([q], field(q, ^dt_field) <= ^to_dt_field_type(end_dt, field_type))
+    |> where([q], field(q, ^dt_field) >= ^start_time)
+    |> where([q], field(q, ^dt_field) <= ^end_time)
   end
 
-  defp parse_dt(param, format, timezone) do
+  @spec parse_dt(String.t(), String.t(), String.t()) :: DateTime.t()
+  def parse_dt(param, format, timezone) do
     param
     |> Timex.parse!(format)
     |> DateTime.from_naive!(timezone)
   end
 
-  defp start_of_hour(datetime) do
+  defp beginning_of_hour(datetime) do
     {date, {h, _m, _s}} = Timex.to_erl(datetime)
     Timex.to_datetime({date, {h, 0, 0}}, datetime.time_zone)
   end
@@ -96,7 +109,7 @@ defmodule ExTeal.Metric.Ranges do
     Timex.to_datetime({date, {h, 59, 59}}, datetime.time_zone)
   end
 
-  defp start_of_minute(datetime) do
+  defp beginning_of_minute(datetime) do
     {date, {h, m, _s}} = Timex.to_erl(datetime)
     Timex.to_datetime({date, {h, m, 0}}, datetime.time_zone)
   end

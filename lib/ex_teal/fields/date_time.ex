@@ -62,7 +62,7 @@ defmodule ExTeal.Fields.DateTime do
         nil
 
       %NaiveDateTime{} = naive ->
-        DateTime.from_naive!(naive, "Etc/UTC")
+        DateTime.from_naive!(naive, "Etc/UTC", Tzdata.TimeZoneDatabase)
 
       val ->
         val

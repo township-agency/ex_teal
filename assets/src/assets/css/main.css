@@ -251,10 +251,11 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-select {
-  @apply .bg-white .border .border-60 .pl-3 .pr-8 .text-80 .shadow;
+  @apply .bg-white .border .pl-3 .pr-8 .text-black .shadow;
   appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z' stroke='%239fa6b2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-size: 10px 6px;
+  background-size: 20px 20px;
   background-position: center right 0.75rem;
 }
 
@@ -274,6 +275,10 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 .form-select:focus {
   @apply .form-control-focus;
+}
+
+.form-select.shadow-none {
+  box-shadow: none;
 }
 
 .form-combo {
@@ -653,4 +658,25 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 .layout-side-nav--nav a.router-link-active {
   @apply .bg-primary .text-white;
 }
+
+.button-group {
+  @apply relative z-0 inline-flex shadow-sm rounded-md;
+}
+
+.button-group--button {
+  @apply relative inline-flex items-center px-3 py-2 border bg-grey-lightest text-sm leading-5 font-medium text-grey-darker transition-colors ease-in-out duration-100
+}
+
+.button-group--button:hover, .button-group--button:focus {
+  @apply bg-grey-lighter text-grey-darkest;
+}
+
+.button-group--button-selected {
+  @apply text-black bg-white;
+}
+
+.button-group--button-selected:hover {
+  @apply bg-grey-lightest text-grey-darkest;
+}
+
 /* purgecss end ignore */

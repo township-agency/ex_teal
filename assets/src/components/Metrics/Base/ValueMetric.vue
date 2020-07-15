@@ -7,21 +7,6 @@
       <h3 class="mr-3 text-base text-80 font-bold">
         {{ title }}
       </h3>
-
-      <select
-        v-if="Object.keys(ranges).length > 0"
-        class="form-control form-select"
-        @change="handleChange"
-      >
-        <option
-          v-for="(label, key) in ranges"
-          :key="key"
-          :value="key"
-          :selected="selectedRangeKey == key"
-        >
-          {{ label }}
-        </option>
-      </select>
     </div>
 
     <p class="flex items-center text-4xl mb-4">
@@ -102,11 +87,6 @@ export default {
       type: String,
       default: ''
     },
-    selectedRangeKey: {
-      type: [ String, Number ],
-      required: true
-    },
-    ranges: { type: Object, default: () => {} },
     format: {
       type: String,
       default: '(0[.]00a)',

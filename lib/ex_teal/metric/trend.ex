@@ -101,9 +101,9 @@ defmodule ExTeal.Metric.Trend do
 
   @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: [map()]
   def aggregate(metric, request, query, aggregate_type, field) do
-    timezone = Request.resolve_timezone(request.conn)
     twelve_hour_time = metric.twelve_hour_time()
-    {start_dt, end_dt} = get_aggregate_datetimes(request, timezone)
+    {start_dt, end_dt} = get_aggregate_datetimes(request)
+    timezone = start_dt.date_time
     possible_results = get_possible_results(start_dt, end_dt, request, twelve_hour_time)
 
     results =
@@ -116,7 +116,7 @@ defmodule ExTeal.Metric.Trend do
         metric: metric
       )
       |> metric.repo().all()
-      |> Enum.into(%{}, &format_result_data(&1, request.unit, twelve_hour_time))
+      |> Enum.into(%{}, &format_result_data(&1, request.unit, timezone, twelve_hour_time))
 
     precision = metric.precision()
 
@@ -129,34 +129,44 @@ defmodule ExTeal.Metric.Trend do
 
   @doc """
   Takes a database record transforms it into a two-tuple of the date_result
-  parsed into an appropriate format and a
+  parsed into an appropriate format
   """
-  @spec format_result_data(map(), String.t(), boolean()) :: {String.t(), number}
-  def format_result_data(%{date_result: date, aggregate: val}, unit, twelve_hour) do
+  @spec format_result_data(map(), String.t(), String.t(), boolean()) :: {String.t(), number}
+  def format_result_data(
+        %{date_result: date, aggregate: val},
+        unit,
+        timezone,
+        twelve_hour
+      ) do
     date =
       case unit do
         "year" ->
           date
 
         "month" ->
-          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}")
-          to_result_date(dt, "month", false)
+          date
+          |> to_local_dt("{YYYY}-{0M}", timezone)
+          |> to_result_date("month", false)
 
         "week" ->
-          {:ok, dt} = Timex.parse(date, "{YYYY}-{Wiso}")
-          to_result_date(dt, "week", false)
+          date
+          |> to_local_dt("{YYYY}-{Wiso}", timezone)
+          |> to_result_date("week", false)
 
         "day" ->
-          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D}")
-          to_result_date(dt, "day", false)
+          date
+          |> to_local_dt("{YYYY}-{0M}-{0D}", timezone)
+          |> to_result_date("day", false)
 
         "hour" ->
-          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D} {h24}:{m}")
-          to_result_date(dt, "hour", twelve_hour)
+          date
+          |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}", timezone)
+          |> to_result_date("hour", twelve_hour)
 
         "minute" ->
-          {:ok, dt} = Timex.parse(date, "{YYYY}-{0M}-{0D} {h24}:{m}:{s}")
-          to_result_date(dt, "minute", twelve_hour)
+          date
+          |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}:{s}", timezone)
+          |> to_result_date("minute", twelve_hour)
 
         true ->
           nil
@@ -165,10 +175,17 @@ defmodule ExTeal.Metric.Trend do
     {date, val}
   end
 
-  def get_possible_results(start_dt, end_dt, request, twelve_hour_time \\ false) do
+  def get_possible_results(start_dt, end_dt, request, timezone, twelve_hour_time \\ false) do
     [from: start_dt, until: end_dt, step: step_for(request.unit)]
     |> Interval.new()
     |> Enum.map(&to_result_date(&1, request.unit, twelve_hour_time))
+  end
+
+  @spec to_local_dt(String.t(), String.t(), String.t()) :: DateTime.t()
+  def to_local_dt(db_date, format, timezone) do
+    db_date
+    |> Timex.parse!(format)
+    |> DateTime.from_naive!(timezone)
   end
 
   @doc """
@@ -218,8 +235,9 @@ defmodule ExTeal.Metric.Trend do
   def to_result_date(datetime, "minute", true),
     do: Timex.format!(datetime, "{Mfull} {D} {YYYY} {h12}:{m} {am}")
 
-  def to_result_date(datetime, "minute", false),
-    do: Timex.format!(datetime, "{Mfull} {D} {YYYY} {h24}:{m}")
+  def to_result_date(datetime, "minute", false) do
+    Timex.format!(datetime, "{Mfull} {D} {YYYY} {h24}:{m}")
+  end
 
   defp step_for("year"), do: [years: 1]
   defp step_for("month"), do: [months: 1]

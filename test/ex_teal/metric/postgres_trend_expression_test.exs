@@ -44,7 +44,7 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       dt =
         {{2020, 01, 05}, {0, 0, 0}}
         |> NaiveDateTime.from_erl!()
-        |> DateTime.from_naive!("America/Chicago")
+        |> DateTime.from_naive!("America/Chicago", Tzdata.TimeZoneDatabase)
 
       interval =
         [from: dt, until: [months: 5], step: [months: 1]]
