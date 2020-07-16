@@ -59,8 +59,9 @@ defmodule ExTeal.Api.MetricResponderTest do
 
   def params,
     do: %{
+      "uri" => "new-user-trend",
       "unit" => "year",
-      "start_at" => "2016",
-      "end_at" => "2017"
+      "start_at" => "2016-01-05T02:03:44-00:00",
+      "end_at" => "2016-03-06T02:04:56-00:00"
     }
 end

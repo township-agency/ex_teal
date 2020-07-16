@@ -8,18 +8,43 @@ defmodule ExTeal.Metric.TrendTest do
   alias TestExTeal.{NewUserTrend, RevenueTrend}
   alias TestExTeal.{Order, User}
 
-  describe "aggregate/5" do
-    test "returns data by year" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "start_at" => "2016-01-03T00:00:00-04:00",
-            "end_at" => "2017-12-30T23:59:59-04:00"
-          })
-        )
+  @utc_params %{
+    "uri" => "new-user-trend",
+    "unit" => "year",
+    "start_at" => "2016-01-05T02:03:44-00:00",
+    "end_at" => "2016-03-06T02:04:56-00:00"
+  }
 
+  @central_params %{
+    "uri" => "new-user-trend",
+    "unit" => "year",
+    "start_at" => "2016-01-05T02:03:44-06:00",
+    "end_at" => "2016-03-06T02:04:56-06:00"
+  }
+
+  setup context do
+    params = if context[:utc], do: @utc_params, else: @central_params
+
+    params = if context[:unit], do: Map.put(params, "unit", context[:unit]), else: params
+    params = if context[:end], do: Map.put(params, "end_at", context[:end]), else: params
+
+    {:ok, request: Request.from_conn(build_conn(:get, "foo", params))}
+  end
+
+  describe "aggregate/5" do
+    @tag utc: true
+    test "returns data by year in utc", %{request: request} do
+      insert(:user, inserted_at: from_erl({{2017, 1, 5}, {0, 0, 0}}))
+
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+
+      assert result == [
+               %{date: "2016", value: D.new(0)}
+             ]
+    end
+
+    @tag end: "2017-03-06T02:04:56-06:00"
+    test "returns data by year", %{request: request} do
       insert(:user, inserted_at: from_erl({{2017, 1, 5}, {0, 0, 0}}))
 
       result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
@@ -30,78 +55,55 @@ defmodule ExTeal.Metric.TrendTest do
              ]
     end
 
-    test "returns data by month" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "month",
-            "start_at" => "2020-01",
-            "end_at" => "2020-04"
-          })
-        )
-
-      insert(:user, inserted_at: from_erl({{2020, 1, 5}, {0, 0, 0}}))
-      insert_pair(:user, inserted_at: from_erl({{2020, 3, 5}, {0, 0, 0}}))
+    @tag end: "2016-04-06T02:04:56-06:00", unit: "month"
+    test "returns data by month", %{request: request} do
+      insert(:user, inserted_at: from_erl({{2016, 1, 5}, {0, 0, 0}}))
+      insert_pair(:user, inserted_at: from_erl({{2016, 3, 5}, {0, 0, 0}}))
 
       result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
 
       assert result == [
-               %{date: "January 2020", value: D.new(1)},
-               %{date: "February 2020", value: D.new(0)},
-               %{date: "March 2020", value: D.new(2)},
-               %{date: "April 2020", value: D.new(0)}
+               %{date: "January 2016", value: D.new(1)},
+               %{date: "February 2016", value: D.new(0)},
+               %{date: "March 2016", value: D.new(2)},
+               %{date: "April 2016", value: D.new(0)}
              ]
     end
 
-    test "can return sum aggregations by week" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "revenue-trend",
-            "unit" => "week",
-            "start_at" => "2020-01",
-            "end_at" => "2020-02"
-          })
-        )
-
-      insert(:order, grand_total: 100, inserted_at: from_erl({{2020, 1, 1}, {0, 0, 0}}))
-      insert_pair(:order, grand_total: 23, inserted_at: from_erl({{2020, 1, 6}, {0, 0, 0}}))
+    @tag end: "2016-01-11T02:04:56-06:00", unit: "week"
+    test "can return sum aggregations by week", %{request: request} do
+      insert(:order, grand_total: 100, inserted_at: from_erl({{2016, 1, 5}, {10, 0, 0}}))
+      insert_pair(:order, grand_total: 23, inserted_at: from_erl({{2016, 1, 13}, {0, 0, 0}}))
 
       result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
 
       assert result == [
-               %{date: "December 30 - January 5", value: D.new(100)},
-               %{date: "January 6 - January 12", value: D.new(46)}
+               %{date: "January 4 - January 10", value: D.new(100)},
+               %{date: "January 11 - January 17", value: D.new(46)}
              ]
     end
 
-    test "can return sums by the minute" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "revenue-trend",
-            "unit" => "minute",
-            # These are in EST
-            "start_at" => "2020-01-01 10:00:00",
-            "end_at" => "2020-01-01 10:04:00",
-            "timezone" => "America/New_York"
-          })
-        )
+    @tag end: "2016-01-05T02:06:44-06:00", unit: "minute"
+    test "can return sums by the minute", %{request: request} do
+      insert(:order,
+        grand_total: 100,
+        inserted_at: from_erl({{2016, 1, 5}, {8, 3, 2}}, "America/Chicago")
+      )
 
-      insert(:order, grand_total: 100, inserted_at: from_erl({{2020, 1, 1}, {13, 2, 0}}))
-      insert_pair(:order, grand_total: 23, inserted_at: from_erl({{2020, 1, 1}, {13, 3, 0}}))
+      insert_pair(:order,
+        grand_total: 23,
+        inserted_at: from_erl({{2016, 1, 5}, {8, 4, 0}}, "America/Chicago")
+      )
 
       result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
 
       zero = Decimal.new(0)
 
       assert result == [
-               %{date: "January 1 2020 10:00", value: zero},
-               %{date: "January 1 2020 10:01", value: zero},
-               %{date: "January 1 2020 10:02", value: zero},
-               %{date: "January 1 2020 10:03", value: Decimal.new(100)},
-               %{date: "January 1 2020 10:04", value: Decimal.new(46)}
+               %{date: "January 5 2016 02:03", value: Decimal.new(100)},
+               %{date: "January 5 2016 02:04", value: Decimal.new(46)},
+               %{date: "January 5 2016 02:05", value: zero},
+               %{date: "January 5 2016 02:06", value: zero}
              ]
     end
   end
@@ -113,54 +115,32 @@ defmodule ExTeal.Metric.TrendTest do
   end
 
   describe "get_possible_results/4" do
-    test "returns a single year for start and stop dates" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "start_at" => "2016",
-            "end_at" => "2016"
-          })
-        )
+    test "returns a single year", %{request: request} do
+      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
-      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request, "Etc/UTC")
-
-      assert ["2016"] == Trend.get_possible_results(start_dt, end_dt, request, false)
+      assert ["2016"] ==
+               Trend.get_possible_results(start_dt, end_dt, request, "America/New_York", false)
     end
 
-    test "returns a unit of years for start and stop dates" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "start_at" => "2016",
-            "end_at" => "2020"
-          })
-        )
-
-      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request, "Etc/UTC")
+    @tag end: "2020-01-05T02:06:44-06:00"
+    test "returns a unit of years", %{request: request} do
+      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
       assert ["2016", "2017", "2018", "2019", "2020"] ==
-               Trend.get_possible_results(start_dt, end_dt, request, false)
+               Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago", false)
     end
 
-    test "returns a unit of minutes for start and stop dates" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "minute",
-            "start_at" => "2020-01-01 03:45:00",
-            "end_at" => "2020-01-01 03:47:00"
-          })
-        )
+    @tag end: "2016-01-05T02:06:44-06:00", unit: "minute"
+    test "returns a unit of minutess", %{request: request} do
+      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
-      {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request, "America/Chicago")
-
-      assert ["January 1 2020 03:45:00", "January 1 2020 03:46:00", "January 1 2020 03:47:00"] ==
-               Trend.get_possible_results(start_dt, end_dt, request, false)
+      assert Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago", false) ==
+               [
+                 "January 5 2016 02:03",
+                 "January 5 2016 02:04",
+                 "January 5 2016 02:05",
+                 "January 5 2016 02:06"
+               ]
     end
   end
 
@@ -169,7 +149,7 @@ defmodule ExTeal.Metric.TrendTest do
       dt = Timex.to_datetime({{2020, 7, 06}, {15, 5, 0}}, "America/Chicago")
       assert Trend.to_result_date(dt, "year", false) == "2020"
       assert Trend.to_result_date(dt, "month", false) == "July 2020"
-      assert Trend.to_result_date(dt, "week", false) == "July 6 - July 13"
+      assert Trend.to_result_date(dt, "week", false) == "July 6 - July 12"
       assert Trend.to_result_date(dt, "day", false) == "July 6 2020"
       assert Trend.to_result_date(dt, "hour", true) == "July 6 2020 3:00 pm"
       assert Trend.to_result_date(dt, "hour", false) == "July 6 2020 15:00"
@@ -229,7 +209,7 @@ defmodule ExTeal.Metric.TrendTest do
 
     test "minute unit with 12hr time" do
       result =
-        %{date_result: "2020-07-06 13:07:00", aggregate: 5}
+        %{date_result: "2020-07-06 13:07", aggregate: 5}
         |> Trend.format_result_data("minute", "America/Chicago", true)
 
       assert result == {"July 6 2020 1:07 pm", 5}
@@ -237,7 +217,7 @@ defmodule ExTeal.Metric.TrendTest do
 
     test "minute unit with 24hr time" do
       result =
-        %{date_result: "2020-07-06 13:42:00", aggregate: 5}
+        %{date_result: "2020-07-06 13:42", aggregate: 5}
         |> Trend.format_result_data("minute", "America/Chicago", false)
 
       assert result == {"July 6 2020 13:42", 5}
@@ -257,6 +237,4 @@ defmodule ExTeal.Metric.TrendTest do
       assert result == [%{aggregate: 1}]
     end
   end
-
-  defp as_iso
 end

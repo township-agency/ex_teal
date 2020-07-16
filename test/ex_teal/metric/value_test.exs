@@ -148,7 +148,7 @@ defmodule ExTeal.Metric.ValueTest do
   defp days_ago_as_str(days) do
     days
     |> days_ago()
-    |> Timex.format!("{YYYY}-{0M}-{0D}")
+    |> Timex.format!("{ISO:Extended}")
   end
 
   defp request_for_between(start_days, end_days) do

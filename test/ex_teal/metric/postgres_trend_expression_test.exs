@@ -185,15 +185,15 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
 
       assert results == [
                %{
-                 date_result: "2020-01-05 00:15:00",
+                 date_result: "2020-01-05 00:15",
                  aggregate: 1
                },
                %{
-                 date_result: "2020-01-05 00:16:00",
+                 date_result: "2020-01-05 00:16",
                  aggregate: 1
                },
                %{
-                 date_result: "2020-01-05 00:17:00",
+                 date_result: "2020-01-05 00:17",
                  aggregate: 1
                }
              ]

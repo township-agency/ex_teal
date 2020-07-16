@@ -8,12 +8,6 @@ defmodule ExTeal.Metric.Ranges do
   import Ecto.Query
   alias ExTeal.Metric.Request
 
-  @year_format "{YYYY}"
-  @month_format "{YYYY}-{0M}"
-  @week_format "{YYYY}-{Wiso}"
-  @day_format "{YYYY}-{0M}-{0D}"
-  @dt_format "{YYYY}-{0M}-{0D} {h24}:{m}:{s}"
-
   @doc """
   Parse the start and end params
   """

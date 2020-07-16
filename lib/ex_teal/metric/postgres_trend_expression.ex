@@ -72,7 +72,7 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
   defp date_format("week"), do: "IYYY-IW"
   defp date_format("day"), do: "YYYY-MM-DD"
   defp date_format("hour"), do: "YYYY-MM-DD HH24:00"
-  defp date_format("minute"), do: "YYYY-MM-DD HH24:mi:00"
+  defp date_format("minute"), do: "YYYY-MM-DD HH24:mi"
 
   defp positive_or_negative(offset) when offset > 0, do: "+"
   defp positive_or_negative(offset) when offset == 0, do: ""

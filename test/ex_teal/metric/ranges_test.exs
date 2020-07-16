@@ -3,185 +3,96 @@ defmodule ExTeal.Metric.RangesTest do
   use Timex
   alias ExTeal.Metric.{Ranges, Request}
 
-  describe "get_aggregate_datetimes/2" do
-    test "for a year unit with UTC" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "start_at" => "2016-01-05T02:03:44-00:00",
-            "end_at" => "2016-01-06T02:04:56-00:00"
-          })
-        )
+  @utc_params %{
+    "uri" => "new-user-trend",
+    "unit" => "year",
+    "start_at" => "2016-01-05T02:03:44-00:00",
+    "end_at" => "2016-03-06T02:04:56-00:00"
+  }
 
+  @central_params %{
+    "uri" => "new-user-trend",
+    "unit" => "year",
+    "start_at" => "2016-01-05T02:03:44-06:00",
+    "end_at" => "2016-03-06T02:04:56-06:00"
+  }
+
+  setup context do
+    params = if context[:utc], do: @utc_params, else: @central_params
+
+    params = if context[:unit], do: Map.put(params, "unit", context[:unit]), else: params
+
+    {:ok, request: Request.from_conn(build_conn(:get, "foo", params))}
+  end
+
+  describe "get_aggregate_datetimes/2" do
+    @tag utc: true
+    test "for a year unit with UTC", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {~U[2016-01-01 00:00:00Z], ~U[2016-12-31 23:59:59Z]}
     end
 
-    test "for a start year and a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "year",
-            "start_at" => "2015-01-05T02:03:44-06:00",
-            "end_at" => "2020-01-06T02:04:56-06:00"
-          })
-        )
-
+    test "for a start year and a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2015, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2020, 12, 31}, {23, 59, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2016, 12, 31}, {23, 59, 59}}, "Etc/GMT+6")
                }
     end
 
-    test "for a month unit with UTC" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "month",
-            "start_at" => "1989-03-01T02:03:44-00:00",
-            "end_at" => "1992-05-31T02:04:56-00:00"
-          })
-        )
-
+    @tag utc: true, unit: "month"
+    test "for a month unit with UTC", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
-               {
-                 Timex.to_datetime({{1989, 3, 1}, {0, 0, 0}}, "Etc/UTC"),
-                 Timex.to_datetime({{1992, 5, 31}, {23, 59, 59}}, "Etc/UTC")
-               }
+               {~U[2016-01-01 00:00:00Z], ~U[2016-03-31 23:59:59Z]}
     end
 
-    test "for a month unit with a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "month",
-            "start_at" => "2015-03-04T02:03:44-06:00",
-            "end_at" => "2020-05-29T02:04:56-06:00"
-          })
-        )
-
+    @tag unit: "month"
+    test "for a month unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) == {
-               Timex.to_datetime({{2015, 3, 1}, {0, 0, 0}}, "Etc/GMT+6"),
-               Timex.to_datetime({{2020, 5, 31}, {23, 59, 59}}, "Etc/GMT+6")
+               Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
+               Timex.to_datetime({{2016, 3, 31}, {23, 59, 59}}, "Etc/GMT+6")
              }
     end
 
-    test "for a month unit with a user override" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "month",
-            "timezone" => "America/Chicago",
-            "start_at" => "1989-04",
-            "end_at" => "1989-05"
-          })
-        )
+    @tag utc: true, unit: "week"
+    test "for a week unit with UTC", %{request: request} do
+      assert Ranges.get_aggregate_datetimes(request) ==
+               {~U[2016-01-04 00:00:00Z], ~U[2016-03-06 23:59:59Z]}
+    end
 
-      assert Ranges.get_aggregate_datetimes(request, "America/New_York") ==
+    @tag unit: "week"
+    test "for a week unit with a user timezone", %{request: request} do
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{1989, 4, 1}, {0, 0, 0}}, "America/New_York"),
-                 Timex.to_datetime({{1989, 5, 31}, {23, 59, 59}}, "America/New_York")
+                 Timex.to_datetime({{2016, 1, 4}, {0, 0, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/GMT+6")
                }
     end
 
-    test "for a week unit with UTC" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "week",
-            "start_at" => "2020-01",
-            "end_at" => "2020-02"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "Etc/UTC") ==
+    @tag unit: "day"
+    test "for a day unit with a user timezone", %{request: request} do
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 ~U[2019-12-30 00:00:00Z],
-                 ~U[2020-01-12 23:59:59Z]
+                 Timex.to_datetime({{2016, 1, 5}, {0, 0, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/GMT+6")
                }
     end
 
-    test "for a week unit with a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "week",
-            "timezone" => "America/Chicago",
-            "start_at" => "2020-01",
-            "end_at" => "2020-02"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
+    @tag unit: "hour"
+    test "for a hour unit with a user timezone", %{request: request} do
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2019, 12, 30}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 1, 12}, {23, 59, 59}}, "America/Chicago")
+                 Timex.to_datetime({{2016, 1, 5}, {2, 0, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2016, 3, 6}, {2, 59, 59}}, "Etc/GMT+6")
                }
     end
 
-    test "for a day unit with a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "day",
-            "timezone" => "America/Chicago",
-            "start_at" => "2020-07-06",
-            "end_at" => "2020-07-10"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
+    @tag unit: "minute"
+    test "for a minute unit with a user timezone", %{request: request} do
+      assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2020, 7, 06}, {0, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 7, 10}, {23, 59, 59}}, "America/Chicago")
-               }
-    end
-
-    test "for a hour unit with a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "hour",
-            "timezone" => "America/Chicago",
-            "start_at" => "2020-07-06 12:05:17",
-            "end_at" => "2020-07-06 20:31:30"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
-               {
-                 Timex.to_datetime({{2020, 7, 06}, {12, 0, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 7, 06}, {20, 59, 59}}, "America/Chicago")
-               }
-    end
-
-    test "for a minute unit with a user timezone" do
-      request =
-        Request.from_conn(
-          build_conn(:get, "/foo", %{
-            "uri" => "new-user-trend",
-            "unit" => "minute",
-            "timezone" => "America/Chicago",
-            "start_at" => "2020-07-06 12:05:17",
-            "end_at" => "2020-07-06 15:15:45"
-          })
-        )
-
-      assert Ranges.get_aggregate_datetimes(request, "America/Chicago") ==
-               {
-                 Timex.to_datetime({{2020, 7, 06}, {12, 5, 0}}, "America/Chicago"),
-                 Timex.to_datetime({{2020, 7, 06}, {15, 15, 59}}, "America/Chicago")
+                 Timex.to_datetime({{2016, 1, 5}, {2, 3, 0}}, "Etc/GMT+6"),
+                 Timex.to_datetime({{2016, 3, 6}, {2, 4, 59}}, "Etc/GMT+6")
                }
     end
   end
