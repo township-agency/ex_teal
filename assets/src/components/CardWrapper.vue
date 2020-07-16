@@ -71,6 +71,6 @@ export default {
 };
 
 function calculateCardWidth (card) {
-  return CardSizes.indexOf(card.width) !== -1 ? `sm:w-full md:w-1/2 lg:w-${card.width}` : 'w-1/2 md:w-1/3';
+  return CardSizes.indexOf(card.width) !== -1 ? `md:w-full lg:w-1/2 xl:w-${card.width}` : 'w-1/2 md:w-1/3';
 }
 </script>

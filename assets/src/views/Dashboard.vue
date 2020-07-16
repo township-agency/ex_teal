@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6 pb-6 w-full">
-      <heading class="flex items-center">
+    <div class="lg:flex lg:items-center lg:justify-between pb-6 w-full">
+      <heading class="lg:flex md:items-center mb-4 lg:mb-0">
         {{ dashboard.title }}
         <span
           v-if="startAt"

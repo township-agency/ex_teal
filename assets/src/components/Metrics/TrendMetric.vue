@@ -1,15 +1,20 @@
 <template>
-  <loading-card
-    :loading="loading"
-  >
-    <div class="m-4">
-      <area-chart
-        :data="areaData"
-        :prefix="prefix"
-        :suffix="suffix"
-      />
-    </div>
-  </loading-card>
+  <div>
+    <header class="uppercase text-xs mb-4">{{card.title}}</header>
+    <loading-card
+      :loading="loading"
+    >
+      <div class="m-4">
+        <area-chart
+          :data="areaData"
+          :prefix="prefix"
+          :suffix="suffix"
+          :library="{showLines: true}"
+          :dataset="dataStyles"
+        />
+      </div>
+    </loading-card>
+  </div>
 </template>
 
 <script>
@@ -66,6 +71,12 @@ export default {
         acc[date] = value;
         return acc;
       }, {});
+    },
+
+    dataStyles () {
+      return {
+        pointRadius: 2
+      };
     }
   },
 
