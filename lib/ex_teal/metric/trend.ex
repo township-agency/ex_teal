@@ -21,11 +21,18 @@ defmodule ExTeal.Metric.Trend do
 
   It would also be nice to be able to display multiple trends on the same graph.
   """
-  @type data :: %{aggregate: term(), date_result: String.t()}
+
+  @type result_entry :: %{aggregate: term(), date_result: String.t()}
+
+  @type result :: [result_entry()]
+
+  @type multi_result :: %{label: String.t(), data: result()}
+
+  @type valid_result :: result() | [multi_result()]
 
   @callback twelve_hour_time() :: boolean()
 
-  @callback calculate(ExTeal.Metric.Request.t()) :: [data()]
+  @callback calculate(ExTeal.Metric.Request.t()) :: valid_result()
 
   defmacro __using__(_opts) do
     quote do
@@ -49,7 +56,7 @@ defmodule ExTeal.Metric.Trend do
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.data()
+      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
       def count(request, queryable, field \\ :id) do
         Trend.aggregate(__MODULE__, request, queryable, :count, field)
       end
@@ -58,7 +65,7 @@ defmodule ExTeal.Metric.Trend do
       Performs an average query against the specified schema for the requested
       range specified field
       """
-      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.data()
+      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
       def average(request, queryable, field) do
         Trend.aggregate(__MODULE__, request, queryable, :avg, field)
       end
@@ -67,7 +74,7 @@ defmodule ExTeal.Metric.Trend do
       Performs a max query against the specified schema for the requested
       range specified field
       """
-      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.data()
+      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
       def maximum(request, queryable, field) do
         Trend.aggregate(__MODULE__, request, queryable, :max, field)
       end
@@ -76,7 +83,7 @@ defmodule ExTeal.Metric.Trend do
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.data()
+      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
       def minimum(request, queryable, field) do
         Trend.aggregate(__MODULE__, request, queryable, :min, field)
       end
@@ -85,12 +92,12 @@ defmodule ExTeal.Metric.Trend do
       Performs a sum query against the specified schema for the requested
       range specified field
       """
-      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.data()
+      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
       def sum(request, queryable, field) do
         Trend.aggregate(__MODULE__, request, queryable, :sum, field)
       end
 
-      defoverridable twelve_hour_time: 0, date_field: 0, precision: 0
+      defoverridable twelve_hour_time: 0, precision: 0
     end
   end
 

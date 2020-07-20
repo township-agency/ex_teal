@@ -25,6 +25,15 @@ defmodule ExTeal.Api.MetricResponderTest do
       resp = MetricResponder.get(conn, "new_users")
       assert resp.status == 200
     end
+
+    @tag manifest: MetricManifest
+    test "returns a 200 for a valid multi metric" do
+      conn = build_conn(:get, "/api/metrics/revenue_trend", params())
+      resp = MetricResponder.get(conn, "revenue_trend")
+      body = Jason.decode!(resp.resp_body, keys: :atoms)
+      assert Enum.count(body.metric.data) == 2
+      assert resp.status == 200
+    end
   end
 
   describe "resource_index/3" do

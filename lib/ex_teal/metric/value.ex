@@ -11,9 +11,13 @@ defmodule ExTeal.Metric.Value do
   of the metric.
   """
 
-  @type data :: %{current: term(), previous: term()}
+  @type result :: %{current: term(), previous: term()}
 
-  @callback calculate(ExTeal.Metric.Request.t()) :: data()
+  @type multi_result :: [%{label: String.t(), data: result()}]
+
+  @type valid_result :: result() | [multi_result()]
+
+  @callback calculate(ExTeal.Metric.Request.t()) :: valid_result()
 
   defmacro __using__(_opts) do
     quote do
@@ -24,11 +28,13 @@ defmodule ExTeal.Metric.Value do
 
       def component, do: "value-metric"
 
+      def options, do: %{uri: uri()}
+
       @doc """
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
       def count(request, query, field \\ :id) do
         Value.aggregate(__MODULE__, request, query, :count, field)
       end
@@ -37,7 +43,7 @@ defmodule ExTeal.Metric.Value do
       Performs an average query against the specified schema for the requested
       range specified field
       """
-      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
       def average(request, query, field) do
         Value.aggregate(__MODULE__, request, query, :avg, field)
       end
@@ -46,7 +52,7 @@ defmodule ExTeal.Metric.Value do
       Performs a max query against the specified schema for the requested
       range specified field
       """
-      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
       def maximum(request, query, field) do
         Value.aggregate(__MODULE__, request, query, :max, field)
       end
@@ -55,7 +61,7 @@ defmodule ExTeal.Metric.Value do
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
       def minimum(request, query, field) do
         Value.aggregate(__MODULE__, request, query, :min, field)
       end
@@ -64,7 +70,7 @@ defmodule ExTeal.Metric.Value do
       Performs a sum query against the specified schema for the requested
       range specified field
       """
-      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.data()
+      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
       def sum(request, query, field) do
         Value.aggregate(__MODULE__, request, query, :sum, field)
       end

@@ -4,12 +4,12 @@ defmodule ExTeal.Metric.Result do
   Value Metric Query
   """
 
-  @serialized ~w(data prefix suffix format)a
+  @serialized ~w(data prefix suffix format multiple_results)a
   @derive {Jason.Encoder, only: @serialized}
 
   alias __MODULE__
 
-  defstruct [:data, :prefix, :suffix, :format]
+  defstruct [:data, :prefix, :suffix, :format, :multiple_results]
 
   @type t :: %__MODULE__{}
 
@@ -19,6 +19,7 @@ defmodule ExTeal.Metric.Result do
       prefix: metric.prefix(),
       suffix: metric.suffix(),
       format: metric.format(),
+      multiple_results: metric.multiple_results(),
       data: data
     }
   end
