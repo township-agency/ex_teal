@@ -1,15 +1,6 @@
 <template>
-  <loading-card
-    :loading="loading"
-    class="metric px-6 py-4 relative"
-  >
-    <div class="flex mb-4 justify-between">
-      <h3 class="mr-3 text-base text-80 font-bold">
-        {{ title }}
-      </h3>
-    </div>
-
-    <p class="flex items-center text-4xl mb-4">
+  <div class="flex justify-center flex-1 items-center flex-col text-black">
+    <p class="flex items-center text-4xl">
       {{ formattedValue }}
       <span
         v-if="suffix"
@@ -17,34 +8,36 @@
       >{{ formattedSuffix }}</span>
     </p>
 
+    <p class="mt-4 pt-4 mb-2 text-xl border-t text-center mx-4v">
+      {{ label }}
+    </p>
+
     <div class="flex items-center">
-      <p class="text-80 font-bold inline-flex items-center">
+      <p class="text-80 font-bold flex items-center">
         <svg
-          v-if="increaseOrDecreaseLabel == 'Decrease'"
-          class="text-danger fill-current mr-2"
-          width="20"
-          height="20"
+          v-if="increaseOrDecrease < 0"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          class="fill-current text-danger-dark mr-2 block"
         >
-          <path
-            d="M1.25,18.75V0H0v20h20v-1.25H1.25z M9.3876,9.375l1.2374-1.2374l4.9372,4.9371H9.696v1.25h8v-8h-1.25v5.8661l-4.9371-4.9372
-    L10.625,6.3698L8.5037,8.4911L4.4378,4.4252L3.554,5.3091l4.9497,4.9497L9.3876,9.375z"
-          />
+          <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z" />
         </svg>
         <svg
-          v-if="increaseOrDecreaseLabel == 'Increase'"
-          class="rotate-180 text-success fill-current mr-2"
-          width="20"
-          height="20"
+          v-if="increaseOrDecrease > 0"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          class="fill-current text-success-dark mr-2"
         >
-          <path
-            d="M1.25,18.75V0H0v20h20v-1.25H1.25z M8.5037,10.2589l2.1213,2.1213l5.8211-5.821v5.8661h1.25v-8h-8v1.25h5.8661
-    l-4.9372,4.9372L9.3425,9.33L8.5037,8.4911L3.554,13.4409l0.8839,0.8839L8.5037,10.2589z"
-          />
+          <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
         </svg>
 
         <span v-if="increaseOrDecrease != 0">
           <span v-if="growthPercentage !== 0">
-            {{ growthPercentage }}% {{ increaseOrDecreaseLabel }}
+            {{ growthPercentage }}%
           </span>
 
           <span v-else>No Increase</span>
@@ -57,7 +50,7 @@
         </span>
       </p>
     </div>
-  </loading-card>
+  </div>
 </template>
 
 <script>
@@ -66,18 +59,9 @@ import { singularOrPlural } from 'ex-teal-js';
 
 export default {
   props: {
-    loading: { type: Boolean, default: true },
-    title: {
-      type: String,
-      default: ''
-    },
-    previous: {
-      type: Number,
-      default: 0
-    },
-    value: {
-      type: Number,
-      default: 0
+    data: {
+      type: Object,
+      required: true
     },
     prefix: {
       type: String,
@@ -91,6 +75,10 @@ export default {
       type: String,
       default: '(0[.]00a)',
     },
+    label: {
+      type: String,
+      required: true
+    }
   },
 
   computed: {
@@ -98,25 +86,17 @@ export default {
       return Math.abs(this.increaseOrDecrease);
     },
 
+    previous () {
+      return this.data ? this.data.previous : 0;
+    },
+
+    value () {
+      return this.data ? this.data.current : 0;
+    },
+
     increaseOrDecrease () {
       if (this.previous == 0 || this.previous == null || this.value == 0) {return 0;}
       return (((this.value - this.previous) / this.previous) * 100).toFixed(2);
-    },
-
-    increaseOrDecreaseLabel () {
-      let label;
-      switch (Math.sign(this.increaseOrDecrease)) {
-        case 1:
-          label = 'Increase';
-          break;
-        case 0:
-          label = 'Constant';
-          break;
-        case -1:
-          label = 'Decrease';
-          break;
-      }
-      return label;
     },
 
     sign () {

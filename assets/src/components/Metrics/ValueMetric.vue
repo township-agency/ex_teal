@@ -1,7 +1,22 @@
 <template>
-  <loading-card :loading="loading">
-    <BaseValueMetric :data="data" />
-  </loading-card>
+  <div>
+    <header class="uppercase text-xs mb-4">
+      {{ card.title }}
+    </header>
+    <loading-card :loading="loading">
+      <div class="m-4 flex items-center justify-between flex-wrap">
+        <BaseValueMetric
+          v-for="(d, i) in data"
+          :key="i"
+          :data="d.data"
+          :label="d.label"
+          :prefix="prefix"
+          :suffix="suffix"
+          :format="format"
+        />
+      </div>
+    </loading-card>
+  </div>
 </template>
 
 <script>
@@ -29,28 +44,24 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: '',
+    },
+
+    metricData: {
+      type: Object,
+      required: true
     }
   },
 
   data: () => ({
     loading: true,
     format: '(0[.]00a)',
-    value: 0,
-    previous: 0,
+    data: [],
     prefix: '',
     suffix: '',
-    selectedRangeKey: null,
+    multiple_results: false
   }),
 
   computed: {
-    hasRanges () {
-      return Object.keys(this.card.options.ranges).length > 0;
-    },
-
-    rangePayload () {
-      return this.hasRanges ? { params: { range: this.selectedRangeKey } } : {};
-    },
-
     metricEndpoint () {
       const uri = this.card.options.uri;
       if (this.resourceName && this.resourceId) {
@@ -67,6 +78,10 @@ export default {
     resourceId () {
       this.fetch();
     },
+
+    metricData () {
+      this.fetch();
+    }
   },
 
   mounted () {
@@ -76,17 +91,27 @@ export default {
   methods: {
     fetch () {
       this.loading = true;
-      Minimum(ExTeal.request().get(this.metricEndpoint, this.rangePayload)).then(
+      const { startAt, endAt, unit, timezone } = this.metricData;
+
+      Minimum(ExTeal.request().get(this.metricEndpoint, {
+        params: {
+          start_at: startAt.toISO({ suppressMilliseconds: true }),
+          end_at: endAt.toISO({ suppressMilliseconds: true }),
+          unit,
+          timezone
+        }
+      })).then(
         ({
           data: {
-            metric: { current, previous, prefix, suffix, format },
+            metric: { data, prefix, suffix, format, multiple_results },
           },
         }) => {
-          this.value = current;
+          console.log(data);
+          this.multiple_results = multiple_results;
           this.format = format || this.format;
           this.prefix = prefix || this.prefix;
           this.suffix = suffix || this.suffix;
-          this.previous = previous;
+          this.data = multiple_results ? data : [ { label: this.card.title, data }];
           this.loading = false;
         }
       );

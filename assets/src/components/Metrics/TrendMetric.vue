@@ -1,6 +1,8 @@
 <template>
   <div>
-    <header class="uppercase text-xs mb-4">{{card.title}}</header>
+    <header class="uppercase text-xs mb-4">
+      {{ card.title }}
+    </header>
     <loading-card
       :loading="loading"
     >
@@ -19,7 +21,6 @@
 
 <script>
 import { Minimum } from 'ex-teal-js';
-import BaseTrendMetric from './Base/TrendMetric';
 
 export default {
   name: 'TrendMetric',
