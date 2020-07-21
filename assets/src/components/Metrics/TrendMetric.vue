@@ -7,11 +7,9 @@
       :loading="loading"
     >
       <div class="m-4">
-        <area-chart
-          :data="areaData"
-          :prefix="prefix"
-          :suffix="suffix"
-          :dataset="dataStyles"
+        <BaseTrendMetric
+          :chart-data="areaData"
+          :options="chartOptions"
         />
       </div>
     </loading-card>
@@ -20,10 +18,13 @@
 
 <script>
 import { Minimum } from 'ex-teal-js';
+import BaseTrendMetric from './Base/TrendMetric';
 
 export default {
   name: 'TrendMetric',
-
+  components: {
+    BaseTrendMetric
+  },
 
   props: {
     card: {
@@ -72,17 +73,17 @@ export default {
         return this.data.map((series) => {
           return {
             name: series.label,
-            data: this.reduceToChartData(series.data)
+            data: series.data
           };
         });
       } else {
-        return this.reduceToChartData(this.data);
+        return this.data;
       }
     },
 
-    dataStyles () {
+    chartOptions () {
       return {
-        pointRadius: 0
+        pointRadius: 1
       };
     }
   },
@@ -123,13 +124,6 @@ export default {
           this.loading = false;
         }
       );
-    },
-
-    reduceToChartData (data) {
-      return data.reduce((acc, { date, value }) => {
-        acc[date] = value;
-        return acc;
-      }, {});
     }
   },
 };

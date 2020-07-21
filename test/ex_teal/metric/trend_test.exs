@@ -38,9 +38,9 @@ defmodule ExTeal.Metric.TrendTest do
 
       result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
 
-      assert result == [
-               %{date: "2016", value: D.new(0)}
-             ]
+      assert result == %{
+               "2016-01-01T00:00:00+00:00" => D.new(0)
+              }
     end
 
     @tag end: "2017-03-06T02:04:56-06:00"
@@ -50,8 +50,8 @@ defmodule ExTeal.Metric.TrendTest do
       result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
 
       assert result == [
-               %{date: "2016", value: D.new(0)},
-               %{date: "2017", value: D.new(1)}
+               %{x: "2016-01-01T00:00:00-06:00", y: D.new(0)},
+               %{x: "2017-01-01T00:00:00-06:00", y: D.new(1)}
              ]
     end
 
@@ -63,10 +63,10 @@ defmodule ExTeal.Metric.TrendTest do
       result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
 
       assert result == [
-               %{date: "January 2016", value: D.new(1)},
-               %{date: "February 2016", value: D.new(0)},
-               %{date: "March 2016", value: D.new(2)},
-               %{date: "April 2016", value: D.new(0)}
+               %{x: "2016-01-01T00:00:00-06:00", y: D.new(1)},
+               %{x: "2016-02-01T00:00:00-06:00", y: D.new(0)},
+               %{x: "2016-03-01T00:00:00-06:00", y: D.new(2)},
+               %{x: "2016-04-01T00:00:00-06:00", y: D.new(0)}
              ]
     end
 
@@ -78,8 +78,8 @@ defmodule ExTeal.Metric.TrendTest do
       result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
 
       assert result == [
-               %{date: "January 4 - January 10", value: D.new(100)},
-               %{date: "January 11 - January 17", value: D.new(46)}
+               %{x: "2016-01-04T00:00:00-06:00", y: D.new(100)},
+               %{x: "2016-01-11T00:00:00-06:00", y: D.new(46)}
              ]
     end
 
@@ -100,10 +100,10 @@ defmodule ExTeal.Metric.TrendTest do
       zero = Decimal.new(0)
 
       assert result == [
-               %{date: "January 5 2016 02:03", value: Decimal.new(100)},
-               %{date: "January 5 2016 02:04", value: Decimal.new(46)},
-               %{date: "January 5 2016 02:05", value: zero},
-               %{date: "January 5 2016 02:06", value: zero}
+               %{x: "2016-01-05T02:03:00-06:00", y: Decimal.new(100)},
+               %{x: "2016-01-05T02:04:00-06:00", y: Decimal.new(46)},
+               %{x: "2016-01-05T02:05:00-06:00", y: zero},
+               %{x: "2016-01-05T02:06:00-06:00", y: zero}
              ]
     end
   end
@@ -118,43 +118,41 @@ defmodule ExTeal.Metric.TrendTest do
     test "returns a single year", %{request: request} do
       {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
-      assert ["2016"] ==
-               Trend.get_possible_results(start_dt, end_dt, request, "America/New_York", false)
+      assert Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago") == [
+               "2016-01-01T00:00:00-06:00"
+             ]
     end
 
     @tag end: "2020-01-05T02:06:44-06:00"
     test "returns a unit of years", %{request: request} do
       {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
-      assert ["2016", "2017", "2018", "2019", "2020"] ==
-               Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago", false)
+      assert Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago") == [
+               "2016-01-01T00:00:00-06:00",
+               "2017-01-01T00:00:00-06:00",
+               "2018-01-01T00:00:00-06:00",
+               "2019-01-01T00:00:00-06:00",
+               "2020-01-01T00:00:00-06:00"
+             ]
     end
 
     @tag end: "2016-01-05T02:06:44-06:00", unit: "minute"
     test "returns a unit of minutess", %{request: request} do
       {start_dt, end_dt} = Ranges.get_aggregate_datetimes(request)
 
-      assert Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago", false) ==
-               [
-                 "January 5 2016 02:03",
-                 "January 5 2016 02:04",
-                 "January 5 2016 02:05",
-                 "January 5 2016 02:06"
-               ]
+      assert Trend.get_possible_results(start_dt, end_dt, request, "America/Chicago") == [
+               "2016-01-05T02:03:00-06:00",
+               "2016-01-05T02:04:00-06:00",
+               "2016-01-05T02:05:00-06:00",
+               "2016-01-05T02:06:00-06:00"
+             ]
     end
   end
 
   describe "to_result_date/3" do
-    test "returns the date in the correct formats for it's unit in its timezone" do
+    test "returns the date in ISO8601" do
       dt = Timex.to_datetime({{2020, 7, 06}, {15, 5, 0}}, "America/Chicago")
-      assert Trend.to_result_date(dt, "year", false) == "2020"
-      assert Trend.to_result_date(dt, "month", false) == "July 2020"
-      assert Trend.to_result_date(dt, "week", false) == "July 6 - July 12"
-      assert Trend.to_result_date(dt, "day", false) == "July 6 2020"
-      assert Trend.to_result_date(dt, "hour", true) == "July 6 2020 3:00 pm"
-      assert Trend.to_result_date(dt, "hour", false) == "July 6 2020 15:00"
-      assert Trend.to_result_date(dt, "minute", true) == "July 6 2020 3:05 pm"
-      assert Trend.to_result_date(dt, "minute", false) == "July 6 2020 15:05"
+      assert Trend.to_result_date(dt) == "2020-07-06T15:05:00-05:00"
     end
   end
 
@@ -162,65 +160,49 @@ defmodule ExTeal.Metric.TrendTest do
     test "year unit" do
       result =
         %{date_result: "2020", aggregate: 5}
-        |> Trend.format_result_data("year", "America/Chicago", false)
+        |> Trend.format_result_data("year", "America/Chicago")
 
-      assert result == {"2020", 5}
+      assert result == {"2020-01-01T00:00:00-06:00", 5}
     end
 
     test "month unit" do
       result =
         %{date_result: "2020-01", aggregate: 5}
-        |> Trend.format_result_data("month", "America/Chicago", false)
+        |> Trend.format_result_data("month", "America/Chicago")
 
-      assert result == {"January 2020", 5}
+      assert result == {"2020-01-01T00:00:00-06:00", 5}
     end
 
     test "week unit" do
       result =
         %{date_result: "2020-10", aggregate: 5}
-        |> Trend.format_result_data("week", "America/Chicago", false)
+        |> Trend.format_result_data("week", "America/Chicago")
 
-      assert result == {"March 2 - March 8", 5}
+      assert result == {"2020-03-02T00:00:00-06:00", 5}
     end
 
     test "day unit" do
       result =
         %{date_result: "2020-07-06", aggregate: 5}
-        |> Trend.format_result_data("day", "America/Chicago", false)
+        |> Trend.format_result_data("day", "America/Chicago")
 
-      assert result == {"July 6 2020", 5}
+      assert result == {"2020-07-06T00:00:00-05:00", 5}
     end
 
-    test "hour unit with 12hr time" do
+    test "hour unit" do
       result =
         %{date_result: "2020-07-06 13:00", aggregate: 5}
-        |> Trend.format_result_data("hour", "America/Chicago", true)
+        |> Trend.format_result_data("hour", "America/Chicago")
 
-      assert result == {"July 6 2020 1:00 pm", 5}
+      assert result == {"2020-07-06T13:00:00-05:00", 5}
     end
 
-    test "hour unit with 24hr time" do
-      result =
-        %{date_result: "2020-07-06 13:00", aggregate: 5}
-        |> Trend.format_result_data("hour", "America/Chicago", false)
-
-      assert result == {"July 6 2020 13:00", 5}
-    end
-
-    test "minute unit with 12hr time" do
+    test "minute unit" do
       result =
         %{date_result: "2020-07-06 13:07", aggregate: 5}
-        |> Trend.format_result_data("minute", "America/Chicago", true)
+        |> Trend.format_result_data("minute", "America/Chicago")
 
-      assert result == {"July 6 2020 1:07 pm", 5}
-    end
-
-    test "minute unit with 24hr time" do
-      result =
-        %{date_result: "2020-07-06 13:42", aggregate: 5}
-        |> Trend.format_result_data("minute", "America/Chicago", false)
-
-      assert result == {"July 6 2020 13:42", 5}
+      assert result == {"2020-07-06T13:07:00-05:00", 5}
     end
   end
 

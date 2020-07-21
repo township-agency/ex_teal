@@ -108,10 +108,9 @@ defmodule ExTeal.Metric.Trend do
 
   @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: [map()]
   def aggregate(metric, request, query, aggregate_type, field) do
-    twelve_hour_time = metric.twelve_hour_time()
     {start_dt, end_dt} = get_aggregate_datetimes(request)
     timezone = start_dt.time_zone
-    possible_results = get_possible_results(start_dt, end_dt, request, timezone, twelve_hour_time)
+    possible_results = get_possible_results(start_dt, end_dt, request, timezone)
 
     results =
       query
@@ -123,14 +122,14 @@ defmodule ExTeal.Metric.Trend do
         metric: metric
       )
       |> metric.repo().all()
-      |> Enum.into(%{}, &format_result_data(&1, request.unit, timezone, twelve_hour_time))
+      |> Enum.into(%{}, &format_result_data(&1, request.unit, timezone))
 
     precision = metric.precision()
 
     Enum.map(possible_results, fn k ->
       value = results |> Map.get(k, 0) |> Decimal.new()
 
-      %{date: k, value: Decimal.round(value, precision)}
+      %{x: k, y: Decimal.round(value, precision)}
     end)
   end
 
@@ -138,42 +137,43 @@ defmodule ExTeal.Metric.Trend do
   Takes a database record transforms it into a two-tuple of the date_result
   parsed into an appropriate format
   """
-  @spec format_result_data(map(), String.t(), String.t(), boolean()) :: {String.t(), number}
+  @spec format_result_data(map(), String.t(), String.t()) :: {String.t(), number}
   def format_result_data(
         %{date_result: date, aggregate: val},
         unit,
-        timezone,
-        twelve_hour
+        timezone
       ) do
     date =
       case unit do
         "year" ->
           date
+          |> to_local_dt("{YYYY}", timezone)
+          |> to_result_date()
 
         "month" ->
           date
           |> to_local_dt("{YYYY}-{0M}", timezone)
-          |> to_result_date("month", false)
+          |> to_result_date()
 
         "week" ->
           date
           |> to_local_dt("{YYYY}-{Wiso}", timezone)
-          |> to_result_date("week", false)
+          |> to_result_date()
 
         "day" ->
           date
           |> to_local_dt("{YYYY}-{0M}-{0D}", timezone)
-          |> to_result_date("day", false)
+          |> to_result_date()
 
         "hour" ->
           date
           |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}", timezone)
-          |> to_result_date("hour", twelve_hour)
+          |> to_result_date()
 
         "minute" ->
           date
           |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}", timezone)
-          |> to_result_date("minute", twelve_hour)
+          |> to_result_date()
 
         true ->
           nil
@@ -182,7 +182,7 @@ defmodule ExTeal.Metric.Trend do
     {date, val}
   end
 
-  def get_possible_results(start_dt, end_dt, request, timezone, twelve_hour_time \\ false) do
+  def get_possible_results(start_dt, end_dt, request, timezone) do
     tz = Timezone.get(timezone, start_dt)
 
     [from: start_dt, until: end_dt, step: step_for(request.unit)]
@@ -191,7 +191,7 @@ defmodule ExTeal.Metric.Trend do
       val
       |> DateTime.from_naive!("Etc/UTC")
       |> Timezone.convert(tz)
-      |> to_result_date(request.unit, twelve_hour_time)
+      |> to_result_date()
     end)
   end
 
@@ -226,32 +226,8 @@ defmodule ExTeal.Metric.Trend do
     select(query, [q], %{aggregate: avg(field(q, ^f))})
   end
 
-  def to_result_date(datetime, "year", _), do: Timex.format!(datetime, "{YYYY}")
-  def to_result_date(datetime, "month", _), do: Timex.format!(datetime, "{Mfull} {YYYY}")
-
-  def to_result_date(datetime, "week", _) do
-    [from: Timex.beginning_of_week(datetime), until: datetime |> Timex.shift(days: 6)]
-    |> Interval.new()
-    |> Interval.format!("{Mfull} {D}", Timex.Format.DateTime.Formatters.Default)
-    |> String.replace(["[", ")"], "")
-    |> String.split(",", trim: true)
-    |> Enum.join(" -")
-  end
-
-  def to_result_date(datetime, "day", _), do: Timex.format!(datetime, "{Mfull} {D} {YYYY}")
-
-  def to_result_date(datetime, "hour", true),
-    do: Timex.format!(datetime, "{Mfull} {D} {YYYY} {h12}:00 {am}")
-
-  def to_result_date(datetime, "hour", false),
-    do: Timex.format!(datetime, "{Mfull} {D} {YYYY} {h24}:00")
-
-  def to_result_date(datetime, "minute", true),
-    do: Timex.format!(datetime, "{Mfull} {D} {YYYY} {h12}:{m} {am}")
-
-  def to_result_date(datetime, "minute", false) do
-    Timex.format!(datetime, "{Mfull} {D} {YYYY} {h24}:{m}")
-  end
+  @spec to_result_date(DateTime.t()) :: String.t()
+  def to_result_date(datetime), do: Timex.format!(datetime, "{ISO:Extended}")
 
   defp step_for("year"), do: [years: 1]
   defp step_for("month"), do: [months: 1]

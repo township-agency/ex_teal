@@ -17,6 +17,9 @@ const webpackConfig = {
       '@': helpers.root('src')
     }
   },
+  externals: {
+    moment: 'moment'
+  },
   module: {
     rules: [
       {
