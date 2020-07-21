@@ -11,7 +11,6 @@
           :data="areaData"
           :prefix="prefix"
           :suffix="suffix"
-          :library="{showLines: true}"
           :dataset="dataStyles"
         />
       </div>
@@ -53,6 +52,7 @@ export default {
     data: [],
     prefix: '',
     suffix: '',
+    multipleResults: false
   }),
 
   computed: {
@@ -68,15 +68,21 @@ export default {
     },
 
     areaData () {
-      return this.data.reduce((acc, { date, value }) => {
-        acc[date] = value;
-        return acc;
-      }, {});
+      if (this.multipleResults) {
+        return this.data.map((series) => {
+          return {
+            name: series.label,
+            data: this.reduceToChartData(series.data)
+          };
+        });
+      } else {
+        return this.reduceToChartData(this.data);
+      }
     },
 
     dataStyles () {
       return {
-        pointRadius: 2
+        pointRadius: 0
       };
     }
   },
@@ -98,7 +104,7 @@ export default {
   methods: {
     fetch () {
       this.loading = true;
-      const { startAt, endAt, unit, timezone } = this.metricData;
+      const { startAt, endAt, unit, timezone, multiple_results } = this.metricData;
       Minimum(ExTeal.request().get(this.metricEndpoint, { params: {
         start_at: startAt.toISO({ suppressMilliseconds: true }),
         end_at: endAt.toISO({ suppressMilliseconds: true }),
@@ -107,9 +113,10 @@ export default {
       } })).then(
         ({
           data: {
-            metric: { data, prefix, suffix },
+            metric: { data, prefix, suffix, multiple_results },
           },
         }) => {
+          this.multipleResults = multiple_results;
           this.prefix = prefix || this.prefix;
           this.suffix = suffix || this.suffix;
           this.data = data;
@@ -117,6 +124,13 @@ export default {
         }
       );
     },
+
+    reduceToChartData (data) {
+      return data.reduce((acc, { date, value }) => {
+        acc[date] = value;
+        return acc;
+      }, {});
+    }
   },
 };
 </script>
