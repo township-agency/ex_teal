@@ -61,7 +61,7 @@ defmodule ExTeal.Api.CardResponderTest do
 
   defp response_card(resp) do
     {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
-    %{cards: [card]} = body
-    card
+    %{cards: [first_card | _]} = body
+    first_card
   end
 end

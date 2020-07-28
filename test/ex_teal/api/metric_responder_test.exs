@@ -21,8 +21,17 @@ defmodule ExTeal.Api.MetricResponderTest do
 
     @tag manifest: MetricManifest
     test "returns a 200 for an valid metric" do
-      conn = build_conn(:get, "/api/metrics/new_users")
+      conn = build_conn(:get, "/api/metrics/new_users", params())
       resp = MetricResponder.get(conn, "new_users")
+      assert resp.status == 200
+    end
+
+    @tag manifest: MetricManifest
+    test "returns a 200 for a valid multi metric" do
+      conn = build_conn(:get, "/api/metrics/revenue_trend", params())
+      resp = MetricResponder.get(conn, "revenue_trend")
+      body = Jason.decode!(resp.resp_body, keys: :atoms)
+      assert Enum.count(body.metric.data) == 2
       assert resp.status == 200
     end
   end
@@ -44,16 +53,24 @@ defmodule ExTeal.Api.MetricResponderTest do
 
     @tag manifest: DefaultManifest
     test "returns a 404 for an invalid metric" do
-      conn = build_conn(:get, "/api/resources/users/metrics/foo")
+      conn = build_conn(:get, "/api/resources/users/metrics/foo", params())
       resp = MetricResponder.resource_index(conn, "users", "foo")
       assert resp.status == 404
     end
 
     @tag manifest: DefaultManifest
     test "returns a metric" do
-      conn = build_conn(:get, "/api/resources/users/metrics/new_users")
+      conn = build_conn(:get, "/api/resources/users/metrics/new_users", params())
       resp = MetricResponder.resource_index(conn, "users", "new_users")
       assert resp.status == 200
     end
   end
+
+  def params,
+    do: %{
+      "uri" => "new-user-trend",
+      "unit" => "year",
+      "start_at" => "2016-01-05T02:03:44-00:00",
+      "end_at" => "2016-03-06T02:04:56-00:00"
+    }
 end

@@ -7,10 +7,10 @@
       v-for="card in filteredCards"
       :key="`${card.component}.${card.options.uri}`"
       :card="card"
-      :size="size"
       :resource="resource"
       :resource-name="resourceName"
       :resource-id="resourceId"
+      :metric-data="metricData"
     />
   </div>
 </template>
@@ -21,11 +21,6 @@ export default {
     cards: {
       type: Array,
       required: true
-    },
-
-    size: {
-      type: String,
-      default: '',
     },
 
     resource: {
@@ -48,6 +43,11 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    metricData: {
+      type: Object,
+      required: true
+    }
   },
 
   computed: {

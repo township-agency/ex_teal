@@ -11,124 +11,107 @@ defmodule ExTeal.Metric.Value do
   of the metric.
   """
 
-  alias ExTeal.Metric.ValueRequest
+  @type result :: %{current: term(), previous: term()}
 
-  @type range_key :: String.t() | integer
+  @type multi_result :: [%{label: String.t(), data: result()}]
 
-  @callback calculate(ExTeal.Metric.ValueRequest.t()) :: {:ok, ExTeal.Metric.ValueResult.t()}
+  @type valid_result :: result() | [multi_result()]
 
-  @callback ranges() :: %{required(range_key) => String.t()}
-
-  @callback prefix() :: String.t()
-
-  @callback suffix() :: String.t()
-
-  @callback format() :: String.t()
-
-  @callback only_on_detail() :: boolean
+  @callback calculate(ExTeal.Metric.Request.t()) :: valid_result()
 
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Metric.Value
-      use ExTeal.Resource.Repo
+      use ExTeal.Metric
 
-      import ExTeal.Metric.QueryHelpers
-      import Ecto.Query, only: [from: 2]
+      alias ExTeal.Metric.{Request, Result, Value}
+
+      def component, do: "value-metric"
+
+      def options, do: %{uri: uri()}
+
+      def chart_options, do: %{}
 
       @doc """
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(ExTeal.Metric.ValueRequest.t(), module()) ::
-              {:ok, ExTeal.Metric.ValueResult.t()}
-      def count(request, module) do
-        result = query_for_with_result(__MODULE__, request, module, :count, :id)
-        {:ok, result}
+      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
+      def count(request, query, field \\ :id) do
+        Value.aggregate(__MODULE__, request, query, :count, field)
       end
 
       @doc """
       Performs an average query against the specified schema for the requested
       range specified field
       """
-      @spec average(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
-              {:ok, ExTeal.Metric.ValueResult.t()}
-      def average(request, module, field) do
-        result = query_for_with_result(__MODULE__, request, module, :avg, field)
-        {:ok, result}
+      @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
+      def average(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :avg, field)
       end
 
       @doc """
       Performs a max query against the specified schema for the requested
       range specified field
       """
-      @spec maximum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
-              {:ok, ExTeal.Metric.ValueResult.t()}
-      def maximum(request, module, field) do
-        result = query_for_with_result(__MODULE__, request, module, :max, field)
-        {:ok, result}
+      @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
+      def maximum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :max, field)
       end
 
       @doc """
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
-              {:ok, ExTeal.Metric.ValueResult.t()}
-      def minimum(request, module, field) do
-        result = query_for_with_result(__MODULE__, request, module, :min, field)
-        {:ok, result}
+      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
+      def minimum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :min, field)
       end
 
       @doc """
       Performs a sum query against the specified schema for the requested
       range specified field
       """
-      @spec sum(ExTeal.Metric.ValueRequest.t(), module(), atom()) ::
-              {:ok, ExTeal.Metric.ValueResult.t()}
-      def sum(request, module, field) do
-        result = query_for_with_result(__MODULE__, request, module, :sum, field)
-        {:ok, result}
+      @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Value.result()
+      def sum(request, query, field) do
+        Value.aggregate(__MODULE__, request, query, :sum, field)
       end
-
-      def uri, do: ExTeal.Naming.resource_name(__MODULE__)
-
-      def base_query(queryable) do
-        queryable
-      end
-
-      def title do
-        __MODULE__
-        |> ExTeal.Naming.resource_name()
-        |> ExTeal.Naming.humanize()
-      end
-
-      def component, do: "value-metric"
-
-      def only_on_detail, do: false
-
-      def options,
-        do: %{
-          ranges: ranges(),
-          uri: uri()
-        }
-
-      def width, do: "1/3"
-
-      def request(conn, metric \\ nil), do: ValueRequest.from_conn(conn, __MODULE__, metric)
-
-      def prefix, do: nil
-
-      def suffix, do: nil
-
-      def format, do: nil
-
-      defoverridable uri: 0,
-                     base_query: 1,
-                     title: 0,
-                     prefix: 0,
-                     suffix: 0,
-                     format: 0,
-                     only_on_detail: 0
     end
+  end
+
+  use Timex
+  alias ExTeal.Metric.Request
+  import ExTeal.Metric.QueryHelpers
+  import ExTeal.Metric.Ranges
+
+  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: map()
+  def aggregate(metric_module, request, queryable, aggregate_type, field) do
+    %{
+      previous: query_for(:previous, metric_module, request, queryable, aggregate_type, field),
+      current: query_for(:current, metric_module, request, queryable, aggregate_type, field)
+    }
+  end
+
+  @spec query_for(atom(), module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) ::
+          integer() | float()
+  def query_for(current, metric, request, queryable, aggregate_type, field) do
+    {start_dt, end_dt} = get_aggregate_datetimes(request)
+
+    queryable
+    |> between_current(current, start_dt: start_dt, end_dt: end_dt, metric: metric)
+    |> metric.repo().aggregate(aggregate_type, field)
+    |> parse()
+  end
+
+  def between_current(query, :current, options) do
+    between(query, options)
+  end
+
+  def between_current(query, :previous, start_dt: start_dt, end_dt: end_dt, metric: metric) do
+    duration =
+      Interval.new(from: start_dt, until: end_dt)
+      |> Interval.duration(:duration)
+
+    between(query, start_dt: Timex.subtract(start_dt, duration), end_dt: start_dt, metric: metric)
   end
 end

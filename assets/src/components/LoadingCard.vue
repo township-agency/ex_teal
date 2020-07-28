@@ -1,5 +1,7 @@
 <template>
-  <card class="relative">
+  <card
+    class="relative"
+  >
     <div
       v-if="loading"
       class="flex items-center justify-center absolute inset-0 z-50"

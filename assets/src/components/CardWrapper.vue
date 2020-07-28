@@ -11,12 +11,14 @@
       :resource="resource"
       :resource-name="resourceName"
       :resource-id="resourceId"
+      :metric-data="metricData"
     />
   </div>
 </template>
 
 <script>
-import { CardSizes } from 'ex-teal-js';
+
+const CardSizes = ['1/2', '1/3', '2/3', '1/4', '3/4'];
 
 export default {
   props: {
@@ -45,6 +47,11 @@ export default {
       type: [ Number, String ],
       default: ''
     },
+
+    metricData: {
+      type: Object,
+      required: true
+    }
   },
 
   computed: {
@@ -64,6 +71,6 @@ export default {
 };
 
 function calculateCardWidth (card) {
-  return CardSizes.indexOf(card.width) !== -1 ? `w-${card.width}` : 'w-1/3';
+  return CardSizes.indexOf(card.width) !== -1 ? `w-full lg:w-1/2 xl:w-${card.width}` : 'w-1/2 md:w-1/3';
 }
 </script>

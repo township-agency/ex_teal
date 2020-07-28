@@ -52,7 +52,9 @@ defmodule ExTeal.MixProject do
       {:phoenix_ecto, "~> 4.1", only: :test},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:nimble_csv, "~> 0.7"}
+      {:nimble_csv, "~> 0.7"},
+      {:timex, ">= 3.6.0"},
+      {:tzdata, "~> 1.0"}
     ]
   end
 

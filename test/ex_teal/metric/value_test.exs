@@ -1,6 +1,6 @@
 defmodule ExTeal.Metric.ValueTest do
   use TestExTeal.ConnCase
-  alias ExTeal.Metric.{ValueRequest, ValueResult}
+  alias ExTeal.Metric.{Request, Result}
   alias TestExTeal.{Order, User}
 
   defmodule TestExTeal.NewUserMetric do
@@ -10,12 +10,6 @@ defmodule ExTeal.Metric.ValueTest do
       count(request, User)
     end
 
-    def ranges,
-      do: %{
-        30 => "30 Days",
-        90 => "90 Days"
-      }
-
     def uri, do: "new-user"
     def title, do: "New Users"
   end
@@ -23,16 +17,20 @@ defmodule ExTeal.Metric.ValueTest do
   defmodule TestExTeal.OrderAverageMetric do
     use ExTeal.Metric.Value
     def calculate(request), do: average(request, Order, :grand_total)
-    def ranges, do: %{30 => "30 Days"}
     def prefix, do: "$"
     def suffix, do: "Total"
     def format, do: "0,0"
   end
 
+  setup context do
+    {:ok, request: request_for_between(Map.get(context, :start, 10), Map.get(context, :end, 0))}
+  end
+
   describe "count/2" do
-    test "returns a value result" do
-      {:ok, result} = TestExTeal.NewUserMetric.count(%ValueRequest{range: 30}, User)
-      assert result
+    test "returns a value result", %{request: request} do
+      result = TestExTeal.NewUserMetric.count(request, User)
+      assert result.current == 0
+      assert result.previous == 0
     end
   end
 
@@ -54,11 +52,6 @@ defmodule ExTeal.Metric.ValueTest do
     test "can be overriden" do
       assert TestExTeal.OrderAverageMetric.prefix() == "$"
     end
-
-    test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
-      assert result.prefix == "$"
-    end
   end
 
   describe "suffix/0" do
@@ -69,11 +62,6 @@ defmodule ExTeal.Metric.ValueTest do
     test "can be overriden" do
       assert TestExTeal.OrderAverageMetric.suffix() == "Total"
     end
-
-    test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
-      assert result.suffix == "Total"
-    end
   end
 
   describe "format/0" do
@@ -83,11 +71,6 @@ defmodule ExTeal.Metric.ValueTest do
 
     test "can be overriden" do
       assert TestExTeal.OrderAverageMetric.format() == "0,0"
-    end
-
-    test "returned as part of the result" do
-      {:ok, result} = TestExTeal.OrderAverageMetric.count(%ValueRequest{range: 30}, Order)
-      assert result.format == "0,0"
     end
   end
 
@@ -102,34 +85,27 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "average/3" do
-    test "calculates the average" do
+    @tag start: 30
+    test "calculates the average", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      {:ok, result} =
-        TestExTeal.NewUserMetric.average(%ValueRequest{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.average(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 5
-
-      insert(:order, grand_total: 0, inserted_at: days_ago(45))
-
-      {:ok, second_result} =
-        TestExTeal.NewUserMetric.average(%ValueRequest{range: 30}, Order, :grand_total)
-
-      assert second_result.previous == 3.33
     end
   end
 
   describe "maximum/3" do
-    test "calculates the max" do
+    @tag start: 30
+    test "calculates the max", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      {:ok, result} =
-        TestExTeal.NewUserMetric.maximum(%ValueRequest{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.maximum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 10
@@ -137,13 +113,13 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "minimum/3" do
-    test "calculates the max" do
+    @tag start: 30
+    test "calculates the min", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 0, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      {:ok, result} =
-        TestExTeal.NewUserMetric.minimum(%ValueRequest{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.minimum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 0
@@ -151,37 +127,38 @@ defmodule ExTeal.Metric.ValueTest do
   end
 
   describe "sum/3" do
-    test "calculates the sum" do
+    @tag start: 30
+    test "calculates the sum", %{request: request} do
       insert(:order, grand_total: 10_000, inserted_at: days_ago(10))
       insert(:order, grand_total: 5, inserted_at: days_ago(45))
       insert(:order, grand_total: 10, inserted_at: days_ago(45))
 
-      {:ok, result} = TestExTeal.NewUserMetric.sum(%ValueRequest{range: 30}, Order, :grand_total)
+      result = TestExTeal.NewUserMetric.sum(request, Order, :grand_total)
 
       assert result.current == 10_000
       assert result.previous == 15
     end
   end
 
-  describe "calculate/1" do
-    test "returns a value result" do
-      insert(:user, inserted_at: days_ago(10))
-      insert_pair(:user, inserted_at: days_ago(45))
-
-      {:ok, %ValueResult{} = result} =
-        %ValueRequest{range: 30, uri: "new-user"}
-        |> TestExTeal.NewUserMetric.calculate()
-
-      assert result.uri == TestExTeal.NewUserMetric.uri()
-      assert result.range == 30
-      assert result.ranges == TestExTeal.NewUserMetric.ranges()
-      assert result.current == 1
-      assert result.previous == 2
-    end
-  end
-
   defp days_ago(days) do
     DateTime.utc_now()
     |> DateTime.add(-1 * days * 60 * 60 * 24)
+  end
+
+  defp days_ago_as_str(days) do
+    days
+    |> days_ago()
+    |> Timex.format!("{ISO:Extended}")
+  end
+
+  defp request_for_between(start_days, end_days) do
+    :get
+    |> build_conn("/foo", %{
+      "uri" => "new-user",
+      "unit" => "day",
+      "start_at" => days_ago_as_str(start_days),
+      "end_at" => days_ago_as_str(end_days)
+    })
+    |> Request.from_conn()
   end
 end

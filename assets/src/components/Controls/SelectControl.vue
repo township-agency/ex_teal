@@ -1,5 +1,6 @@
 <template>
   <select
+    class="relative"
     v-bind="$attrs"
     :value="selected"
     v-on="inputListeners"

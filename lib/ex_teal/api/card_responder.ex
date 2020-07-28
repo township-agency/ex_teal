@@ -12,9 +12,9 @@ defmodule ExTeal.Api.CardResponder do
   def dashboard(conn, name) do
     case ExTeal.dashboard_for(name) do
       {:ok, dashboard} ->
-        cards = Dashboard.cards_to_json(dashboard, conn)
-        {:ok, body} = Jason.encode(cards)
-        Serializer.as_json(conn, body, 200)
+        dashboard
+        |> Dashboard.cards_to_json(conn)
+        |> as_json(conn)
 
       {:error, reason} ->
         ErrorSerializer.handle_error(conn, reason)
@@ -24,12 +24,17 @@ defmodule ExTeal.Api.CardResponder do
   def resource(conn, resource_name) do
     case ExTeal.resource_for(resource_name) do
       {:ok, resource} ->
-        cards = Dashboard.cards_to_json(resource, conn)
-        {:ok, body} = Jason.encode(cards)
-        Serializer.as_json(conn, body, 200)
+        resource
+        |> Dashboard.cards_to_json(conn)
+        |> as_json(conn)
 
       {:error, reason} ->
         ErrorSerializer.handle_error(conn, reason)
     end
+  end
+
+  defp as_json(cards, conn) do
+    {:ok, body} = Jason.encode(cards)
+    Serializer.as_json(conn, body, 200)
   end
 end
