@@ -22,17 +22,17 @@ defmodule ExTeal.Metric.Trend do
   It would also be nice to be able to display multiple trends on the same graph.
   """
 
-  @type result_entry :: %{aggregate: term(), date_result: String.t()}
+  @type multi_result :: map()
 
-  @type result :: [result_entry()]
-
-  @type multi_result :: %{label: String.t(), data: result()}
-
-  @type valid_result :: result() | [multi_result()]
+  @type valid_result :: map() | [multi_result()]
 
   @callback twelve_hour_time() :: boolean()
 
   @callback calculate(ExTeal.Metric.Request.t()) :: valid_result()
+
+  @callback chart_options() :: map()
+
+  @callback cast(Decimal.t()) :: any()
 
   defmacro __using__(_opts) do
     quote do
@@ -52,13 +52,15 @@ defmodule ExTeal.Metric.Trend do
 
       def options, do: %{uri: uri()}
 
+      def chart_options, do: %{}
+
       @doc """
       Performs a count query against the specified schema for the requested
       range.
       """
-      @spec count(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
-      def count(request, queryable, field \\ :id) do
-        Trend.aggregate(__MODULE__, request, queryable, :count, field)
+      @spec count(Request.t(), Ecto.Queryable.t(), atom(), map()) :: Trend.result()
+      def count(request, queryable, field \\ :id, series_options \\ %{}) do
+        Trend.aggregate(__MODULE__, request, queryable, :count, field, series_options)
       end
 
       @doc """
@@ -66,8 +68,8 @@ defmodule ExTeal.Metric.Trend do
       range specified field
       """
       @spec average(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
-      def average(request, queryable, field) do
-        Trend.aggregate(__MODULE__, request, queryable, :avg, field)
+      def average(request, queryable, field, series_options \\ %{}) do
+        Trend.aggregate(__MODULE__, request, queryable, :avg, field, series_options)
       end
 
       @doc """
@@ -75,17 +77,17 @@ defmodule ExTeal.Metric.Trend do
       range specified field
       """
       @spec maximum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
-      def maximum(request, queryable, field) do
-        Trend.aggregate(__MODULE__, request, queryable, :max, field)
+      def maximum(request, queryable, field, series_options \\ %{}) do
+        Trend.aggregate(__MODULE__, request, queryable, :max, field, series_options)
       end
 
       @doc """
       Performs a minimum query against the specified schema for the requested
       range specified field
       """
-      @spec minimum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
-      def minimum(request, queryable, field) do
-        Trend.aggregate(__MODULE__, request, queryable, :min, field)
+      @spec minimum(Request.t(), Ecto.Queryable.t(), atom(), map()) :: Trend.result()
+      def minimum(request, queryable, field, series_options \\ %{}) do
+        Trend.aggregate(__MODULE__, request, queryable, :min, field, series_options)
       end
 
       @doc """
@@ -93,11 +95,13 @@ defmodule ExTeal.Metric.Trend do
       range specified field
       """
       @spec sum(Request.t(), Ecto.Queryable.t(), atom()) :: Trend.result()
-      def sum(request, queryable, field) do
-        Trend.aggregate(__MODULE__, request, queryable, :sum, field)
+      def sum(request, queryable, field, series_options \\ %{}) do
+        Trend.aggregate(__MODULE__, request, queryable, :sum, field, series_options)
       end
 
-      defoverridable twelve_hour_time: 0, precision: 0
+      def cast(decimal), do: decimal
+
+      defoverridable twelve_hour_time: 0, precision: 0, chart_options: 0, cast: 1
     end
   end
 
@@ -106,8 +110,8 @@ defmodule ExTeal.Metric.Trend do
   import ExTeal.Metric.Ranges
   alias ExTeal.Metric.{Request, TrendExpressionFactory}
 
-  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom()) :: [map()]
-  def aggregate(metric, request, query, aggregate_type, field) do
+  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom(), map()) :: map()
+  def aggregate(metric, request, query, aggregate_type, field, series_options) do
     {start_dt, end_dt} = get_aggregate_datetimes(request)
     timezone = start_dt.time_zone
     possible_results = get_possible_results(start_dt, end_dt, request, timezone)
@@ -126,11 +130,21 @@ defmodule ExTeal.Metric.Trend do
 
     precision = metric.precision()
 
-    Enum.map(possible_results, fn k ->
-      value = results |> Map.get(k, 0) |> Decimal.new()
+    data =
+      Enum.map(possible_results, fn k ->
+        value =
+          results
+          |> Map.get(k, 0)
+          |> Decimal.new()
+          |> Decimal.round(precision)
+          |> metric.cast()
 
-      %{x: k, y: Decimal.round(value, precision)}
-    end)
+        %{x: k, y: value}
+      end)
+
+    default_options()
+    |> Map.merge(series_options)
+    |> Map.merge(%{data: data})
   end
 
   @doc """
@@ -227,7 +241,8 @@ defmodule ExTeal.Metric.Trend do
   end
 
   @spec to_result_date(DateTime.t()) :: String.t()
-  def to_result_date(datetime), do: Timex.format!(datetime, "{ISO:Extended}")
+  def to_result_date(datetime),
+    do: datetime |> DateTime.truncate(:second) |> Timex.format!("{ISO:Extended}")
 
   defp step_for("year"), do: [years: 1]
   defp step_for("month"), do: [months: 1]
@@ -235,4 +250,7 @@ defmodule ExTeal.Metric.Trend do
   defp step_for("day"), do: [days: 1]
   defp step_for("hour"), do: [hours: 1]
   defp step_for("minute"), do: [minutes: 1]
+
+  defp default_options,
+    do: %{backgroundColor: "rgba(0, 173, 238, 0.6)", borderColor: "rgba(0, 173, 238, 1)"}
 end

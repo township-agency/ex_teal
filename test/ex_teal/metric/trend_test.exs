@@ -36,20 +36,18 @@ defmodule ExTeal.Metric.TrendTest do
     test "returns data by year in utc", %{request: request} do
       insert(:user, inserted_at: from_erl({{2017, 1, 5}, {0, 0, 0}}))
 
-      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id, %{})
 
-      assert result == %{
-               "2016-01-01T00:00:00+00:00" => D.new(0)
-              }
+      assert result.data == [%{x: "2016-01-01T00:00:00+00:00", y: D.new(0)}]
     end
 
     @tag end: "2017-03-06T02:04:56-06:00"
     test "returns data by year", %{request: request} do
       insert(:user, inserted_at: from_erl({{2017, 1, 5}, {0, 0, 0}}))
 
-      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id, %{})
 
-      assert result == [
+      assert result.data == [
                %{x: "2016-01-01T00:00:00-06:00", y: D.new(0)},
                %{x: "2017-01-01T00:00:00-06:00", y: D.new(1)}
              ]
@@ -60,9 +58,9 @@ defmodule ExTeal.Metric.TrendTest do
       insert(:user, inserted_at: from_erl({{2016, 1, 5}, {0, 0, 0}}))
       insert_pair(:user, inserted_at: from_erl({{2016, 3, 5}, {0, 0, 0}}))
 
-      result = Trend.aggregate(NewUserTrend, request, User, :count, :id)
+      result = Trend.aggregate(NewUserTrend, request, User, :count, :id, %{})
 
-      assert result == [
+      assert result.data == [
                %{x: "2016-01-01T00:00:00-06:00", y: D.new(1)},
                %{x: "2016-02-01T00:00:00-06:00", y: D.new(0)},
                %{x: "2016-03-01T00:00:00-06:00", y: D.new(2)},
@@ -75,9 +73,9 @@ defmodule ExTeal.Metric.TrendTest do
       insert(:order, grand_total: 100, inserted_at: from_erl({{2016, 1, 5}, {10, 0, 0}}))
       insert_pair(:order, grand_total: 23, inserted_at: from_erl({{2016, 1, 13}, {0, 0, 0}}))
 
-      result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
+      result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total, %{})
 
-      assert result == [
+      assert result.data == [
                %{x: "2016-01-04T00:00:00-06:00", y: D.new(100)},
                %{x: "2016-01-11T00:00:00-06:00", y: D.new(46)}
              ]
@@ -95,11 +93,11 @@ defmodule ExTeal.Metric.TrendTest do
         inserted_at: from_erl({{2016, 1, 5}, {8, 4, 0}}, "America/Chicago")
       )
 
-      result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total)
+      result = Trend.aggregate(RevenueTrend, request, Order, :sum, :grand_total, %{})
 
       zero = Decimal.new(0)
 
-      assert result == [
+      assert result.data == [
                %{x: "2016-01-05T02:03:00-06:00", y: Decimal.new(100)},
                %{x: "2016-01-05T02:04:00-06:00", y: Decimal.new(46)},
                %{x: "2016-01-05T02:05:00-06:00", y: zero},

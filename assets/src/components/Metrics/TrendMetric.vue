@@ -6,9 +6,10 @@
     <loading-card
       :loading="loading"
     >
-      <div class="m-4">
+      <div class="m-4 max-h-3/4">
         <BaseTrendMetric
-          :chart-data="areaData"
+          v-if="!loading"
+          :chart-data="data"
           :options="chartOptions"
         />
       </div>
@@ -19,6 +20,17 @@
 <script>
 import { Minimum } from 'ex-teal-js';
 import BaseTrendMetric from './Base/TrendMetric';
+import merge from 'lodash/merge';
+import { DateTime } from 'luxon';
+
+const FORMATS = {
+  minute: DateTime.TIME_SIMPLE,
+  hour: { hour: 'numeric' },
+  day: { day: 'numeric', month: 'short' },
+  week: 'DD',
+  month: { month: 'short', year: 'numeric' },
+  year: { year: 'numeric' }
+};
 
 export default {
   name: 'TrendMetric',
@@ -53,7 +65,8 @@ export default {
     data: [],
     prefix: '',
     suffix: '',
-    multipleResults: false
+    multipleResults: false,
+    userOptions: {},
   }),
 
   computed: {
@@ -68,23 +81,44 @@ export default {
       }
     },
 
-    areaData () {
-      if (this.multipleResults) {
-        return this.data.map((series) => {
-          return {
-            name: series.label,
-            data: series.data
-          };
-        });
-      } else {
-        return this.data;
-      }
-    },
-
     chartOptions () {
-      return {
-        pointRadius: 1
-      };
+      return merge({
+        pointRadius: 1,
+        scales: {
+          xAxes: [ {
+            type: 'time',
+            distribution: 'series',
+            offset: true,
+            ticks: {
+              source: 'data',
+              autoSkip: true,
+              maxRotation: 0,
+              autoSkipPadding: 10
+            },
+            time: {
+              unit: this.metricData.unit,
+              tooltipFormat: FORMATS[this.metricData.unit]
+            }
+          } ],
+          yAxes: [ {
+            gridLines: {
+              drawBorder: false
+            }
+          } ],
+        },
+        tooltips: {
+          mode: 'index',
+          callbacks: {
+            label: (item, data) => {
+              const elems = [ this.prefix, item.value, this.suffix ].filter(v => v);
+              return `${data.datasets[item.datasetIndex].label}: ${elems.join('')}`;
+            }
+          }
+        },
+        legend: {
+          display: this.multipleResults
+        }
+      }, this.userOptions);
     }
   },
 
@@ -114,13 +148,23 @@ export default {
       } })).then(
         ({
           data: {
-            metric: { data, prefix, suffix, multiple_results },
+            metric: { data, prefix, suffix, multiple_results, options },
           },
         }) => {
           this.multipleResults = multiple_results;
-          this.prefix = prefix || this.prefix;
+          if (multiple_results) {
+            const multiData = data.map((trend) => {
+              return { label: trend.label, ...trend.data };
+            });
+            this.data = { datasets: multiData };
+          } else {
+            data.label = this.card.title;
+            this.data = { datasets: [ data ] };
+          }
+          this.prefix = prefix !== null ? prefix : this.prefix;
+          this.suffix = suffix !== null ? suffix : this.suffix;
           this.suffix = suffix || this.suffix;
-          this.data = data;
+          this.userOptions = options;
           this.loading = false;
         }
       );

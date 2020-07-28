@@ -106,7 +106,6 @@ export default {
             metric: { data, prefix, suffix, format, multiple_results },
           },
         }) => {
-          console.log(data);
           this.multiple_results = multiple_results;
           this.format = format || this.format;
           this.prefix = prefix || this.prefix;
