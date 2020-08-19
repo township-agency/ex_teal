@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-centers">
-    <div class="w-full max-w-4xl">
+    <div class="w-full">
       <heading class="flex mb-3">
         Get Started
       </heading>

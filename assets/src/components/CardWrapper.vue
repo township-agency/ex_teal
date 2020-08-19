@@ -1,7 +1,7 @@
 <template>
   <div
     :key="cardKey"
-    class="px-3 mb-6"
+    class="px-3 mb-6 w-full"
     :class="widthClass"
   >
     <component
@@ -29,7 +29,7 @@ export default {
 
     size: {
       type: String,
-      default: '',
+      default: 'large',
     },
 
     resource: {
@@ -56,6 +56,7 @@ export default {
 
   computed: {
     widthClass () {
+      console.log(this.size);
       return this.size == 'large' ? 'w-full' : calculateCardWidth(this.card);
     },
 
