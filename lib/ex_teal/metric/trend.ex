@@ -18,8 +18,6 @@ defmodule ExTeal.Metric.Trend do
 
   Some of these data sets will be rather large, so we should provide some safe
   defaults for the maximum number of results returned.
-
-  It would also be nice to be able to display multiple trends on the same graph.
   """
 
   @type multi_result :: map()
@@ -30,9 +28,9 @@ defmodule ExTeal.Metric.Trend do
 
   @callback calculate(ExTeal.Metric.Request.t()) :: valid_result()
 
-  @callback chart_options() :: map()
-
   @callback cast(Decimal.t()) :: any()
+
+  @callback precision() :: integer()
 
   defmacro __using__(_opts) do
     quote do
@@ -51,8 +49,6 @@ defmodule ExTeal.Metric.Trend do
       def precision, do: 0
 
       def options, do: %{uri: uri()}
-
-      def chart_options, do: %{}
 
       @doc """
       Performs a count query against the specified schema for the requested
@@ -101,7 +97,7 @@ defmodule ExTeal.Metric.Trend do
 
       def cast(decimal), do: decimal
 
-      defoverridable twelve_hour_time: 0, precision: 0, chart_options: 0, cast: 1
+      defoverridable twelve_hour_time: 0, precision: 0, cast: 1
     end
   end
 
@@ -135,9 +131,9 @@ defmodule ExTeal.Metric.Trend do
         value =
           results
           |> Map.get(k, 0)
-          |> Decimal.new()
-          |> Decimal.round(precision)
           |> metric.cast()
+          |> to_decimal()
+          |> Decimal.round(precision)
 
         %{x: k, y: value}
       end)
@@ -251,6 +247,14 @@ defmodule ExTeal.Metric.Trend do
   defp step_for("hour"), do: [hours: 1]
   defp step_for("minute"), do: [minutes: 1]
 
-  defp default_options,
+  def default_options,
     do: %{backgroundColor: "rgba(0, 173, 238, 0.6)", borderColor: "rgba(0, 173, 238, 1)"}
+
+  defp to_decimal(float) when is_float(float), do: Decimal.from_float(float)
+
+  defp to_decimal(value) when is_integer(value), do: Decimal.new(value)
+
+  defp to_decimal(%Decimal{} = val), do: val
+
+  defp to_decimal(_val), do: Decimal.new(0)
 end

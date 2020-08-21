@@ -7,8 +7,14 @@
       :loading="loading"
     >
       <div class="m-4 max-h-3/4">
-        <BaseTrendMetric
-          v-if="!loading"
+        <BaseLineMetric
+          v-if="showLine"
+          :chart-data="data"
+          :options="chartOptions"
+        />
+
+        <BaseBarMetric
+          v-if="showBar"
           :chart-data="data"
           :options="chartOptions"
         />
@@ -19,7 +25,8 @@
 
 <script>
 import { Minimum } from 'ex-teal-js';
-import BaseTrendMetric from './Base/TrendMetric';
+import BaseLineMetric from './Base/LineMetric';
+import BaseBarMetric from './Base/BarMetric';
 import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
 
@@ -35,7 +42,8 @@ const FORMATS = {
 export default {
   name: 'TrendMetric',
   components: {
-    BaseTrendMetric
+    BaseLineMetric,
+    BaseBarMetric
   },
 
   props: {
@@ -83,12 +91,15 @@ export default {
 
     chartOptions () {
       return merge({
+        type: 'line',
+        responsive: true,
+        maintainAspectRatio: false,
         pointRadius: 1,
         scales: {
           xAxes: [ {
             type: 'time',
             distribution: 'series',
-            offset: true,
+            offset: false,
             ticks: {
               source: 'data',
               autoSkip: true,
@@ -119,6 +130,14 @@ export default {
           display: this.multipleResults
         }
       }, this.userOptions);
+    },
+
+    showLine () {
+      return !this.loading && this.chartOptions.type == 'line';
+    },
+
+    showBar () {
+      return !this.loading && this.chartOptions.type == 'bar';
     }
   },
 

@@ -6,19 +6,30 @@ defmodule ExTeal.Metric.ValueTest do
   defmodule TestExTeal.NewUserMetric do
     use ExTeal.Metric.Value
 
+    @impl true
     def calculate(request) do
       count(request, User)
     end
 
+    @impl true
     def uri, do: "new-user"
+
+    @impl true
     def title, do: "New Users"
   end
 
   defmodule TestExTeal.OrderAverageMetric do
     use ExTeal.Metric.Value
+    @impl true
     def calculate(request), do: average(request, Order, :grand_total)
+
+    @impl true
     def prefix, do: "$"
+
+    @impl true
     def suffix, do: "Total"
+
+    @impl true
     def format, do: "0,0"
   end
 

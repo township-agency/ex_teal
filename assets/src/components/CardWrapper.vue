@@ -27,11 +27,6 @@ export default {
       required: true,
     },
 
-    size: {
-      type: String,
-      default: 'large',
-    },
-
     resource: {
       type: Object,
       default () { return {}; }
@@ -56,7 +51,7 @@ export default {
 
   computed: {
     widthClass () {
-      console.log(this.size);
+      console.log(this.card);
       return this.size == 'large' ? 'w-full' : calculateCardWidth(this.card);
     },
 
@@ -72,6 +67,6 @@ export default {
 };
 
 function calculateCardWidth (card) {
-  return CardSizes.indexOf(card.width) !== -1 ? `w-full lg:w-1/2 xl:w-${card.width}` : 'w-1/2 md:w-1/3';
+  return `w-full lg:w-1/2 xl:w-${card.width}`;
 }
 </script>
