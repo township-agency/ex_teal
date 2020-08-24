@@ -32,7 +32,7 @@ defmodule ExTeal.Resource.Create do
   `handle_create/2` can return an %Ecto.Changeset, an Ecto.Schema struct,
   a list of errors (`{:error, [email: "is not valid"]}` or a conn with
   any response/body.
-
+  ou
   Example custom implementation:
 
       def handle_create(_conn, attributes) do

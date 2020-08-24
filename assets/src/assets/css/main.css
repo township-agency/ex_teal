@@ -542,6 +542,34 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 .fade-leave-to {
   opacity: 0;
 }
+/* Tooltip
+---------------------------------------------------------------------------- */
+.tooltip {
+  @apply bg-white px-3 py-2 rounded border border-50 shadow text-sm leading-normal;
+}
+
+.tooltip {
+  display: block !important;
+  z-index: 88888;
+}
+
+.tooltip .tooltip-inner {
+}
+
+.tooltip.popover .popover-inner {
+}
+
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
+}
+
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
 
 /* Show/Hide Transition
 ---------------------------------------------------------------------------- */

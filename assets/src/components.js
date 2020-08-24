@@ -39,6 +39,8 @@ import ResourceTableRow from '@/components/Index/ResourceTableRow';
 import SearchInput from '@/components/SearchInput';
 import SelectControl from '@/components/Controls/SelectControl';
 import SortableIcon from '@/components/Index/SortableIcon';
+import Tooltip from '@/components/Tooltip';
+import TooltipContent from '@/components/TooltipContent';
 import TrendMetric from '@/components/Metrics/TrendMetric';
 import ValidationErrors from '@/components/ValidationErrors';
 import ValueMetric from '@/components/Metrics/ValueMetric';
@@ -97,6 +99,9 @@ Vue.component('search-input', SearchInput);
 Vue.component('select-control', SelectControl);
 Vue.component('sortable-icon', SortableIcon);
 Vue.component('text-field-filter', TextFieldFilter);
+Vue.component('tooltip', Tooltip);
+Vue.component('tooltip-content', TooltipContent);
+
 Vue.component('trend-metric', TrendMetric);
 Vue.component('value-metric', ValueMetric);
 Vue.component('validation-errors', ValidationErrors);

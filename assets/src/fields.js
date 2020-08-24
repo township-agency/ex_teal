@@ -171,3 +171,12 @@ import IndexColorField from '@/components/Index/Color.vue';
 Vue.component('form-color', FormColorField);
 Vue.component('detail-color', DetailColorField);
 Vue.component('index-color', IndexColorField);
+
+// BooleanGroup...
+import FormBooleanGroupField from '@/components/Form/BooleanGroup.vue';
+import DetailBooleanGroupField from '@/components/Detail/BooleanGroup.vue';
+import IndexBooleanGroupField from '@/components/Index/BooleanGroup.vue';
+
+Vue.component('form-boolean-group', FormBooleanGroupField);
+Vue.component('detail-boolean-group', DetailBooleanGroupField);
+Vue.component('index-boolean-group', IndexBooleanGroupField);
