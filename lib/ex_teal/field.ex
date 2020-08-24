@@ -43,6 +43,10 @@ defmodule ExTeal.Field do
 
   @callback filterable_as :: ExTeal.FieldFilter.valid_type()
 
+  @callback default_sortable :: boolean()
+
+  @callback sanitize_as :: atom() | false
+
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Field

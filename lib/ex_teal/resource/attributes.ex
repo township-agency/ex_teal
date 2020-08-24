@@ -66,7 +66,10 @@ defmodule ExTeal.Resource.Attributes do
           Attributes.maybe_sanitize(attrs, fields, skip_sanitize)
         end
 
-        defoverridable permitted_attributes: 3
+        def parse(param) do
+        end
+
+        defoverridable permitted_attributes: 3, parse: 1
       end
     end
   end
@@ -111,6 +114,10 @@ defmodule ExTeal.Resource.Attributes do
 
   @valid_sanitizers ~w(noscrub basic_html html5 markdown_html strip_tags)a
   def sanitize(false, value), do: value
+
+  def sanitize(:json, value) do
+    Jason.decode!(value)
+  end
 
   def sanitize(key, value) when is_atom(key) and key in @valid_sanitizers do
     apply(HtmlSanitizeEx, key, [value])

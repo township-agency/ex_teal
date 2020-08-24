@@ -2,11 +2,13 @@ import Vue from 'vue';
 import App from './App.vue';
 import PortalVue from 'portal-vue';
 import Toasted from 'vue-toasted';
+import VTooltip from 'v-tooltip';
+
 import './util/chart-adapter';
 
 import router from '@/router';
 import axios from '@/util/axios';
-
+Vue.use(VTooltip);
 Vue.use(Toasted, {
   theme: 'nova',
   position: 'bottom-right',
