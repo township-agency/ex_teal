@@ -48,8 +48,6 @@ defmodule ExTeal.Metric.Trend do
 
       def precision, do: 0
 
-      def options, do: %{uri: uri()}
-
       @doc """
       Performs a count query against the specified schema for the requested
       range.

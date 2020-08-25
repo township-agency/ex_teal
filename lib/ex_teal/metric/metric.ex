@@ -153,7 +153,8 @@ defmodule ExTeal.Metric do
         format: 0,
         component: 0,
         chart_options: 0,
-        options: 0
+        options: 0,
+        default_range: 0
       )
     end
   end
