@@ -475,6 +475,10 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   @apply .h-8 .flex .items-center .cursor-pointer .select-none .rounded;
 }
 
+.dropdown-trigger.rounded-none {
+  border-radius: 0;
+}
+
 /* Field Filter Triggers ---------------------------------------------------------------------------- */
 
 .dropdown-trigger.field-filter-trigger {

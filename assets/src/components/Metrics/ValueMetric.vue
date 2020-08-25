@@ -1,7 +1,14 @@
 <template>
   <div>
-    <header class="uppercase text-xs mb-4">
+    <header class="uppercase text-xs mb-4 flex items-center justify-between">
       {{ card.title }}
+      <metric-time-control
+        v-if="!!selectedRange"
+        :ago-ranges="ranges"
+        :unit="unit"
+        :selected-range="selectedRange"
+        @update-interval="updateInterval"
+      />
     </header>
     <loading-card :loading="loading">
       <div class="m-4 flex items-center justify-between flex-wrap">
@@ -22,6 +29,9 @@
 <script>
 import { Minimum } from 'ex-teal-js';
 import BaseValueMetric from './Base/ValueMetric';
+import { DateTime } from 'luxon';
+import Duration from 'luxon/src/duration';
+import Interval from 'luxon/src/interval';
 
 export default {
   name: 'ValueMetric',
@@ -44,11 +54,6 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: '',
-    },
-
-    metricData: {
-      type: Object,
-      required: true
     }
   },
 
@@ -58,7 +63,12 @@ export default {
     data: [],
     prefix: '',
     suffix: '',
-    multiple_results: false
+    multiple_results: false,
+    startAt: null,
+    endAt: null,
+    unit: null,
+    timezone: null,
+    selectedRange: null
   }),
 
   computed: {
@@ -72,16 +82,24 @@ export default {
         return `/api/metrics/${uri}`;
       }
     },
+
+    ranges () {
+      return this.card.options.ranges;
+    },
   },
 
   watch: {
     resourceId () {
       this.fetch();
-    },
-
-    metricData () {
-      this.fetch();
     }
+  },
+
+  created () {
+    this.selectedRange = this.card.options.default_range;
+    this.unit = this.selectedRange.unit;
+    this.timezone = DateTime.local().zoneName;
+    this.startAt = this.startAtFromRange(this.selectedRange);
+    this.endAt = DateTime.local();
   },
 
   mounted () {
@@ -91,8 +109,7 @@ export default {
   methods: {
     fetch () {
       this.loading = true;
-      const { startAt, endAt, unit, timezone } = this.metricData;
-
+      const { startAt, endAt, unit, timezone } = this;
       Minimum(ExTeal.request().get(this.metricEndpoint, {
         params: {
           start_at: startAt.toISO({ suppressMilliseconds: true }),
@@ -110,10 +127,25 @@ export default {
           this.format = format || this.format;
           this.prefix = prefix || this.prefix;
           this.suffix = suffix || this.suffix;
-          this.data = multiple_results ? data : [ { label: this.card.title, data }];
+          this.data = multiple_results ? data : [ { label: this.card.title, data } ];
           this.loading = false;
         }
       );
+    },
+
+    startAtFromRange (range) {
+      const now = DateTime.local();
+      const durationObj = {};
+      durationObj[`${range.unit}s`] = range.value;
+      return now.minus(Duration.fromObject(durationObj));
+    },
+
+    updateInterval ({ start, end, unit, range }) {
+      this.startAt = start;
+      this.endAt = end;
+      this.unit = unit;
+      this.selectedRange = range;
+      this.fetch();
     },
   },
 };

@@ -70,7 +70,7 @@ export default {
     toggle (event, option) {
       const firstOption = this.value.find(o => o.name == option.name);
 
-      if(!firstOption) {
+      if (!firstOption) {
         this.value[option.name] = event.target.checked;
       } else {
         firstOption.checked = event.target.checked;

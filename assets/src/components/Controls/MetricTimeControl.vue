@@ -1,43 +1,45 @@
 <template>
   <div class="flex">
-    <select-control
-      :options="timeControlOptions"
-      :selected="controlType"
-      class="form-select bg-white border px-3 py-2 text-80 text-sm appearance-none shadow-none mx-0 border-grey-light text-black"
-      @input="selectTimeControl"
-    />
-    <span
-      v-if="controlType == 'ago'"
-      class="button-group"
+    <dropdown
+      v-if="agoRanges.length > 0"
+      class="rounded-none"
     >
-      <button
-        v-for="(interval) in agoRanges"
-        :key="interval.label"
-        :class="{
-          'relative inline-flex items-center px-3 py-2 border text-sm leading-5 font-medium transition-colors ease-in-out duration-100 focus:bg-grey-lightest hover:bg-grey-lightest -ml-px': true,
-          'text-black bg-white hover:text-grey-darkest focus:text-grey-darkest': interval.label == selectedRange.label,
-          'bg-grey-lightest text-grey-darker hover:text-grey-darkest focus:text-grey-darkest ': interval.label !== selectedRange.label
-        }"
-        @click="selectInterval(interval)"
+      <dropdown-trigger
+        slot-scope="{ toggle }"
+        :handle-click="toggle"
+        class="px-3 border bg-white rounded-none"
       >
-        {{ interval.label }}
-      </button>
-    </span>
-    <div v-else>
-      <select-control
-        :options="units"
-        :selected="selectedUnit"
-        class="form-select bg-white border px-3 py-2 text-80 text-sm appearance-none shadow-none mx-0 border-grey-light text-black -ml-px"
-        @input="selectUnit"
-      />
-    </div>
+        {{ selectedRange.label }}
+      </dropdown-trigger>
+
+      <dropdown-menu
+        slot="menu"
+        direction="rtl"
+        width="150"
+      >
+        <ul class="flex flex-wrap divide-x divide-y divide-gray-lighter">
+          <li
+            v-for="interval in agoRanges"
+            :key="interval.label"
+            class="w-1/3 text-center"
+          >
+            <a
+              :class="{
+                'px-3 py-2 block hover:bg-grey-lightest text-center': true,
+                'hover:bg-grey-lightest bg-grey-light': selectedRange.label == interval.label
+              }"
+              @click="selectInterval(interval)"
+            > {{ interval.label }} </a>
+          </li>
+        </ul>
+      </dropdown-menu>
+    </dropdown>
   </div>
 </template>
 <script>
 import find from 'lodash/find';
 import { DateTime } from 'luxon';
 import Duration from 'luxon/src/duration';
-
 
 export default {
   props: {
@@ -51,17 +53,10 @@ export default {
     }
   },
 
-  data () {
-    return {
-      controlType: 'ago',
-    };
-  },
-
   computed: {
     timeControlOptions () {
       return [
         { label: 'Interval', value: 'ago' },
-        // { label: 'Custom Range', value: 'range' }
       ];
     },
     units () {

@@ -1,7 +1,14 @@
 <template>
   <div>
-    <header class="uppercase text-xs mb-4">
+    <header class="uppercase text-xs mb-4 flex items-center justify-between">
       {{ card.title }}
+      <metric-time-control
+        v-if="!!selectedRange"
+        :ago-ranges="ranges"
+        :unit="unit"
+        :selected-range="selectedRange"
+        @update-interval="updateInterval"
+      />
     </header>
     <loading-card
       :loading="loading"
@@ -29,6 +36,8 @@ import BaseLineMetric from './Base/LineMetric';
 import BaseBarMetric from './Base/BarMetric';
 import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
+import Duration from 'luxon/src/duration';
+import Interval from 'luxon/src/interval';
 
 const FORMATS = {
   minute: DateTime.TIME_SIMPLE,
@@ -60,11 +69,6 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: '',
-    },
-
-    metricData: {
-      type: Object,
-      required: true
     }
   },
 
@@ -75,6 +79,11 @@ export default {
     suffix: '',
     multipleResults: false,
     userOptions: {},
+    startAt: null,
+    endAt: null,
+    unit: null,
+    timezone: null,
+    selectedRange: null
   }),
 
   computed: {
@@ -107,8 +116,8 @@ export default {
               autoSkipPadding: 10
             },
             time: {
-              unit: this.metricData.unit,
-              tooltipFormat: FORMATS[this.metricData.unit]
+              unit: this.unit,
+              tooltipFormat: FORMATS[this.unit]
             }
           } ],
           yAxes: [ {
@@ -132,6 +141,10 @@ export default {
       }, this.userOptions);
     },
 
+    ranges () {
+      return this.card.options.ranges;
+    },
+
     showLine () {
       return !this.loading && this.chartOptions.type == 'line';
     },
@@ -144,11 +157,15 @@ export default {
   watch: {
     resourceId () {
       this.fetch();
-    },
-
-    metricData () {
-      this.fetch();
     }
+  },
+
+  created () {
+    this.selectedRange = this.card.options.default_range;
+    this.unit = this.selectedRange.unit;
+    this.timezone = DateTime.local().zoneName;
+    this.startAt = this.startAtFromRange(this.selectedRange);
+    this.endAt = DateTime.local();
   },
 
   mounted () {
@@ -158,7 +175,7 @@ export default {
   methods: {
     fetch () {
       this.loading = true;
-      const { startAt, endAt, unit, timezone, multiple_results } = this.metricData;
+      const { startAt, endAt, unit, timezone, multiple_results } = this;
       Minimum(ExTeal.request().get(this.metricEndpoint, { params: {
         start_at: startAt.toISO({ suppressMilliseconds: true }),
         end_at: endAt.toISO({ suppressMilliseconds: true }),
@@ -187,7 +204,21 @@ export default {
           this.loading = false;
         }
       );
-    }
+    },
+
+    startAtFromRange (range) {
+      const now = DateTime.local();
+      const durationObj = {};
+      durationObj[`${range.unit}s`] = range.value;
+      return now.minus(Duration.fromObject(durationObj));
+    },
+
+    updateInterval ({ start, end, unit, range }) {
+      this.startAt = start;
+      this.endAt = end;
+      this.unit = unit;
+      this.selectedRange = range;
+    },
   },
 };
 </script>

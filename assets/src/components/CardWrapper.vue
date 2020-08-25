@@ -11,14 +11,13 @@
       :resource="resource"
       :resource-name="resourceName"
       :resource-id="resourceId"
-      :metric-data="metricData"
     />
   </div>
 </template>
 
 <script>
 
-const CardSizes = ['1/2', '1/3', '2/3', '1/4', '3/4'];
+const CardSizes = [ '1/2', '1/3', '2/3', '1/4', '3/4' ];
 
 export default {
   props: {
@@ -41,17 +40,11 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: ''
-    },
-
-    metricData: {
-      type: Object,
-      required: true
     }
   },
 
   computed: {
     widthClass () {
-      console.log(this.card);
       return this.size == 'large' ? 'w-full' : calculateCardWidth(this.card);
     },
 
