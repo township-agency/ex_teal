@@ -218,6 +218,7 @@ export default {
       this.endAt = end;
       this.unit = unit;
       this.selectedRange = range;
+      this.fetch();
     },
   },
 };

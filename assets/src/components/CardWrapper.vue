@@ -1,7 +1,7 @@
 <template>
   <div
     :key="cardKey"
-    class="px-3 mb-6 w-full"
+    class="p-3 w-full"
     :class="widthClass"
   >
     <component
