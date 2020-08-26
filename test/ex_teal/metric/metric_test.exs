@@ -1,14 +1,14 @@
-defmodule ExTeal.Metric.CardTest do
+defmodule ExTeal.Metric.MetricTest do
   use TestExTeal.ConnCase
 
-  alias ExTeal.Metric.Card
+  alias ExTeal.Metric
 
-  defmodule PlainCard do
-    use Card
+  defmodule PlainMetric do
+    use Metric
   end
 
-  defmodule FancyCard do
-    use Card
+  defmodule FancyMetric do
+    use Metric
 
     @impl true
     def uri, do: "fancy"
@@ -25,57 +25,58 @@ defmodule ExTeal.Metric.CardTest do
     @impl true
     def only_on_detail(conn), do: conn.request_path == "foo"
 
+    @impl true
     def options, do: %{foo: "bar"}
   end
 
   describe "uri/0" do
     test "sets a default" do
-      assert PlainCard.uri() == "plain_card"
+      assert PlainMetric.uri() == "plain_metric"
     end
 
     test "can be overriden" do
-      assert FancyCard.uri() == "fancy"
+      assert FancyMetric.uri() == "fancy"
     end
   end
 
   describe "title/0" do
     test "sets a default" do
-      assert PlainCard.title() == "Plain card"
+      assert PlainMetric.title() == "Plain metric"
     end
 
     test "can be overriden" do
-      assert FancyCard.title() == "Most Fancy"
+      assert FancyMetric.title() == "Most Fancy"
     end
   end
 
   describe "width/0" do
     test "sets a default" do
-      assert PlainCard.width() == "1/3"
+      assert PlainMetric.width() == "1/3"
     end
 
     test "can be overriden" do
-      assert FancyCard.width() == "full"
+      assert FancyMetric.width() == "full"
     end
   end
 
   describe "only_on_index/1" do
     test "sets a default", %{conn: conn} do
-      refute PlainCard.only_on_index(conn)
+      refute PlainMetric.only_on_index(conn)
     end
 
     test "can be overriden", %{conn: conn} do
-      assert FancyCard.only_on_index(conn)
+      assert FancyMetric.only_on_index(conn)
     end
   end
 
   describe "only_on_detail/1" do
     test "sets a default", %{conn: conn} do
-      refute PlainCard.only_on_detail(conn)
+      refute PlainMetric.only_on_detail(conn)
     end
 
     test "can be overriden", %{conn: conn} do
-      refute FancyCard.only_on_detail(conn)
-      assert FancyCard.only_on_detail(build_conn(:get, "foo"))
+      refute FancyMetric.only_on_detail(conn)
+      assert FancyMetric.only_on_detail(build_conn(:get, "foo"))
     end
   end
 end

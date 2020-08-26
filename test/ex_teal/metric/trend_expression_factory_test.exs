@@ -11,10 +11,12 @@ defmodule ExTeal.Metric.TrendExpressionFactoryTest do
   defmodule FooTrend do
     use ExTeal.Metric.Trend
 
+    @impl true
     def calculate(request) do
       count(request, User)
     end
 
+    @impl true
     def repo, do: Foo
   end
 

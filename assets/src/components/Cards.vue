@@ -10,7 +10,6 @@
       :resource="resource"
       :resource-name="resourceName"
       :resource-id="resourceId"
-      :metric-data="metricData"
     />
   </div>
 </template>
@@ -42,11 +41,6 @@ export default {
     onlyOnDetail: {
       type: Boolean,
       default: false,
-    },
-
-    metricData: {
-      type: Object,
-      required: true
     }
   },
 

@@ -1,9 +1,9 @@
 <script>
-import { Line, mixins } from 'vue-chartjs';
+import { Bar, mixins } from 'vue-chartjs';
 import '@/util/chart-adapter';
 const { reactiveProp } = mixins;
 export default {
-  extends: Line,
+  extends: Bar,
   mixins: [ reactiveProp ],
   props: {
     options: {
@@ -22,6 +22,5 @@ export default {
   mounted () {
     this.renderChart(this.chartData, this.options);
   }
-
 };
 </script>

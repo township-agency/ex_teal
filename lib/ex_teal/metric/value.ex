@@ -28,10 +28,6 @@ defmodule ExTeal.Metric.Value do
 
       def component, do: "value-metric"
 
-      def options, do: %{uri: uri()}
-
-      def chart_options, do: %{}
-
       @doc """
       Performs a count query against the specified schema for the requested
       range.

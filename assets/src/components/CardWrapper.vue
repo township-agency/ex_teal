@@ -1,7 +1,7 @@
 <template>
   <div
     :key="cardKey"
-    class="px-3 mb-6"
+    class="p-3 w-full"
     :class="widthClass"
   >
     <component
@@ -11,25 +11,19 @@
       :resource="resource"
       :resource-name="resourceName"
       :resource-id="resourceId"
-      :metric-data="metricData"
     />
   </div>
 </template>
 
 <script>
 
-const CardSizes = ['1/2', '1/3', '2/3', '1/4', '3/4'];
+const CardSizes = [ '1/2', '1/3', '2/3', '1/4', '3/4' ];
 
 export default {
   props: {
     card: {
       type: Object,
       required: true,
-    },
-
-    size: {
-      type: String,
-      default: '',
     },
 
     resource: {
@@ -46,11 +40,6 @@ export default {
     resourceId: {
       type: [ Number, String ],
       default: ''
-    },
-
-    metricData: {
-      type: Object,
-      required: true
     }
   },
 
@@ -71,6 +60,6 @@ export default {
 };
 
 function calculateCardWidth (card) {
-  return CardSizes.indexOf(card.width) !== -1 ? `w-full lg:w-1/2 xl:w-${card.width}` : 'w-1/2 md:w-1/3';
+  return `w-full lg:w-1/2 xl:w-${card.width}`;
 }
 </script>
