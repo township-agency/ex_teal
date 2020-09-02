@@ -60,6 +60,8 @@ defmodule ExTeal.Application.Configuration do
 
       def auth_provider, do: ExTeal.GuestAuthProvider
 
+      def theme, do: %ExTeal.Theme{}
+
       defoverridable(
         application_name: 0,
         logo_image_path: 0,
@@ -67,7 +69,8 @@ defmodule ExTeal.Application.Configuration do
         auth_provider: 0,
         path: 0,
         dashboards: 0,
-        nav_groups: 1
+        nav_groups: 1,
+        theme: 0
       )
     end
   end
@@ -82,7 +85,8 @@ defmodule ExTeal.Application.Configuration do
       dashboards: ExTeal.available_dashboards() |> Dashboard.map_to_json(),
       nav_groups: ExTeal.available_nav_groups(conn),
       plugins: ExTeal.available_plugins(),
-      authenticated: true
+      authenticated: true,
+      theme: ExTeal.theme()
     }
   end
 end

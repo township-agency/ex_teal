@@ -118,6 +118,7 @@ defmodule TestExTeal.Order do
   use Ecto.Schema
 
   schema "orders" do
+    field(:name, :string)
     field(:grand_total, :integer)
     timestamps()
   end

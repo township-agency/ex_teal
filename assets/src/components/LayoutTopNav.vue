@@ -1,7 +1,7 @@
 <template>
   <header class="relative flex items-center h-16 border-b border-grey bg-grey-lightest px-4 sm:px-6 md:px-8">
     <button
-      class="hover:bg-grey-lightest md:hidden flex-grow-0 mr-4 z-10"
+      class="hover:bg-grey-lightest lg:hidden flex-grow-0 mr-4 z-10"
       @click="openSideNav"
     >
       <icon type="menu" />

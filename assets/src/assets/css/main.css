@@ -2,39 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --transparent: transparent;
-  --black: #22292f;
-  --white: white;
-  --white-50: rgba(255, 255, 255, 0.5);
-  --danger: #F91E17;
-  --danger-dark: #BB1611;
-  --success: #2CD82E;
-  --success-dark: #49B31C;
-  --warning: #ffeb3b;
-  --info: #03a9f4;
-  --primary-light: #4DC6F3;
-  --primary: #00ADEE;
-  --primary-dark: #0082B3;
-  --primary-70: rgba(64, 153, 222, 0.7);
-  --primary-50: rgba(64, 153, 222, 0.5);
-  --primary-30: rgba(64, 153, 222, 0.3);
-  --primary-10: rgba(64, 153, 222, 0.1);
-  --secondary: #f16522;
-  --secondary-10: rgba(241, 101, 34, 0.1);
-  --logo: #252d37;
-  --sidebar-icon: #b3c1d1;
-  --grey-20: #F8F8F8;
-  --grey-30: #E9E9E9;
-  --grey-40: #eef1f4;
-  --grey-50: #e3e7eb;
-  --grey-60: #bacad6;
-  --grey-70: #b3b9bf;
-  --grey-80: #7c858e;
-  --grey-90: #252d37;
-  --grey-90-half: rgba(40, 54, 61, 0.5);
-}
-
 /* purgecss start ignore */
 
 html {

@@ -6,7 +6,7 @@
     <!-- Off-canvas menu for mobile -->
     <div
       v-show="navOpen"
-      class="md:hidden"
+      class="lg:hidden"
     >
       <div class="fixed inset-0 flex z-40">
         <!-- Off-canvas mobile menu overlay -->
@@ -83,7 +83,7 @@
     </div>
     <!--  -->
 
-    <div class="hidden md:flex md:flex-shrink-0">
+    <div class="hidden lg:flex md:flex-shrink-0">
       <div class="flex flex-col w-sidebar border-r border-grey pt-5 pb-4 bg-white">
         <div class="flex items-center flex-shrink-0 px-4">
           <img

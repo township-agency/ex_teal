@@ -152,7 +152,6 @@ export default {
           }
         });
       } catch (error) {
-        console.log(error);
         if (error.response.status == 422) {
           this.validationErrors = new Errors(error.response.data.errors);
         }
@@ -183,7 +182,6 @@ export default {
         this.validationErrors = new Errors();
         this.updateLastRetrievedAtTimestamp();
       } catch (error) {
-        console.log(error);
         if (error.response.status == 422) {
           this.validationErrors = new Errors(error.response.data.errors);
         }

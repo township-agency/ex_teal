@@ -209,8 +209,6 @@ export default {
     fill (form) {
       const obj = this.value || defaultValue;
 
-      console.log(this.value);
-
       Object.keys(obj).forEach((key) => {
         const formKey = `${this.field.attribute}[${key}]`;
         form.append(formKey, obj[key]);

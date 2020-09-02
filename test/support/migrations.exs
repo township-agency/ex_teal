@@ -27,6 +27,7 @@ defmodule TestExTeal.Migrations do
     end
 
     create table(:orders) do
+      add(:name, :string)
       add(:grand_total, :integer)
       timestamps()
     end
