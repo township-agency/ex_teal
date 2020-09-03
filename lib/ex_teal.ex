@@ -166,6 +166,14 @@ defmodule ExTeal do
     end
   end
 
+  @spec theme() :: ExTeal.Theme.t()
+  def theme do
+    case manifest() do
+      nil -> %ExTeal.Theme{}
+      module -> module.theme()
+    end
+  end
+
   def manifest do
     Application.get_env(:ex_teal, :manifest)
   end

@@ -136,9 +136,7 @@ defmodule ExTeal.Metric.Trend do
         %{x: k, y: value}
       end)
 
-    default_options()
-    |> Map.merge(series_options)
-    |> Map.merge(%{data: data})
+    Map.merge(series_options, %{data: data})
   end
 
   @doc """
@@ -244,9 +242,6 @@ defmodule ExTeal.Metric.Trend do
   defp step_for("day"), do: [days: 1]
   defp step_for("hour"), do: [hours: 1]
   defp step_for("minute"), do: [minutes: 1]
-
-  def default_options,
-    do: %{backgroundColor: "rgba(0, 173, 238, 0.6)", borderColor: "rgba(0, 173, 238, 1)"}
 
   defp to_decimal(float) when is_float(float), do: Decimal.from_float(float)
 

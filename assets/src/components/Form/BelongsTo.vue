@@ -29,7 +29,7 @@
             >
           </div>
           <div class="flex">
-            <p class="text-90 mr-2">
+            <p class="text-gray-darkest mr-2">
               {{ selectedResource.title }}
             </p>
             <p
@@ -56,7 +56,7 @@
             >
           </div>
           <div>
-            <p class="text-90">
+            <p class="text-gray-darkest">
               {{ option.title }}
             </p>
             <p

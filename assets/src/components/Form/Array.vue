@@ -3,7 +3,7 @@
     <template slot="field">
       <div 
         v-if="!listFirst && !maxReached"
-        class="flex border border-40 p-4" 
+        class="flex border border-gray-light p-4" 
       >
         <input
           v-model="newItem"
@@ -25,7 +25,7 @@
         v-if="items.length" 
         ref="itemslist"
         :style="maxHeight" 
-        class="border border-40 py-2"
+        class="border border-gray-light py-2"
       >
         <draggable
           v-model="items"
@@ -64,7 +64,7 @@
       </ul>
       <div 
         v-if="listFirst && !maxReached"
-        class="flex border border-40 p-4" 
+        class="flex border border-gray-light p-4" 
       >
         <input
           v-model="newItem"

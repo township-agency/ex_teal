@@ -1,8 +1,8 @@
 <script>
 const classes = {
-  '1': 'text-90 font-normal text-xl',
-  '2': 'text-90 font-normal text-lg',
-  '3': 'text-90 font-bold text-bg'
+  '1': 'text-gray-darkest font-normal text-xl',
+  '2': 'text-gray-darkest font-normal text-lg',
+  '3': 'text-gray-darkest font-bold text-bg'
 };
 
 export default {

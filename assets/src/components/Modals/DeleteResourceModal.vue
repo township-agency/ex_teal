@@ -16,17 +16,17 @@
           >
             {{ uppercaseMode }} Resource
           </heading>
-          <p class="text-80 leading-normal">
+          <p class="text-gray-darker leading-normal">
             Are you sure you want to {{ mode }} the selected resources?
           </p>
         </div>
       </slot>
 
-      <div class="bg-grey-lightest px-6 py-3 flex">
+      <div class="bg-gray-lightest px-6 py-3 flex">
         <div class="ml-auto">
           <button
             type="button"
-            class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
+            class="btn text-gray-darker font-normal h-9 px-3 mr-3 btn-link"
             @click.prevent="handleClose"
           >
             Cancel

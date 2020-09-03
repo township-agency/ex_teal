@@ -64,7 +64,7 @@
     />
     <button
       :class="{
-        'hidden group-hover:block rounded-r border border-danger text-danger text-xs h-8 w-8 bg-grey-lightest': true
+        'hidden group-hover:block rounded-r border border-danger text-danger text-xs h-8 w-8 bg-gray-lightest': true
       }"
       @click="deleteFilter"
     >
@@ -72,7 +72,7 @@
     </button>
     <span
       v-if="notLastFilter"
-      class="font-bold w-16 text-center text-xs text-grey font-normal"
+      class="font-bold w-16 text-center text-xs text-gray font-normal"
     >
       AND
     </span>

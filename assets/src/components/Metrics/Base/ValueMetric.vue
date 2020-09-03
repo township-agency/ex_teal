@@ -4,7 +4,7 @@
       {{ formattedValue }}
       <span
         v-if="suffix"
-        class="ml-2 text-sm font-bold text-80"
+        class="ml-2 text-sm font-bold text-gray-darker"
       >{{ formattedSuffix }}</span>
     </p>
 
@@ -13,7 +13,7 @@
     </p>
 
     <div class="flex items-center">
-      <p class="text-80 font-bold flex items-center">
+      <p class="text-gray-darker font-bold flex items-center">
         <svg
           v-if="increaseOrDecrease < 0"
           xmlns="http://www.w3.org/2000/svg"

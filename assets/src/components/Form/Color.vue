@@ -16,7 +16,7 @@
         >
         <div
           :style="{ backgroundColor: value }"
-          class="color-input border-l-0 h-8 border border-60 w-8"
+          class="color-input border-l-0 h-8 border border-gray-dark w-8"
           @click="togglePicker"
         />
         <chrome-picker

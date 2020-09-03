@@ -251,7 +251,6 @@ export default {
     },
 
     selectInitialResource () {
-      console.log('hi');
       this.selectedResource = find(
         this.availableResources,
         r => r.id == this.selectedResourceId

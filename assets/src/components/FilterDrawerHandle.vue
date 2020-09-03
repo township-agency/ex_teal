@@ -1,5 +1,5 @@
 <template>
-  <button class="flex items-center text-80 px-2 animate hover:bg-grey-dark">
+  <button class="flex items-center text-gray-darker px-2 animate hover:bg-gray-dark">
     <icon
       type="filter"
       class="mr-2"

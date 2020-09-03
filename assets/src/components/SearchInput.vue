@@ -21,7 +21,7 @@
 
         <slot name="default">
           <icon type="search" />
-          <div class="text-grey">
+          <div class="text-gray">
             Click to search
           </div>
         </slot>
@@ -53,7 +53,7 @@
       :style="{ width: inputWidth + 'px', zIndex: 2000 }"
       class="form-input form-input-bordered search-input absolute top-0 left-0 my-1 overflow-hidden"
     >
-      <div class="p-2 bg-grey-300">
+      <div class="p-2 bg-gray-300">
         <input
           ref="search"
           v-model="search"
@@ -97,7 +97,7 @@
           :ref="index === selected ? 'selected' : null"
           :class="{
             [`search-input-item-${index}`]: true,
-            'hover:bg-30': index !== selected,
+            'hover:bg-gray-lighter': index !== selected,
             'bg-primary text-white': index === selected
           }"
           class="px-4 py-2 cursor-pointer"

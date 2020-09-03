@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=en class="font-sans bg-grey-lightest antialiased">
+<html lang=en class="font-sans bg-gray-lightest antialiased">
   <head>
     <meta charset=utf-8>
     <meta http-equiv=X-UA-Compatible content="IE=edge">
@@ -7,6 +7,12 @@
     <meta name="csrf-token" content="<%= @csrf_token %>">
     <link rel=icon href=<%= @config.path %>/favicon.ico>
     <title><%= @title %></title>
+    <style>
+      :root{
+        <%= @colors %>
+      }
+    </style>
+
     <%= if @assets.compiled_assets do %>
       <%= for style <- @assets.styles do %>
         <link href="<%= @config.path %><%= style %>" rel="stylesheet" type="text/css">

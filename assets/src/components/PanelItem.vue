@@ -1,8 +1,8 @@
 <template>
-  <div class="flex border-b border-40">
+  <div class="flex border-b border-gray-light">
     <div class="w-1/4 py-4">
       <slot>
-        <h4 class="font-normal text-80">
+        <h4 class="font-normal text-gray-darker">
           {{ label }}
         </h4>
       </slot>
@@ -11,7 +11,7 @@
       <slot name="value">
         <p
           v-if="field.value && !field.as_html"
-          class="text-90"
+          class="text-gray-darkest"
         >
           {{ field.value }}
         </p>

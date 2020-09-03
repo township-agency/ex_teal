@@ -37,7 +37,7 @@
           v-if="panel.name.includes('Details')"
           class="card-headline"
         >
-          <h2 class="text-90 font-normal text-xl">
+          <h2 class="text-gray-darkest font-normal text-xl">
             {{ panel.name }}
           </h2>
           <div class="ml-auto flex">

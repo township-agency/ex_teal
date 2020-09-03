@@ -2,7 +2,7 @@
   <panel-item :field="field">
     <p
       slot="value"
-      class="text-90"
+      class="text-gray-darkest"
     >
       <span
         :class="{ 'bg-success': field.value, 'bg-danger': !field.value }"

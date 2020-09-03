@@ -10,37 +10,26 @@ module.exports = {
   shadowLookup: true,
   theme: {
     colors: {
-      transparent: 'transparent',
-      black: '#000000',
-      'grey-lightest': '#FAFAFA',
-      'grey-lighter': '#EBEBEB',
-      'grey-light': '#DBDBDB',
-      grey: '#CCCCCC',
-      'grey-dark': '#B8B8B8',
-      'grey-darker': '#838383',
-      'grey-darkest': '#3D3D3D',
-      white: '#ffffff',
-      primary: 'var(--primary)',
+      'transparent': 'transparent',
+      'black': 'var(--black)',
+      'gray-lightest': '#FAFAFA',
+      'gray-lighter': '#EBEBEB',
+      'gray-light': '#DBDBDB',
+      'gray': '#CCCCCC',
+      'gray-dark': '#B8B8B8',
+      'gray-darker': '#838383',
+      'gray-darkest': '#3D3D3D',
+      'white': 'var(--white)',
+      'primary': 'var(--primary)',
       'primary-dark': 'var(--primary-dark)',
       'primary-light': 'var(--primary-light)',
       'primary-10': 'var(--primary-10)',
       'primary-30': 'var(--primary-30)',
-      'secondary-10': 'var(--secondary-10)',
-      success: 'var(--success)',
+      'success': 'var(--success)',
       'success-dark': 'var(--success-dark)',
-      danger: 'var(--danger)',
+      'danger': 'var(--danger)',
       'danger-dark': 'var(--danger-dark)',
-      info: 'var(--info)',
-      warning: 'var(--warning)',
-      '90-half': 'var(--grey-90-half)',
-      90: 'var(--grey-90)',
-      80: 'var(--grey-80)',
-      70: 'var(--grey-70)',
-      60: 'var(--grey-60)',
-      50: 'var(--grey-50)',
-      40: 'var(--grey-40)',
-      30: 'var(--grey-30)',
-      20: 'var(--grey-20)'
+      'info': 'var(--info)'
     },
     fontFamily: {
       sans: [
@@ -81,7 +70,7 @@ module.exports = {
 
     borderColor: theme => ({
       ...theme('colors'),
-      default: theme('colors.grey-light', 'currentColor')
+      default: theme('colors.gray-light', 'currentColor')
     }),
 
     shadows: {

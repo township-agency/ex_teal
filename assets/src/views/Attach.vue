@@ -288,7 +288,6 @@ export default {
 
     handleInvalid (error) {
       const errors = error.response.data.errors;
-      console.log(error);
       ExTeal.$emit('error', `Unable to attach the ${this.relatedResourceLabel}`);
       this.validationErrors = new Errors(errors);
     }

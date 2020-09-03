@@ -1,12 +1,12 @@
 <template>
   <div
     id="app"
-    class="h-screen flex overflow-hidden bg-grey-lightest"
+    class="h-screen flex overflow-hidden bg-gray-lightest"
   >
     <!-- Off-canvas menu for mobile -->
     <div
       v-show="navOpen"
-      class="md:hidden"
+      class="lg:hidden"
     >
       <div class="fixed inset-0 flex z-40">
         <!-- Off-canvas mobile menu overlay -->
@@ -23,7 +23,7 @@
             v-show="mobileNav"
             class="fixed inset-0"
           >
-            <div class="absolute inset-0 bg-grey opacity-75" />
+            <div class="absolute inset-0 bg-gray opacity-75" />
           </div>
         </transition>
 
@@ -41,7 +41,7 @@
           >
             <div class="absolute top-0 right-0 -mr-16 p-1">
               <button
-                class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-600"
+                class="flex items-center justify-center h-12 w-12 rounded-full focus:outline-none focus:bg-gray-60"
                 aria-label="Close sidebar"
                 @click="closeMobileNav"
               >
@@ -83,8 +83,8 @@
     </div>
     <!--  -->
 
-    <div class="hidden md:flex md:flex-shrink-0">
-      <div class="flex flex-col w-sidebar border-r border-grey pt-5 pb-4 bg-white">
+    <div class="hidden lg:flex md:flex-shrink-0">
+      <div class="flex flex-col w-sidebar border-r border-gray pt-5 pb-4 bg-white">
         <div class="flex items-center flex-shrink-0 px-4">
           <img
             v-if="config.logo"

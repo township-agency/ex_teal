@@ -6,7 +6,7 @@
       <slot />
     </div>
     <div
-      class="absolute inset-0 bg-80 z-0 opacity-25"
+      class="absolute inset-0 bg-gray-darker z-0 opacity-25"
       @click="close"
     />
   </div>

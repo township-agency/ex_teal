@@ -8,7 +8,7 @@
       <div class="relative">
         <icon
           type="search"
-          class="absolute ml-2 mt-2 text-grey"
+          class="absolute ml-2 mt-2 text-gray"
         />
         <input
           ref="input"
@@ -32,7 +32,7 @@
         class="bg-white py-3 overflow-hidden z-40 absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto z-40"
       >
         <loader
-          class="text-60"
+          class="text-gray-dark"
           width="40"
         />
       </div>
@@ -42,7 +42,7 @@
         v-if="shouldShowNoResults"
         class="bg-white overflow-hidden z-40 absolute shadow-lg w-full mt-2 max-h-search overflow-y-auto"
       >
-        <h3 class="text-xs uppercase tracking-wide text-80 bg-40 py-4 px-3">
+        <h3 class="text-xs uppercase tracking-wide text-gray-darker bg-gray-light py-4 px-3">
           No Results Found
         </h3>
       </div>  
@@ -58,7 +58,7 @@
           :key="group.resource_name"
         >
           <h3
-            class="text-xs uppercase tracking-wide text-80 bg-grey-lighter py-2 px-3"
+            class="text-xs uppercase tracking-wide text-gray-darker bg-gray-lighter py-2 px-3"
           >
             {{ group.resource_title }}
           </h3>
@@ -72,9 +72,9 @@
               <a
                 :class="{
                   'bg-white': highlightedResultIndex != item.index,
-                  'bg-20': highlightedResultIndex == item.index
+                  'bg-gray-lightest': highlightedResultIndex == item.index
                 }"
-                class="cursor-pointer flex items-center hover:bg-grey-lightest block py-2 px-3 no-underline font-normal"
+                class="cursor-pointer flex items-center hover:bg-gray-lightest block py-2 px-3 no-underline font-normal"
                 @click.prevent="navigate(item.index)"
               >
                 <img
@@ -83,10 +83,10 @@
                   class="h-8 w-8 mr-3"
                 >
                 <div>
-                  <p class="text-90">{{ item.title }}</p>
+                  <p class="text-gray-darkest">{{ item.title }}</p>
                   <p
                     v-if="item.subtitle"
-                    class="text-xs mt-1 text-80"
+                    class="text-xs mt-1 text-gray-darker"
                   >
                     {{ item.subtitle }}
                   </p>

@@ -3,7 +3,7 @@
     <template slot="value">
       <p
         v-if="field.value"
-        class="text-90"
+        class="text-gray-darkest"
       >
         {{ formattedDate }}
       </p>

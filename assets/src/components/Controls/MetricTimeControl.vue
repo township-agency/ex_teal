@@ -25,8 +25,8 @@
           >
             <a
               :class="{
-                'px-3 py-2 block hover:bg-grey-lightest text-center': true,
-                'hover:bg-grey-lightest bg-grey-light': selectedRange.label == interval.label
+                'px-3 py-2 block hover:bg-gray-lightest text-center': true,
+                'hover:bg-gray-lightest bg-gray-light': selectedRange.label == interval.label
               }"
               @click="selectInterval(interval)"
             > {{ interval.label }} </a>

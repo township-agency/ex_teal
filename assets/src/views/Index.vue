@@ -23,7 +23,7 @@
         {{ meta.label }}
         <span
           v-if="resourceCountLabel"
-          class="text-sm text-grey ml-2 inline-block"
+          class="text-sm text-gray ml-2 inline-block"
         >
           Viewing {{ resourceCountLabel }}
         </span>
@@ -39,7 +39,7 @@
       >
         <icon
           type="search"
-          class="absolute ml-2 mt-2 text-grey"
+          class="absolute ml-2 mt-2 text-gray"
         />
 
         <input
@@ -55,19 +55,19 @@
       <div class="flex items-center justify-end">
         <div v-if="shouldShowReorder && !viaHasOne">
           <button
-            class="border-l border-r hover:bg-grey-light px-2 h-8"
+            class="border-l border-r hover:bg-gray-light px-2 h-8"
             @click="showSort"
           >
             <icon
               type="reorder"
-              class="text-grey-darker"
+              class="text-gray-darker"
             />
           </button>
         </div>
 
         <div v-if="selectedResources.length > 0">
           <button
-            class="border-r hover:bg-grey-light px-2 h-8 flex items-center"
+            class="border-r hover:bg-gray-light px-2 h-8 flex items-center"
             @click="exportResults"
           >
             <icon
@@ -97,13 +97,13 @@
 
         <button
           v-if="shouldShowFilters"
-          :class="{'bg-grey-lighter': shouldShowFilters }"
-          class="border-r hover:bg-grey-light px-2 h-8 flex items-center"
+          :class="{'bg-gray-lighter': shouldShowFilters }"
+          class="border-r hover:bg-gray-light px-2 h-8 flex items-center"
           @click="toggleFilters"
         >
           <icon
             type="filter"
-            class="text-grey-darker"
+            class="text-gray-darker"
           />
         </button>
 
@@ -154,7 +154,7 @@
 
     <div
       v-if="showFilters"
-      class="border-t border-r border-l pr-2 pb-2 pl-2 bg-grey-lighter"
+      class="border-t border-r border-l pr-2 pb-2 pl-2 bg-gray-lighter"
     >
       <div
         v-if="currentFieldFilters.length > 0"
@@ -182,7 +182,7 @@
 
     <loading-card
       :loading="loading"
-      :class="{ 'overflow-hidden border border-50': !shouldShowToolbar }"
+      :class="{ 'overflow-hidden border border-gray': !shouldShowToolbar }"
     >
       <div
         v-if="!resources.length && !loading"
@@ -215,7 +215,7 @@
             </g>
           </svg>
 
-          <h3 class="text-base text-80 font-normal mb-6">
+          <h3 class="text-base text-gray-darker font-normal mb-6">
             No {{ resourceInformation.title.toLowerCase() }} matched the given criteria.
 
             <create-resource-button

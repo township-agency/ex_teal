@@ -15,6 +15,9 @@ defmodule ExTeal.View do
     assets = ExTeal.Asset.all_assets()
     csrf_token = Plug.CSRFProtection.get_csrf_token()
 
+    theme = ExTeal.theme()
+    color_variables = ExTeal.Theme.color_variables(theme)
+
     index(
       title: ExTeal.application_name(),
       base: base,
@@ -23,7 +26,8 @@ defmodule ExTeal.View do
       assets: assets,
       plugin_scripts: ExTeal.all_scripts(),
       csrf_token: csrf_token,
-      dropdown: dropdown
+      dropdown: dropdown,
+      colors: color_variables
     )
   end
 

@@ -80,7 +80,6 @@ export default {
     groupedResources () {
       const grouped = groupBy(this.availableResources, resource => resource.group || 'Resources');
       const groups = this.config.nav_groups;
-      console.log(groups);
       return Object.entries(grouped)
         .sort((a, b) => {
           return groups.indexOf(a[0]) <= groups.indexOf(b[0]) ? -1 : 1;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot>
-      <h4 class="mb-3 pl-5 text-90 font-normal text-lg">
+      <h4 class="mb-3 pl-5 text-gray-darkest font-normal text-lg">
         {{ panel.name }}
       </h4>
     </slot>

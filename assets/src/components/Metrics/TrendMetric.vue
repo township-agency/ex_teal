@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="uppercase text-xs mb-4 flex items-center justify-between">
+    <header class="uppercase text-xs mb-4 flex items-center justify-between h-8">
       {{ card.title }}
       <metric-time-control
         v-if="!!selectedRange"
@@ -18,12 +18,14 @@
           v-if="showLine"
           :chart-data="data"
           :options="chartOptions"
+          :styles="chartStyles"
         />
 
         <BaseBarMetric
           v-if="showBar"
           :chart-data="data"
           :options="chartOptions"
+          :styles="chartStyles"
         />
       </div>
     </loading-card>
@@ -38,6 +40,7 @@ import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
 import Duration from 'luxon/src/duration';
 import Interval from 'luxon/src/interval';
+import InteractsWithTheme from '@/mixins/InteractsWithTheme';
 
 const FORMATS = {
   minute: DateTime.TIME_SIMPLE,
@@ -54,6 +57,7 @@ export default {
     BaseLineMetric,
     BaseBarMetric
   },
+  mixins: [ InteractsWithTheme ],
 
   props: {
     card: {
@@ -118,6 +122,9 @@ export default {
             time: {
               unit: this.unit,
               tooltipFormat: FORMATS[this.unit]
+            },
+            gridLines: {
+              display: false
             }
           } ],
           yAxes: [ {
@@ -132,6 +139,12 @@ export default {
             label: (item, data) => {
               const elems = [ this.prefix, item.value, this.suffix ].filter(v => v);
               return `${data.datasets[item.datasetIndex].label}: ${elems.join('')}`;
+            },
+            labelColor: (item, chart) => {
+              const { borderColor, backgroundColor } = chart.data.datasets[item.datasetIndex];
+              return {
+                borderColor, backgroundColor
+              };
             }
           }
         },
@@ -139,6 +152,12 @@ export default {
           display: this.multipleResults
         }
       }, this.userOptions);
+    },
+
+    chartStyles () {
+      return {
+        height: '400px'
+      };
     },
 
     ranges () {
@@ -173,6 +192,7 @@ export default {
   },
 
   methods: {
+
     fetch () {
       this.loading = true;
       const { startAt, endAt, unit, timezone, multiple_results } = this;
@@ -189,13 +209,23 @@ export default {
         }) => {
           this.multipleResults = multiple_results;
           if (multiple_results) {
-            const multiData = data.map((trend) => {
-              return { label: trend.label, ...trend.data };
+            const colors = this.colorsForData(data.length);
+
+            const multiData = data.map((trend, i) => {
+              const colorData = {};
+              
+              if (this.chartOptions.type == 'line') {
+                colorData.borderColor = colors[i];
+                colorData.backgroundColor = 'transparent';
+              } else {
+                colorData.backgroundColor = colors[i];
+              }
+              return { label: trend.label, ...this.colorsForTrend(colors, this.chartOptions.type, i), ...trend.data };
             });
             this.data = { datasets: multiData };
           } else {
             data.label = this.card.title;
-            this.data = { datasets: [ data ] };
+            this.data = { datasets: [ { ...this.colorsForTrend(this.colorsForData(1), this.chartOptions.type, 0), ...data } ] };
           }
           this.prefix = prefix !== null ? prefix : this.prefix;
           this.suffix = suffix !== null ? suffix : this.suffix;
