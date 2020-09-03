@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.9.3](https://github.com/township-agency/ex_teal/compare/0.9.2...0.9.3) (2020-08-26)
+
+#### Features
+
+* Partition Metrics
+* Teal Themes
+
+### Bug Fixes
+
+* Darken h3 side-nav headers
+* Card Wrapper was losing it's xl break points
+
 ### [0.9.2](https://github.com/township-agency/ex_teal/compare/0.9.1...0.9.2) (2020-08-26)
 
 #### Features

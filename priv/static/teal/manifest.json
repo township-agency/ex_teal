@@ -1,8 +1,8 @@
 {
-  "npm.babel.js": "/js/0.df23128ea001cfeb5d2b.chunk.js",
+  "npm.babel.js": "/js/0.c465b4b1942426e60419.chunk.js",
   "npm.regenerator-runtime.js": "/js/1.5e59e0bf0bee3cc63fff.chunk.js",
   "main.css": "/css/main.css",
-  "main.js": "/js/fa6c305b7551a8b7be9f.js",
+  "main.js": "/js/e36cc8e54bc6dfe30095.js",
   "npm.algoliasearch.js": "/js/3.0590c56cb66bbb4f42b9.chunk.js",
   "npm.autocomplete.js.js": "/js/4.ece888dad2d1c7979b42.chunk.js",
   "npm.axios.js": "/js/5.b6fe3a1902cc7a5f8c3f.chunk.js",
@@ -37,7 +37,7 @@
   "npm.trix.js": "/js/34.992b18cd55fff3f26a9a.chunk.js",
   "npm.v-tooltip.js": "/js/35.5f0ad746cf3dc8f759b4.chunk.js",
   "npm.vue.js": "/js/36.a755b4eb19e0521a9d7a.chunk.js",
-  "npm.vue-chartjs.js": "/js/37.25141c2695f6fb1aa96f.chunk.js",
+  "npm.vue-chartjs.js": "/js/37.2d1c58542f4b3c799f6f.chunk.js",
   "npm.vue-clickaway.js": "/js/38.29ef95d972bff60e1fcd.chunk.js",
   "npm.vue-color.js": "/js/39.8abdb4a437135493242f.chunk.js",
   "npm.vue-loader.js": "/js/40.0ef7a52d7f25af60d387.chunk.js",
@@ -93,6 +93,6 @@
   "js/6.238635e2aa27dba84e9c.chunk.js.gz": "/js/6.238635e2aa27dba84e9c.chunk.js.gz",
   "js/7.2d8db4adfa411aa65c88.chunk.js.br": "/js/7.2d8db4adfa411aa65c88.chunk.js.br",
   "js/7.2d8db4adfa411aa65c88.chunk.js.gz": "/js/7.2d8db4adfa411aa65c88.chunk.js.gz",
-  "js/fa6c305b7551a8b7be9f.js.br": "/js/fa6c305b7551a8b7be9f.js.br",
-  "js/fa6c305b7551a8b7be9f.js.gz": "/js/fa6c305b7551a8b7be9f.js.gz"
+  "js/e36cc8e54bc6dfe30095.js.br": "/js/e36cc8e54bc6dfe30095.js.br",
+  "js/e36cc8e54bc6dfe30095.js.gz": "/js/e36cc8e54bc6dfe30095.js.gz"
 }

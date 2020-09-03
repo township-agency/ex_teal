@@ -1,7 +1,7 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
-  @version "0.9.2"
+  @version "0.9.3"
 
   @source "https://github.com/township-agency/ex_teal"
 
