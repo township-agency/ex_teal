@@ -4,7 +4,7 @@ defmodule ExTeal.Theme do
   changing the colors used in the user interface.  The struct provides the default values,
   and can be overriden by providing a custom struct in the `ExTeal.Manifest` module.
   """
-  @derive {Jason.Encoder, only: [:metric_colors_type, :metric_colors, :metric_gradient]}
+  @derive {Jason.Encoder, only: [:metric_colors]}
   defstruct transparent: "transparent",
             black: "#22292f",
             white: "white",
@@ -35,7 +35,6 @@ defmodule ExTeal.Theme do
             grey_80: "#7c858e",
             grey_90: "#252d37",
             grey_90_half: "rgba(40, 54, 61, 0.5)",
-            metric_colors_type: "array",
             metric_colors: [
               "#3B3F73",
               "#4F5599",
@@ -61,8 +60,7 @@ defmodule ExTeal.Theme do
               "#8F6E3E",
               "#D7A65E",
               "#EFB868"
-            ],
-            metric_gradient: %{}
+            ]
 
   def color_variables(%__MODULE__{} = theme),
     do: """

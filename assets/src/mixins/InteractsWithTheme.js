@@ -4,7 +4,7 @@ const colorArray = function (colors, count) {
   });
 };
 
-function hexToRgb (hex) {
+const hexToRgb = function (hex) {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, (m, r, g, b) => {
@@ -23,9 +23,7 @@ const InteractsWithTheme = {
   methods: {
     colorsForData (data_length) {
       const theme = window.ExTeal.config.theme;
-      if (theme.metric_colors_type === 'array') {
-        return colorArray(theme.metric_colors, data_length);
-      }
+      return colorArray(theme.metric_colors, data_length);
     },
 
     colorsForTrend (colors, type, index) {
