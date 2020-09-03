@@ -60,6 +60,26 @@ export default {
 };
 
 function calculateCardWidth (card) {
-  return `w-full lg:w-1/2 xl:w-${card.width}`;
+  let width;
+
+  switch (card.width) {
+    case '1/2':
+      width = 'w-1/2';
+      break;
+    case '1/3':
+      width = 'w-1/3';
+      break;
+    case '2/3':
+      width = 'w-2/3';
+      break;
+    case '1/4':
+      width = 'w-1/4';
+      break;
+    case '3/4':
+      width = 'w-3/4';
+      break;
+  }
+
+  return `w-full lg:w-1/2 xl:${width}`;
 }
 </script>
