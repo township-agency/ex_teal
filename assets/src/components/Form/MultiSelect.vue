@@ -455,7 +455,7 @@ fieldset[disabled] .multiselect {
 
 .multiselect__tags {
   border-radius: 0;
-  @apply .border .border-60;
+  @apply .border .border-gray-dark;
 }
 .multiselect__tag {
   @apply .bg-primary;

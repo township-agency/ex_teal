@@ -1,9 +1,9 @@
 <template>
-  <div class="border-t bg-grey-lightest flex justify-end">
+  <div class="border-t bg-gray-lightest flex justify-end">
     <nav
       v-if="resources.length > 0"
     >
-      <span class="text-80 mr-2">Per Page:</span>
+      <span class="text-gray-darker mr-2">Per Page:</span>
       <select-control
         label="value"
         :selected="perPage"        
@@ -16,7 +16,7 @@
         :disabled="!hasPreviousPages"
         :class="{
           'text-primary dim': hasPreviousPages,
-          'text-80 opacity-50': !hasPreviousPages
+          'text-gray-darker opacity-50': !hasPreviousPages
         }"
         class="btn btn-link py-3 px-4"
         rel="prev"
@@ -30,7 +30,7 @@
         :disabled="!hasMorePages"
         :class="{
           'text-primary dim': hasMorePages,
-          'text-80 opacity-50': !hasMorePages
+          'text-gray-darker opacity-50': !hasMorePages
         }"
         class="ml-auto btn btn-link py-3 px-4"
         rel="next"

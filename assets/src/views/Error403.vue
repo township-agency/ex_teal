@@ -13,7 +13,7 @@
         </p>
         <router-link
           :to="{ name: 'home' }"
-          class="dim btn btn-lg btn-default btn-white text-90 no-text-shadow tracking-wide uppercase"
+          class="dim btn btn-lg btn-default btn-white text-gray-darkest no-text-shadow tracking-wide uppercase"
         >
           Go Home
         </router-link>

@@ -8,7 +8,7 @@
       class="flex items-center justify-center z-50 p-6"
       style="min-height: 150px"
     >
-      <loader class="text-60" />
+      <loader class="text-gray-dark" />
     </div>
 
     <slot v-else />

@@ -19,7 +19,7 @@
           />
         </div>
         <label
-          class="text-xs text-grey-dark"
+          class="text-xs text-gray-dark"
           for="field.attribute"
         >{{
           label

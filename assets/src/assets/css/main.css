@@ -33,7 +33,7 @@ html {
 }
 
 .card {
-  @apply .bg-white .border .border-solid .border-grey-light .w-full;
+  @apply .bg-white .border .border-solid .border-gray-light .w-full;
 }
 
 .card-panel {
@@ -41,7 +41,7 @@ html {
 }
 
 .card-refresh {
-  @apply .p-1 .ml-auto .text-80 .inline-flex .items-center;
+  @apply .p-1 .ml-auto .text-gray-darker .inline-flex .items-center;
 }
 
 .card-refresh:hover {
@@ -84,7 +84,7 @@ html {
 }
 
 .small-header {
-  @apply .bg-grey-lightest .text-xs .text-grey .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
+  @apply .bg-gray-lightest .text-xs .text-gray .uppercase  .text-left .py-3 .px-3 .tracking-wide .align-middle;
   @apply .border-b;
 }
 
@@ -97,7 +97,7 @@ html {
 }
 
 .table td {
-  @apply .font-light .text-90 .border-t .border-40 .px-3 .align-middle .max-w-xs .overflow-hidden;
+  @apply .font-light .text-gray-darkest .border-t .border-gray-light .px-3 .align-middle .max-w-xs .overflow-hidden;
   text-overflow: ellipsis;
   height: 3.8125rem;
 }
@@ -113,7 +113,7 @@ html {
   transition: .25s all;
 }
 .sortable-chosen td {
-  @apply bg-grey-lighter text-primary-light;
+  @apply bg-gray-lighter text-primary-light;
   transition: .25s all;
 }
 
@@ -193,7 +193,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-input {
-  @apply .bg-white .border .border-white .px-2 .text-80;
+  @apply .bg-white .border .border-white .px-2 .text-gray-darker;
 }
 
 .form-control-focus {
@@ -210,7 +210,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-input-bordered {
-  @apply .bg-white .border .border-60 .px-2 .text-80;
+  @apply .bg-white .border .border-gray-dark .px-2 .text-gray-darker;
 }
 
 .form-input.search {
@@ -236,7 +236,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 
 .form-input:disabled,
 .form-select:disabled {
-  @apply .bg-grey-lightest;
+  @apply .bg-gray-lightest;
   cursor: not-allowed;
 }
 
@@ -249,7 +249,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-combo {
-  @apply .bg-white .border .border-60 .text-80 .shadow .overflow-hidden;
+  @apply .bg-white .border .border-gray-dark .text-gray-darker .shadow .overflow-hidden;
 }
 
 .form-combo-select {
@@ -466,7 +466,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .field-filter-dropdown p:hover {
-  @apply .bg-30;
+  @apply .bg-gray-lighter;
 }
 
 .field-filter-dropdown .dropdown-menu a {
@@ -516,7 +516,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 /* Tooltip
 ---------------------------------------------------------------------------- */
 .tooltip {
-  @apply bg-white px-3 py-2 rounded border border-50 shadow text-sm leading-normal;
+  @apply bg-white px-3 py-2 rounded border border-gray shadow text-sm leading-normal;
 }
 
 .tooltip {
@@ -629,21 +629,21 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 .card .vc-chrome {
   border-radius: 0;
   box-shadow: none;
-  @apply .border .border-60;
+  @apply .border .border-gray-dark;
 }
 
 /* Top Nav CSS */
 
 .layout-top-nav--dropdown li a {
-  @apply .block .no-underline .text-90 .p-3;
+  @apply .block .no-underline .text-gray-darkest .p-3;
 }
 
 .layout-top-nav--dropdown li a:hover {
-  @apply .bg-30;
+  @apply .bg-gray-lighter;
 }
 
 .layout-side-nav--nav h3 {
-  @apply mb-2 text-xs text-70 font-normal px-4;
+  @apply mb-2 text-xs text-gray font-normal px-4;
 }
 
 .layout-side-nav--nav a {
@@ -651,7 +651,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .layout-side-nav--nav a:hover {
-  @apply .text-90 .bg-grey-lightest;
+  @apply .text-gray-darkest .bg-gray-lightest;
 }
 
 .layout-side-nav--nav a.router-link-active {
@@ -663,11 +663,11 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .button-group--button {
-  @apply relative inline-flex items-center px-3 py-2 border bg-grey-lightest text-sm leading-5 font-medium text-grey-darker transition-colors ease-in-out duration-100
+  @apply relative inline-flex items-center px-3 py-2 border bg-gray-lightest text-sm leading-5 font-medium text-gray-darker transition-colors ease-in-out duration-100
 }
 
 .button-group--button:hover, .button-group--button:focus {
-  @apply bg-grey-lighter text-grey-darkest;
+  @apply bg-gray-lighter text-gray-darkest;
 }
 
 .button-group--button-selected {
@@ -675,7 +675,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .button-group--button-selected:hover {
-  @apply bg-grey-lightest text-grey-darkest;
+  @apply bg-gray-lightest text-gray-darkest;
 }
 
 /* purgecss end ignore */

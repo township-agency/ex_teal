@@ -3,7 +3,7 @@
     <p
       v-if="field.value"
       slot="value"
-      class="text-90"
+      class="text-gray-darkest"
     >
       <img
         :src="field.value"

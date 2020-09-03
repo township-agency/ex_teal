@@ -8,10 +8,10 @@
       >
         <icon
           type="action"
-          class="text-grey-darker"
+          class="text-gray-darker"
           view-box="0 0 16 16"
         />
-        <span class="text-grey-darker text-sm ml-2">Actions</span>
+        <span class="text-gray-darker text-sm ml-2">Actions</span>
       </dropdown-trigger>
 
       <dropdown-menu

@@ -1,5 +1,5 @@
 <template functional>
-  <div class="sm:flex border-b border-40">
+  <div class="sm:flex border-b border-gray-light">
     <slot />
   </div>
 </template>

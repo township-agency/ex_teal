@@ -4,7 +4,7 @@
       <heading class="flex mb-3">
         Get Started
       </heading>
-      <p class="text-90 leading-tight mb-8">
+      <p class="text-gray-darkest leading-tight mb-8">
         Welcome to Teal! Get familiar with Teal and explore its features in the
         documentation:
       </p>
@@ -16,7 +16,7 @@
           cellspacing="0"
         >
           <tr>
-            <td class="align-top w-1/2 border-r border-b border-50">
+            <td class="align-top w-1/2 border-r border-b border-gray">
               <a
                 :href="resources"
                 class="no-underline dim flex p-6"
@@ -34,7 +34,7 @@
                     :level="3"
                     class="mb-3"
                   >Resources</heading>
-                  <p class="text-90 leading-normal">
+                  <p class="text-gray-darkest leading-normal">
                     Teal's resource manager allows you to quickly view and
                     manage your Ecto schemas and relationships directly from Teal's
                     intuitive interface.
@@ -43,7 +43,7 @@
               </a>
             </td>
 
-            <td class="align-top w-1/2 border-b border-50">
+            <td class="align-top w-1/2 border-b border-gray">
               <a
                 :href="actions"
                 class="no-underline dim flex p-6"
@@ -61,7 +61,7 @@
                     :level="3"
                     class="mb-3"
                   >Actions</heading>
-                  <p class="text-90 leading-normal">
+                  <p class="text-gray-darkest leading-normal">
                     Actions perform tasks on a single record or an entire batch
                     of records.
                   </p>
@@ -71,7 +71,7 @@
           </tr>
 
           <tr>
-            <td class="align-top w-1/2 border-r border-b border-50">
+            <td class="align-top w-1/2 border-r border-b border-gray">
               <a
                 :href="filters"
                 class="no-underline dim flex p-6"
@@ -89,14 +89,14 @@
                     :level="3"
                     class="mb-3"
                   >Filters</heading>
-                  <p class="text-90 leading-normal">
+                  <p class="text-gray-darkest leading-normal">
                     Write custom filters for your resource and relationship indexes
                     to offer your users quick glances at different segments of your data.
                   </p>
                 </div>
               </a>
             </td>
-            <td class="align-top w-1/2 border-r border-b border-50">
+            <td class="align-top w-1/2 border-r border-b border-gray">
               <a
                 :href="metrics"
                 class="no-underline dim flex p-6"
@@ -120,7 +120,7 @@
                     :level="3"
                     class="mb-3"
                   >Metrics</heading>
-                  <p class="text-90 leading-normal">
+                  <p class="text-gray-darkest leading-normal">
                     Teal makes it painless to quickly display custom metrics for
                     your application. To put the cherry on top, we’ve included
                     query helpers to make it all easy as pie.

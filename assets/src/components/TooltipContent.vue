@@ -1,6 +1,6 @@
 <script>
 const defaultClasses =
-  'bg-white px-3 py-2 rounded border border-50 shadow text-sm leading-normal';
+  'bg-white px-3 py-2 rounded border border-gray shadow text-sm leading-normal';
 
 export default {
   props: {

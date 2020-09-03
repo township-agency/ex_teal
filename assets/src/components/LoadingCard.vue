@@ -6,7 +6,7 @@
       v-if="loading"
       class="flex items-center justify-center absolute inset-0 z-50"
     >
-      <loader class="text-60" />
+      <loader class="text-gray-dark" />
     </div>
 
     <slot />

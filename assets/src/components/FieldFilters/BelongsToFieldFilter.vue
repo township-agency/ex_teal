@@ -27,7 +27,7 @@
           >
         </div>
         <div class="flex">
-          <p class="text-90">
+          <p class="text-gray-darkest">
             {{ selectedResource.title }}
           </p>
         </div>
@@ -48,12 +48,12 @@
           >
         </div>
         <div>
-          <p class="text-90">
+          <p class="text-gray-darkest">
             {{ option.title }}
           </p>
           <p
             v-if="option.subtitle"
-            class="text-xs mt-1 text-80"
+            class="text-xs mt-1 text-gray-darker"
           >
             {{ option.subtitle }}
           </p>

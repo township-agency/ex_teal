@@ -134,7 +134,7 @@
                 >
                   {{ uppercaseMode }} Resource
                 </heading>
-                <p class="text-80 leading-normal">
+                <p class="text-gray-darker leading-normal">
                   Are you sure you want to  {{ mode }} this resource?
                 </p>
               </div>

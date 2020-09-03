@@ -26,7 +26,7 @@
 
         <p
           v-if="selectedAction.fields.length == 0"
-          class="text-80 px-8 my-8"
+          class="text-gray-darker px-8 my-8"
         >
           Are you sure you want to run this action?
         </p>
@@ -50,12 +50,12 @@
         </div>
       </div>
 
-      <div class="bg-30 px-6 py-3 flex">
+      <div class="bg-gray-lighter px-6 py-3 flex">
         <div class="flex items-center ml-auto">
           <button
             dusk="cancel-action-button"
             type="button"
-            class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
+            class="btn text-gray-darker font-normal h-9 px-3 mr-3 btn-link"
             @click.prevent="handleClose"
           >
             Cancel
