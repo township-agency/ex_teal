@@ -5,7 +5,9 @@ defmodule ExTeal.HelpCard do
 
   use ExTeal.Card
 
+  @impl true
   def width, do: "full"
 
+  @impl true
   def component, do: "help-card"
 end
