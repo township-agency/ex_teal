@@ -2,7 +2,7 @@
   "npm.babel.js": "/js/0.c465b4b1942426e60419.chunk.js",
   "npm.regenerator-runtime.js": "/js/1.5e59e0bf0bee3cc63fff.chunk.js",
   "main.css": "/css/main.css",
-  "main.js": "/js/e36cc8e54bc6dfe30095.js",
+  "main.js": "/js/02ee5ad27cfb7d319c6d.js",
   "npm.algoliasearch.js": "/js/3.0590c56cb66bbb4f42b9.chunk.js",
   "npm.autocomplete.js.js": "/js/4.ece888dad2d1c7979b42.chunk.js",
   "npm.axios.js": "/js/5.b6fe3a1902cc7a5f8c3f.chunk.js",
@@ -53,6 +53,8 @@
   "css/styles.css.br": "/css/styles.css.br",
   "css/styles.css.gz": "/css/styles.css.gz",
   "images/logo.svg": "/images/logo.svg",
+  "js/02ee5ad27cfb7d319c6d.js.br": "/js/02ee5ad27cfb7d319c6d.js.br",
+  "js/02ee5ad27cfb7d319c6d.js.gz": "/js/02ee5ad27cfb7d319c6d.js.gz",
   "js/11.d01ee70b5961581dbbb0.chunk.js.br": "/js/11.d01ee70b5961581dbbb0.chunk.js.br",
   "js/11.d01ee70b5961581dbbb0.chunk.js.gz": "/js/11.d01ee70b5961581dbbb0.chunk.js.gz",
   "js/20.d10deb46330f586646fe.chunk.js.br": "/js/20.d10deb46330f586646fe.chunk.js.br",
@@ -92,7 +94,5 @@
   "js/6.238635e2aa27dba84e9c.chunk.js.br": "/js/6.238635e2aa27dba84e9c.chunk.js.br",
   "js/6.238635e2aa27dba84e9c.chunk.js.gz": "/js/6.238635e2aa27dba84e9c.chunk.js.gz",
   "js/7.2d8db4adfa411aa65c88.chunk.js.br": "/js/7.2d8db4adfa411aa65c88.chunk.js.br",
-  "js/7.2d8db4adfa411aa65c88.chunk.js.gz": "/js/7.2d8db4adfa411aa65c88.chunk.js.gz",
-  "js/e36cc8e54bc6dfe30095.js.br": "/js/e36cc8e54bc6dfe30095.js.br",
-  "js/e36cc8e54bc6dfe30095.js.gz": "/js/e36cc8e54bc6dfe30095.js.gz"
+  "js/7.2d8db4adfa411aa65c88.chunk.js.gz": "/js/7.2d8db4adfa411aa65c88.chunk.js.gz"
 }
