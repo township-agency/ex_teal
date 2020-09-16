@@ -1,14 +1,12 @@
 defmodule ExTeal.MixProject do
   use Mix.Project
 
-  @version "0.9.3"
-
   @source "https://github.com/township-agency/ex_teal"
 
   def project do
     [
       app: :ex_teal,
-      version: @version,
+      version: File.read!("version.txt") |> String.trim(),
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
