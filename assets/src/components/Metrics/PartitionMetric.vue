@@ -113,7 +113,7 @@ export default {
     chartStyles () {
       return {
         height: '400px',
-        width: '380px'
+        width: '350px'
       };
     }
   },
