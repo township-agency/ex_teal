@@ -41,6 +41,7 @@ import { DateTime } from 'luxon';
 import Duration from 'luxon/src/duration';
 import Interval from 'luxon/src/interval';
 import InteractsWithTheme from '@/mixins/InteractsWithTheme';
+import numbro from 'numbro';
 
 const FORMATS = {
   minute: DateTime.TIME_SIMPLE,
@@ -130,6 +131,12 @@ export default {
           yAxes: [ {
             gridLines: {
               drawBorder: false
+            },
+            ticks: {
+              callback: (value, index, values) => {
+                const elems = [ this.prefix, numbro(value).format(this.card.options.format) ].filter(v => v);
+                return elems.join('');
+              }
             }
           } ],
         },
@@ -137,7 +144,7 @@ export default {
           mode: 'index',
           callbacks: {
             label: (item, data) => {
-              const elems = [ this.prefix, item.value, this.suffix ].filter(v => v);
+              const elems = [ this.prefix, numbro(item.value).format(this.card.options.format), this.suffix ].filter(v => v);
               return `${data.datasets[item.datasetIndex].label}: ${elems.join('')}`;
             },
             labelColor: (item, chart) => {

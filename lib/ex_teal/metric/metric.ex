@@ -56,7 +56,7 @@ defmodule ExTeal.Metric do
 
   @doc """
   A string representing how a value is formatted before being displayed by the
-  [numbro](https://numbrojs.com/) library.  Defaults to `(0[.]00a)`
+  [numbro](https://numbrojs.com/) library.  Defaults to `0,0`
   """
   @callback format() :: String.t()
 
@@ -124,7 +124,7 @@ defmodule ExTeal.Metric do
 
       def suffix, do: nil
 
-      def format, do: nil
+      def format, do: "0,0"
 
       def component, do: "empty-metric"
 
@@ -135,7 +135,8 @@ defmodule ExTeal.Metric do
           ranges: ranges(),
           default_range: default_range(),
           uri: uri(),
-          title: title()
+          title: title(),
+          format: format()
         }
 
       defoverridable(

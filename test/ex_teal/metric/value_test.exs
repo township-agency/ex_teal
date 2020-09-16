@@ -77,7 +77,7 @@ defmodule ExTeal.Metric.ValueTest do
 
   describe "format/0" do
     test "defaults to nil" do
-      assert TestExTeal.NewUserMetric.format() == nil
+      assert TestExTeal.NewUserMetric.format() == '(0[.]00a)'
     end
 
     test "can be overriden" do

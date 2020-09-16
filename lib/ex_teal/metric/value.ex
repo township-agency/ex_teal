@@ -26,6 +26,7 @@ defmodule ExTeal.Metric.Value do
 
       alias ExTeal.Metric.{Request, Result, Value}
 
+      @impl true
       def component, do: "value-metric"
 
       @doc """
@@ -72,6 +73,11 @@ defmodule ExTeal.Metric.Value do
       def sum(request, query, field) do
         Value.aggregate(__MODULE__, request, query, :sum, field)
       end
+
+      @impl true
+      def format, do: '(0[.]00a)'
+
+      defoverridable format: 0
     end
   end
 
