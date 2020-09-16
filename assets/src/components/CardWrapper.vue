@@ -45,7 +45,7 @@ export default {
 
   computed: {
     widthClass () {
-      return this.size == 'large' ? 'w-full' : calculateCardWidth(this.card);
+      return this.card.width == 'full' ? 'w-full' : calculateCardWidth(this.card);
     },
 
     cardSizeClass () {
@@ -64,22 +64,22 @@ function calculateCardWidth (card) {
 
   switch (card.width) {
     case '1/2':
-      width = 'w-1/2';
+      width = 'xl:w-1/2';
       break;
     case '1/3':
-      width = 'w-1/3';
+      width = 'xl:w-1/3';
       break;
     case '2/3':
-      width = 'w-2/3';
+      width = 'xl:w-2/3';
       break;
     case '1/4':
-      width = 'w-1/4';
+      width = 'xl:w-1/4';
       break;
     case '3/4':
-      width = 'w-3/4';
+      width = 'xl:w-3/4';
       break;
   }
 
-  return `w-full lg:w-1/2 xl:${width}`;
+  return `w-full lg:w-1/2 ${width}`;
 }
 </script>
