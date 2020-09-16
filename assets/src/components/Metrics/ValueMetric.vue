@@ -59,7 +59,6 @@ export default {
 
   data: () => ({
     loading: true,
-    format: '(0[.]00a)',
     data: [],
     prefix: '',
     suffix: '',
@@ -86,6 +85,10 @@ export default {
     ranges () {
       return this.card.options.ranges;
     },
+
+    format () {
+      return this.card.options.format;
+    }
   },
 
   watch: {
@@ -120,11 +123,10 @@ export default {
       })).then(
         ({
           data: {
-            metric: { data, prefix, suffix, format, multiple_results },
+            metric: { data, prefix, suffix, multiple_results },
           },
         }) => {
           this.multiple_results = multiple_results;
-          this.format = format || this.format;
           this.prefix = prefix || this.prefix;
           this.suffix = suffix || this.suffix;
           this.data = multiple_results ? data : [ { label: this.card.title, data } ];
