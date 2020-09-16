@@ -99,7 +99,6 @@ by Motel."
         "README.md",
         "CHANGELOG.md"
       ],
-      source_ref: "v#{@version}",
       source_url: @source
     ]
   end
