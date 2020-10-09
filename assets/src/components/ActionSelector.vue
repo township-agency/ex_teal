@@ -101,9 +101,9 @@ export default {
         action: this.selectedActionKey,
         search: this.queryString.currentSearch,
         field_filters: this.queryString.encodedFieldFilters,
-        viaResource: this.queryString.viaResource,
-        viaResourceId: this.queryString.viaResourceId,
-        viaRelationship: this.queryString.viaRelationship
+        via_resource: this.queryString.viaResource,
+        via_resource_id: this.queryString.viaResourceId,
+        via_relationship: this.queryString.viaRelationship
       };
     },
 
