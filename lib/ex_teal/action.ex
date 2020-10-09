@@ -98,12 +98,11 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
-      |> Index.field_filters(conn.params, resource)
+      |> Index.filter_via_relationships(params)
+      |> Index.field_filters(params, resource)
+      |> Index.search(params, resource)
 
-    case query do
-      [] -> {:error, :not_found}
-      query -> {:ok, query}
-    end
+    {:ok, query}
   end
 
   def actionable_query(resource, %Conn{params: %{"resources" => ids} = params} = conn) do
@@ -112,7 +111,9 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
-      |> Index.field_filters(conn.params, resource)
+      |> Index.filter_via_relationships(params)
+      |> Index.field_filters(params, resource)
+      |> Index.search(params, resource)
       |> where([r], r.id in ^ids)
 
     {:ok, query}

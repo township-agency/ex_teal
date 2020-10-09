@@ -249,11 +249,14 @@ defmodule ExTeal.Resource.Index do
     query
   end
 
-  def filter_via_relationships(query, %{
-        "via_resource" => resource_name,
-        "via_resource_id" => resource_id,
-        "via_relationship" => rel_name
-      }) do
+  def filter_via_relationships(
+        query,
+        %{
+          "via_resource" => resource_name,
+          "via_resource_id" => resource_id,
+          "via_relationship" => rel_name
+        }
+      ) do
     with {:ok, resource} <- ExTeal.resource_for(resource_name),
          {:ok, relationship} <- schema_assoc_for(resource, rel_name) do
       from(query, where: ^[{relationship.related_key, resource_id}])

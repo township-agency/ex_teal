@@ -4,6 +4,7 @@ defmodule TestExTeal.User do
   schema "users" do
     field(:email, :string)
     field(:name, :string)
+    has_many(:posts, TestExTeal.Post)
 
     many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
     timestamps()

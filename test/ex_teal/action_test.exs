@@ -76,5 +76,46 @@ defmodule ExTeal.ActionTest do
       [found_post] = Repo.all(query)
       assert found_post.user.id == p.user.id
     end
+
+    test "filters based on filter fields" do
+      p = insert(:post, name: "Foo")
+      insert(:post)
+      filters = [%{"field" => "name", "operator" => "=", "operand" => "Foo"}]
+      encoded_filters = filters |> Jason.encode!() |> :base64.encode()
+
+      conn =
+        build_conn(:get, "/posts/", %{
+          "field_filters" => encoded_filters,
+          "resources" => "all",
+          "action" => "publish-post"
+        })
+        |> fetch_query_params()
+
+      {:ok, query} = Action.actionable_query(PostResource, conn)
+
+      [found_post] = Repo.all(query)
+      assert found_post.id == p.id
+    end
+
+    @tag manifest: TestExTeal.DefaultManifest
+    test "filters based on relationships" do
+      u = insert(:user)
+      p = insert(:post, user: u)
+      insert(:post)
+
+      conn =
+        build_conn(:get, "posts", %{
+          "via_resource" => "users",
+          "via_resource_id" => "#{u.id}",
+          "via_relationship" => "posts",
+          "relationship_type" => "hasMany",
+          "resources" => "all"
+        })
+        |> fetch_query_params()
+
+      {:ok, query} = Action.actionable_query(PostResource, conn)
+      [found_post] = Repo.all(query)
+      assert found_post.id == p.id
+    end
   end
 end
