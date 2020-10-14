@@ -59,24 +59,27 @@
                 {{ option.title }}
               </div>
             </search-input>
-            <select-control
+            <select
               v-else
               class="form-control form-select mb-3 w-full"
-              :class="{ 'border-danger': validationErrors.has(field.attribute) }"
-              :options="availableResources"
-              :selected="selectedResourceId"
-              label="title"
-              value-key="id"
               @change="selectResourceFromSelectControl"
             >
               <option
                 value=""
-                disabled
                 selected
               >
-                Choose {{ relatedResourceLabel }}
+                Choose {{ field.name }}
               </option>
-            </select-control>
+
+              <option
+                v-for="resource in availableResources"
+                :key="resource.id"
+                :value="resource.id"
+                :selected="selectedResourceId == resource.id"
+              >
+                {{ resource.title }}
+              </option>
+            </select>
           </template>
         </default-field>
 
@@ -215,7 +218,7 @@ export default {
     selectInitialResource () {
       this.selectedResource = find(
         this.availableResources,
-        r => r.value == this.selectedResourceId
+        r => r.id == this.selectedResourceId
       );
     },
 
