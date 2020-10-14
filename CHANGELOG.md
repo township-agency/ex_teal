@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.10.3](https://www.github.com/township-agency/ex_teal/compare/v0.10.2...v0.10.3) (2020-10-14)
+
+
+### Bug Fixes
+
+* Use the correct select props and events for the non-searchable attach view ([#30](https://www.github.com/township-agency/ex_teal/issues/30)) ([d17e02d](https://www.github.com/township-agency/ex_teal/commit/d17e02d6e17eb4eff7c17faf1b738a87ac77eb1e))
+* Value Format should be a string, not charlist ([#31](https://www.github.com/township-agency/ex_teal/issues/31)) ([e2d8137](https://www.github.com/township-agency/ex_teal/commit/e2d8137db56ebade99d3a813799f56fb9bff193c))
+
 ### [0.10.2](https://www.github.com/township-agency/ex_teal/compare/v0.10.1...v0.10.2) (2020-10-09)
 
 
