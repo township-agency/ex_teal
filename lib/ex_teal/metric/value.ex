@@ -75,7 +75,7 @@ defmodule ExTeal.Metric.Value do
       end
 
       @impl true
-      def format, do: '(0[.]00a)'
+      def format, do: "(0[.]00a)"
 
       defoverridable format: 0
     end
