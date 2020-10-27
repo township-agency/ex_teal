@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.10.4](https://www.github.com/township-agency/ex_teal/compare/v0.10.3...v0.10.4) (2020-10-27)
+
+
+### Bug Fixes
+
+* Enable ex_teal_dependency_container to include it's params. ([#33](https://www.github.com/township-agency/ex_teal/issues/33)) ([f96edc2](https://www.github.com/township-agency/ex_teal/commit/f96edc2a309ce6a1c3825a1f8e0cefc3f20a774e))
+
 ### [0.10.3](https://www.github.com/township-agency/ex_teal/compare/v0.10.2...v0.10.3) (2020-10-14)
 
 
