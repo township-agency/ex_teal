@@ -51,6 +51,7 @@ defmodule ExTeal.Resource.Attributes do
           fields =
             __MODULE__.fields()
             |> Enum.map(fn
+              %Field{options: %{fields: fields}} = f -> [f] ++ fields
               %Field{} = f -> [f]
               %Panel{fields: fields} -> fields
             end)
