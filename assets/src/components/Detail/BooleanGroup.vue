@@ -8,19 +8,13 @@
         <li
           v-for="option in value"
           :key="option.name"
-          class="mb-1"
+          class="mb-1 text-gray-darkest"
         >
           <span
-            :class="classes[option.checked]"
-            class="inline-flex items-center py-1 pl-2 pr-3 rounded-full font-bold text-sm leading-tight"
-          >
-            <fake-checkbox
-              :checked="option.checked"
-              width="20"
-              height="20"
-            />
-            <span class="ml-1">{{ option.label }}</span>
-          </span>
+            :class="{ 'bg-success': option.checked, 'bg-danger': !option.checked }"
+            class="inline-block rounded-full w-2 h-2 mr-1"
+          />
+          <span>{{ option.label }}</span>
         </li>
       </ul>
       <span v-else>{{ field.options.no_value || "No Data" }}</span>

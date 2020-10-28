@@ -90,16 +90,10 @@ defmodule ExTeal.Fields.BooleanGroup do
         field
 
       {:embed, embedded} ->
-        fields = embedded.related.__schema__(:fields)
+        parameterize_an_embed(field, embedded)
 
-        opts =
-          (fields -- [:id])
-          |> Enum.into(%{}, fn f ->
-            field_string = Atom.to_string(f)
-            {field_string, field_string}
-          end)
-
-        options(field, opts)
+      {:parameterized, Ecto.Embedded, %Ecto.Embedded{cardinality: :one}} ->
+        field
     end
   end
 
@@ -121,5 +115,20 @@ defmodule ExTeal.Fields.BooleanGroup do
   @spec no_value_text(Field.t(), String.t()) :: Field.t()
   def no_value_text(field, text) do
     %{field | options: Map.put(field.options, :no_value, text)}
+  end
+
+  defp parameterize_an_embed(field, embedded_schema) do
+    fields = embedded_schema.related.__schema__(:fields)
+    group_options = Map.get(field.options, :group_options, %{})
+
+    opts =
+      (fields -- [:id])
+      |> Enum.into(%{}, fn f ->
+        field_string = Atom.to_string(f)
+        {field_string, field_string}
+      end)
+
+    opts = Map.merge(opts, group_options)
+    options(field, opts)
   end
 end

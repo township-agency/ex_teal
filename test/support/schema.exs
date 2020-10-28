@@ -11,10 +11,27 @@ defmodule TestExTeal.User do
   end
 end
 
+defmodule TestExTeal.Features do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  embedded_schema do
+    field(:show_featured_image, :boolean, default: true)
+    field(:show_cta, :boolean, default: true)
+  end
+
+  def changeset(field, params) do
+    cast(field, params, [
+      :show_featured_image,
+      :show_cta
+    ])
+  end
+end
+
 defmodule TestExTeal.Post do
   use Ecto.Schema
   import Ecto.Changeset
-  alias TestExTeal.Post
+  alias TestExTeal.{Features, Post}
 
   schema "posts" do
     field(:name, :string)
@@ -22,6 +39,8 @@ defmodule TestExTeal.Post do
     field(:published, :boolean)
     field(:published_at, :naive_datetime)
     field(:deleted_at, :utc_datetime)
+
+    embeds_one(:features, Features, on_replace: :update)
 
     many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 
@@ -35,6 +54,7 @@ defmodule TestExTeal.Post do
   def changeset(%Post{} = post, params \\ %{}) do
     post
     |> cast(params, @fields)
+    |> cast_embed(:features)
     |> validate_required([:name])
   end
 end
