@@ -26,13 +26,16 @@ const formatKeys = {
 const InteractsWithDateTimes = {
   computed: {
     format () {
-      if (!this.field.options.format) {
-        return DateTime.DATE_FULL;
-      }
-      return formatKeys[this.field.options.format] || formatKeys['datetime_short'];
+      const key = this.naiveDateTime ? 'datetime_med' : 'datetime_full';
+      return this.field.options.format ? formatKeys[this.field.options.format] : formatKeys[key];
+    },
+
+    naiveDateTime () {
+      return this.field.options.naive_datetime || false;
     },
 
     formattedDate () {
+
       return DateTime.fromISO(this.field.value).toLocaleString(this.format);
     }
   }

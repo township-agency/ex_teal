@@ -193,7 +193,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-input {
-  @apply .bg-white .border .border-white .px-2 .text-gray-darker;
+  @apply .bg-white .border .border-white .px-2 .text-gray-darkest;
 }
 
 .form-control-focus {
@@ -210,7 +210,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-input-bordered {
-  @apply .bg-white .border .border-gray-dark .px-2 .text-gray-darker;
+  @apply .bg-white .border .border-gray-dark .px-2 .text-gray-darkest;
 }
 
 .form-input.search {
@@ -218,7 +218,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
 }
 
 .form-select {
-  @apply .bg-white .border .pl-3 .pr-8 .text-black .shadow;
+  @apply .bg-white .border .pl-3 .pr-8 .text-black .border-gray-dark;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z' stroke='%239fa6b2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;

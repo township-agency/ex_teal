@@ -5,8 +5,6 @@ defmodule ExTeal.Fields.DateTime do
 
   def component, do: "date-time"
 
-  def filterable_as, do: ExTeal.FieldFilter.DateTime
-
   @doc """
   Set the format of the flatpickr datetime picker.
 
@@ -44,7 +42,7 @@ defmodule ExTeal.Fields.DateTime do
   en_US -> Oct 14, 1983
   fr    -> 14 oct. 1983
 
-  :full 
+  :full
   en_US -> October 14, 1983
   fr    -> 14 octobre 1983
 
@@ -56,13 +54,25 @@ defmodule ExTeal.Fields.DateTime do
     %{field | options: Map.put_new(options, :format, value)}
   end
 
+  @doc """
+  Specify that the field is a naive datetime.  Using this function, the field
+  will render and set the value without converting from the users local time
+  to UTC.
+  """
+  def naive_datetime(%Field{options: options} = field),
+    do: %{field | options: Map.put_new(options, :naive_datetime, true)}
+
+  @impl true
+  def filterable_as, do: ExTeal.FieldFilter.DateTime
+
+  @impl true
   def value_for(%Field{} = field, model, _view) do
     case Map.get(model, field.field) do
       nil ->
         nil
 
       %NaiveDateTime{} = naive ->
-        DateTime.from_naive!(naive, "Etc/UTC", Tzdata.TimeZoneDatabase)
+        naive
 
       val ->
         val
