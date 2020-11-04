@@ -125,13 +125,13 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
 
     test "returns a query that can aggregate by hours with timezones" do
       dt =
-        {{2020, 01, 05}, {5, 0, 0}}
+        {{2020, 01, 05}, {10, 15, 0}}
         |> NaiveDateTime.from_erl!()
         |> DateTime.from_naive!("Etc/UTC")
 
-      [from: dt, until: [hours: 5], step: [hours: 1]]
-      |> Interval.new()
-      |> Enum.map(fn date ->
+      interval = Interval.new(from: dt, until: [hours: 5], step: [hours: 1])
+
+      Enum.map(interval, fn date ->
         insert(:post, inserted_at: date)
       end)
 
@@ -141,39 +141,30 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
         |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "hour")
         |> Repo.all()
 
-      assert results == [
-               %{
-                 date_result: "2020-01-05 00:00",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 01:00",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 02:00",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 03:00",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 04:00",
-                 aggregate: 1
-               }
-             ]
+      expected_date_results =
+        Enum.map(interval, fn date ->
+          tz = Timezone.get("America/Chicago", date)
+
+          date
+          |> DateTime.from_naive!("Etc/UTC")
+          |> DateTime.add(-15 * 60)
+          |> Timezone.convert(tz)
+          |> Timex.format!("{ISOdate} {0h12}:{m}")
+        end)
+
+      assert results |> Enum.map(& &1.aggregate) |> Enum.all?(&(&1 == 1))
+      assert Enum.map(results, & &1.date_result) == expected_date_results
     end
 
     test "returns a query that can aggregate by minutes with timezones" do
       dt =
-        {{2020, 01, 05}, {5, 15, 23}}
+        {{2020, 01, 05}, {10, 15, 23}}
         |> NaiveDateTime.from_erl!()
         |> DateTime.from_naive!("Etc/UTC")
 
-      [from: dt, until: [minutes: 3], step: [minutes: 1]]
-      |> Interval.new()
-      |> Enum.map(fn date ->
+      interval = Interval.new(from: dt, until: [minutes: 3], step: [minutes: 1])
+
+      Enum.map(interval, fn date ->
         insert(:post, inserted_at: date)
       end)
 
@@ -183,20 +174,18 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
         |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "minute")
         |> Repo.all()
 
-      assert results == [
-               %{
-                 date_result: "2020-01-05 00:15",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 00:16",
-                 aggregate: 1
-               },
-               %{
-                 date_result: "2020-01-05 00:17",
-                 aggregate: 1
-               }
-             ]
+      expected_date_results =
+        Enum.map(interval, fn date ->
+          tz = Timezone.get("America/Chicago", date)
+
+          date
+          |> DateTime.from_naive!("Etc/UTC")
+          |> Timezone.convert(tz)
+          |> Timex.format!("{ISOdate} {0h12}:{m}")
+        end)
+
+      assert results |> Enum.map(& &1.aggregate) |> Enum.all?(&(&1 == 1))
+      assert Enum.map(results, & &1.date_result) == expected_date_results
     end
   end
 end
