@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0](https://www.github.com/township-agency/ex_teal/compare/v0.10.4...v0.11.0) (2020-11-04)
+
+
+### Features
+
+* Enable Naive DateTime Fields ([4b96d70](https://www.github.com/township-agency/ex_teal/commit/4b96d70b68871f4d6141b456b2e906605b459a1f)), closes [#36](https://www.github.com/township-agency/ex_teal/issues/36)
+* Update BooleanGroup for ecto 3.5 ([#35](https://www.github.com/township-agency/ex_teal/issues/35)) ([49228f0](https://www.github.com/township-agency/ex_teal/commit/49228f08e15f5a8b473079b8d02b7023b0e491be))
+
+
+### Bug Fixes
+
+* Day Light Savings brittle tests ([a5f7261](https://www.github.com/township-agency/ex_teal/commit/a5f7261c281418ffe65603a723e7440f03c15254))
+
 ### [0.10.4](https://www.github.com/township-agency/ex_teal/compare/v0.10.3...v0.10.4) (2020-10-27)
 
 
