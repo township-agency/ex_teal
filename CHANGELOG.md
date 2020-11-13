@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.11.1](https://www.github.com/township-agency/ex_teal/compare/v0.11.0...v0.11.1) (2020-11-13)
+
+
+### Bug Fixes
+
+* Fix Naive DateTime Selector ([#39](https://www.github.com/township-agency/ex_teal/issues/39)) ([226b8c4](https://www.github.com/township-agency/ex_teal/commit/226b8c4b35ab007bc35545b504e6e772745c87cc))
+
 ## [0.11.0](https://www.github.com/township-agency/ex_teal/compare/v0.10.4...v0.11.0) (2020-11-04)
 
 
