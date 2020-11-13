@@ -7,7 +7,7 @@
       <DateTimePicker
         :field="field"
         :field-name="field.name"
-        :value="localizedValue"
+        :value="value"
         class="w-full form-control form-input form-input-bordered"
         :date-format="pickerFormat"
         :placeholder="placeholder"
@@ -26,8 +26,6 @@ export default {
   components: { DateTimePicker },
   mixins: [ HandlesValidationErrors, FormField ],
 
-  data: () => ({ localizedValue: '' }),
-
   computed: {
     format () {
       return this.field.options.format || DateTime.DATETIME_FULL;
@@ -44,6 +42,10 @@ export default {
 
     twelveHourTime () {
       return !this.field.options.twenty_four_hour_time || true;
+    },
+
+    naiveDateTime () {
+      return this.field.options.naive_datetime || false;
     }
   },
 
@@ -52,33 +54,18 @@ export default {
       this.value = this.field.value || '';
 
       if (this.value !== '') {
-        this.localizedValue = this.fromUTC(this.value);
         return;
-      }
-
-      if (this.naiveDateTime) {
-        this.localizedValue = this.value;
       }
     },
 
     handleChange (value) {
       if (this.naiveDateTime) {
         const now = DateTime.local();
-        const dt = DateTime.fromISO(value).setZone(now.zoneName, {
-          keepLocalTime: true
-        });
-
+        const dt = DateTime.fromISO(value).setZone(now.zoneName);
         this.value = `${dt.toFormat('yyyy-M-dd')}T${dt.toFormat('TT')}`;
-        this.localizedValue = dt.toLocaleString(DateTime.DATETIME_MED);
-
         return;
       }
       this.value = value;
-      this.localizedValue = this.fromUTC(this.value);
-    },
-
-    fromUTC (value) {
-      return DateTime.fromISO(value).toLocaleString(DateTime.DATETIME_FULL);
     }
   }
 };

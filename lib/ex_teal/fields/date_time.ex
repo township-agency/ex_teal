@@ -72,7 +72,11 @@ defmodule ExTeal.Fields.DateTime do
         nil
 
       %NaiveDateTime{} = naive ->
-        naive
+        if Map.get(field.options, :naive_datetime) do
+          naive
+        else
+          DateTime.from_naive!(naive, "Etc/UTC")
+        end
 
       val ->
         val
