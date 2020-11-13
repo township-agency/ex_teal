@@ -62,10 +62,8 @@ export default {
         enableSeconds: this.enableSeconds,
         onClose: this.onChange,
         dateFormat: 'Z',
-        allowInput: true,
         altInput: true,
         altFormat: this.dateFormat,
-
         time_24hr: !this.twelveHourTime
       });
     });
