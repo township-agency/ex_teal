@@ -256,7 +256,8 @@ defmodule ExTeal.Resource.Index do
           "via_resource_id" => resource_id,
           "via_relationship" => rel_name
         }
-      ) do
+      )
+      when resource_name != "" and resource_id != "" and rel_name != "" do
     with {:ok, resource} <- ExTeal.resource_for(resource_name),
          {:ok, relationship} <- schema_assoc_for(resource, rel_name) do
       from(query, where: ^[{relationship.related_key, resource_id}])
