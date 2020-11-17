@@ -4,7 +4,7 @@ defmodule ExTeal.Metric.Partition do
   """
   import Ecto.Query
 
-  @type result :: %{key: any(), value: float() | integer()}
+  @type result :: %{label: any(), value: float() | integer()}
 
   @callback calculate(ExTeal.Metric.Request.t()) :: [result()]
 
@@ -114,7 +114,7 @@ defmodule ExTeal.Metric.Partition do
           aggregate :: atom(),
           group_by :: atom(),
           column :: atom()
-        ) :: Partition.result()
+        ) :: [ExTeal.Metric.Partition.result()]
   def aggregate(metric, query, aggregate, grouper, column) do
     query
     |> group_by([x], field(x, ^grouper))

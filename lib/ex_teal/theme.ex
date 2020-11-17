@@ -46,6 +46,8 @@ defmodule ExTeal.Theme do
               "#EFB868"
             ]
 
+  @type t :: %__MODULE__{}
+
   def color_variables(%__MODULE__{} = theme),
     do: """
       --black: #{theme.black};

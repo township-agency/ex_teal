@@ -29,65 +29,6 @@ defmodule ExTeal.Fields.SelectTest do
     assert field.component == "select"
   end
 
-  describe "with_options/2" do
-    test "accepts a map and stores them as options" do
-      field = Select.make(:size)
-      assert field.options == %{}
-
-      options = %{
-        "S" => "Small",
-        "M" => "Medium",
-        "L" => "Large"
-      }
-
-      field = Select.with_options(field, options)
-      assert field.options == options
-      assert field.private_options.display_using_labels == false
-    end
-
-    test "accepts a function and stores them as options" do
-      field = Select.make(:size)
-      assert field.options == %{}
-
-      options = %{
-        "S" => "Small",
-        "M" => "Medium",
-        "L" => "Large"
-      }
-
-      field =
-        Select.with_options(field, fn ->
-          options
-        end)
-
-      assert field.options == options
-      assert field.private_options.display_using_labels == false
-    end
-  end
-
-  describe "display_using_labels/1" do
-    test "passes the option to the struct" do
-      field = Select.make(:size)
-      assert field.options == %{}
-
-      options = %{
-        "S" => "Small",
-        "M" => "Medium",
-        "L" => "Large"
-      }
-
-      field =
-        field
-        |> Select.with_options(fn ->
-          options
-        end)
-        |> Select.display_using_labels()
-
-      assert field.options.field_options == options
-      assert field.private_options.display_using_labels == true
-    end
-  end
-
   describe "value_for/2" do
     test "returns the default value" do
       field = Select.make(:size)
@@ -104,49 +45,38 @@ defmodule ExTeal.Fields.SelectTest do
         "L" => "Large"
       }
 
-      field =
-        field
-        |> Select.with_options(options)
-        |> Select.display_using_labels()
+      field = Select.options(field, options)
 
       model = %{size: "S"}
       assert Select.value_for(field, model, :edit) == "S"
     end
 
     test "returns the labeled value for index" do
-      field = Select.make(:size)
+      opts = %{"1" => "One", "2" => "Two"}
+      field = Select.make(:size) |> Select.options(opts)
 
-      options = %{
-        "S" => "Small",
-        "M" => "Medium",
-        "L" => "Large"
-      }
-
-      field =
-        field
-        |> Select.with_options(options)
-        |> Select.display_using_labels()
-
-      model = %{size: "S"}
-      assert Select.value_for(field, model, :index) == "Small"
+      model = %{size: "One"}
+      assert Select.value_for(field, model, :index) == "1"
     end
 
     test "returns the labeled value for show" do
-      field = Select.make(:size)
+      opts = %{"1" => "One", "2" => "Two"}
+      field = Select.make(:size) |> Select.options(opts)
 
-      options = %{
-        "S" => "Small",
-        "M" => "Medium",
-        "L" => "Large"
-      }
+      model = %{size: "One"}
+      assert Select.value_for(field, model, :show) == "1"
+    end
 
-      field =
-        field
-        |> Select.with_options(options)
-        |> Select.display_using_labels()
+    test "returns the value for show with option groups" do
+      opts = [
+        {"foo", ~w(bar baz)},
+        {"qux", ~w(qux quz)}
+      ]
 
-      model = %{size: "S"}
-      assert Select.value_for(field, model, :show) == "Small"
+      field = Select.make(:size) |> Select.options(opts)
+
+      model = %{size: "bar"}
+      assert Select.value_for(field, model, :show) == "bar"
     end
   end
 

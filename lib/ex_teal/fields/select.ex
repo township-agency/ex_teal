@@ -42,7 +42,7 @@ defmodule ExTeal.Fields.Select do
   This functionality is equivalent to `Phoenix.HTML.Form.select/3`
   """
   def options(field, options) do
-    %{field | options: %{options | field_options: transform_options(options)}}
+    %{field | options: Map.put_new(field.options, :field_options, transform_options(options))}
   end
 
   @doc """
@@ -86,25 +86,37 @@ defmodule ExTeal.Fields.Select do
     %{value: value, key: key, disabled: Keyword.get(extra, :disabled, false)}
   end
 
-  @depreciated "Use `Select.options/2` instead"
   def with_options(field, options) when is_map(options) do
+    IO.warn("with_options/2 is depreciated.  See `ExTeal.Fields.Select.options/2`")
     options(field, options)
   end
 
   def with_options(field, options_fn) when is_function(options_fn) do
+    IO.warn("with_options/2 is depreciated.  See `ExTeal.Fields.Select.options/2`")
     option_value = options_fn.()
-    options(field, options)
+    options(field, option_value)
   end
 
-  @depreciated "Use `Select.options/2` instead"
   def display_using_labels(field) do
+    IO.warn("display_using_labels/1 is depreciated.  See `ExTeal.Fields.Select.options/2`")
     field
   end
 
   @impl true
-  def value_for(%Field{private_options: %{display_using_labels: true}} = field, model, view)
+  def value_for(%Field{options: %{field_options: option_values}} = field, model, view)
       when view in [:show, :index] do
-    Map.get(field.options, Map.get(model, field.field))
+    value = Map.get(model, field.field)
+
+    option_values =
+      option_values
+      |> Enum.map(fn
+        %{group: _group, options: group_options} -> group_options
+        option -> option
+      end)
+      |> List.flatten()
+
+    option = Enum.find(option_values, &(&1.value == value)) || %{}
+    Map.get(option, :key, nil)
   end
 
   def value_for(field, model, view), do: Field.value_for(field, model, view)
