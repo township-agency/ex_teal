@@ -44,6 +44,16 @@ defmodule ExTeal.Action do
 
   @callback commit(Plug.Conn.t(), [ExTeal.Field.t()], Ecto.Query.t()) :: action_responses()
 
+  @doc """
+  Override the default title for the action
+  """
+  @callback title() :: String.t()
+
+  @doc """
+  Override the default key for the action
+  """
+  @callback key() :: String.t()
+
   defmacro __using__(_) do
     quote do
       @behaviour ExTeal.Action
