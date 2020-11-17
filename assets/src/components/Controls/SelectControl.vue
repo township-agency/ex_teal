@@ -57,10 +57,6 @@ export default {
   },
 
   computed: {
-    hasGroups () {
-      return this.options.some((v) => v.group);
-    },
-
     inputListeners () {
       return assign({}, this.$listeners, {
         change: event => {
