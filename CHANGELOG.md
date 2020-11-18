@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0](https://www.github.com/township-agency/ex_teal/compare/v0.11.2...v0.12.0) (2020-11-18)
+
+
+### Features
+
+* Select refactor ([#43](https://www.github.com/township-agency/ex_teal/issues/43)) ([667dbd9](https://www.github.com/township-agency/ex_teal/commit/667dbd9b7d7e27ad1ae848c657d6d2988b8c8fef))
+
 ### [0.11.2](https://www.github.com/township-agency/ex_teal/compare/v0.11.1...v0.11.2) (2020-11-17)
 
 
