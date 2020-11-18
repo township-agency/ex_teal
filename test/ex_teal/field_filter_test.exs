@@ -26,6 +26,8 @@ defmodule ExTeal.FieldFilterTest do
              "name",
              "body",
              "published",
+             "author",
+             "contributor",
              "published_at",
              "deleted_at",
              "user"

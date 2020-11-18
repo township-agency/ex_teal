@@ -6,13 +6,14 @@ defmodule ExTeal.FieldFilter.Select do
 
   use ExTeal.FieldFilter
   import Ecto.Query
+  alias ExTeal.Fields.Select
 
   @impl true
   def operators(field) do
     field
-    |> Map.get(:options, [])
-    |> Enum.map(fn {_value, label} ->
-      %{"op" => label, "no_operand" => true}
+    |> Select.all_options_for()
+    |> Enum.map(fn %{value: value} ->
+      %{"op" => value, "no_operand" => true}
     end)
   end
 
@@ -26,50 +27,25 @@ defmodule ExTeal.FieldFilter.Select do
 
     option =
       field
-      |> Map.get(:options, [])
-      |> Enum.find(fn {_k, label} -> label == op end)
+      |> Select.all_options_for()
+      |> Enum.find(fn %{value: value} -> value == op end)
 
     case option do
-      {k, _} ->
-        where(query, [q], field(q, ^field_name) == ^k)
+      %{key: key} ->
+        where(query, [q], field(q, ^field_name) == ^key)
 
       _ ->
         query
     end
   end
 
-  def filter(query, %{"operator" => "!=", "operand" => val}, field_name, _)
-      when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) != ^val)
-  end
+  def filter(query, op, field_name, resource) do
+    IO.warn(
+      "Unmatched select field filter for resource: #{resource.title} on field #{field_name} with params: #{
+        inspect(op)
+      }"
+    )
 
-  def filter(query, %{"operator" => ">", "operand" => val}, field_name, _)
-      when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) > ^val)
+    query
   end
-
-  def filter(query, %{"operator" => ">=", "operand" => val}, field_name, _)
-      when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) >= ^val)
-  end
-
-  def filter(query, %{"operator" => "<", "operand" => val}, field_name, _)
-      when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) < ^val)
-  end
-
-  def filter(query, %{"operator" => "<=", "operand" => val}, field_name, _)
-      when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) <= ^val)
-  end
-
-  def filter(query, %{"operator" => "is empty"}, field_name, _) do
-    where(query, [q], is_nil(field(q, ^field_name)))
-  end
-
-  def filter(query, %{"operator" => "not empty"}, field_name, _) do
-    where(query, [q], not is_nil(field(q, ^field_name)))
-  end
-
-  def filter(query, _, _, _), do: query
 end

@@ -31,7 +31,7 @@ defmodule ExTeal.Fields.SelectTest do
 
   describe "value_for/2" do
     test "returns the default value" do
-      field = Select.make(:size)
+      field = Select.make(:size) |> Select.options(~w(S M L))
       model = %{size: "S"}
       assert Select.value_for(field, model, :show) == "S"
     end
@@ -151,5 +151,10 @@ defmodule ExTeal.Fields.SelectTest do
                }
              ]
     end
+  end
+
+  test "can be searchable" do
+    field = Select.make(:foo) |> Select.searchable()
+    assert field.options.searchable
   end
 end

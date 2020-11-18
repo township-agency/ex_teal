@@ -12,6 +12,8 @@ defmodule TestExTeal.Migrations do
     create table(:posts) do
       add(:name, :string)
       add(:body, :string)
+      add(:author, :string)
+      add(:contributor, :string)
       add(:features, :map)
       add(:user_id, references(:users))
       add(:published, :boolean, default: false, null: false)

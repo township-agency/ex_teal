@@ -46,6 +46,20 @@ defmodule ExTeal.Fields.Select do
   end
 
   @doc """
+  At times it's convenient to be able to search or filter the list of options in a
+  select field.  You can enable this by calling `Select.searchable` on the field:
+
+      Select.make(:type) |> Select.options(~w(foo bar)) |> Select.searchable()
+
+  When using this field, Teal will display an input field which allows you to filter
+  the list based on it's key.
+  """
+  @spec searchable(Field.t()) :: Field.t()
+  def searchable(field) do
+    %{field | options: Map.put_new(field.options, :searchable, true)}
+  end
+
+  @doc """
   Returns the options to be used inside of a select.
   """
   def transform_options(options) do
@@ -103,23 +117,25 @@ defmodule ExTeal.Fields.Select do
   end
 
   @impl true
-  def value_for(%Field{options: %{field_options: option_values}} = field, model, view)
-      when view in [:show, :index] do
+  def value_for(field, model, view) when view in [:show, :index] do
     value = Map.get(model, field.field)
 
-    option_values =
-      option_values
-      |> Enum.map(fn
-        %{group: _group, options: group_options} -> group_options
-        option -> option
-      end)
-      |> List.flatten()
-
+    option_values = all_options_for(field)
     option = Enum.find(option_values, &(&1.value == value)) || %{}
     Map.get(option, :key, nil)
   end
 
   def value_for(field, model, view), do: Field.value_for(field, model, view)
+
+  def all_options_for(field) do
+    field.options
+    |> Map.get(:field_options, [])
+    |> Enum.map(fn
+      %{group: _group, options: group_options} -> group_options
+      option -> option
+    end)
+    |> List.flatten()
+  end
 
   @impl true
   def filterable_as, do: ExTeal.FieldFilter.Select
