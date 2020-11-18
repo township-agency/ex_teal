@@ -5,7 +5,7 @@
   >
     <div
       :style="styles"
-      class="z-40 overflow-hidden bg-white border shadow"
+      class="z-40 overflow-x-hidden overflow-y-scroll bg-white border shadow"
     >
       <slot />
     </div>
@@ -28,6 +28,10 @@ export default {
       default: 120,
       type: [ Number, String ]
     },
+    maxHeight: {
+      default: 200,
+      type: [ Number, String ]
+    },
     override: {
       type: String,
       default: null
@@ -47,7 +51,8 @@ export default {
     },
     styles () {
       return {
-        width: `${this.width}px`
+        width: `${this.width}px`,
+        'max-height': `${this.maxHeight}px`
       };
     }
   }

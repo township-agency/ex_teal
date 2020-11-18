@@ -64,7 +64,7 @@
     />
     <button
       :class="{
-        'hidden group-hover:block rounded-r border border-danger text-danger text-xs h-8 w-8 bg-gray-lightest': true
+        'hidden group-hover:flex items-center justify-center rounded-r border border-danger text-danger text-xs h-8 w-8 bg-gray-lightest': true
       }"
       @click="deleteFilter"
     >

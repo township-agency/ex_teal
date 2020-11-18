@@ -25,7 +25,7 @@ defmodule ExTeal.Resource.Create do
 
   Default implementation returns the results of calling
   `Model.changeset(%Model{}, attrs)` where Model is the model defined by the
-  `ExTeal.Resource.Model.model/0` callback.
+  `c:ExTeal.Resource.Model.model/0` callback.
 
   The attributes argument is the result of the `permitted_attributes` function.
 

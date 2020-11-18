@@ -36,6 +36,8 @@ defmodule TestExTeal.Post do
   schema "posts" do
     field(:name, :string)
     field(:body, :string)
+    field(:author, :string)
+    field(:contributor, :string)
     field(:published, :boolean)
     field(:published_at, :naive_datetime)
     field(:deleted_at, :utc_datetime)
@@ -49,7 +51,7 @@ defmodule TestExTeal.Post do
     timestamps()
   end
 
-  @fields ~w(name body published published_at deleted_at user_id)a
+  @fields ~w(name body author contributor published published_at deleted_at user_id)a
 
   def changeset(%Post{} = post, params \\ %{}) do
     post

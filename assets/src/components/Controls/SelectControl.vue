@@ -6,24 +6,23 @@
     v-on="inputListeners"
   >
     <slot />
-    <template v-for="(gOptions, group) in groupedOptions">
+    <template v-for="option in options">
       <optgroup
-        v-if="group"
-        :key="group"
-        :label="group"
+        v-if="option.group"
+        :key="option.group"
+        :label="option.group"
       >
         <option
-          v-for="option in gOptions"
-          :key="option.value"
-          v-bind="attrsFor(option)"
+          v-for="o in option.options"
+          :key="o.key"
+          v-bind="attrsFor(o)"
         >
-          {{ labelFor(option) }}
+          {{ labelFor(o) }}
         </option>
       </optgroup>
       <template v-else>
         <option
-          v-for="option in gOptions"
-          :key="option.id"
+          :key="option.value"
           v-bind="attrsFor(option)"
         >
           {{ labelFor(option) }}
@@ -34,7 +33,6 @@
 </template>
 
 <script>
-import groupBy from 'lodash/groupBy';
 import assign from 'lodash/assign';
 export default {
   props: {
@@ -59,12 +57,12 @@ export default {
   },
 
   computed: {
-    groupedOptions () {
-      return groupBy(this.options, option => option.group || '');
-    },
-
     inputListeners () {
       return assign({}, this.$listeners, {
+        change: event => {
+          this.$emit('input', event.target.value);
+          this.$emit('change', event);
+        },
         input: event => {
           this.$emit('input', event.target.value);
         },
@@ -84,7 +82,7 @@ export default {
         { value: option[this.valueKey] },
         this.selected !== void 0 ? { selected: this.selected == option[this.valueKey] } : {}
       );
-    },
+    }
   },
 };
 </script>
