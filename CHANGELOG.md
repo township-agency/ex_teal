@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.12.1](https://www.github.com/township-agency/ex_teal/compare/v0.12.0...v0.12.1) (2020-12-03)
+
+
+### Bug Fixes
+
+* The Naive DateTime Picker was using the incorrect month token ([780146b](https://www.github.com/township-agency/ex_teal/commit/780146bbab1b81bc7fea7083b549f53ee28837ac))
+
 ## [0.12.0](https://www.github.com/township-agency/ex_teal/compare/v0.11.2...v0.12.0) (2020-11-18)
 
 
