@@ -62,7 +62,7 @@ export default {
       if (this.naiveDateTime) {
         const now = DateTime.local();
         const dt = DateTime.fromISO(value).setZone(now.zoneName);
-        this.value = `${dt.toFormat('yyyy-M-dd')}T${dt.toFormat('TT')}`;
+        this.value = `${dt.toFormat('yyyy-MM-dd')}T${dt.toFormat('TT')}`;
         return;
       }
       this.value = value;
