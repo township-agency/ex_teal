@@ -92,16 +92,17 @@ defmodule ExTeal.Resource.Delete do
     |> Serializer.render_errors(errors)
   end
 
-  defp find_deleteable(resource, %Conn{params: %{"resources" => "all"}} = conn) do
+  defp find_deleteable(resource, %Conn{params: %{"resources" => "all"} = params}) do
     resource.model()
-    |> Index.field_filters(conn.params, resource)
+    |> Index.filter_via_relationships(params)
+    |> Index.field_filters(params, resource)
+    |> Index.search(params, resource)
   end
 
-  defp find_deleteable(resource, %Conn{params: %{"resources" => ids}} = conn) do
+  defp find_deleteable(resource, %Conn{params: %{"resources" => ids}}) do
     ids = ids |> String.split(",") |> Enum.map(&String.to_integer/1)
 
     resource.model()
-    |> Index.field_filters(conn.params, resource)
     |> where([r], r.id in ^ids)
   end
 end

@@ -1,6 +1,7 @@
 defmodule ExTeal.Resource.DeleteTest do
   use TestExTeal.ConnCase
   alias ExTeal.Resource.Delete
+  alias TestExTeal.{Post, Repo}
 
   defmodule FailingOnDeleteResource do
     use ExTeal.Resource
@@ -58,6 +59,50 @@ defmodule ExTeal.Resource.DeleteTest do
 
     response = Delete.call(CustomResource, conn)
     assert response.status == 204
+  end
+
+  @tag manifest: TestExTeal.DefaultManifest
+  test "'all' filters based on filter fields" do
+    p = insert(:post, name: "Foo")
+    not_selected = insert(:post)
+    filters = [%{"field" => "name", "operator" => "=", "operand" => "Foo"}]
+    encoded_filters = filters |> Jason.encode!() |> :base64.encode()
+
+    conn =
+      build_conn(:delete, "/posts/", %{
+        "field_filters" => encoded_filters,
+        "resources" => "all",
+        "action" => "publish-post"
+      })
+      |> fetch_query_params()
+
+    response = Delete.call(TestExTeal.PostResource, conn)
+    assert response.status == 204
+    refute Repo.get(Post, p.id)
+    assert Repo.get(Post, not_selected.id)
+  end
+
+  @tag manifest: TestExTeal.DefaultManifest
+  test "filters based on relationships" do
+    u = insert(:user)
+    p = insert(:post, user: u)
+    not_related = insert(:post)
+
+    conn =
+      build_conn(:delete, "posts", %{
+        "via_resource" => "users",
+        "via_resource_id" => "#{u.id}",
+        "via_relationship" => "posts",
+        "relationship_type" => "hasMany",
+        "resources" => "all"
+      })
+      |> fetch_query_params()
+
+    response = Delete.call(TestExTeal.PostResource, conn)
+
+    assert response.status == 204
+    refute Repo.get(Post, p.id)
+    assert Repo.get(Post, not_related.id)
   end
 
   def prep_conn(method, path, params \\ %{}) do
