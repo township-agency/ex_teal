@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.12.2](https://www.github.com/township-agency/ex_teal/compare/v0.12.1...v0.12.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* Deleting with 'select all' was not including relationships ([8945a1b](https://www.github.com/township-agency/ex_teal/commit/8945a1bd4e9c5d9fcdffafd86083fb15a9c9e7de))
+
 ### [0.12.1](https://www.github.com/township-agency/ex_teal/compare/v0.12.0...v0.12.1) (2020-12-03)
 
 
