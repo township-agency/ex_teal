@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import { Deleteable } from 'ex-teal-js';
+import Deleteable from '@/mixins/Deleteable';
 export default {
   mixins: [ Deleteable ],
   props: {
