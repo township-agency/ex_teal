@@ -280,7 +280,6 @@
 import _ from 'lodash';
 import {
   Capitalize,
-  Deleteable,
   HasCards,
   InteractsWithQueryString,
   InteractsWithResourceInformation,
@@ -290,6 +289,7 @@ import {
 } from 'ex-teal-js';
 
 import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters'; 
+import Deleteable from '@/mixins/Deleteable';
 
 export default {
   mixins: [
@@ -859,9 +859,9 @@ export default {
       const query = {
         search: this.currentSearch,
         field_filters: this.encodedFieldFilters,
-        viaResource: this.viaResource,
-        viaResourceId: this.viaResourceId,
-        viaRelationship: this.viaRelationship,
+        via_resource: this.viaResource,
+        via_resource_id: this.viaResourceId,
+        via_relationship: this.viaRelationship,
         order_by: this.currentOrderBy,
         order_by_direction: this.currentOrderByDirection,
         resources: this.selectedResourcesForActionSelector,

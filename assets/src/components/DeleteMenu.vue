@@ -85,6 +85,7 @@ export default {
     deleteSelectedResources () {
       if (this.allMatchingSelected) {
         this.$emit('deleteAllMatching');
+        return;
       }
 
       this.$emit('deleteSelected');
