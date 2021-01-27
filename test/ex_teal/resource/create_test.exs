@@ -54,9 +54,11 @@ defmodule ExTeal.Resource.CreateTest do
 
     def handle_create(_, params) do
       changeset = Post.changeset(%Post{}, params)
+      other_cs = Post.changeset(%Post{}, %{name: "Other"})
 
       Multi.new()
       |> Multi.insert(:post, changeset)
+      |> Multi.insert(:other_post, other_cs)
     end
 
     def render_create(conn, %{post: post}) do
