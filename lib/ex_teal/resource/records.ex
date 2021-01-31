@@ -32,7 +32,7 @@ defmodule ExTeal.Resource.Records do
 
   Return value should be %Plug.Conn{} or an %Ecto.Query{}.
   """
-  @callback records(Plug.Conn.t(), module()) :: Plug.Conn.t() | ExTeal.Resource.records()
+  @callback records(Plug.Conn.t(), module()) :: Plug.Conn.t() | Ecto.Query.t()
 
   @doc """
   Used to specify which relationships to always

@@ -13,13 +13,13 @@ defmodule ExTeal.Resource.Fields do
 
   All resources will override this:
 
-      def fields(_conn), do: [
-        Id::make() |> sortable(),
-        Text::make('Name') |> sortable(),
-        DateTime::make(:updated_at, 'Last Updated At') |> hide_from_index()
+      def fields(), do: [
+        Id.make() |> sortable(),
+        Text.make('Name') |> sortable(),
+        DateTime.make(:updated_at, 'Last Updated At') |> hide_from_index()
       ]
   """
-  @callback fields() :: list(module)
+  @callback fields() :: list(Field.t())
 
   @doc """
   Used to decorate the fields before
@@ -34,6 +34,7 @@ defmodule ExTeal.Resource.Fields do
       def identifier(model), do: model.id
 
       @inferred_fields ExTeal.Resource.Fields.fields_from_model(__MODULE__)
+      @spec fields() :: [Field.t()]
       def fields, do: @inferred_fields
 
       def meta_for(method, data, all, total, resource, conn),

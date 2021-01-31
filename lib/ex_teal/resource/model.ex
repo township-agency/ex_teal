@@ -42,7 +42,7 @@ defmodule ExTeal.Resource.Model do
   Defaults to looking for name or title fields,
   falls back to the schemas name appended by it's id
   """
-  @callback title_for_schema(struct) :: String.t()
+  @callback title_for_schema(struct) :: String.t() | nil
 
   @doc """
   Returns the subtitle to display in relationships.
@@ -50,7 +50,7 @@ defmodule ExTeal.Resource.Model do
   Defaults to looking for name or title fields,
   falls back to the schemas name appended by it's id
   """
-  @callback subtitle_for_schema(struct) :: String.t()
+  @callback subtitle_for_schema(struct) :: String.t() | nil
 
   @doc """
   Returns the thumbnail to display in search.
@@ -58,7 +58,7 @@ defmodule ExTeal.Resource.Model do
   Defaults to looking for name or title fields,
   falls back to the schemas name appended by it's id
   """
-  @callback thumbnail_for_schema(struct) :: String.t()
+  @callback thumbnail_for_schema(struct) :: String.t() | nil
 
   @doc """
   The fields that should be searched

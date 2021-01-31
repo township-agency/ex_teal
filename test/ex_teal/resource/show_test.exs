@@ -9,7 +9,7 @@ defmodule ExTeal.Resource.ShowTest do
     alias TestExTeal.{Post, Repo}
     def model, do: Post
     def repo, do: Repo
-    def records(_), do: Post
+    def records(_, _), do: Post
   end
 
   test "default implementation return 404 if not found" do

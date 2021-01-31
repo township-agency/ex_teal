@@ -7,7 +7,7 @@ defmodule ExTeal.Resource.RecordTest do
     use ExTeal.Resource.Record
     alias TestExTeal.{Post, Repo}
 
-    def records(_), do: Post
+    def records(_, _), do: Post
 
     def record(query, id) do
       Repo.get_by(query, name: id)
