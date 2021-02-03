@@ -120,16 +120,16 @@ defmodule ExTeal.Resource.Create do
   @doc false
   def respond(%Plug.Conn{} = conn, _old_conn, _), do: conn
 
-  def respond({:error, errors}, conn, resource),
+  def respond({:error, errors} = _cs, conn, resource),
     do: resource.handle_invalid_create(conn, errors)
 
-  def respond({:error, _name, errors, _changes}, conn, resource),
+  def respond({:error, _name, errors, _changes} = _multi, conn, resource),
     do: resource.handle_invalid_create(conn, errors)
 
-  def respond({:ok, model}, conn, resource) do
+  def respond({:ok, %{id: _id} = model} = _cs, conn, resource) do
     model = resource.repo().preload(model, resource.with())
     resource.render_create(conn, model)
   end
 
-  def respond(model, conn, resource), do: resource.render_create(conn, model)
+  def respond({:ok, model} = _multi, conn, resource), do: resource.render_create(conn, model)
 end
