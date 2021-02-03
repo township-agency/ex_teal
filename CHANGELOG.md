@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.12.4](https://www.github.com/township-agency/ex_teal/compare/v0.12.3...v0.12.4) (2021-02-03)
+
+
+### Bug Fixes
+
+* Cannot return multi in handle create ([#51](https://www.github.com/township-agency/ex_teal/issues/51)) ([7aaabf1](https://www.github.com/township-agency/ex_teal/commit/7aaabf11315095a28807f0627a29a8fff3579133))
+
 ### [0.12.3](https://www.github.com/township-agency/ex_teal/compare/v0.12.2...v0.12.3) (2020-12-14)
 
 
