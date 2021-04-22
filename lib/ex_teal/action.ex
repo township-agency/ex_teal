@@ -40,7 +40,7 @@ defmodule ExTeal.Action do
 
   @type action_responses :: :ok | {:error, String.t()} | ExTeal.ActionResponse.t()
 
-  @callback options(Plug.Conn.t()) :: list()
+  @callback options(Plug.Conn.t()) :: map()
 
   @callback commit(Plug.Conn.t(), [ExTeal.Field.t()], Ecto.Query.t()) :: action_responses()
 

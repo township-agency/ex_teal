@@ -20,7 +20,7 @@ defmodule ExTeal.Application.Configuration do
   @doc """
   Returns an array of dashboards
   """
-  @callback dashboards() :: [Dashboard]
+  @callback dashboards() :: [module()]
 
   @doc """
   Returns the json configuration required for the vue app.
