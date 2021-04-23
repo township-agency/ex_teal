@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.12.5](https://www.github.com/township-agency/ex_teal/compare/v0.12.4...v0.12.5) (2021-04-23)
+
+
+### Bug Fixes
+
+* Broken tests due to timezone offsets ([e7e0b47](https://www.github.com/township-agency/ex_teal/commit/e7e0b476aea228e28c467a6f40980e6e0169394b))
+* Broken Type Specs ([e3673a9](https://www.github.com/township-agency/ex_teal/commit/e3673a995198787b601f68d7fd34cf59fd0ba215))
+
 ### [0.12.4](https://www.github.com/township-agency/ex_teal/compare/v0.12.3...v0.12.4) (2021-02-03)
 
 
