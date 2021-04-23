@@ -13,7 +13,7 @@ defmodule ExTeal.Metric do
           value: integer()
         }
 
-  @callback date_field() :: :naive_date_time | :utc_datetime
+  @callback date_field() :: atom()
   @callback date_field_type() :: :naive_date_time | :utc_datetime
   @callback multiple_results() :: boolean()
 

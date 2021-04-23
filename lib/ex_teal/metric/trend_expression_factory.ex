@@ -10,10 +10,10 @@ defmodule ExTeal.Metric.TrendExpressionFactory do
   Based on the adapter, select a trend factory and build
   a date expression to be used in a Ecto Query fragment for the query
   """
-  def make(query, metric, timezone, unit) do
+  def make(query, metric, timezone, unit, start_dt) do
     case metric.repo().__adapter__ do
       Ecto.Adapters.Postgres ->
-        PostgresTrendExpression.generate(query, metric, timezone, unit)
+        PostgresTrendExpression.generate(query, metric, timezone, unit, start_dt)
 
       adapter ->
         raise ArgumentError, message: "Adapter #{adapter} does not support trend metrics"

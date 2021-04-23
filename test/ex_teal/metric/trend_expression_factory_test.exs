@@ -23,7 +23,7 @@ defmodule ExTeal.Metric.TrendExpressionFactoryTest do
   describe "make/1" do
     test "throws an error for an unsupported adapter" do
       assert_raise ArgumentError, fn ->
-        TrendExpressionFactory.make(User, FooTrend, "Etc/UTC", "day")
+        TrendExpressionFactory.make(User, FooTrend, "Etc/UTC", "day", Timex.now())
       end
     end
   end
