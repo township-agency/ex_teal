@@ -25,7 +25,12 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       results =
         Post
         |> select([p], %{aggregate: fragment("count(?) as aggregate", p.id)})
-        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "year")
+        |> PostgresTrendExpression.generate(
+          NewPostTrend,
+          "America/Chicago",
+          "year",
+          two_years_ago
+        )
         |> Repo.all()
 
       assert results == [
@@ -59,7 +64,7 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       results =
         Post
         |> select([p], %{aggregate: fragment("count(?) as aggregate", p.id)})
-        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "month")
+        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "month", dt)
         |> Repo.all()
 
       assert results == [
@@ -104,7 +109,7 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       results =
         Post
         |> select([p], %{aggregate: fragment("count(?) as aggregate", p.id)})
-        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "week")
+        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "week", dt)
         |> Repo.all()
 
       assert results == [
@@ -138,7 +143,7 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       results =
         Post
         |> select([p], %{aggregate: fragment("count(?) as aggregate", p.id)})
-        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "hour")
+        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "hour", dt)
         |> Repo.all()
 
       expected_date_results =
@@ -171,7 +176,7 @@ defmodule ExTeal.Metric.PostgresTrendExpressionTest do
       results =
         Post
         |> select([p], %{aggregate: fragment("count(?) as aggregate", p.id)})
-        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "minute")
+        |> PostgresTrendExpression.generate(NewPostTrend, "America/Chicago", "minute", dt)
         |> Repo.all()
 
       expected_date_results =

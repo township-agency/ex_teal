@@ -113,7 +113,7 @@ defmodule ExTeal.Metric.Trend do
     results =
       query
       |> aggregate_as(aggregate_type, field)
-      |> TrendExpressionFactory.make(metric, timezone, request.unit)
+      |> TrendExpressionFactory.make(metric, timezone, request.unit, start_dt)
       |> between(
         start_dt: start_dt,
         end_dt: end_dt,

@@ -13,7 +13,8 @@ defmodule ExTeal.Metric.TrendExpression do
               query :: Ecto.Queryable.t(),
               metric :: module(),
               timezone :: String.t(),
-              unit :: String.t()
+              unit :: String.t(),
+              start_dt :: DateTime.t()
             ) ::
               Ecto.Queryable.t()
 
@@ -21,7 +22,7 @@ defmodule ExTeal.Metric.TrendExpression do
     quote do
       @behaviour ExTeal.Metric.TrendExpression
       import Ecto.Query
-      import ExTeal.Metric.TrendExpression, only: [fetch_offset: 1]
+      import ExTeal.Metric.TrendExpression, only: [fetch_offset: 2]
     end
   end
 
@@ -29,11 +30,11 @@ defmodule ExTeal.Metric.TrendExpression do
 
   @type valid_timezone :: String.t() | integer() | :utc | :local
 
-  @spec fetch_offset(String.t()) :: float()
-  def fetch_offset(timezone) do
+  @spec fetch_offset(timezone :: String.t(), datetime :: DateTime.t()) :: float()
+  def fetch_offset(timezone, datetime) do
     seconds =
       timezone
-      |> Timezone.get(Timex.now())
+      |> Timezone.get(datetime)
       |> Timezone.total_offset()
 
     seconds / 3_600

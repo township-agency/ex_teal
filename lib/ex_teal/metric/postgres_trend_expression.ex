@@ -5,8 +5,8 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
   use ExTeal.Metric.TrendExpression
 
   @impl true
-  def generate(query, metric, timezone, unit) do
-    offset = fetch_offset(timezone)
+  def generate(query, metric, timezone, unit, start_dt) do
+    offset = fetch_offset(timezone, start_dt)
 
     format = date_format(unit)
 
