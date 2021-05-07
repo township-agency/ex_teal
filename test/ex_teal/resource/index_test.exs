@@ -38,6 +38,17 @@ defmodule ExTeal.Resource.IndexTest do
     assert u.id == user.id
   end
 
+  test "can search by primary id" do
+    [u1, _u2] = insert_pair(:user)
+
+    conn = prep_conn(:get, "users", %{"search" => "#{u1.id}"})
+    response = Index.call(UserResource, conn)
+    assert 200 == response.status
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    assert [u] = json[:data]
+    assert u.id == u1.id
+  end
+
   @tag manifest: TestExTeal.DefaultManifest
   test "can use a many to many relationship to return fields correctly" do
     [t1, _t2] = insert_pair(:tag)
