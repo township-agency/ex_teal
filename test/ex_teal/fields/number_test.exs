@@ -20,7 +20,12 @@ defmodule ExTeal.Fields.NumberTest do
 
   test "has a component" do
     field = Number.make(:amount)
-    assert field.component == "number-field"
+    assert field.component == "text-field"
+  end
+
+  test "has a field filter" do
+    field = Number.make(:amount)
+    assert field.filterable == ExTeal.FieldFilter.Number
   end
 
   test "is shown on edit" do
@@ -42,15 +47,6 @@ defmodule ExTeal.Fields.NumberTest do
     test "accepts a map and stores them as options" do
       field = Number.make(:price)
       assert field.options == %{}
-
-      options = %{
-        "min" => "0",
-        "max" => "100",
-        "step" => "1"
-      }
-
-      field = Number.with_options(field, options)
-      assert field.options == options
     end
   end
 end

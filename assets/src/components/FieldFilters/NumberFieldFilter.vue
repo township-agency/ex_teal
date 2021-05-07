@@ -17,7 +17,7 @@ export default {
       type: Object
     }
   },
-  
+
   methods: {
     setOperand (e) {
       this.$emit('change', { ...this.filter, operand: e.target.value, valid: true });
