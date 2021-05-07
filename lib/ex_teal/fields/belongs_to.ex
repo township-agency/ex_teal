@@ -69,7 +69,7 @@ defmodule ExTeal.Fields.BelongsTo do
   """
   @spec searchable(Field.t()) :: Field.t()
   def searchable(field) do
-    opts = Map.merge(field.options, %{searchable: true})
-    Map.put(field, :options, opts)
+    IO.warn("searchable/1 is deprecated.  BelongsTo fields are always searchable")
+    field
   end
 end
