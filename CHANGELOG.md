@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0](https://www.github.com/township-agency/ex_teal/compare/v0.12.5...v0.13.0) (2021-05-07)
+
+
+### Features
+
+* As a user, I should be able to search a resource by the primary id ([c129c97](https://www.github.com/township-agency/ex_teal/commit/c129c97f0fe010ae0c7f04630bc76459935f06ad))
+* BelongsTo should always be searchable ([defbda6](https://www.github.com/township-agency/ex_teal/commit/defbda6a44a7b78f41311c12dcb2a5ba7953a6a8))
+* Upgrade Number Field ([3a61e4d](https://www.github.com/township-agency/ex_teal/commit/3a61e4d8e920a7b499203e885cfacfe7634c1e23))
+
 ### [0.12.5](https://www.github.com/township-agency/ex_teal/compare/v0.12.4...v0.12.5) (2021-04-23)
 
 
