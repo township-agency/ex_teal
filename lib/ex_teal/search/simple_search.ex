@@ -17,6 +17,18 @@ defmodule ExTeal.Search.SimpleSearch do
         dynamic([q], ilike(field(q, ^field_name), ^"%#{term}%") or ^dynamic)
       end)
 
+    dynamic =
+      case Integer.parse(term) do
+        {id, ""} ->
+          dynamic([q], q.id == ^id or ^dynamic)
+
+        {_integer, _remainder} ->
+          dynamic
+
+        :error ->
+          dynamic
+      end
+
     from(query, where: ^dynamic)
   end
 end
