@@ -309,7 +309,7 @@ defmodule ExTeal.Api.ManyToManyTest do
       [f1] = body.fields
 
       assert f1.attribute == "order"
-      assert f1.value == 2
+      assert f1.value == "2"
     end
   end
 

@@ -68,13 +68,6 @@ Vue.component('index-password-field', IndexTextField);
 Vue.component('detail-password-field', DetailTextField);
 Vue.component('form-password-field', PasswordField);
 
-// NumberField
-import NumberField from '@/components/Form/NumberField.vue';
-
-Vue.component('index-number-field', IndexTextField);
-Vue.component('detail-number-field', DetailTextField);
-Vue.component('form-number-field', NumberField);
-
 // File
 
 import IndexFile from '@/components/Index/File';
