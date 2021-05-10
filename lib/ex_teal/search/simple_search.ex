@@ -13,21 +13,9 @@ defmodule ExTeal.Search.SimpleSearch do
   @spec build(Ecto.Query.t(), module(), map()) :: Ecto.Query.t()
   def build(query, resource, %{"search" => term}) do
     dynamic =
-      Enum.reduce(resource.search(), false, fn field_name, dynamic ->
-        dynamic([q], ilike(field(q, ^field_name), ^"%#{term}%") or ^dynamic)
+      Enum.reduce([:id | resource.search()], false, fn field_name, dynamic ->
+        dynamic([q], ilike(type(field(q, ^field_name), :string), ^"%#{term}%") or ^dynamic)
       end)
-
-    dynamic =
-      case Integer.parse(term) do
-        {id, ""} ->
-          dynamic([q], q.id == ^id or ^dynamic)
-
-        {_integer, _remainder} ->
-          dynamic
-
-        :error ->
-          dynamic
-      end
 
     from(query, where: ^dynamic)
   end
