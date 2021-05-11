@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.13.1](https://www.github.com/township-agency/ex_teal/compare/v0.13.0...v0.13.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* cast fields to string for simple search ([2e6637d](https://www.github.com/township-agency/ex_teal/commit/2e6637dc917066b6ac94704a6e0262d302f4014c))
+
 ## [0.13.0](https://www.github.com/township-agency/ex_teal/compare/v0.12.5...v0.13.0) (2021-05-07)
 
 
