@@ -736,7 +736,7 @@ export default {
           });
 
           this.resourcesToSort = _.sortBy(this.resources, resource => {
-            return resource.fields[index].value;
+            return parseInt(resource.fields[index].value);
           });
 
           this.isSorting = true;
