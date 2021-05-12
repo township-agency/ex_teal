@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.13.2](https://www.github.com/township-agency/ex_teal/compare/v0.13.1...v0.13.2) (2021-05-12)
+
+
+### Bug Fixes
+
+* Number fields are now represented as string fields, parse them to integers before reordering ([4a91569](https://www.github.com/township-agency/ex_teal/commit/4a91569edfa11d3d58bf7d98e4da5068d0639053))
+
 ### [0.13.1](https://www.github.com/township-agency/ex_teal/compare/v0.13.0...v0.13.1) (2021-05-11)
 
 
