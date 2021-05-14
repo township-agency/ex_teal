@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@websanova/vue-auth": "^2.21.14-beta",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "ex-teal-js": "1.0.4",
     "flatpickr": "^4.6.3",
     "form-backend-validation": "^2.3.3",
