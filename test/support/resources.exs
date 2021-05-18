@@ -1,7 +1,7 @@
 defmodule TestExTeal.UserResource do
   use ExTeal.Resource
 
-  alias ExTeal.Fields.{ID, ManyToMany, Number, Text}
+  alias ExTeal.Fields.{ID, ManyToMany, Number, Select, Text}
 
   def model, do: TestExTeal.User
 
@@ -17,6 +17,7 @@ defmodule TestExTeal.UserResource do
       ID.make(:id),
       Text.make(:name),
       Text.make(:email),
+      Select.make(:role),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
       |> ManyToMany.with_pivot_fields([
         Number.make(:order),

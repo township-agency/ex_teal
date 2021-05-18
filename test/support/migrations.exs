@@ -2,10 +2,15 @@ defmodule TestExTeal.Migrations do
   use Ecto.Migration
 
   def change do
+    create_query = "CREATE TYPE user_role AS ENUM ('admin', 'moderator', 'seller', 'buyer')"
+    drop_query = "DROP TYPE user_role"
+    execute(create_query, drop_query)
+
     create table(:users) do
       add(:email, :string)
       add(:name, :string)
       add(:password_hash, :string)
+      add(:role, :user_role)
       timestamps()
     end
 

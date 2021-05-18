@@ -1,5 +1,5 @@
 defmodule ExTeal.Fields.SelectTest do
-  use ExUnit.Case
+  use TestExTeal.ConnCase
 
   alias ExTeal.Fields.Select
 
@@ -34,6 +34,20 @@ defmodule ExTeal.Fields.SelectTest do
       field = Select.make(:size) |> Select.options(~w(S M L))
       model = %{size: "S"}
       assert Select.value_for(field, model, :show) == "S"
+    end
+
+    test "returns the value for a field that represents an ecto enum" do
+      field = Select.make(:role)
+      model = build(:user, role: :seller)
+
+      assert Select.value_for(field, model, :show) == :seller
+    end
+
+    test "returns the value for a field that does not represent an ecto enum" do
+      field = Select.make(:author) |> Select.options(~w(foo bar))
+      model = build(:post, author: "foo")
+
+      assert Select.value_for(field, model, :show) == "foo"
     end
 
     test "returns the default value for edit" do
@@ -156,5 +170,21 @@ defmodule ExTeal.Fields.SelectTest do
   test "can be searchable" do
     field = Select.make(:foo) |> Select.searchable()
     assert field.options.searchable
+  end
+
+  describe "apply_options_for/3" do
+    test "a field that represents an enum has it's options set automatically" do
+      field = Select.make(:role)
+      model = build(:user, role: :seller)
+
+      updated_field = Select.apply_options_for(field, model, :show)
+
+      assert updated_field.options.field_options == [
+               %{disabled: false, value: :admin, key: :admin},
+               %{disabled: false, value: :moderator, key: :moderator},
+               %{disabled: false, value: :seller, key: :seller},
+               %{disabled: false, value: :buyer, key: :buyer}
+             ]
+    end
   end
 end

@@ -120,9 +120,13 @@ defmodule ExTeal.Fields.Select do
   def value_for(field, model, view) when view in [:show, :index] do
     value = Map.get(model, field.field)
 
-    option_values = all_options_for(field)
-    option = Enum.find(option_values, &(&1.value == value)) || %{}
-    Map.get(option, :key, nil)
+    if field_represents_an_enum?(field, model) do
+      value
+    else
+      option_values = all_options_for(field)
+      option = Enum.find(option_values, &(&1.value == value)) || %{}
+      Map.get(option, :key, nil)
+    end
   end
 
   def value_for(field, model, view), do: Field.value_for(field, model, view)
@@ -139,4 +143,31 @@ defmodule ExTeal.Fields.Select do
 
   @impl true
   def filterable_as, do: ExTeal.FieldFilter.Select
+
+  @impl true
+  def apply_options_for(%Field{options: options} = field, model, _type) do
+    if field_represents_an_enum?(field, model) and Map.fetch(options, :field_options) == :error do
+      {:parameterized, Ecto.Enum, details} = schema_field_type(field, model)
+      enum_options = transform_options(details.values)
+      %{field | options: Map.put(field.options, :field_options, enum_options)}
+    else
+      field
+    end
+  end
+
+  defp field_represents_an_enum?(_field, model) when not is_struct(model), do: false
+
+  defp field_represents_an_enum?(field, model) do
+    case schema_field_type(field, model) do
+      {:parameterized, Ecto.Enum, _} ->
+        true
+
+      _ ->
+        false
+    end
+  end
+
+  defp schema_field_type(field, model) do
+    model.__struct__.__schema__(:type, field.field)
+  end
 end
