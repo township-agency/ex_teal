@@ -5,6 +5,7 @@ defmodule TestExTeal.User do
     field(:email, :string)
     field(:name, :string)
     has_many(:posts, TestExTeal.Post)
+    field(:role, Ecto.Enum, values: [:admin, :moderator, :seller, :buyer])
 
     many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
     timestamps()

@@ -8,7 +8,8 @@ defmodule TestExTeal.Factory do
   def user_factory do
     %User{
       name: "Motel ExTeal",
-      email: "teal@motel.is"
+      email: "teal@motel.is",
+      role: :admin
     }
   end
 
