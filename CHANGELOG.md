@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.0](https://www.github.com/township-agency/ex_teal/compare/v0.13.2...v0.14.0) (2021-05-18)
+
+
+### Features
+
+* Select fields can represent Ecto.Enums ([5823c9f](https://www.github.com/township-agency/ex_teal/commit/5823c9f125e103db7c498050021b99e86d9fa157))
+
 ### [0.13.2](https://www.github.com/township-agency/ex_teal/compare/v0.13.1...v0.13.2) (2021-05-12)
 
 
