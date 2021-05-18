@@ -113,7 +113,8 @@ defmodule ExTeal.Resource do
   end
 
   def to_json(resource, conn \\ nil) do
-    singular = resource.title |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
+    singular =
+      resource.title() |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
 
     %{
       title: resource.title(),
