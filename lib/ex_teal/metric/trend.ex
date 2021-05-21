@@ -20,9 +20,11 @@ defmodule ExTeal.Metric.Trend do
   defaults for the maximum number of results returned.
   """
 
+  @type result :: map()
+
   @type multi_result :: map()
 
-  @type valid_result :: map() | [multi_result()]
+  @type valid_result :: result() | [multi_result()]
 
   @callback twelve_hour_time() :: boolean()
 
@@ -104,7 +106,7 @@ defmodule ExTeal.Metric.Trend do
   import ExTeal.Metric.Ranges
   alias ExTeal.Metric.{Request, TrendExpressionFactory}
 
-  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom(), map()) :: map()
+  @spec aggregate(module(), Request.t(), Ecto.Queryable.t(), atom(), atom(), map()) :: result()
   def aggregate(metric, request, query, aggregate_type, field, series_options) do
     {start_dt, end_dt} = get_aggregate_datetimes(request)
     timezone = start_dt.time_zone

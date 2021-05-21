@@ -117,4 +117,8 @@ defmodule ExTeal.Metric.Ranges do
     utc = Timezone.get("Etc/UTC", value)
     Timezone.convert(value, utc)
   end
+
+  defp to_dt_field_type(value, :utc_datetime) do
+    value
+  end
 end

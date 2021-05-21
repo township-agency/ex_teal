@@ -14,7 +14,7 @@ defmodule ExTeal.Metric do
         }
 
   @callback date_field() :: atom()
-  @callback date_field_type() :: :naive_date_time | :utc_datetime
+  @callback date_field_type() :: :naive_datetime | :utc_datetime
   @callback multiple_results() :: boolean()
 
   @doc """
@@ -47,12 +47,12 @@ defmodule ExTeal.Metric do
   @doc """
   A string to prepend to any displayed value on the metric card. For example: `$`
   """
-  @callback prefix() :: String.t()
+  @callback prefix() :: String.t() | nil
 
   @doc """
   A string to appended to any displayed value on the metric card.  For example: `°`
   """
-  @callback suffix() :: String.t()
+  @callback suffix() :: String.t() | nil
 
   @doc """
   A string representing how a value is formatted before being displayed by the
