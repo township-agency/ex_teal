@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.14.1](https://www.github.com/township-agency/ex_teal/compare/v0.14.0...v0.14.1) (2021-05-21)
+
+
+### Bug Fixes
+
+* Clean up compiler warnings in 1.11 versions of Elixir ([836de32](https://www.github.com/township-agency/ex_teal/commit/836de3290f89050abb51bdb86121eb6b7da53b7f))
+* Invalid Typespecs from default functions on Trend Metrics ([0eb02fd](https://www.github.com/township-agency/ex_teal/commit/0eb02fd95c89107b13747f8baa66d9169087f4da))
+
 ## [0.14.0](https://www.github.com/township-agency/ex_teal/compare/v0.13.2...v0.14.0) (2021-05-18)
 
 
