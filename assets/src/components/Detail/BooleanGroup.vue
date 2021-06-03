@@ -7,14 +7,14 @@
       >
         <li
           v-for="option in value"
-          :key="option.name"
+          :key="option.value"
           class="mb-1 text-gray-darkest"
         >
           <span
             :class="{ 'bg-success': option.checked, 'bg-danger': !option.checked }"
             class="inline-block rounded-full w-2 h-2 mr-1"
           />
-          <span>{{ option.label }}</span>
+          <span>{{ option.key }}</span>
         </li>
       </ul>
       <span v-else>{{ field.options.no_value || "No Data" }}</span>
@@ -54,11 +54,11 @@ export default {
   created () {
     this.field.value = this.field.value || {};
     const options = this.field.options.group_options || {};
-    this.value = Object.keys(options).map(name => {
+    this.value = options.map(option => {
       return {
-        name: name,
-        label: options[name],
-        checked: this.field.value[name] || false
+        key: option.key,
+        value: option.value,
+        checked: this.field.value[option.value] || false
       };
     });
   },

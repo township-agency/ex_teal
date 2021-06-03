@@ -1,18 +1,15 @@
 <template>
-  <default-field
-    :field="field"
-    :errors="errors"
-  >
+  <default-field :field="field" :errors="errors">
     <template slot="field">
       <checkbox-with-label
         v-for="option in value"
-        :key="option.name"
+        :key="option.value"
         class="mt-2"
-        :name="option.name"
+        :name="option.key"
         :checked="option.checked"
         @change="toggle($event, option)"
       >
-        {{ option.label }}
+        {{ option.key }}
       </checkbox-with-label>
     </template>
   </default-field>
@@ -34,7 +31,7 @@ export default {
      */
     finalPayload () {
       return _(this.value)
-        .map(o => [ o.name, o.checked ])
+        .map((o) => [ o.value, o.checked ])
         .fromPairs()
         .value();
     },
@@ -47,11 +44,11 @@ export default {
     setInitialValue () {
       this.field.value = this.field.value || {};
       const options = this.field.options.group_options || {};
-      this.value = Object.keys(options).map(name => { 
+      this.value = options.map((option) => {
         return {
-          name: name,
-          label: options[name],
-          checked: this.field.value[name] || false
+          key: option.key,
+          value: option.value,
+          checked: this.field.value[option.value] || false,
         };
       });
     },
@@ -68,10 +65,10 @@ export default {
      * Toggle the option's value.
      */
     toggle (event, option) {
-      const firstOption = this.value.find(o => o.name == option.name);
+      const firstOption = this.value.find((o) => o.value == option.value);
 
       if (!firstOption) {
-        this.value[option.name] = event.target.checked;
+        this.value[option.value] = event.target.checked;
       } else {
         firstOption.checked = event.target.checked;
       }

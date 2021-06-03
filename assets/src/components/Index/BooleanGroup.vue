@@ -12,7 +12,7 @@
         >
           <li
             v-for="option in value"
-            :key="option.name"
+            :key="option.key"
             class="mb-1"
           >
             <span
@@ -24,7 +24,7 @@
                 width="20"
                 height="20"
               />
-              <span class="ml-1">{{ option.label }}</span>
+              <span class="ml-1">{{ option.key }}</span>
             </span>
           </li>
         </ul>
@@ -54,11 +54,11 @@ export default {
   created () {
     this.field.value = this.field.value || {};
     const options = this.field.options.group_options || {};
-    this.value = Object.keys(options).map(name => {
+    this.value = options.map(option => {
       return {
-        name: name,
-        label: options[name],
-        checked: this.field.value[name] || false
+        key: option.key,
+        value: option.value,
+        checked: this.field.value[option.value] || false
       };
     });
   }
