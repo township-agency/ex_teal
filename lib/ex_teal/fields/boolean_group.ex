@@ -92,8 +92,8 @@ defmodule ExTeal.Fields.BooleanGroup do
       {:embed, embedded} ->
         parameterize_an_embed(field, embedded)
 
-      {:parameterized, Ecto.Embedded, %Ecto.Embedded{cardinality: :one}} ->
-        field
+      {:parameterized, Ecto.Embedded, %Ecto.Embedded{cardinality: :one} = embedded} ->
+        parameterize_an_embedded(field, embedded)
     end
   end
 
@@ -103,9 +103,9 @@ defmodule ExTeal.Fields.BooleanGroup do
   @doc """
   Add the available options to manage in the boolean group
   """
-  @spec options(Field.t(), map()) :: Field.t()
+  @spec options(Field.t(), any()) :: Field.t()
   def options(field, options) do
-    opts = Map.merge(options, %{group_options: options})
+    opts = Map.merge(field.options, %{group_options: ExTeal.Field.transform_options(options)})
     %{field | options: opts}
   end
 
@@ -118,17 +118,24 @@ defmodule ExTeal.Fields.BooleanGroup do
   end
 
   defp parameterize_an_embed(field, embedded_schema) do
-    fields = embedded_schema.related.__schema__(:fields)
-    group_options = Map.get(field.options, :group_options, %{})
+    case Map.fetch(field.options, :group_options) do
+      {:ok, _options} ->
+        field
 
-    opts =
-      (fields -- [:id])
-      |> Enum.into(%{}, fn f ->
-        field_string = Atom.to_string(f)
-        {field_string, field_string}
-      end)
+      _ ->
+        fields = embedded_schema.related.__schema__(:fields)
+        options(field, fields -- [:id])
+    end
+  end
 
-    opts = Map.merge(opts, group_options)
-    options(field, opts)
+  defp parameterize_an_embedded(field, embedded) do
+    case Map.fetch(field.options, :group_options) do
+      {:ok, _options} ->
+        field
+
+      _ ->
+        embedded_fields = embedded.related.__schema__(:fields) -- [:id]
+        options(field, embedded_fields)
+    end
   end
 end

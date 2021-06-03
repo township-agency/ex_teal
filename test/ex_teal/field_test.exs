@@ -26,4 +26,77 @@ defmodule ExTeal.FieldTest do
       assert result.filterable == ExTeal.FieldFilter.Text
     end
   end
+
+  describe "transform_options/1" do
+    test "with a binary list" do
+      assert Field.transform_options(~w(foo bar)) == [
+               %{disabled: false, value: "foo", key: "foo"},
+               %{disabled: false, value: "bar", key: "bar"}
+             ]
+    end
+
+    test "with a keyword list" do
+      assert Field.transform_options(Foo: "foo", Bar: "bar") == [
+               %{disabled: false, value: "foo", key: :Foo},
+               %{disabled: false, value: "bar", key: :Bar}
+             ]
+
+      assert Field.transform_options([
+               [key: "Foo", value: "foo"],
+               [key: "Bar", value: "bar", disabled: true]
+             ]) == [
+               %{disabled: false, value: "foo", key: "Foo"},
+               %{disabled: true, value: "bar", key: "Bar"}
+             ]
+    end
+
+    test "with a map" do
+      assert Field.transform_options(%{"1" => "One", "2" => "Two"}) == [
+               %{disabled: false, value: "One", key: "1"},
+               %{disabled: false, value: "Two", key: "2"}
+             ]
+    end
+
+    test "with optgroups" do
+      assert Field.transform_options([
+               {"foo", ~w(bar baz)},
+               {"qux", ~w(qux quz)}
+             ]) == [
+               %{
+                 group: "foo",
+                 options: [
+                   %{disabled: false, value: "bar", key: "bar"},
+                   %{disabled: false, value: "baz", key: "baz"}
+                 ]
+               },
+               %{
+                 group: "qux",
+                 options: [
+                   %{disabled: false, value: "qux", key: "qux"},
+                   %{disabled: false, value: "quz", key: "quz"}
+                 ]
+               }
+             ]
+
+      assert Field.transform_options(%{
+               "foo" => %{"1" => "One", "2" => "Two"},
+               "qux" => ~w(qux quz)
+             }) == [
+               %{
+                 group: "foo",
+                 options: [
+                   %{disabled: false, value: "One", key: "1"},
+                   %{disabled: false, value: "Two", key: "2"}
+                 ]
+               },
+               %{
+                 group: "qux",
+                 options: [
+                   %{disabled: false, value: "qux", key: "qux"},
+                   %{disabled: false, value: "quz", key: "quz"}
+                 ]
+               }
+             ]
+    end
+  end
 end

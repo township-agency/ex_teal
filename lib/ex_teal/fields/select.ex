@@ -9,6 +9,7 @@ defmodule ExTeal.Fields.Select do
   """
 
   use ExTeal.Field
+  alias ExTeal.Field
 
   def component, do: "select"
 
@@ -42,7 +43,10 @@ defmodule ExTeal.Fields.Select do
   This functionality is equivalent to `Phoenix.HTML.Form.select/3`
   """
   def options(field, options) do
-    %{field | options: Map.put_new(field.options, :field_options, transform_options(options))}
+    %{
+      field
+      | options: Map.put_new(field.options, :field_options, Field.transform_options(options))
+    }
   end
 
   @doc """
@@ -57,47 +61,6 @@ defmodule ExTeal.Fields.Select do
   @spec searchable(Field.t()) :: Field.t()
   def searchable(field) do
     %{field | options: Map.put_new(field.options, :searchable, true)}
-  end
-
-  @doc """
-  Returns the options to be used inside of a select.
-  """
-  def transform_options(options) do
-    Enum.into(options, [], fn
-      {option_key, option_value} ->
-        option(option_key, option_value, [])
-
-      options_list when is_list(options_list) ->
-        {option_key, options_list} = Keyword.pop(options_list, :key)
-
-        option_key ||
-          raise ArgumentError,
-                "expected :key key when building <option> from keyword list: #{
-                  inspect(options_list)
-                }"
-
-        {option_value, options_list} = Keyword.pop(options_list, :value)
-
-        option_value ||
-          raise ArgumentError,
-                "expected :value key when building option from keyword list: #{
-                  inspect(options_list)
-                }"
-
-        option(option_key, option_value, options_list)
-
-      option_value ->
-        option(option_value, option_value, [])
-    end)
-  end
-
-  defp option(group_label, group_values, [])
-       when is_list(group_values) or is_map(group_values) do
-    %{group: group_label, options: transform_options(group_values)}
-  end
-
-  defp option(key, value, extra) do
-    %{value: value, key: key, disabled: Keyword.get(extra, :disabled, false)}
   end
 
   def with_options(field, options) when is_map(options) do
@@ -148,7 +111,7 @@ defmodule ExTeal.Fields.Select do
   def apply_options_for(%Field{options: options} = field, model, _type) do
     if field_represents_an_enum?(field, model) and Map.fetch(options, :field_options) == :error do
       {:parameterized, Ecto.Enum, details} = schema_field_type(field, model)
-      enum_options = transform_options(details.values)
+      enum_options = Field.transform_options(details.values)
       %{field | options: Map.put(field.options, :field_options, enum_options)}
     else
       field
