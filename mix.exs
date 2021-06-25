@@ -63,7 +63,12 @@ defmodule ExTeal.MixProject do
         "features"
       ],
       features: "test --only feature:true",
-      "assets.compile": &compile_assets/1
+      "assets.compile": &compile_assets/1,
+      "test.dev": [
+        "format --check-formatted",
+        "compile --warnings-as-errors --force",
+        "credo --strict"
+      ]
     ]
   end
 
