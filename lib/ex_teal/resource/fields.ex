@@ -34,7 +34,6 @@ defmodule ExTeal.Resource.Fields do
       def identifier(model), do: model.id
 
       @inferred_fields ExTeal.Resource.Fields.fields_from_model(__MODULE__)
-      @spec fields() :: [Field.t()]
       def fields, do: @inferred_fields
 
       def meta_for(method, data, all, total, resource, conn),
