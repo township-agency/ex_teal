@@ -76,11 +76,17 @@ defmodule ExTeal.Resource.Fields do
         fields_for(:index, resource)
       end
 
+    policy = resource.policy()
+
     data
-    |> Enum.map(fn x ->
+    |> Enum.map(fn model ->
       %{
-        fields: apply_values(fields, x, resource, :index, nil),
-        id: id_for(x)
+        fields: apply_values(fields, model, resource, :index, nil),
+        id: id_for(model),
+        meta: %{
+          can_delete?: policy.delete_any?(conn),
+          can_update?: policy.update_any?(conn)
+        }
       }
     end)
   end

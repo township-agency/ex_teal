@@ -81,6 +81,7 @@ defmodule ExTeal.Resource do
       use ExTeal.Resource.Update
       use ExTeal.Resource.Delete
       use ExTeal.Resource.Export
+      use ExTeal.Resource.Policy
 
       import ExTeal.FieldVisibility
       import ExTeal.Field, only: [get: 2]
@@ -123,7 +124,8 @@ defmodule ExTeal.Resource do
       uri: resource.uri(),
       hidden: resource.hide_from_nav(),
       skip_sanitize: resource.skip_sanitize(),
-      searchable: !Enum.empty?(resource.search())
+      searchable: !Enum.empty?(resource.search()),
+      can_create_any?: resource.policy().create_any?(conn)
     }
   end
 end
