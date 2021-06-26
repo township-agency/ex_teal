@@ -106,7 +106,8 @@ defmodule ExTeal.Application.ConfigurationTest do
                  group: nil,
                  hidden: false,
                  searchable: false,
-                 skip_sanitize: false
+                 skip_sanitize: false,
+                 can_create_any?: true
                }
              ]
     end

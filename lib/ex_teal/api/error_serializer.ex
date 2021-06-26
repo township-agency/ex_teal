@@ -45,6 +45,17 @@ defmodule ExTeal.Api.ErrorSerializer do
     Serializer.as_json(conn, body, 422)
   end
 
+  def handle_error(conn, :not_authorized) do
+    body =
+      Jason.encode!(%{
+        id: "NOT_AUTHORIZED",
+        title: "Not Authorized",
+        status: 403
+      })
+
+    Serializer.as_json(conn, body, 403)
+  end
+
   def handle_error(conn, _reason) do
     body =
       Jason.encode!(%{

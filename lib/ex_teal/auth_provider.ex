@@ -3,6 +3,9 @@ defmodule ExTeal.AuthProvider do
   Interface for providing authorization and authentication to ExTeal.
   """
 
+  @typedoc """
+  Data to be displayed on the front end
+  """
   @type user_payload :: %{
           name: String.t() | nil,
           avatar_url: String.t() | nil

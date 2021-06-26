@@ -19,6 +19,17 @@ defmodule TestExTeal.ConnCase do
   alias Phoenix.ConnTest
   alias TestExTeal.Repo
 
+  defmacro test_manifests(manifests, do: block) do
+    quote do
+      for {atom, title} <- unquote(manifests) do
+        @tag manifest: atom
+        test title do
+          unquote(block)
+        end
+      end
+    end
+  end
+
   using do
     quote do
       # Import conveniences for testing with connections

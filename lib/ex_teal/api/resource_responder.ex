@@ -8,176 +8,169 @@ defmodule ExTeal.Api.ResourceResponder do
   alias ExTeal.Resource.{Create, Delete, Export, Fields, Index, Serializer, Show, Update}
 
   def index(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Index.call(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      Index.call(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def show(conn, resource_uri, resource_id) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Show.call(resource, conn, resource_id)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      Show.call(resource, conn, resource_id)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def creation_fields(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        fields = Fields.fields_for(:new, resource)
-        schema = resource.model()
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().create_any?(conn) do
+      fields = Fields.fields_for(:new, resource)
+      schema = resource.model()
 
-        fields =
-          Enum.map(fields, fn field ->
-            new_schema = struct(schema, %{})
-            field.type.apply_options_for(field, new_schema, :new)
-          end)
+      fields =
+        Enum.map(fields, fn field ->
+          new_schema = struct(schema, %{})
+          field.type.apply_options_for(field, new_schema, :new)
+        end)
 
-        {:ok, body} = Jason.encode(%{fields: fields})
-        Serializer.as_json(conn, body, 200)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+      {:ok, body} = Jason.encode(%{fields: fields})
+      Serializer.as_json(conn, body, 200)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def field(conn, resource_uri, field_name) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn),
          {:ok, field} <- Fields.field_for(resource, field_name) do
       new_schema = resource.model() |> struct(%{})
       field = field.type.apply_options_for(field, new_schema, :show)
       {:ok, body} = Jason.encode(%{field: field})
       Serializer.as_json(conn, body, 200)
     else
-      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+      error -> responder_error(conn, error)
     end
   end
 
   def update_fields(conn, resource_uri, resource_id) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        model = resource.handle_show(conn, resource_id)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().update_any?(conn) do
+      model = resource.handle_show(conn, resource_id)
 
-        fields =
-          :edit
-          |> Fields.fields_for(resource)
-          |> Fields.apply_values(model, resource, :edit, nil)
+      fields =
+        :edit
+        |> Fields.fields_for(resource)
+        |> Fields.apply_values(model, resource, :edit, nil)
 
-        {:ok, body} = Jason.encode(%{fields: fields})
-        Serializer.as_json(conn, body, 200)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+      {:ok, body} = Jason.encode(%{fields: fields})
+      Serializer.as_json(conn, body, 200)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def relatable(conn, resource_uri, relationship) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn),
          {:ok, related_resource} <- ExTeal.resource_for_relationship(resource, relationship) do
       Index.query_for_related(related_resource, conn)
     else
-      {:error, reason} -> ErrorSerializer.handle_error(conn, reason)
+      error -> responder_error(conn, error)
     end
   end
 
   def filters_for(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        filters = resource.filters_for(conn)
-        {:ok, body} = Jason.encode(%{filters: filters})
-        Serializer.as_json(conn, body, 200)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      filters = resource.filters_for(conn)
+      {:ok, body} = Jason.encode(%{filters: filters})
+      Serializer.as_json(conn, body, 200)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def actions_for(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        actions = resource.actions_for(conn)
-        {:ok, body} = Jason.encode(%{actions: actions})
-        Serializer.as_json(conn, body, 200)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      actions = resource.actions_for(conn)
+      {:ok, body} = Jason.encode(%{actions: actions})
+      Serializer.as_json(conn, body, 200)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def commit_action(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn),
          {:ok, resp} <- ExTeal.Action.apply_action(resource, conn) do
       {:ok, body} = Jason.encode(resp)
       Serializer.as_json(conn, body, 200)
     else
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+      error -> responder_error(conn, error)
     end
   end
 
   def export(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Export.stream(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      Export.stream(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def create(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Create.call(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().create_any?(conn) do
+      Create.call(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def update(conn, resource_uri, resource_id) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Update.call(resource, resource_id, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().update_any?(conn) do
+      Update.call(resource, resource_id, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def delete(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Delete.call(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().delete_any?(conn) do
+      Delete.call(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def reorder(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        Update.batch_update(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().update_any?(conn) do
+      Update.batch_update(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
 
   def field_filters(conn, resource_uri) do
-    case ExTeal.resource_for(resource_uri) do
-      {:ok, resource} ->
-        FieldFilter.for_resource(resource, conn)
-
-      {:error, reason} ->
-        ErrorSerializer.handle_error(conn, reason)
+    with {:ok, resource} <- ExTeal.resource_for(resource_uri),
+         true <- resource.policy().view_any?(conn) do
+      FieldFilter.for_resource(resource, conn)
+    else
+      error -> responder_error(conn, error)
     end
   end
+
+  defp responder_error(conn, false), do: ErrorSerializer.handle_error(conn, :not_authorized)
+  defp responder_error(conn, {:error, reason}), do: ErrorSerializer.handle_error(conn, reason)
 end
