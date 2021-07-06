@@ -37,11 +37,11 @@ Update a project that uses Teal to point to your local repo:
     ]
 ```
 
-In the same projects, `dev` config, configure Teal to use `vue-cli` generated
-assets rather then the compiled assets.
+In the same project's `dev` config, configure Teal to use `vue-cli` generated
+assets rather than the compiled assets.
 
 ```elixir
 config :ex_teal, compiled_assets: false
 ```
 
-Run `yarn && yarn serve`
+In Teal's `assets/`, host the assets by running `yarn && yarn dev`
