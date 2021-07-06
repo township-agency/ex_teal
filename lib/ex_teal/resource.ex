@@ -125,7 +125,10 @@ defmodule ExTeal.Resource do
       hidden: resource.hide_from_nav(),
       skip_sanitize: resource.skip_sanitize(),
       searchable: !Enum.empty?(resource.search()),
-      can_create_any?: resource.policy().create_any?(conn)
+      can_create_any: resource.policy().create_any?(conn),
+      can_view_any: resource.policy().view_any?(conn),
+      can_update_any: resource.policy().update_any?(conn),
+      can_delete_any: resource.policy().delete_any?(conn)
     }
   end
 end

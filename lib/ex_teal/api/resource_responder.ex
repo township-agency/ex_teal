@@ -7,6 +7,7 @@ defmodule ExTeal.Api.ResourceResponder do
   alias ExTeal.FieldFilter
   alias ExTeal.Resource.{Create, Delete, Export, Fields, Index, Serializer, Show, Update}
 
+  @spec index(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def index(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
@@ -16,6 +17,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec show(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def show(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
@@ -25,6 +27,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec creation_fields(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def creation_fields(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().create_any?(conn) do
@@ -44,6 +47,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec field(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def field(conn, resource_uri, field_name) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn),
@@ -57,6 +61,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec update_fields(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def update_fields(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().update_any?(conn) do
@@ -74,6 +79,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec relatable(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def relatable(conn, resource_uri, relationship) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn),
@@ -84,6 +90,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec filters_for(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def filters_for(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
@@ -95,6 +102,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec actions_for(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def actions_for(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
@@ -106,6 +114,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec commit_action(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def commit_action(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn),
@@ -117,6 +126,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec export(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def export(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
@@ -126,6 +136,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec create(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def create(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().create_any?(conn) do
@@ -135,6 +146,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec update(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def update(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().update_any?(conn) do
@@ -144,6 +156,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec delete(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def delete(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().delete_any?(conn) do
@@ -153,6 +166,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec reorder(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def reorder(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().update_any?(conn) do
@@ -162,6 +176,7 @@ defmodule ExTeal.Api.ResourceResponder do
     end
   end
 
+  @spec field_filters(Plug.Conn.t(), binary) :: Plug.Conn.t()
   def field_filters(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().view_any?(conn) do
