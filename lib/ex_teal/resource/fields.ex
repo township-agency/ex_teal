@@ -80,8 +80,13 @@ defmodule ExTeal.Resource.Fields do
 
     data
     |> Enum.map(fn model ->
+      fields =
+        fields
+        |> apply_values(model, resource, :index, nil)
+        |> Enum.filter(&viewable/1)
+
       %{
-        fields: apply_values(fields, model, resource, :index, nil),
+        fields: fields,
         id: id_for(model),
         meta: %{
           can_delete?: policy.delete_any?(conn),
@@ -99,6 +104,7 @@ defmodule ExTeal.Resource.Fields do
       :show
       |> fields_for(resource)
       |> apply_values(model, resource, method, default)
+      |> Enum.filter(&viewable/1)
 
     %{
       id: resource.identifier(model),
@@ -106,6 +112,9 @@ defmodule ExTeal.Resource.Fields do
       panels: panels
     }
   end
+
+  defp viewable(%{options: %{can_view_any: false}}), do: false
+  defp viewable(%{}), do: true
 
   defp id_for(%{pivot: true, _row: %{id: id}}), do: id
   defp id_for(%{id: id}), do: id
