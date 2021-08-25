@@ -2,7 +2,7 @@
 
 Policies are a way of controlling access to resources within Teal.
 
-## Changing the default policy
+## Default policy
 
 The default policy is `ExTeal.OpenEverywherePolicy`, which has the following implementations:
 
@@ -56,7 +56,7 @@ end
 
 ```
 
-## Changing the policy on an individual resource
+## Resource Policies
 
 You can override the policy at the resource level by implementing the `policy/0` callback
 
