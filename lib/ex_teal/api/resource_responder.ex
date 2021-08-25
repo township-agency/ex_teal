@@ -66,7 +66,6 @@ defmodule ExTeal.Api.ResourceResponder do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          model <- resource.handle_show(conn, resource_id),
          true <- resource.policy().update?(conn, model) do
-
       fields =
         :edit
         |> Fields.fields_for(resource)

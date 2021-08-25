@@ -140,7 +140,8 @@ defmodule ExTeal.Api.ManyToMany do
   def creation_pivot_fields(conn, resource_uri, field_name) do
     case resource_and_field(resource_uri, field_name) do
       {:ok, resource, field} ->
-        updated_field = field.type.apply_options_for(field, struct(resource.model()), conn, :create)
+        updated_field =
+          field.type.apply_options_for(field, struct(resource.model()), conn, :create)
 
         pivot_fields =
           updated_field.private_options

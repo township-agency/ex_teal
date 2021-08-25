@@ -175,8 +175,7 @@ defmodule ExTeal.Api.ResourceResponderTest do
     test "returns a 403 for a single update" do
       p = insert(:post)
 
-      conn =
-        build_conn(:put, "/api/posts/#{p.id}", %{})
+      conn = build_conn(:put, "/api/posts/#{p.id}", %{})
 
       resp = ResourceResponder.update(conn, "posts", p.id)
       assert resp.status == 403
