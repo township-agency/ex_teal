@@ -39,6 +39,23 @@ end
 
 ```
 
+Then set it in your manifest:
+
+```elixir
+# lib/my_app_web/ex_teal/manifest.ex
+
+defmodule MyAppWeb.ExTeal.Manifest do
+  use ExTeal.Manifest
+  
+  # ...
+
+  def default_policy, do: MyAppWeb.ExTeal.ClosedEverywherePolicy
+  
+  # ...
+end
+
+```
+
 ## Changing the policy on an individual resource
 
 You can override the policy at the resource level by implementing the `policy/0` callback
