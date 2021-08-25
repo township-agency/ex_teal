@@ -82,7 +82,7 @@ defmodule ExTeal.Fields.BooleanGroup do
   def default_sortable, do: false
 
   @impl true
-  def apply_options_for(field, model, _type) do
+  def apply_options_for(field, model, _conn, _type) do
     schema = model.__struct__
 
     case schema.__schema__(:type, field.field) do

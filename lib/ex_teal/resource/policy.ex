@@ -9,7 +9,7 @@ defmodule ExTeal.Resource.Policy do
     quote do
       @behaviour ExTeal.Resource.Policy
 
-      def policy, do: ExTeal.OpenEverywherePolicy
+      def policy, do: ExTeal.default_policy()
 
       defoverridable(policy: 0)
     end

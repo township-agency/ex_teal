@@ -35,7 +35,10 @@ defmodule ExTeal.Resource.Serializer do
         conn
       ) do
     meta = resource.meta_for(:index, models, all, total, resource, conn)
-    data = resource.serialize_response(:index, resource, models, conn)
+
+    policy = resource.policy()
+    filtered_models = Enum.filter(models, &policy.view?(conn, &1))
+    data = resource.serialize_response(:index, resource, filtered_models, conn)
 
     {:ok, response} =
       Jason.encode(%{
@@ -66,9 +69,15 @@ defmodule ExTeal.Resource.Serializer do
   end
 
   def render_show(model, resource, conn) do
-    data = resource.serialize_response(:show, resource, model, conn)
-    {:ok, response} = Jason.encode(data)
-    as_json(conn, response)
+    case resource.policy().view?(conn, model) do
+      false ->
+        ErrorSerializer.handle_error(conn, :not_authorized)
+
+      true ->
+        data = resource.serialize_response(:show, resource, model, conn)
+        {:ok, response} = Jason.encode(data)
+        as_json(conn, response)
+    end
   end
 
   def render_create(model, resource, conn) do

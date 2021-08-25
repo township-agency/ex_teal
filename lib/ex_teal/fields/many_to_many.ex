@@ -26,7 +26,7 @@ defmodule ExTeal.Fields.ManyToMany do
   def show_on_new, do: false
   def show_on_edit, do: false
 
-  def apply_options_for(field, model, _type) do
+  def apply_options_for(field, model, conn, _type) do
     rel = model.__struct__.__schema__(:association, field.field)
 
     with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do
@@ -38,7 +38,7 @@ defmodule ExTeal.Fields.ManyToMany do
 
       %{
         field
-        | options: Map.merge(Resource.to_json(resource), opts),
+        | options: Map.merge(Resource.to_json(resource, conn), opts),
           private_options: Map.merge(field.private_options, %{rel: rel})
       }
     end

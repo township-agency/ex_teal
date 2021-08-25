@@ -170,7 +170,33 @@ defmodule ExTeal.Api.ResourceResponderTest do
     end
   end
 
+  describe "update/2" do
+    @tag manifest: ImmutableManifest
+    test "returns a 403 for a single update" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:put, "/api/posts/#{p.id}", %{})
+
+      resp = ResourceResponder.update(conn, "posts", p.id)
+      assert resp.status == 403
+    end
+  end
+
   describe "delete/2" do
+    @tag manifest: ForeverManifest
+    test "returns a 403 for a single delete" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:delete, "/api/posts", %{
+          "resources" => "#{p.id}"
+        })
+
+      resp = ResourceResponder.delete(conn, "posts")
+      assert resp.status == 403
+    end
+
     @tag manifest: EmptyManifest
     test "returns a 404 when no resource available" do
       conn = build_conn(:delete, "/api/posts")

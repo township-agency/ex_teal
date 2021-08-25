@@ -1,6 +1,7 @@
 <template>
   <div>
     <button
+      v-if="shouldShowDeleteButton"
       class="btn btn-default btn-only-icon bg-danger text-white"
       @click="confirmDeleteSelectedResources"
     >
@@ -53,6 +54,10 @@ export default {
       return this.allMatchingSelected
         ? this.allMatchingResourceCount
         : this.selectedResources.length;
+    },
+
+    shouldShowDeleteButton () {
+      return true;
     }
   },
 

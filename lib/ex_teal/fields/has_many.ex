@@ -20,7 +20,7 @@ defmodule ExTeal.Fields.HasMany do
   def show_on_new, do: false
   def show_on_edit, do: false
 
-  def apply_options_for(field, model, _type) do
+  def apply_options_for(field, model, conn, _type) do
     rel = model.__struct__.__schema__(:association, field.field)
 
     with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do
@@ -30,7 +30,7 @@ defmodule ExTeal.Fields.HasMany do
           listable: true
         })
 
-      Map.put(field, :options, Map.merge(Resource.to_json(resource), opts))
+      Map.put(field, :options, Map.merge(Resource.to_json(resource, conn), opts))
     end
   end
 end

@@ -224,11 +224,11 @@ export default {
     },
 
     shouldShowUpdateButton () {
-      return this.resourceInformation && this.resourceInformation.can_update_any;
+      return this.resourceInformation && this.resource.meta["can_update?"];
     },
 
     shouldShowDeleteButton () {
-      return this.resourceInformation && this.resourceInformation.can_delete_any;
+      return this.resourceInformation && this.resource.meta["can_delete?"];
     }
   },
 

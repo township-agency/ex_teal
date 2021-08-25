@@ -42,6 +42,7 @@
           </h2>
           <div class="ml-auto flex">
             <button
+              v-if="shouldShowDeleteButton"
               class="btn btn-default btn-icon btn-danger mr-3"
               title="Delete"
               @click="openDeleteModal"
@@ -64,6 +65,7 @@
             </portal>
 
             <router-link
+              v-if="shouldShowUpdateButton"
               :to="{ name: 'edit', params: { id: resource.id } }"
               data-testid="edit-resource"
               dusk="edit-resource-button"
@@ -140,6 +142,12 @@ export default {
     cardsEndpoint () {
       return `/api/${this.resourceName}/cards`;
     },
+    shouldShowUpdateButton () {
+      return this.resourceInformation && this.resource.meta["can_update?"];
+    },
+    shouldShowDeleteButton () {
+      return this.resourceInformation && this.resource.meta["can_delete?"];
+    }
   },
 
   watch: {
@@ -221,9 +229,9 @@ export default {
 
       return ExTeal.request()
         .get(`/api/${this.resourceName}/${this.resourceId}`)
-        .then(({ data: { panels, fields, id } }) => {
-          this.panels = panels;
-          this.resource = { fields, id };
+        .then(({ data: resource }) => {
+          this.panels = resource.panels;
+          this.resource = resource;
           this.loading = false;
         })
         .catch(error => {

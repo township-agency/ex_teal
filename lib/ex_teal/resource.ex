@@ -109,11 +109,11 @@ defmodule ExTeal.Resource do
     end
   end
 
-  def map_to_json(resources, conn \\ nil) do
+  def map_to_json(resources, conn) do
     Enum.map(resources, &to_json(&1, conn))
   end
 
-  def to_json(resource, conn \\ nil) do
+  def to_json(resource, conn) do
     singular =
       resource.title() |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
 

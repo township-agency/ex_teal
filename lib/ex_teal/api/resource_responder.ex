@@ -37,7 +37,7 @@ defmodule ExTeal.Api.ResourceResponder do
       fields =
         Enum.map(fields, fn field ->
           new_schema = struct(schema, %{})
-          field.type.apply_options_for(field, new_schema, :new)
+          field.type.apply_options_for(field, new_schema, conn, :new)
         end)
 
       {:ok, body} = Jason.encode(%{fields: fields})
@@ -53,7 +53,7 @@ defmodule ExTeal.Api.ResourceResponder do
          true <- resource.policy().view_any?(conn),
          {:ok, field} <- Fields.field_for(resource, field_name) do
       new_schema = resource.model() |> struct(%{})
-      field = field.type.apply_options_for(field, new_schema, :show)
+      field = field.type.apply_options_for(field, new_schema, conn, :show)
       {:ok, body} = Jason.encode(%{field: field})
       Serializer.as_json(conn, body, 200)
     else
@@ -64,8 +64,8 @@ defmodule ExTeal.Api.ResourceResponder do
   @spec update_fields(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def update_fields(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
-         true <- resource.policy().update_any?(conn) do
-      model = resource.handle_show(conn, resource_id)
+         model <- resource.handle_show(conn, resource_id),
+         true <- resource.policy().update?(conn, model) do
 
       fields =
         :edit
@@ -149,7 +149,8 @@ defmodule ExTeal.Api.ResourceResponder do
   @spec update(Plug.Conn.t(), binary, binary) :: Plug.Conn.t()
   def update(conn, resource_uri, resource_id) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
-         true <- resource.policy().update_any?(conn) do
+         model <- resource.handle_show(conn, resource_id),
+         true <- resource.policy().update?(conn, model) do
       Update.call(resource, resource_id, conn)
     else
       error -> responder_error(conn, error)
