@@ -101,6 +101,7 @@ by Motel."
     [
       main: "readme",
       extras: [
+        "guides/Policies.md",
         "README.md",
         "CHANGELOG.md"
       ],
