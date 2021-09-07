@@ -17,8 +17,9 @@
       <p
         v-if="hasError"
         class="my-2 text-danger"
-        v-html="firstError"
-      />
+      >
+        {{ firstError }}
+      </p>
     </div>
   </field-wrapper>
 </template>

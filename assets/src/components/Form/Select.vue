@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <search-input
         v-if="isSearchable"
@@ -35,11 +38,6 @@
         value-key="value"
         @change="handleChange"
       />    
-      <p
-        v-if="hasError"
-        class="my-2 text-danger"
-        v-html="firstError"
-      />
     </template>
   </default-field>
 </template>

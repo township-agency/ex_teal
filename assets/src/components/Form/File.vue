@@ -22,13 +22,6 @@
       </span>
 
       <span class="text-gray-50 select-none"> {{ currentLabel }} </span>
-
-      <p
-        v-if="hasError"
-        class="text-xs mt-2 text-danger"
-      >
-        {{ firstError }}
-      </p>
     </template>
   </default-field>
 </template>
