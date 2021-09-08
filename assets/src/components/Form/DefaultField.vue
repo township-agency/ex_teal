@@ -14,12 +14,22 @@
       >
         {{ helpText }}
       </help-text>
+      <p
+        v-if="hasError"
+        class="my-2 text-danger"
+      >
+        {{ firstError }}
+      </p>
     </div>
   </field-wrapper>
 </template>
 
 <script>
+import { HandlesValidationErrors } from 'ex-teal-js';
+
 export default {
+  mixins: [ HandlesValidationErrors ],
+
   props: {
     field: { type: Object, required: true },
     fieldName: { type: String, default: '' },

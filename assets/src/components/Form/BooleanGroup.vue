@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field" :errors="errors">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <checkbox-with-label
         v-for="option in value"

@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <search-input
         v-if="isSearchable"

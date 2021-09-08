@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <div
         v-on-clickaway="hidePicker"
@@ -27,11 +30,6 @@
           @input="updateFromPicker"
         />
       </div>
-      <p
-        v-if="hasError"
-        class="my-2 text-danger"
-        v-html="firstError"
-      />
     </template>
   </default-field>
 </template>

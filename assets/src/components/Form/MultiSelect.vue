@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <Multiselect
         v-model="value"
@@ -12,11 +15,6 @@
         placeholder="Pick some"
         label="label"
         track-by="value"
-      />
-      <p
-        v-if="hasError"
-        class="my-2 text-danger"
-        v-html="firstError"
       />
     </template>
   </default-field>

@@ -1,5 +1,8 @@
 <template>
-  <default-field :field="field">
+  <default-field
+    :field="field"
+    :errors="errors"
+  >
     <template slot="field">
       <input
         :id="editorId"
@@ -13,12 +16,6 @@
         :placeholder="field.name"
         @change="handleChange"
       />
-      <p
-        v-if="hasError"
-        class="my-2 text-danger"
-      >
-        {{ firstError }}
-      </p>
     </template>
   </default-field>
 </template>
