@@ -102,6 +102,13 @@ defmodule ExTeal do
     end
   end
 
+  def default_policy do
+    case manifest() do
+      nil -> ExTeal.OpenEverywherePolicy
+      module -> module.default_policy()
+    end
+  end
+
   @spec resource_for(String.t()) :: {:ok, ExTeal.Resource.t()} | {:error, :not_found}
   def resource_for(name) do
     case Enum.find(available_resources(), fn x -> x.uri() == name end) do

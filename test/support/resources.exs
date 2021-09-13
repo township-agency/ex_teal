@@ -97,3 +97,175 @@ defmodule TestExTeal.SinglePostUserResource do
       HasOne.make(:post, TestExTeal.Post)
     ]
 end
+
+defmodule TestExTeal.Invisible.PostResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{
+    BelongsTo,
+    Boolean,
+    BooleanGroup,
+    DateTime,
+    ID,
+    ManyToMany,
+    Select,
+    Text,
+    TextArea
+  }
+
+  def model, do: TestExTeal.Post
+
+  def policy, do: TestExTeal.InvisiblePolicy
+
+  def with, do: [:user]
+
+  def fields,
+    do: [
+      ID.make(:id),
+      Text.make(:name),
+      TextArea.make(:body),
+      Boolean.make(:published),
+      Select.make(:author) |> Select.options(Foo: "foo", Bar: "bar"),
+      Select.make(:contributor) |> Select.options(~w(foo bar)),
+      DateTime.make(:published_at),
+      DateTime.make(:deleted_at),
+      BelongsTo.make(:user),
+      BooleanGroup.make(:features)
+      |> BooleanGroup.options(%{
+        "show_cta" => "Show CTA",
+        "show_featured_image" => "Show Featured Image"
+      }),
+      ManyToMany.make(:tags, TestExTeal.Tag)
+    ]
+
+  def actions(_), do: [TestExTeal.PublishAction]
+end
+
+defmodule TestExTeal.Enough.PostResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{
+    BelongsTo,
+    Boolean,
+    BooleanGroup,
+    DateTime,
+    ID,
+    ManyToMany,
+    Select,
+    Text,
+    TextArea
+  }
+
+  def model, do: TestExTeal.Post
+
+  def policy, do: TestExTeal.EnoughPolicy
+
+  def with, do: [:user]
+
+  def fields,
+    do: [
+      ID.make(:id),
+      Text.make(:name),
+      TextArea.make(:body),
+      Boolean.make(:published),
+      Select.make(:author) |> Select.options(Foo: "foo", Bar: "bar"),
+      Select.make(:contributor) |> Select.options(~w(foo bar)),
+      DateTime.make(:published_at),
+      DateTime.make(:deleted_at),
+      BelongsTo.make(:user),
+      BooleanGroup.make(:features)
+      |> BooleanGroup.options(%{
+        "show_cta" => "Show CTA",
+        "show_featured_image" => "Show Featured Image"
+      }),
+      ManyToMany.make(:tags, TestExTeal.Tag)
+    ]
+
+  def actions(_), do: [TestExTeal.PublishAction]
+end
+
+defmodule TestExTeal.Immutable.PostResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{
+    BelongsTo,
+    Boolean,
+    BooleanGroup,
+    DateTime,
+    ID,
+    ManyToMany,
+    Select,
+    Text,
+    TextArea
+  }
+
+  def model, do: TestExTeal.Post
+
+  def policy, do: TestExTeal.ImmutablePolicy
+
+  def with, do: [:user]
+
+  def fields,
+    do: [
+      ID.make(:id),
+      Text.make(:name),
+      TextArea.make(:body),
+      Boolean.make(:published),
+      Select.make(:author) |> Select.options(Foo: "foo", Bar: "bar"),
+      Select.make(:contributor) |> Select.options(~w(foo bar)),
+      DateTime.make(:published_at),
+      DateTime.make(:deleted_at),
+      BelongsTo.make(:user),
+      BooleanGroup.make(:features)
+      |> BooleanGroup.options(%{
+        "show_cta" => "Show CTA",
+        "show_featured_image" => "Show Featured Image"
+      }),
+      ManyToMany.make(:tags, TestExTeal.Tag)
+    ]
+
+  def actions(_), do: [TestExTeal.PublishAction]
+end
+
+defmodule TestExTeal.Forever.PostResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{
+    BelongsTo,
+    Boolean,
+    BooleanGroup,
+    DateTime,
+    ID,
+    ManyToMany,
+    Select,
+    Text,
+    TextArea
+  }
+
+  def model, do: TestExTeal.Post
+
+  def policy, do: TestExTeal.ForeverPolicy
+
+  def with, do: [:user]
+
+  def fields,
+    do: [
+      ID.make(:id),
+      Text.make(:name),
+      TextArea.make(:body),
+      Boolean.make(:published),
+      Select.make(:author) |> Select.options(Foo: "foo", Bar: "bar"),
+      Select.make(:contributor) |> Select.options(~w(foo bar)),
+      DateTime.make(:published_at),
+      DateTime.make(:deleted_at),
+      BelongsTo.make(:user),
+      BooleanGroup.make(:features)
+      |> BooleanGroup.options(%{
+        "show_cta" => "Show CTA",
+        "show_featured_image" => "Show Featured Image"
+      }),
+      ManyToMany.make(:tags, TestExTeal.Tag)
+    ]
+
+  def actions(_), do: [TestExTeal.PublishAction]
+end

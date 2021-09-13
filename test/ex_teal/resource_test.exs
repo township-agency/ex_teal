@@ -45,7 +45,11 @@ defmodule ExTeal.ResourceTest do
                  group: nil,
                  hidden: true,
                  searchable: false,
-                 skip_sanitize: false
+                 skip_sanitize: false,
+                 can_create_any: true,
+                 can_delete_any: true,
+                 can_update_any: true,
+                 can_view_any: true
                },
                %{
                  title: "Groups",
@@ -54,7 +58,11 @@ defmodule ExTeal.ResourceTest do
                  group: "Admin",
                  hidden: false,
                  searchable: false,
-                 skip_sanitize: false
+                 skip_sanitize: false,
+                 can_create_any: true,
+                 can_delete_any: true,
+                 can_update_any: true,
+                 can_view_any: true
                }
              ]
     end

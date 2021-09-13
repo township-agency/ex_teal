@@ -99,12 +99,12 @@ defmodule ExTeal.Fields.SelectTest do
     assert field.options.searchable
   end
 
-  describe "apply_options_for/3" do
+  describe "apply_options_for/4" do
     test "a field that represents an enum has it's options set automatically" do
       field = Select.make(:role)
       model = build(:user, role: :seller)
 
-      updated_field = Select.apply_options_for(field, model, :show)
+      updated_field = Select.apply_options_for(field, model, %{}, :show)
 
       assert updated_field.options.field_options == [
                %{disabled: false, value: :admin, key: :admin},

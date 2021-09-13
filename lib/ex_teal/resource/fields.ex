@@ -34,7 +34,6 @@ defmodule ExTeal.Resource.Fields do
       def identifier(model), do: model.id
 
       @inferred_fields ExTeal.Resource.Fields.fields_from_model(__MODULE__)
-      @spec fields() :: [Field.t()]
       def fields, do: @inferred_fields
 
       def meta_for(method, data, all, total, resource, conn),
@@ -77,30 +76,51 @@ defmodule ExTeal.Resource.Fields do
         fields_for(:index, resource)
       end
 
+    policy = resource.policy()
+
     data
-    |> Enum.map(fn x ->
+    |> Enum.map(fn model ->
+      fields =
+        fields
+        |> apply_values(model, resource, conn, :index, nil)
+        |> Enum.filter(&viewable/1)
+
       %{
-        fields: apply_values(fields, x, resource, :index, nil),
-        id: id_for(x)
+        fields: fields,
+        id: id_for(model),
+        meta: %{
+          can_delete?: policy.delete?(conn, model),
+          can_update?: policy.update?(conn, model)
+        }
       }
     end)
   end
 
-  def serialize_response(method, resource, model, _conn) do
+  def serialize_response(method, resource, model, conn) do
     panels = Panel.gather_panels(resource)
     [default | _others] = panels
 
     fields =
       :show
       |> fields_for(resource)
-      |> apply_values(model, resource, method, default)
+      |> apply_values(model, resource, conn, method, default)
+      |> Enum.filter(&viewable/1)
+
+    policy = resource.policy()
 
     %{
       id: resource.identifier(model),
       fields: fields,
-      panels: panels
+      panels: panels,
+      meta: %{
+        can_delete?: policy.delete?(conn, model),
+        can_update?: policy.update?(conn, model)
+      }
     }
   end
+
+  defp viewable(%{options: %{can_view_any: false}}), do: false
+  defp viewable(%{}), do: true
 
   defp id_for(%{pivot: true, _row: %{id: id}}), do: id
   defp id_for(%{id: id}), do: id
@@ -202,14 +222,14 @@ defmodule ExTeal.Resource.Fields do
   defp panel_fields(%Field{} = field), do: [field]
   defp panel_fields(%Panel{fields: fields}), do: fields
 
-  def apply_values(fields, model, resource, type, panel \\ nil)
+  def apply_values(fields, model, resource, conn, type, panel \\ nil)
 
-  def apply_values(fields, %{pivot: true} = model, resource, type, panel) do
+  def apply_values(fields, %{pivot: true} = model, resource, conn, type, panel) do
     model = Map.merge(model._row, model._pivot)
-    apply_values(fields, model, resource, type, panel)
+    apply_values(fields, model, resource, conn, type, panel)
   end
 
-  def apply_values(fields, model, _resource, type, panel) do
+  def apply_values(fields, model, _resource, conn, type, panel) do
     fields
     |> Enum.map(fn field ->
       value = field.type.value_for(field, model, type)
@@ -217,7 +237,7 @@ defmodule ExTeal.Resource.Fields do
       field
       |> Map.put(:value, value)
       |> add_panel_key(panel)
-      |> field.type.apply_options_for(model, type)
+      |> field.type.apply_options_for(model, conn, type)
     end)
     |> Enum.reject(&is_nil/1)
   end

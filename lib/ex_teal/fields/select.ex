@@ -108,7 +108,7 @@ defmodule ExTeal.Fields.Select do
   def filterable_as, do: ExTeal.FieldFilter.Select
 
   @impl true
-  def apply_options_for(%Field{options: options} = field, model, _type) do
+  def apply_options_for(%Field{options: options} = field, model, _conn, _type) do
     if field_represents_an_enum?(field, model) and Map.fetch(options, :field_options) == :error do
       {:parameterized, Ecto.Enum, details} = schema_field_type(field, model)
       enum_options = Field.transform_options(details.values)

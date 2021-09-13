@@ -9,7 +9,7 @@ defmodule ExTeal.Fields.HasOneTest do
       post = insert(:post)
       user = insert(:single_post_user, post: post)
 
-      field = HasOne.apply_options_for(field, user, :index)
+      field = HasOne.apply_options_for(field, user, %{}, :index)
       assert field.options.has_one_relationship == :post
       assert field.options.has_one_id == post.id
     end
@@ -18,7 +18,7 @@ defmodule ExTeal.Fields.HasOneTest do
     test "returns with an empty relationship" do
       [_, field] = TestExTeal.SinglePostUserResource.fields()
       user = insert(:single_post_user, post: nil)
-      field = HasOne.apply_options_for(field, user, :index)
+      field = HasOne.apply_options_for(field, user, %{}, :index)
       assert field.options.has_one_relationship == :post
       assert field.options.has_one_id == nil
     end

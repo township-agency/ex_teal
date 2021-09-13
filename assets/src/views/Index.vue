@@ -125,7 +125,7 @@
           :via-resource="viaResource"
           :via-resource-id="viaResourceId"
           :via-relationship="viaRelationship"
-          :can-create="!resourceIsFull"
+          :can-create="canCreateAny"
           :relationship-type="relationshipType"
           classes="rounded-tr border-none"
         />
@@ -224,7 +224,7 @@
               :via-resource="viaResource"
               :via-resource-id="viaResourceId"
               :via-relationship="viaRelationship"
-              :can-create="!resourceIsFull"
+              :can-create="canCreateAny"
               :relationship-type="relationshipType"
               classes="mt-2"
               :with-text="true"
@@ -537,6 +537,13 @@ export default {
      */
     resourceIsFull () {
       return this.viaHasOne && this.resources.length > 0;
+    },
+
+    /**
+     * Determine if the resource can be created.
+     */
+    canCreateAny () {
+      return !this.resourceIsFull && this.resourceInformation.can_create_any;
     },
 
     /**

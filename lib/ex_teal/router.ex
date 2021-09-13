@@ -61,8 +61,10 @@ defmodule ExTeal.Router do
   end
 
   get "/search" do
+    resources = Enum.filter(ExTeal.searchable_resources(), & &1.policy().view_any?(conn))
+
     conn
-    |> GlobalSearch.new(ExTeal.searchable_resources())
+    |> GlobalSearch.new(resources)
     |> GlobalSearch.run()
     |> GlobalSearch.render()
   end

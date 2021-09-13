@@ -31,3 +31,31 @@ defmodule TestExTeal.MetricManifest do
       TestExTeal.MainDashboard
     ]
 end
+
+defmodule TestExTeal.InvisibleManifest do
+  use ExTeal.Manifest
+
+  def resources,
+    do: [TestExTeal.UserResource, TestExTeal.Invisible.PostResource, TestExTeal.TagResource]
+end
+
+defmodule TestExTeal.EnoughManifest do
+  use ExTeal.Manifest
+
+  def resources,
+    do: [TestExTeal.UserResource, TestExTeal.Enough.PostResource, TestExTeal.TagResource]
+end
+
+defmodule TestExTeal.ImmutableManifest do
+  use ExTeal.Manifest
+
+  def resources,
+    do: [TestExTeal.UserResource, TestExTeal.Immutable.PostResource, TestExTeal.TagResource]
+end
+
+defmodule TestExTeal.ForeverManifest do
+  use ExTeal.Manifest
+
+  def resources,
+    do: [TestExTeal.UserResource, TestExTeal.Forever.PostResource, TestExTeal.TagResource]
+end

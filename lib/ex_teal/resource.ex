@@ -81,6 +81,7 @@ defmodule ExTeal.Resource do
       use ExTeal.Resource.Update
       use ExTeal.Resource.Delete
       use ExTeal.Resource.Export
+      use ExTeal.Resource.Policy
 
       import ExTeal.FieldVisibility
       import ExTeal.Field, only: [get: 2]
@@ -108,11 +109,11 @@ defmodule ExTeal.Resource do
     end
   end
 
-  def map_to_json(resources, conn \\ nil) do
+  def map_to_json(resources, conn) do
     Enum.map(resources, &to_json(&1, conn))
   end
 
-  def to_json(resource, conn \\ nil) do
+  def to_json(resource, conn) do
     singular =
       resource.title() |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
 
@@ -123,7 +124,11 @@ defmodule ExTeal.Resource do
       uri: resource.uri(),
       hidden: resource.hide_from_nav(),
       skip_sanitize: resource.skip_sanitize(),
-      searchable: !Enum.empty?(resource.search())
+      searchable: !Enum.empty?(resource.search()),
+      can_create_any: resource.policy().create_any?(conn),
+      can_view_any: resource.policy().view_any?(conn),
+      can_update_any: resource.policy().update_any?(conn),
+      can_delete_any: resource.policy().delete_any?(conn)
     }
   end
 end

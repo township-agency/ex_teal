@@ -38,7 +38,7 @@ defmodule ExTeal.Fields.BelongsTo do
   end
 
   @impl true
-  def apply_options_for(field, model, _type) do
+  def apply_options_for(field, model, _conn, _type) do
     id =
       case Map.get(model, field.field) do
         nil -> nil

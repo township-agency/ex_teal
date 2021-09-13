@@ -58,6 +58,8 @@ defmodule ExTeal.Application.Configuration do
 
       def nav_groups(_conn), do: ["Resources"]
 
+      def default_policy, do: ExTeal.OpenEverywherePolicy
+
       def auth_provider, do: ExTeal.GuestAuthProvider
 
       def theme, do: %ExTeal.Theme{}
@@ -66,6 +68,7 @@ defmodule ExTeal.Application.Configuration do
         application_name: 0,
         logo_image_path: 0,
         json_configuration: 1,
+        default_policy: 0,
         auth_provider: 0,
         path: 0,
         dashboards: 0,
@@ -81,7 +84,10 @@ defmodule ExTeal.Application.Configuration do
       name: ExTeal.application_name(),
       logo: ExTeal.logo_image_path(),
       path: ExTeal.path(),
-      resources: ExTeal.available_resources() |> Resource.map_to_json(conn),
+      resources:
+        ExTeal.available_resources()
+        |> Enum.filter(& &1.policy().view_any?(conn))
+        |> Resource.map_to_json(conn),
       dashboards: ExTeal.available_dashboards() |> Dashboard.map_to_json(),
       nav_groups: ExTeal.available_nav_groups(conn),
       plugins: ExTeal.available_plugins(),

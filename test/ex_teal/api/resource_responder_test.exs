@@ -1,8 +1,18 @@
 defmodule ExTeal.Api.ResourceResponderTest do
   use TestExTeal.ConnCase
+  import TestExTeal.ConnCase, only: [test_manifests: 2]
+
   alias ExTeal.Api.ResourceResponder
   alias TestExTeal.{Post, Repo}
-  alias TestExTeal.{DefaultManifest, EmptyManifest}
+
+  alias TestExTeal.{
+    DefaultManifest,
+    EmptyManifest,
+    EnoughManifest,
+    ForeverManifest,
+    ImmutableManifest,
+    InvisibleManifest
+  }
 
   describe "index/2" do
     @tag manifest: EmptyManifest
@@ -12,8 +22,20 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert resp.status == 404
     end
 
-    @tag manifest: DefaultManifest
-    test "returns a 200 with data" do
+    @tag manifest: InvisibleManifest
+    test "invisible not visible, returns 403" do
+      p = insert(:post)
+      conn = build_conn(:get, "/api/posts/#{p.id}")
+      resp = ResourceResponder.show(conn, "posts", p.id)
+      assert resp.status == 403
+    end
+
+    test_manifests [
+      {DefaultManifest, "returns a 200 with data"},
+      {EnoughManifest, "uncreateable still visible, returns a 200 with data"},
+      {ImmutableManifest, "uneditable still visible, returns a 200 with data"},
+      {ForeverManifest, "undeleteable still visible, returns a 200 with data"}
+    ] do
       conn = build_conn(:get, "/api/posts")
       resp = ResourceResponder.index(conn, "posts")
       assert resp.status == 200
@@ -28,11 +50,24 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert resp.status == 404
     end
 
-    @tag manifest: DefaultManifest
-    test "returns a 200 with the resource" do
-      conn = build_conn(:get, "/api/posts/1")
-      resp = ResourceResponder.show(conn, "posts", 1)
-      assert resp.status == 404
+    @tag manifest: InvisibleManifest
+    test "invisible not visible, returns 403" do
+      p = insert(:post)
+      conn = build_conn(:get, "/api/posts/#{p.id}")
+      resp = ResourceResponder.show(conn, "posts", p.id)
+      assert resp.status == 403
+    end
+
+    test_manifests [
+      {DefaultManifest, "returns a 200 with the resource"},
+      {EnoughManifest, "uncreateable still visible, returns a 200 with data"},
+      {ImmutableManifest, "uneditable still visible, returns a 200 with data"},
+      {ForeverManifest, "undeleteable still visible, returns a 200 with data"}
+    ] do
+      p = insert(:post)
+      conn = build_conn(:get, "/api/posts/#{p.id}")
+      resp = ResourceResponder.show(conn, "posts", p.id)
+      assert resp.status == 200
     end
   end
 
@@ -42,6 +77,26 @@ defmodule ExTeal.Api.ResourceResponderTest do
       conn = build_conn(:get, "/api/posts/1")
       resp = ResourceResponder.relatable(conn, "posts", "user")
       assert resp.status == 404
+    end
+
+    @tag manifest: InvisibleManifest
+    test "invisible not visible, returns 403" do
+      p = insert(:post)
+      conn = build_conn(:get, "/api/posts/#{p.id}")
+      resp = ResourceResponder.relatable(conn, "posts", "user")
+      assert resp.status == 403
+    end
+
+    test_manifests [
+      {DefaultManifest, "returns a 200 with the resource"},
+      {EnoughManifest, "uncreateable not relatable, returns a 200 with data"},
+      {ImmutableManifest, "uneditable not relatable, returns a 200 with data"},
+      {ForeverManifest, "undeleteable not relatable, returns a 200 with data"}
+    ] do
+      p = insert(:post)
+      conn = build_conn(:get, "/api/posts/#{p.id}")
+      resp = ResourceResponder.relatable(conn, "posts", "user")
+      assert resp.status == 200
     end
   end
 
@@ -53,8 +108,19 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert resp.status == 404
     end
 
-    @tag manifest: DefaultManifest
-    test "returns the actions for the resource" do
+    @tag manifest: InvisibleManifest
+    test "invisible does not show actions, returns 403" do
+      conn = build_conn(:get, "/api/posts/actions")
+      resp = ResourceResponder.actions_for(conn, "posts")
+      assert resp.status == 403
+    end
+
+    test_manifests [
+      {DefaultManifest, "returns the actions for the resource"},
+      {EnoughManifest, "uncreateable shows actions, returns a 200 with data"},
+      {ImmutableManifest, "uneditable shows actions, returns a 200 with data"},
+      {ForeverManifest, "undeleteable shows actions, returns a 200 with data"}
+    ] do
       conn = build_conn(:get, "/api/posts/actions")
       resp = ResourceResponder.actions_for(conn, "posts")
       assert resp.status == 200
@@ -71,8 +137,26 @@ defmodule ExTeal.Api.ResourceResponderTest do
       assert resp.status == 404
     end
 
-    @tag manifest: DefaultManifest
-    test "returns a 200 when complete" do
+    @tag manifest: InvisibleManifest
+    test "invisible does not show actions, returns 403" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:post, "/api/posts/actions", %{
+          "action" => "publish-post",
+          "resources" => "#{p.id}"
+        })
+
+      resp = ResourceResponder.commit_action(conn, "posts")
+      assert resp.status == 403
+    end
+
+    test_manifests [
+      {DefaultManifest, "returns a 200 when complete"},
+      {EnoughManifest, "uncreateable allows committing actions, returns a 200 with data"},
+      {ImmutableManifest, "uneditable allows committing actions, returns a 200 with data"},
+      {ForeverManifest, "undeleteable allows committing actions, returns a 200 with data"}
+    ] do
       p = insert(:post)
 
       conn =
@@ -86,7 +170,32 @@ defmodule ExTeal.Api.ResourceResponderTest do
     end
   end
 
+  describe "update/2" do
+    @tag manifest: ImmutableManifest
+    test "returns a 403 for a single update" do
+      p = insert(:post)
+
+      conn = build_conn(:put, "/api/posts/#{p.id}", %{})
+
+      resp = ResourceResponder.update(conn, "posts", p.id)
+      assert resp.status == 403
+    end
+  end
+
   describe "delete/2" do
+    @tag manifest: ForeverManifest
+    test "returns a 403 for a single delete" do
+      p = insert(:post)
+
+      conn =
+        build_conn(:delete, "/api/posts", %{
+          "resources" => "#{p.id}"
+        })
+
+      resp = ResourceResponder.delete(conn, "posts")
+      assert resp.status == 403
+    end
+
     @tag manifest: EmptyManifest
     test "returns a 404 when no resource available" do
       conn = build_conn(:delete, "/api/posts")

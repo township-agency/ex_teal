@@ -51,6 +51,7 @@
       <div class="flex">
         <span class="table-action">
           <router-link
+            v-if="shouldShowViewButton"
             :to="{
               name: 'detail',
               params: {
@@ -74,6 +75,7 @@
           class="table-action"
         >
           <router-link
+            v-if="shouldShowUpdateButton"
             :to="{
               name: 'edit-attached',
               params: {
@@ -94,6 +96,7 @@
           class="table-action"
         >
           <router-link
+            v-if="shouldShowUpdateButton"
             :to="{
               name: 'edit',
               params: {
@@ -109,6 +112,7 @@
         </span>
         <span class="table-action">
           <button
+            v-if="shouldShowDeleteButton"
             class="appearance-none cursor-pointer table-action-link danger"
             :title="viaManyToMany ? 'Detach' : 'Delete'"
             @click.prevent="openDeleteModal"
@@ -147,9 +151,10 @@
 </template>
 
 <script>
+import { InteractsWithResourceInformation } from 'ex-teal-js';
 import Deleteable from '@/mixins/Deleteable';
 export default {
-  mixins: [ Deleteable ],
+  mixins: [ Deleteable, InteractsWithResourceInformation ],
   props: {
     deleteResource: {
       type: Function,
@@ -212,6 +217,18 @@ export default {
   computed: {
     resourceId () {
       return this.resource.id;
+    },
+
+    shouldShowViewButton () {
+      return this.resourceInformation && this.resourceInformation.can_view_any;
+    },
+
+    shouldShowUpdateButton () {
+      return this.resourceInformation && this.resource.meta["can_update?"];
+    },
+
+    shouldShowDeleteButton () {
+      return this.resourceInformation && this.resource.meta["can_delete?"];
     }
   },
 
