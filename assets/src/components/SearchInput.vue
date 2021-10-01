@@ -244,10 +244,10 @@ export default {
     },
 
     open () {
-      // if (!this.disabled) {
-      this.show = true;
-      this.search = '';
-      // }
+      if (!this.disabled) {
+        this.show = true;
+        this.search = '';
+      }
     },
 
     close () {
@@ -255,10 +255,10 @@ export default {
     },
 
     clear () {
-      // if (!this.disabled) {
-      this.selected = null;
-      this.$emit('clear', null);
-      // }
+      if (!this.disabled) {
+        this.selected = null;
+        this.$emit('clear', null);
+      }
     },
 
     move (offset) {
