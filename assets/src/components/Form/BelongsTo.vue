@@ -5,7 +5,7 @@
   >
     <template slot="field">
       <search-input
-        v-if="!isLocked"
+        :disabled="isLocked"
         :error="hasError"
         :value="selectedResource"
         :data="availableResources"
