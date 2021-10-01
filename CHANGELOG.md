@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.16.1](https://www.github.com/township-agency/ex_teal/compare/v0.16.0...v0.16.1) (2021-10-01)
+
+
+### Bug Fixes
+
+* BelongsTo and SearchInput need valid props and disabled mode ([#123](https://www.github.com/township-agency/ex_teal/issues/123)) ([cc5dd8b](https://www.github.com/township-agency/ex_teal/commit/cc5dd8b0fca05e5ef427b4412b76844a600cc1f5))
+
 ## [0.16.0](https://www.github.com/township-agency/ex_teal/compare/v0.15.1...v0.16.0) (2021-09-13)
 
 
