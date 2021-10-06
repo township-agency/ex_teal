@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.16.2](https://www.github.com/township-agency/ex_teal/compare/v0.16.1...v0.16.2) (2021-10-06)
+
+
+### Bug Fixes
+
+* Resource responder was using the incorrect function signature for Fields.apply_values/5 ([1780a67](https://www.github.com/township-agency/ex_teal/commit/1780a672eaad433a0f79c65a5db5771dc7e72373))
+
 ### [0.16.1](https://www.github.com/township-agency/ex_teal/compare/v0.16.0...v0.16.1) (2021-10-01)
 
 
