@@ -32,8 +32,7 @@ export default {
 
   props: {
     field: { type: Object, required: true },
-    fieldName: { type: String, default: '' },
-    showHelpText: { type: Boolean, default: true }
+    fieldName: { type: String, default: '' }
   },
 
   computed: {
@@ -41,7 +40,7 @@ export default {
       return this.field.options.help_text;
     },
     canShowHelpText () {
-      return this.showHelpText && this.helpText;
+      return this.helpText != null;
     }
   }
 };

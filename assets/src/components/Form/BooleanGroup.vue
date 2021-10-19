@@ -12,7 +12,7 @@
         :checked="option.checked"
         @change="toggle($event, option)"
       >
-        {{ option.key }}
+        {{ option.value }}
       </checkbox-with-label>
     </template>
   </default-field>
@@ -34,7 +34,7 @@ export default {
      */
     finalPayload () {
       return _(this.value)
-        .map((o) => [ o.value, o.checked ])
+        .map((o) => [ o.key, o.checked ])
         .fromPairs()
         .value();
     },
@@ -51,7 +51,7 @@ export default {
         return {
           key: option.key,
           value: option.value,
-          checked: this.field.value[option.value] || false,
+          checked: this.field.value[option.key] || false,
         };
       });
     },
