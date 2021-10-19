@@ -14,7 +14,7 @@
             :class="{ 'bg-success': option.checked, 'bg-danger': !option.checked }"
             class="inline-block rounded-full w-2 h-2 mr-1"
           />
-          <span>{{ option.key }}</span>
+          <span>{{ option.value }}</span>
         </li>
       </ul>
       <span v-else>{{ field.options.no_value || "No Data" }}</span>
@@ -58,7 +58,7 @@ export default {
       return {
         key: option.key,
         value: option.value,
-        checked: this.field.value[option.value] || false
+        checked: this.field.value[option.key] || false
       };
     });
   },

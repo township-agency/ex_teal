@@ -24,7 +24,7 @@
                 width="20"
                 height="20"
               />
-              <span class="ml-1">{{ option.key }}</span>
+              <span class="ml-1">{{ option.value }}</span>
             </span>
           </li>
         </ul>
@@ -58,7 +58,7 @@ export default {
       return {
         key: option.key,
         value: option.value,
-        checked: this.field.value[option.value] || false
+        checked: this.field.value[option.key] || false
       };
     });
   }
