@@ -164,7 +164,10 @@ defmodule ExTeal.Resource.Fields do
   end
 
   def pivot_fields_for(related, rel, _queried) do
-    relationship_field = Enum.find(related.fields(), &(&1.field == rel))
+    relationship_field =
+      related
+      |> all_fields()
+      |> Enum.find(&(&1.field == rel))
 
     case Map.get(relationship_field, :private_options) do
       nil ->
@@ -201,7 +204,7 @@ defmodule ExTeal.Resource.Fields do
 
   def all_fields(resource) do
     resource.fields()
-    |> Enum.map(&panel_fields/1)
+    |> Enum.map(&subfields/1)
     |> Enum.concat()
   end
 
@@ -219,8 +222,9 @@ defmodule ExTeal.Resource.Fields do
     end
   end
 
-  defp panel_fields(%Field{} = field), do: [field]
-  defp panel_fields(%Panel{fields: fields}), do: fields
+  defp subfields(%Field{options: %{fields: fields}}), do: fields
+  defp subfields(%Field{} = field), do: [field]
+  defp subfields(%Panel{fields: fields}), do: fields
 
   def apply_values(fields, model, resource, conn, type, panel \\ nil)
 
