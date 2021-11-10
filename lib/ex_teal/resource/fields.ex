@@ -128,8 +128,7 @@ defmodule ExTeal.Resource.Fields do
   @doc """
   Instead of returning the fields for an index table of a resource,
   this function is called to render a simple belongs to field via a
-  `ManyToManyBelongsTo` field.  Eventually this function will look up pivot
-  fields and return them as well.
+  `ManyToManyBelongsTo` field.
 
   Given a many to many relationship between posts and tags, an index query
   for the tags associated with a post should return a single many to many belongs to

@@ -25,13 +25,16 @@ defmodule ExTeal.Fields.ManyToManyBelongsTo do
 
   def apply_options_for(field, model, _conn, _type) do
     queried = field.private_options.queried_resource
-
     rel = queried.model().__schema__(:association, field.field)
+    is_pivot = model.__struct__ == rel.join_through
+    [_, referenced_foreign_key] = Keyword.keys(rel.join_keys)
 
-    Map.put(field, :options, %{
+    opts = %{
       belongs_to_key: rel.owner_key,
       belongs_to_relationship: field.relationship.uri(),
-      belongs_to_id: model.id
-    })
+      belongs_to_id: if(is_pivot, do: Map.get(model, referenced_foreign_key), else: model.id)
+    }
+
+    %{field | options: Map.merge(field.options, opts)}
   end
 end
