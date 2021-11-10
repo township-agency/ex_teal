@@ -85,8 +85,9 @@ defmodule ExTeal.Resource.FieldsTest do
       [t1, t2] = insert_pair(:tag)
       u = insert(:user)
 
-      insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
-      insert(:preferred_tag, user: u, tag: t2, order: 1, notes: "bar")
+      insert(:preferred_tag)
+      insert(:preferred_tag, user: u, tag: t2, order: 2, notes: "foo")
+      insert(:preferred_tag, user: u, tag: t1, order: 1, notes: "bar")
 
       conn =
         prep_conn(:get, "tags", %{

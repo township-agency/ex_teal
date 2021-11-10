@@ -85,6 +85,7 @@ defmodule ExTeal.Resource.IndexTest do
     [t1, t2] = insert_pair(:tag)
     u = insert(:user)
 
+    insert(:preferred_tag)
     insert(:preferred_tag, user: u, tag: t2, order: 5, notes: "bar")
     insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
 
