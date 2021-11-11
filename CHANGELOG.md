@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.16.4](https://www.github.com/township-agency/ex_teal/compare/v0.16.3...v0.16.4) (2021-11-11)
+
+
+### Bug Fixes
+
+* All fields should include subfields nested in a field ([75de0fc](https://www.github.com/township-agency/ex_teal/commit/75de0fc0109fe33ec9eafd82a5b844d97cfc148c))
+* ManyToManys with Pivot Fields should use the child key when the model is the pivot schema, not the child schema ([6dc6aec](https://www.github.com/township-agency/ex_teal/commit/6dc6aec1a7b771d8fb26fcc09fb334e0d2562fc2))
+
 ### [0.16.3](https://www.github.com/township-agency/ex_teal/compare/v0.16.2...v0.16.3) (2021-10-19)
 
 
