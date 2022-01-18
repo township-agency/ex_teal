@@ -5,6 +5,76 @@
   >
     <template slot="field">
       <Multiselect
+        v-if="useCards"
+        v-model="value"
+        :options="options"
+        :multiple="true"
+        :close-on-select="false"
+        :clear-on-select="false"
+        :preserve-search="true"
+        :preselect-first="true"
+        placeholder="Pick some"
+        label="label"
+        track-by="value"
+      >
+        <template slot="tag" slot-scope="{ option, remove }">
+          <div class="inline-flex items-center mr-2 border rounded px-2 py-1 mb-2">
+            <div
+              v-if="option.thumbnail"
+              class="mr-3"
+            >
+              <img
+                :src="option.thumbnail"
+                class="w-8 h-8 rounded block"
+              >
+            </div>
+            <div>
+              <p class="text-gray-darkest">
+                {{ option.title }}
+              </p>
+              <p
+                v-if="option.subtitle"
+                class="text-xs mt-0.5 opacity-75"
+              >
+                {{ option.subtitle }}
+              </p>
+            </div>
+            <a @click="remove(option)" class="w-5 h-5 rounded-full block border border-danger text-danger flex items-center justify-center ml-4">
+              <icon
+                type="delete"
+                :width="12"
+                :height="12"
+              />
+            </a>
+          </div>
+        </template>
+        <template slot="option" slot-scope="props">
+          <div class="inline-flex items-center">
+            <div
+              v-if="props.option.thumbnail"
+              class="mr-3"
+            >
+              <img
+                :src="props.option.thumbnail"
+                class="w-8 h-8 rounded block"
+              >
+            </div>
+            <div>
+              <p class="text-gray-darkest">
+                {{ props.option.title }}
+              </p>
+              <p
+                v-if="props.option.subtitle"
+                class="text-xs mt-0.5 opacity-75"
+              >
+                {{ props.option.subtitle }}
+              </p>
+            </div>
+          </div>
+        </template>
+      </Multiselect>
+      <Multiselect
+        v-else
         v-model="value"
         :options="options"
         :multiple="true"
@@ -32,6 +102,12 @@ export default {
     value: false,
     options: []
   }),
+
+  computed: {
+    useCards () {
+      return !!this.field.options[0].title;
+    }
+  },
 
   mounted () {
     this.value = this.field.value || false;

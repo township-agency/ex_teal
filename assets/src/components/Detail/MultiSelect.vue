@@ -7,9 +7,37 @@
       <span
         v-for="v in field.value"
         :key="v.value"
-        class="inline-block mr-2 bg-gray px-2 py-1"
+        class="inline-block mr-2 border border-rounded-sm px-2 py-1"
       >
-        {{ v.label }}
+        <div
+          v-if="v.title"
+          slot="default"
+          class="flex items-center"
+        >
+          <div
+            v-if="v.thumbnail"
+            class="mr-3"
+          >
+            <img
+              :src="v.thumbnail"
+              class="w-6 h-6 rounded block"
+            >
+          </div>
+          <div class="flex">
+            <p class="text-gray-darkest mr-2">
+              {{ v.title }}
+            </p>
+            <p
+              v-if="v.subtitle"
+              class="text-xs mt-1 opacity-75"
+            >
+              {{ v.subtitle }}
+            </p>
+          </div>
+        </div>
+        <span v-else>
+          {{ v.label }}
+        </span>
       </span>
     </p>
   </panel-item>
