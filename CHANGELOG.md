@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [0.17.1](https://www.github.com/township-agency/ex_teal/compare/v0.17.0...v0.17.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* array field wouldn't save empty value ([#145](https://www.github.com/township-agency/ex_teal/issues/145)) ([ef09ca2](https://www.github.com/township-agency/ex_teal/commit/ef09ca2f794aeced061ccb65d6bda0d1552852b3))
+
 ## [0.17.0](https://www.github.com/township-agency/ex_teal/compare/v0.16.4...v0.17.0) (2022-01-20)
 
 
