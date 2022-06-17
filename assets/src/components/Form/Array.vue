@@ -139,9 +139,13 @@ export default {
   mounted () {
     this.setInitialValue();
     this.field.fill = formData => {
-      this.items.forEach((item, i) => {
-        formData.append(`${this.field.attribute}[]`, item);
-      });
+      if (this.items.length == 0) {
+        formData.append(`${this.field.attribute}[]`, []);
+      } else {
+        this.items.forEach((item, i) => {
+          formData.append(`${this.field.attribute}[]`, item);
+        });
+      }
     };
   },
 
