@@ -192,17 +192,13 @@ defmodule ExTeal.Field do
 
         option_key ||
           raise ArgumentError,
-                "expected :key key when building <option> from keyword list: #{
-                  inspect(options_list)
-                }"
+                "expected :key key when building <option> from keyword list: #{inspect(options_list)}"
 
         {option_value, options_list} = Keyword.pop(options_list, :value)
 
         option_value ||
           raise ArgumentError,
-                "expected :value key when building option from keyword list: #{
-                  inspect(options_list)
-                }"
+                "expected :value key when building option from keyword list: #{inspect(options_list)}"
 
         option(option_key, option_value, options_list)
 

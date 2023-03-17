@@ -6,8 +6,8 @@ defmodule ExTeal.MixProject do
   def project do
     [
       app: :ex_teal,
-      version: File.read!("version.txt") |> String.trim(),
-      elixir: "~> 1.8",
+      version: "0.17.1",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
       aliases: aliases(),
@@ -33,18 +33,18 @@ defmodule ExTeal.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug, "~> 1.7"},
+      {:plug, "~> 1.14"},
       {:corsica, "~> 1.0"},
       {:postgrex, ">= 0.15.0"},
       {:jason, "~> 1.1"},
       {:inflex, "~> 2.0"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.5"},
       {:phoenix, "~> 1.4"},
       {:phoenix_html, ">= 2.11.0"},
       {:ecto, "~> 3.5"},
       {:ecto_sql, "~> 3.3"},
       {:ex_machina, "~> 2.2", only: :test},
-      {:credo, "~> 1.3", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.4.1"},
       {:phoenix_ecto, "~> 4.1", only: :test},

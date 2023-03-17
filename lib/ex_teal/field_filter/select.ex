@@ -41,9 +41,7 @@ defmodule ExTeal.FieldFilter.Select do
 
   def filter(query, op, field_name, resource) do
     IO.warn(
-      "Unmatched select field filter for resource: #{resource.title} on field #{field_name} with params: #{
-        inspect(op)
-      }"
+      "Unmatched select field filter for resource: #{resource.title} on field #{field_name} with params: #{inspect(op)}"
     )
 
     query

@@ -9,8 +9,8 @@ defmodule ExTeal.View do
     config = ExTeal.json_configuration(conn)
     auth_provider = ExTeal.auth_provider()
 
-    user = apply(auth_provider, :current_user_for, [conn])
-    dropdown = apply(auth_provider, :dropdown_content, [conn])
+    user = auth_provider.current_user_for(conn)
+    dropdown = auth_provider.dropdown_content(conn)
 
     assets = ExTeal.Asset.all_assets()
     csrf_token = Plug.CSRFProtection.get_csrf_token()

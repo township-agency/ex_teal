@@ -108,7 +108,7 @@ defmodule ExTeal.Resource.Export do
 
     stream = Stream.concat([[header_stream], resource_stream])
 
-    apply(parser, :dump_to_stream, [stream])
+    parser.dump_to_stream(stream)
   end
 
   defp chunk_or_halt(data, conn) do
