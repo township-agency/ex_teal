@@ -65,6 +65,12 @@ defmodule ExTeal.Resource.Model do
   """
   @callback search() :: [atom()]
 
+  @doc """
+  Array of default field filters to be used
+  when there are no filters present
+  """
+  @callback default_filters() :: [map()] | nil
+
   defmacro __using__(_) do
     quote do
       @behaviour ExTeal.Resource.Model
@@ -84,13 +90,16 @@ defmodule ExTeal.Resource.Model do
 
       def search, do: []
 
+      def default_filters, do: nil
+
       defoverridable model: 0,
                      title: 0,
                      uri: 0,
                      title_for_schema: 1,
                      subtitle_for_schema: 1,
                      thumbnail_for_schema: 1,
-                     search: 0
+                     search: 0,
+                     default_filters: 0
     end
   end
 

@@ -7,9 +7,14 @@ const InteractsWithFieldFilters = {
      */
     initializeFieldFilterValuesFromQueryString () {
       this.clearAllFieldFilters();
-
       if (this.encodedFieldFilters) {
         this.currentFieldFilters = JSON.parse(atob(this.encodedFieldFilters));
+      } else if (this.resourceInformation && this.resourceInformation.default_filters && this.initialLoading){
+        this.currentFieldFilters = this.resourceInformation.default_filters;
+        this.updateQueryString({
+          [this.pageParameter]: 1,
+          [this.fieldFilterParameter]: btoa(JSON.stringify(this.currentFieldFilters))
+        });
       }
       if (this.currentFieldFilters.length > 0) {
         this.showFilters = true;
@@ -37,7 +42,7 @@ const InteractsWithFieldFilters = {
         this.updateQueryString({
           [this.pageParameter]: 1,
           [this.fieldFilterParameter]: btoa(JSON.stringify(this.currentFieldFilters))
-        }); 
+        });
       }
     },
 
@@ -49,7 +54,7 @@ const InteractsWithFieldFilters = {
     addNewFilter () {
       const lastFilter =  this.currentFieldFilters[this.currentFieldFilters.length - 1];
       if (lastFilter) {
-        this.currentFieldFilters.push(lastFilter);         
+        this.currentFieldFilters.push(lastFilter);
       } else if (this.fieldFilters.length > 0) {
         this.currentFieldFilters = [ { field: this.fieldFilters[0].field, operator: this.fieldFilters[0].operators[0].op, operand: null } ];
       }
