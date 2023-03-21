@@ -16,7 +16,7 @@ defmodule ExTeal.ActionTest do
       }
 
       c =
-        build_conn(:post, "foo", %{
+        build_conn(:post, "/foo", %{
           "action" => "publish-post",
           "resources" => "#{p1.id},#{p3.id}"
         })
@@ -33,7 +33,7 @@ defmodule ExTeal.ActionTest do
       expected = {:error, :not_found}
 
       c =
-        build_conn(:post, "foo", %{
+        build_conn(:post, "/foo", %{
           "action" => "foo",
           "resources" => "#{p.id}"
         })
@@ -52,7 +52,7 @@ defmodule ExTeal.ActionTest do
          }}
 
       c =
-        build_conn(:post, "foo", %{
+        build_conn(:post, "/foo", %{
           "action" => "publish-post",
           "resources" => "-1"
         })
@@ -66,7 +66,7 @@ defmodule ExTeal.ActionTest do
       p = insert(:post, user: build(:user))
 
       c =
-        build_conn(:post, "foo", %{
+        build_conn(:post, "/foo", %{
           "action" => "publish-post",
           "resources" => "#{p.id}"
         })
@@ -104,7 +104,7 @@ defmodule ExTeal.ActionTest do
       insert(:post)
 
       conn =
-        build_conn(:get, "posts", %{
+        build_conn(:get, "/posts", %{
           "via_resource" => "users",
           "via_resource_id" => "#{u.id}",
           "via_relationship" => "posts",

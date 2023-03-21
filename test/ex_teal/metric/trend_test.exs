@@ -28,7 +28,7 @@ defmodule ExTeal.Metric.TrendTest do
     params = if context[:unit], do: Map.put(params, "unit", context[:unit]), else: params
     params = if context[:end], do: Map.put(params, "end_at", context[:end]), else: params
 
-    {:ok, request: Request.from_conn(build_conn(:get, "foo", params))}
+    {:ok, request: Request.from_conn(build_conn(:post, "/foo", params))}
   end
 
   describe "aggregate/5" do

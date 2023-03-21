@@ -23,7 +23,7 @@ defmodule ExTeal.Metric.MetricTest do
     def only_on_index(_conn), do: true
 
     @impl true
-    def only_on_detail(conn), do: conn.request_path == "foo"
+    def only_on_detail(conn), do: conn.request_path == "/foo"
 
     @impl true
     def options, do: %{foo: "bar"}
@@ -76,7 +76,7 @@ defmodule ExTeal.Metric.MetricTest do
 
     test "can be overriden", %{conn: conn} do
       refute FancyMetric.only_on_detail(conn)
-      assert FancyMetric.only_on_detail(build_conn(:get, "foo"))
+      assert FancyMetric.only_on_detail(build_conn(:get, "/foo"))
     end
   end
 end

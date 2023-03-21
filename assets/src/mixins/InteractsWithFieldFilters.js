@@ -16,9 +16,6 @@ const InteractsWithFieldFilters = {
           [this.fieldFilterParameter]: btoa(JSON.stringify(this.currentFieldFilters))
         });
       }
-      if (this.currentFieldFilters.length > 0) {
-        this.showFilters = true;
-      }
     },
 
     /**

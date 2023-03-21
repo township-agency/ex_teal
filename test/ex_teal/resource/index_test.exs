@@ -30,7 +30,7 @@ defmodule ExTeal.Resource.IndexTest do
   test "can search with very basic ilikes across string fields" do
     user = insert(:user, name: "Scott Taylor")
     insert(:user, name: "Other")
-    conn = prep_conn(:get, "users", %{"search" => "Scott"})
+    conn = prep_conn(:get, "/users", %{"search" => "Scott"})
     response = Index.call(UserResource, conn)
     assert 200 == response.status
     json = Jason.decode!(response.resp_body, keys: :atoms!)
@@ -41,7 +41,7 @@ defmodule ExTeal.Resource.IndexTest do
   test "can search by primary id" do
     [u1, _u2] = insert_pair(:user)
 
-    conn = prep_conn(:get, "users", %{"search" => "#{u1.id}"})
+    conn = prep_conn(:get, "/users", %{"search" => "#{u1.id}"})
     response = Index.call(UserResource, conn)
     assert 200 == response.status
     json = Jason.decode!(response.resp_body, keys: :atoms!)
@@ -55,7 +55,7 @@ defmodule ExTeal.Resource.IndexTest do
     p = insert(:post, tags: [t1])
 
     conn =
-      prep_conn(:get, "tags", %{
+      prep_conn(:get, "/tags", %{
         "via_resource" => "posts",
         "via_resource_id" => "#{p.id}",
         "via_relationship" => "tags",
@@ -90,7 +90,7 @@ defmodule ExTeal.Resource.IndexTest do
     insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
 
     conn =
-      prep_conn(:get, "tags", %{
+      prep_conn(:get, "/tags", %{
         "via_resource" => "users",
         "via_resource_id" => "#{u.id}",
         "via_relationship" => "preferred_tags",
@@ -116,7 +116,7 @@ defmodule ExTeal.Resource.IndexTest do
     insert(:preferred_tag, user: u, tag: t1, order: 2, notes: "foo")
 
     conn =
-      prep_conn(:get, "tags", %{
+      prep_conn(:get, "/tags", %{
         "via_resource" => "users",
         "via_resource_id" => "#{u.id}",
         "via_relationship" => "preferred_tags",

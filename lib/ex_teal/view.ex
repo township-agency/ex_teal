@@ -5,7 +5,12 @@ defmodule ExTeal.View do
   require EEx
 
   def render(conn) do
-    base = Application.get_env(:ex_teal, :base_url)
+    base =
+      case Application.fetch_env(:ex_teal, :base_url) do
+        {:ok, base} -> base
+        :error -> "/"
+      end
+
     config = ExTeal.json_configuration(conn)
     auth_provider = ExTeal.auth_provider()
 

@@ -5,7 +5,12 @@ defmodule ExTeal.Asset do
   defstruct [:styles, :scripts, :compiled_assets]
 
   def all_assets do
-    compiled_assets = Application.get_env(:ex_teal, :compiled_assets, true)
+    compiled_assets =
+      case Application.fetch_env(:ex_teal, :compiled_assets) do
+        {:ok, val} -> val
+        :error -> true
+      end
+
     assets_for(compiled_assets)
   end
 
