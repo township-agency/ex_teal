@@ -89,7 +89,7 @@ defmodule ExTeal.Resource.DeleteTest do
     not_related = insert(:post)
 
     conn =
-      build_conn(:delete, "posts", %{
+      build_conn(:delete, "/posts", %{
         "via_resource" => "users",
         "via_resource_id" => "#{u.id}",
         "via_relationship" => "posts",

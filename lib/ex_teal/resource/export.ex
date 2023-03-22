@@ -48,7 +48,12 @@ defmodule ExTeal.Resource.Export do
 
       def parse_export_row(record, fields), do: Export.default_parse(record, fields)
 
-      def export_module, do: Application.get_env(:ex_teal, :export_module)
+      def export_module do
+        case Application.fetch_env(:ex_teal, :export_module) do
+          {:ok, module} -> module
+          :error -> nil
+        end
+      end
 
       defoverridable handle_export_query: 2,
                      export_fields: 0,
@@ -108,7 +113,7 @@ defmodule ExTeal.Resource.Export do
 
     stream = Stream.concat([[header_stream], resource_stream])
 
-    apply(parser, :dump_to_stream, [stream])
+    parser.dump_to_stream(stream)
   end
 
   defp chunk_or_halt(data, conn) do

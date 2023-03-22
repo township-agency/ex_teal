@@ -25,10 +25,8 @@ defmodule ExTeal.Resource.Repo do
   @doc false
   def default_repo do
     quote do
-      if Application.get_env(:ex_teal, :repo) do
-        def repo, do: Application.get_env(:ex_teal, :repo)
-        defoverridable repo: 0
-      end
+      def repo, do: Application.fetch_env!(:ex_teal, :repo)
+      defoverridable repo: 0
     end
   end
 end

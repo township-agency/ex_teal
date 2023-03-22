@@ -86,7 +86,7 @@ defmodule ExTeal.FieldFilter do
   Iterate over the fields from an index query, build the related field
   filter and apply their queries.
   """
-  @spec query(Ecto.Queryable.t(), map(), module()) :: Ecto.Queryable.t()
+  @spec query(Ecto.Queryable.t(), list(map()), module()) :: Ecto.Queryable.t()
   def query(query, filter_params, resource) do
     filters =
       resource

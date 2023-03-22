@@ -182,6 +182,6 @@ defmodule ExTeal do
   end
 
   def manifest do
-    Application.get_env(:ex_teal, :manifest)
+    Application.fetch_env!(:ex_teal, :manifest)
   end
 end

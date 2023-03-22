@@ -97,14 +97,11 @@
 
         <button
           v-if="shouldShowFilters"
-          :class="{'bg-gray-lighter': shouldShowFilters }"
-          class="border-r hover:bg-gray-light px-2 h-8 flex items-center"
+          :class="{ 'bg-primary-light hover:pg-primary text-white': currentFieldFilters.length > 0 }"
+          class="border-r px-2 h-8 flex items-center relative text-gray-darker"
           @click="toggleFilters"
         >
-          <icon
-            type="filter"
-            class="text-gray-darker"
-          />
+          <icon type="filter" />
         </button>
 
         <delete-menu
@@ -288,7 +285,7 @@ import {
   PerPageable
 } from 'ex-teal-js';
 
-import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters'; 
+import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters';
 import Deleteable from '@/mixins/Deleteable';
 
 export default {

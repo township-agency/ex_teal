@@ -110,7 +110,8 @@ defmodule ExTeal.Application.ConfigurationTest do
                  can_create_any: true,
                  can_delete_any: true,
                  can_update_any: true,
-                 can_view_any: true
+                 can_view_any: true,
+                 default_filters: nil
                }
              ]
     end

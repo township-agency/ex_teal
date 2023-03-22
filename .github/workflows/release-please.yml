@@ -1,15 +1,14 @@
 on:
   push:
     branches:
-      - master
+      - main
 name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: GoogleCloudPlatform/release-please-action@v2.2.0
+      - uses: GoogleCloudPlatform/release-please-action@v3.7.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release-type: simple
+          release-type: elixir
           package-name: ex_teal
-          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"docs","section":"Documentation","hidden":false},{"type":"perf","section":"Performance Improvements","hidden":false},{"type":"refactor","section":"Code Refactoring","hidden":false},{"type":"style","section":"Code Style","hidden":false},{"type":"test","section":"Test Coverage","hidden":false}]'

@@ -1,6 +1,6 @@
 defmodule ExTeal.Metric.ValueTest do
   use TestExTeal.ConnCase
-  alias ExTeal.Metric.{Request, Result}
+  alias ExTeal.Metric.Request
   alias TestExTeal.{Order, User}
 
   defmodule TestExTeal.NewUserMetric do

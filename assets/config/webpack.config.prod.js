@@ -6,7 +6,6 @@ const OptimizeCSSAssetsPlugin  = require('optimize-css-assets-webpack-plugin');
 const MiniCSSExtractPlugin     = require('mini-css-extract-plugin');
 const UglifyJSPlugin           = require('uglifyjs-webpack-plugin');
 const CompressionPlugin        = require('compression-webpack-plugin');
-const BrotliPlugin             = require('brotli-webpack-plugin');
 const { CleanWebpackPlugin }   = require('clean-webpack-plugin');
 const ManifestPlugin           = require('webpack-manifest-plugin');
 const CopyPlugin               = require('copy-webpack-plugin');
@@ -74,12 +73,7 @@ const webpackConfig = merge(commonConfig, {
       threshold: 10240,
       minRatio: 0.8
     }),
-    new BrotliPlugin({
-      asset: '[path].br[query]',
-      test: new RegExp('\\.(js|css)$'),
-      threshold: 10240,
-      minRatio: 0.8
-    }),
+
     new CleanWebpackPlugin(),
     new ManifestPlugin()
   ]

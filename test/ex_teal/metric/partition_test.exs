@@ -1,6 +1,6 @@
 defmodule ExTeal.Metric.PartitionTest do
   use TestExTeal.ConnCase
-  alias ExTeal.Metric.{Request, Result}
+  alias ExTeal.Metric.Request
   alias TestExTeal.{Order, Post, User}
 
   defmodule UserCount do

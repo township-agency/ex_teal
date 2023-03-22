@@ -128,7 +128,8 @@ defmodule ExTeal.Resource do
       can_create_any: resource.policy().create_any?(conn),
       can_view_any: resource.policy().view_any?(conn),
       can_update_any: resource.policy().update_any?(conn),
-      can_delete_any: resource.policy().delete_any?(conn)
+      can_delete_any: resource.policy().delete_any?(conn),
+      default_filters: resource.default_filters()
     }
   end
 end

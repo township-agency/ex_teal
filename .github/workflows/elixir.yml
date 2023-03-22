@@ -1,74 +1,65 @@
-name: Elixir CI
+name: Elixir Testing CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-env:
-  MIX_ENV: test
+on: push
 
 jobs:
   test:
-    runs-on: ubuntu-18.04
-
-    strategy:
-      matrix:
-        elixir: ['1.10.3']
-        otp: ['22.2.8']
-
+    runs-on: ubuntu-latest
     services:
-      db:
-        image: postgres:12
+
+      # We need postgres for our tests
+      postgres:
+        image: postgres:14
+
+        # Match these to what's defined in dev.exs
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: teal_test
+          POSTGRES_DB: test_teal
+
+        # Maps tcp port 5432 on service container to the host
         ports: ['5432:5432']
+
+        # Set health checks to wait until postgres has started
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+    env:
+      MIX_ENV: test
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Setup elixir
-      uses: erlef/setup-elixir@v1
-      with:
-        otp-version: ${{ matrix.otp }} # Define the OTP version [required]
-        elixir-version: ${{ matrix.elixir }} # Define the elixir version [required]
+      - name: Setup elixir
+        uses: erlef/setup-elixir@v1
+        with:
+          otp-version: '25.0'
+          elixir-version: '1.14'
 
-    - name: Retrieve Mix Dependencies Cache
-      uses: actions/cache@v1
-      id: mix-cache #id to use in retrieve action
-      with:
-        path: deps
-        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - name: Cache Mix
+        uses: actions/cache@v2
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
 
-    - name: Install Mix Dependencies
-      if: steps.mix-cache.outputs.cache-hit != 'true'
-      run: |
-        mix local.rebar --force
-        mix local.hex --force
-        mix deps.get
-        mix deps.compile
+      - name: Install Mix Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
 
-    - name: Elixir - Warning-Free Compile
-      env:
-        MIX_ENV: test
-      run: mix compile --warnings-as-errors
+      - name: Check that `mix format` has been run
+        run: mix format --check-formatted
 
-    - name: Elixir - Standard Formatting
-      env:
-        MIX_ENV: test
-      run: mix format --check-formatted
+      - name: Check warnings
+        run: mix compile --warnings-as-errors
 
-    - name: Elixir - Code Analysis
-      env:
-        MIX_ENV: test
-      run: mix credo --strict
+      - name: Elixir - Code Analysis
+        run: mix credo --strict
 
-    - name: Elixir - Run Tests
-      env:
-        MIX_ENV: test
-      run: mix test
+      - name: Elixir - Run Tests
+        run: mix test

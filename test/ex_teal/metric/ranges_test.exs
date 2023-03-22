@@ -22,7 +22,7 @@ defmodule ExTeal.Metric.RangesTest do
 
     params = if context[:unit], do: Map.put(params, "unit", context[:unit]), else: params
 
-    {:ok, request: Request.from_conn(build_conn(:get, "foo", params))}
+    {:ok, request: Request.from_conn(build_conn(:post, "/foo", params))}
   end
 
   describe "get_aggregate_datetimes/2" do
