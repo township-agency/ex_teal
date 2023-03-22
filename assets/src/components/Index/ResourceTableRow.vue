@@ -224,11 +224,17 @@ export default {
     },
 
     shouldShowUpdateButton () {
-      return this.resourceInformation && this.resource.meta["can_update?"];
+      if (!this.resourceInformation || !this.resource) {
+        return false;
+      }
+      return this.resourceInformation.can_update_any && this.resource.meta["can_update?"];
     },
 
     shouldShowDeleteButton () {
-      return this.resourceInformation && this.resource.meta["can_delete?"];
+      if (!this.resourceInformation || !this.resource) {
+        return false;
+      }
+      return this.resourceInformation.can_delete_any && this.resource.meta["can_delete?"];
     }
   },
 
