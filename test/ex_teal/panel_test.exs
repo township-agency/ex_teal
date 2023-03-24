@@ -61,7 +61,7 @@ defmodule ExTeal.PanelTest do
   describe "gather_panels/1" do
     test "given a resource without panels, returns a single panel with the resource name" do
       panels = Panel.gather_panels(SimpleResource)
-      assert panels == [%Panel{key: :post_details, name: "Post Details"}]
+      assert panels == [%Panel{key: :"post details", name: "Post Details"}]
     end
   end
 end

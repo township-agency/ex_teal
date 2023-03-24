@@ -24,33 +24,26 @@
       </div>
     </div>
 
-    <card class="overflow-hidden">
-      <form
-        v-if="fields"
-        @submit.prevent="updateResource"
-      >
-        <!-- Validation Errors -->
-        <validation-errors :errors="validationErrors" />
-        <!-- Update Button -->
+    <form
+      v-if="fields"
+      @submit.prevent="updateResource"
+    >
+      <!-- Validation Errors -->
+      <validation-errors :errors="validationErrors" />
+      <!-- Update Button -->
 
-        <!-- Fields -->
-        <div
-          v-for="field in fields"
-          :key="field.attribute"
-        >
-          <component
-            :is="'form-' + field.component"
-            :errors="validationErrors"
-            :resource-id="resourceId"
-            :resource-name="resourceName"
-            :field="field"
-            @file-deleted="updateLastRetrievedAtTimestamp"
-          />
-        </div>
-
-        <!-- Update Button -->
-      </form>
-    </card>
+      <form-panel
+        v-for="(panel, index) in panelsWithFields"
+        :key="panel.name"
+        class="mb-6"
+        :index="index"
+        :panel="panel"
+        :name="panel.name"
+        :fields="panel.fields"
+        :validation-errors="validationErrors"
+        :resource-name="resourceName"
+      />
+    </form>
   </div>
 </template>
 
@@ -77,6 +70,7 @@ export default {
   data: () => ({
     loading: true,
     fields: [],
+    panels: [],
     validationErrors: new Errors(),
     lastRetrievedAt: null
   }),
@@ -98,6 +92,16 @@ export default {
 
     singularName () {
       return this.resourceInformation.singular;
+    },
+    panelsWithFields () {
+      return _.map(this.panels, panel => {
+        return {
+          ...panel,
+          fields: _.filter(this.fields, field => {
+            return field.panel === panel.key;
+          })
+        };
+      });
     }
   },
 
@@ -117,7 +121,7 @@ export default {
       this.fields = [];
 
       const {
-        data: { fields }
+        data: { fields, panels }
       } = await ExTeal.request()
         .get(`/api/${this.resourceName}/${this.resourceId}/update-fields`)
         .catch(error => {
@@ -128,7 +132,7 @@ export default {
         });
 
       this.fields = fields;
-
+      this.panels = panels;
       this.loading = false;
     },
 

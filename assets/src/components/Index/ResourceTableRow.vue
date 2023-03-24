@@ -227,14 +227,14 @@ export default {
       if (!this.resourceInformation || !this.resource) {
         return false;
       }
-      return this.resourceInformation.can_update_any && this.resource.meta["can_update?"];
+      return this.resourceInformation.can_update_any && this.resource.meta['can_update?'];
     },
 
     shouldShowDeleteButton () {
       if (!this.resourceInformation || !this.resource) {
         return false;
       }
-      return this.resourceInformation.can_delete_any && this.resource.meta["can_delete?"];
+      return this.resourceInformation.can_delete_any && this.resource.meta['can_delete?'];
     }
   },
 
