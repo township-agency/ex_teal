@@ -34,7 +34,7 @@
         :panel="panel"
       >
         <div
-          v-if="panel.name.includes('Details')"
+          v-if="index === 0"
           class="card-headline"
         >
           <h2 class="text-gray-darkest font-normal text-xl">

@@ -4,28 +4,53 @@ defmodule ExTeal.Panel do
   """
   alias ExTeal.Field
 
-  @derive {Jason.Encoder, except: [:fields, :opts, :field]}
-  defstruct name: nil, key: nil, fields: [], opts: %{}, field: nil
+  @derive {Jason.Encoder, except: [:fields, :field]}
+  defstruct name: nil, key: nil, fields: [], options: %{}, field: nil
+  @type t :: %__MODULE__{}
+
+  @type options :: %{
+          optional(:helper_text) => String.t(),
+          optional(:limit) => non_neg_integer(),
+          optional(:apply_to_all) => map()
+        }
 
   @doc """
   Creates a new panel
   """
-  def new(name, fields, opts \\ %{}) do
+  @spec new(String.t(), [Field.t()], options()) :: t()
+  def new(name, fields, options \\ %{}) do
     key = panel_key(name)
 
     fields =
       Enum.map(fields, fn field ->
         field
         |> Map.put(:panel, key)
-        |> Map.merge(Map.get(opts, :apply_to_all, %{}))
+        |> Map.merge(Map.get(options, :apply_to_all, %{}))
       end)
 
     %__MODULE__{
       name: name,
       key: key,
       fields: fields,
-      opts: opts
+      options: options
     }
+  end
+
+  @doc """
+  Add helper text for the panel
+  """
+  @spec helper_text(t, String.t()) :: t
+  def helper_text(panel, text) do
+    %{panel | options: Map.put(panel.options, :helper_text, text)}
+  end
+
+  @doc """
+  Limit the amount of fields that show by default on the detail page
+  Other fields are hidden behind a "Show more" button
+  """
+  @spec limit(t, integer) :: t
+  def limit(panel, limit) do
+    %{panel | options: Map.put(panel.options, :limit, limit)}
   end
 
   @doc """

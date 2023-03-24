@@ -18,7 +18,7 @@
         <link href="<%= @config.path %><%= style %>" rel="stylesheet" type="text/css">
       <% end %>
     <% else %>
-      <link href="http://localhost:8080<%= @config.path %>/main.js" rel="preload" as="script"></head>
+      <link href="http://localhost:8080/teal/js/main.js" rel="preload" as="script"></head>
     <% end %>
   </head>
   <body class="font-normal text-black leading-normal">

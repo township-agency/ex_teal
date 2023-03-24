@@ -32,7 +32,7 @@ defmodule ExTeal.PanelTest do
 
   describe "new/3" do
     test "passing a set of options to new" do
-      default = Panel.new("Content", [Text.make(:name)], %{foo: "bar"})
+      default = Panel.new("Content", [Text.make(:name)], %{helper_text: "Some text"})
 
       assert default == %Panel{
                name: "Content",
@@ -40,7 +40,7 @@ defmodule ExTeal.PanelTest do
                fields: [
                  :name |> Text.make() |> Map.put(:panel, :content)
                ],
-               opts: %{foo: "bar"}
+               options: %{helper_text: "Some text"}
              }
     end
 
@@ -53,7 +53,7 @@ defmodule ExTeal.PanelTest do
                fields: [
                  :name |> Text.make() |> Map.put(:panel, :content) |> Map.put(:show_on_new, false)
                ],
-               opts: %{apply_to_all: %{show_on_new: false}}
+               options: %{apply_to_all: %{show_on_new: false}}
              }
     end
   end
@@ -63,5 +63,17 @@ defmodule ExTeal.PanelTest do
       panels = Panel.gather_panels(SimpleResource)
       assert panels == [%Panel{key: :"post details", name: "Post Details"}]
     end
+  end
+
+  test "helper_text/2 passes a string to the options" do
+    default = Panel.new("Content", [])
+    result = Panel.helper_text(default, "Some text")
+    assert result.options == %{helper_text: "Some text"}
+  end
+
+  test "limit/2 passes the limit to the options" do
+    default = Panel.new("Content", [])
+    result = Panel.limit(default, 1)
+    assert result.options == %{limit: 1}
   end
 end

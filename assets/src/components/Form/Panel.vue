@@ -7,9 +7,9 @@
       {{ panel.name }}
     </heading>
     <p
-      v-if="panel.helpText"
-      class="text-80 text-sm font-semibold italic mb-3"
-      v-html="panel.helpText"
+      v-if="helperText"
+      class="text-gray-dark text-sm font-semibold italic mb-3"
+      v-html="helperText"
     />
 
     <card>
@@ -74,6 +74,11 @@ export default {
     validationErrors: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    helperText () {
+      return this.panel.options.helper_text;
     }
   }
 };
