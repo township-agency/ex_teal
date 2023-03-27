@@ -5,22 +5,21 @@ defmodule ExTeal.Resource.AttributesTest do
   defmodule DefaultResource do
     use ExTeal.Resource
 
-    alias ExTeal.Fields.{Number, Place, RichText, Text}
+    alias ExTeal.Fields.{Number, RichText, Text}
     alias ExTeal.Resource.Attributes
 
     def fields,
       do: [
         Text.make(:title),
         Number.make(:order),
-        RichText.make(:body) |> Attributes.sanitize_as(:html5),
-        Place.make(:address)
+        RichText.make(:body) |> Attributes.sanitize_as(:html5)
       ]
   end
 
   defmodule PanelResource do
     use ExTeal.Resource
 
-    alias ExTeal.Fields.{Number, Place, RichText, Text}
+    alias ExTeal.Fields.{Number, RichText, Text}
     alias ExTeal.Panel
     alias ExTeal.Resource.Attributes
 
@@ -28,8 +27,30 @@ defmodule ExTeal.Resource.AttributesTest do
       do: [
         Text.make(:title),
         Number.make(:order),
-        RichText.make(:body) |> Attributes.sanitize_as(:html5),
-        Panel.new("Address", [Place.make(:address)])
+        Panel.new("Body", [
+          RichText.make(:body) |> Attributes.sanitize_as(:html5)
+        ])
+      ]
+  end
+
+  defmodule EmbeddedResource do
+    use ExTeal.Resource
+
+    alias ExTeal.Embedded
+    alias ExTeal.Fields.Text
+    alias ExTeal.Resource.Attributes
+
+    def model, do: TestExTeal.Post
+
+    def fields,
+      do: [
+        Text.make(:name),
+        Embedded.new(:location, [
+          Text.make(:address),
+          Text.make(:city),
+          Text.make(:state),
+          Text.make(:zip)
+        ])
       ]
   end
 
@@ -119,6 +140,30 @@ defmodule ExTeal.Resource.AttributesTest do
              "title" => "text here",
              "order" => "1",
              "body" => "<a href=\"https://google.com\">text here</a>"
+           }
+  end
+
+  test "nests embedded fields" do
+    attrs = %{
+      "name" => "a post",
+      "location.address" => "1600 Pennsylvania Ave NW",
+      "location.address_line_2" => "",
+      "location.city" => "Washington",
+      "location.state" => "DC",
+      "location.zip" => "20500"
+    }
+
+    params = EmbeddedResource.permitted_attributes(%Plug.Conn{}, attrs, :create)
+
+    assert params == %{
+             "name" => "a post",
+             "location" => %{
+               "address" => "1600 Pennsylvania Ave NW",
+               "address_line_2" => nil,
+               "city" => "Washington",
+               "state" => "DC",
+               "zip" => "20500"
+             }
            }
   end
 

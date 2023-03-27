@@ -30,7 +30,6 @@ defmodule ExTeal.Asset do
   end
 
   defp assets_for(false) do
-    IO.inspect("Not using compiled assets")
     %__MODULE__{
       compiled_assets: false
     }

@@ -1,6 +1,8 @@
 defmodule ExTeal.FieldTest do
   use ExUnit.Case
-  alias ExTeal.Field
+  alias ExTeal.{Embedded, Field}
+  alias ExTeal.Fields.Text
+  alias TestExTeal.Post
 
   describe "field_name/2" do
     test "returns the name by default" do
@@ -97,6 +99,19 @@ defmodule ExTeal.FieldTest do
                  ]
                }
              ]
+    end
+  end
+
+  describe "value_for/3" do
+    test "uses a getter when one is defined" do
+      field = %Field{getter: fn _ -> "foo" end}
+      assert Field.value_for(field, nil, nil) == "foo"
+    end
+
+    test "can parse through embedded schemas" do
+      %ExTeal.Panel{fields: [_hidden, f]} = Embedded.new(:location, [Text.make(:zip)])
+      assert Field.value_for(f, %Post{location: %{zip: "baz"}}, nil) == "baz"
+      assert Field.value_for(f, %Post{location: nil}, nil) == nil
     end
   end
 end

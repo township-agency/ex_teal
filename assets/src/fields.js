@@ -164,3 +164,6 @@ import IndexBooleanGroupField from '@/components/Index/BooleanGroup.vue';
 Vue.component('form-boolean-group', FormBooleanGroupField);
 Vue.component('detail-boolean-group', DetailBooleanGroupField);
 Vue.component('index-boolean-group', IndexBooleanGroupField);
+
+import FormHidden from '@/components/Form/Hidden.vue';
+Vue.component('form-hidden-field', FormHidden);

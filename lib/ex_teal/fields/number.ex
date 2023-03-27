@@ -9,8 +9,8 @@ defmodule ExTeal.Fields.Number do
   end
 
   @impl ExTeal.Field
-  def value_for(field, model, _type) do
-    value = Map.get(model, field.field)
+  def value_for(field, model, type) do
+    value = ExTeal.Field.value_for(field, model, type)
 
     cond do
       is_integer(value) ->

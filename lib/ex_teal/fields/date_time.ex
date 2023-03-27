@@ -66,8 +66,8 @@ defmodule ExTeal.Fields.DateTime do
   def filterable_as, do: ExTeal.FieldFilter.DateTime
 
   @impl true
-  def value_for(%Field{} = field, model, _view) do
-    case Map.get(model, field.field) do
+  def value_for(%Field{} = field, model, view) do
+    case Field.value_for(field, model, view) do
       nil ->
         nil
 

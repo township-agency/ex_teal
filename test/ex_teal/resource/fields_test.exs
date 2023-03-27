@@ -1,7 +1,7 @@
 defmodule ExTeal.Resource.FieldsTest do
   use TestExTeal.ConnCase
 
-  alias ExTeal.Fields.{ManyToManyBelongsTo, Text}
+  alias ExTeal.Fields.{Hidden, ManyToManyBelongsTo, Text}
   alias ExTeal.Resource.Fields
   alias TestExTeal.{PostResource, TagResource, UserResource}
 
@@ -32,6 +32,21 @@ defmodule ExTeal.Resource.FieldsTest do
       ]
   end
 
+  defmodule EmbeddedPostResource do
+    use ExTeal.Resource
+    alias ExTeal.Embedded
+    alias ExTeal.Fields.Text
+
+    def fields,
+      do: [
+        Text.make(:name),
+        Embedded.new(:location, [
+          Text.make(:street_line_1),
+          Text.make(:city)
+        ])
+      ]
+  end
+
   describe "all_fields/1" do
     test "returns all fields for a simple resource" do
       fields = Fields.all_fields(SimplePostResource)
@@ -44,6 +59,23 @@ defmodule ExTeal.Resource.FieldsTest do
       assert fields == [
                Text.make(:name),
                :description |> Text.make() |> Map.put(:panel, :content)
+             ]
+    end
+
+    test "returns all fields for an embedded resource" do
+      fields = Fields.all_fields(EmbeddedPostResource)
+
+      as_panel_field = fn field ->
+        field
+        |> Map.put(:attribute, :"location.#{field.field}")
+        |> Map.put(:panel, :location)
+      end
+
+      assert fields == [
+               Text.make(:name),
+               as_panel_field.(Hidden.make(:id)),
+               as_panel_field.(Text.make(:street_line_1)),
+               as_panel_field.(Text.make(:city))
              ]
     end
   end

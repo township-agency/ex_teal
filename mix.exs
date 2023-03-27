@@ -39,7 +39,7 @@ defmodule ExTeal.MixProject do
       {:jason, "~> 1.1"},
       {:inflex, "~> 2.0"},
       {:plug_cowboy, "~> 2.5"},
-      {:phoenix, "~> 1.4"},
+      {:phoenix, "~> 1.5"},
       {:phoenix_html, ">= 2.11.0"},
       {:ecto, "~> 3.5"},
       {:ecto_sql, "~> 3.3"},

@@ -52,6 +52,21 @@ import _ from 'lodash';
 import { Errors, InteractsWithResourceInformation } from 'ex-teal-js';
 import Heading from '@/components/Heading';
 
+const flattenErrors = (obj, prefix = '') => {
+  const result = {};
+  for (const key in obj) {
+    if (typeof obj[key] === 'string') {
+      result[prefix + key] = obj[key];
+    } else {
+      const flatErrors = flattenErrors(obj[key], `${prefix}${key}[`);
+      for (const flatKey in flatErrors) {
+        result[flatKey + ']'] = flatErrors[flatKey];
+      }
+    }
+  }
+  return result;
+};
+
 export default {
   components: { Heading },
   mixins: [ InteractsWithResourceInformation ],
