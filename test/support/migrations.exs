@@ -20,6 +20,7 @@ defmodule TestExTeal.Migrations do
       add(:author, :string)
       add(:contributor, :string)
       add(:features, :map)
+      add(:location, :map)
       add(:user_id, references(:users))
       add(:published, :boolean, default: false, null: false)
       add(:published_at, :naive_datetime)

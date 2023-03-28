@@ -17,7 +17,10 @@
         label="label"
         track-by="value"
       >
-        <template slot="tag" slot-scope="{ option, remove }">
+        <template
+          slot="tag"
+          slot-scope="{ option, remove }"
+        >
           <div class="inline-flex items-center mr-2 border rounded px-2 py-1 mb-2">
             <div
               v-if="option.thumbnail"
@@ -39,7 +42,10 @@
                 {{ option.subtitle }}
               </p>
             </div>
-            <a @click="remove(option)" class="w-5 h-5 rounded-full block border border-danger text-danger flex items-center justify-center ml-4">
+            <a
+              class="w-5 h-5 rounded-full block border border-danger text-danger flex items-center justify-center ml-4"
+              @click="remove(option)"
+            >
               <icon
                 type="delete"
                 :width="12"
@@ -48,7 +54,10 @@
             </a>
           </div>
         </template>
-        <template slot="option" slot-scope="props">
+        <template
+          slot="option"
+          slot-scope="props"
+        >
           <div class="inline-flex items-center">
             <div
               v-if="props.option.thumbnail"

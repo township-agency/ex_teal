@@ -29,10 +29,33 @@ defmodule TestExTeal.Features do
   end
 end
 
+defmodule TestExTeal.Location do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  embedded_schema do
+    field(:address, :string)
+    field(:address_line_2, :string)
+    field(:city, :string)
+    field(:state, :string)
+    field(:zip, :string)
+  end
+
+  def changeset(field, params) do
+    cast(field, params, [
+      :address,
+      :address_line_2,
+      :city,
+      :state,
+      :zip
+    ])
+  end
+end
+
 defmodule TestExTeal.Post do
   use Ecto.Schema
   import Ecto.Changeset
-  alias TestExTeal.{Features, Post}
+  alias TestExTeal.{Features, Location, Post}
 
   schema "posts" do
     field(:name, :string)
@@ -44,6 +67,7 @@ defmodule TestExTeal.Post do
     field(:deleted_at, :utc_datetime)
 
     embeds_one(:features, Features, on_replace: :update)
+    embeds_one(:location, Location)
 
     many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 

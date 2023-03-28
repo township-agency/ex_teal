@@ -81,7 +81,7 @@ defmodule ExTeal.Fields.Select do
 
   @impl true
   def value_for(field, model, view) when view in [:show, :index] do
-    value = Map.get(model, field.field)
+    value = ExTeal.Field.value_for(field, model, view)
 
     if field_represents_an_enum?(field, model) do
       value

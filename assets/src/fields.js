@@ -147,15 +147,6 @@ Vue.component('form-date-time', FormDateTime);
 Vue.component('detail-date-time', DetailDateTime);
 Vue.component('index-date-time', IndexDateTime);
 
-// Place...
-import FormPlaceField from '@/components/Form/PlaceField.vue';
-import DetailPlaceField from '@/components/Detail/PlaceField.vue';
-import IndexPlaceField from '@/components/Index/PlaceField.vue';
-
-Vue.component('form-place-field', FormPlaceField);
-Vue.component('detail-place-field', DetailPlaceField);
-Vue.component('index-place-field', IndexPlaceField);
-
 // Color...
 import FormColorField from '@/components/Form/Color.vue';
 import DetailColorField from '@/components/Detail/Color.vue';
@@ -173,3 +164,6 @@ import IndexBooleanGroupField from '@/components/Index/BooleanGroup.vue';
 Vue.component('form-boolean-group', FormBooleanGroupField);
 Vue.component('detail-boolean-group', DetailBooleanGroupField);
 Vue.component('index-boolean-group', IndexBooleanGroupField);
+
+import FormHidden from '@/components/Form/Hidden.vue';
+Vue.component('form-hidden-field', FormHidden);

@@ -124,8 +124,22 @@ defmodule ExTeal.Field do
     getter.(model)
   end
 
-  def value_for(field, model, _type) do
-    Map.get(model, field.field)
+  def value_for(%Field{field: f, attribute: attr} = field, model, _type) do
+    if f == attr || Atom.to_string(f) == attr do
+      Map.get(model, f)
+    else
+      nested_value_for(field, model)
+    end
+  end
+
+  def nested_value_for(%Field{attribute: attr}, model) do
+    attr
+    |> Atom.to_string()
+    |> String.split(".")
+    |> Enum.map(&String.to_existing_atom/1)
+    |> Enum.reduce(model, fn attr, m ->
+      if is_nil(m), do: nil, else: Map.get(m, attr)
+    end)
   end
 
   @doc """

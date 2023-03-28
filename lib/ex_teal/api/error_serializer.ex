@@ -26,9 +26,13 @@ defmodule ExTeal.Api.ErrorSerializer do
   def render(%Changeset{} = changeset) do
     # When encoded, the changeset returns its errors
     # as a JSON object. So we just pass it forward.
+    errors =
+      changeset
+      |> translate_errors()
+      |> flatten()
 
     %{
-      errors: translate_errors(changeset)
+      errors: errors
     }
   end
 
@@ -38,6 +42,20 @@ defmodule ExTeal.Api.ErrorSerializer do
     else
       Jason.encode(data)
     end
+  end
+
+  def flatten(data) do
+    Enum.reduce(data, %{}, &flatten_element/2)
+  end
+
+  defp flatten_element({key, value}, acc) when is_map(value) do
+    Enum.reduce(value, acc, fn {subkey, subvalue}, acc ->
+      Map.put(acc, "#{key}.#{subkey}", subvalue)
+    end)
+  end
+
+  defp flatten_element({key, value}, acc) do
+    Map.put(acc, key, value)
   end
 
   def handle_error(conn, {:error, %Changeset{} = cs}) do

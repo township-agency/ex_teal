@@ -22,7 +22,7 @@
       />
     </div>
     <div
-      v-for="panel in availablePanels"
+      v-for="(panel, index) in availablePanels"
       :key="panel.key"
       class="mb-8"
     >
@@ -34,13 +34,16 @@
         :panel="panel"
       >
         <div
-          v-if="panel.name.includes('Details')"
+          v-if="index === 0"
           class="card-headline"
         >
           <h2 class="text-gray-darkest font-normal text-xl">
             {{ panel.name }}
           </h2>
-          <div class="ml-auto flex">
+          <div
+            v-if="index === 0"
+            class="ml-auto flex"
+          >
             <button
               v-if="shouldShowDeleteButton"
               class="btn btn-default btn-icon btn-danger mr-3"
@@ -143,10 +146,10 @@ export default {
       return `/api/${this.resourceName}/cards`;
     },
     shouldShowUpdateButton () {
-      return this.resourceInformation && this.resource.meta["can_update?"];
+      return this.resourceInformation && this.resource.meta['can_update?'];
     },
     shouldShowDeleteButton () {
-      return this.resourceInformation && this.resource.meta["can_delete?"];
+      return this.resourceInformation && this.resource.meta['can_delete?'];
     }
   },
 

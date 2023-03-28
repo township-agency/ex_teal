@@ -32,8 +32,8 @@ defmodule ExTeal.Fields.HasOne do
   end
 
   @impl true
-  def value_for(field, model, _type) do
-    schema = Map.get(model, field.field)
+  def value_for(field, model, type) do
+    schema = Field.value_for(field, model, type)
 
     case ExTeal.resource_for_model(field.relationship) do
       {:ok, resource} ->

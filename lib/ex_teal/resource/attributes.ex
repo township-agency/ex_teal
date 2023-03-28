@@ -56,12 +56,7 @@ defmodule ExTeal.Resource.Attributes do
               %Panel{fields: fields} -> fields
             end)
             |> Enum.concat()
-            |> Enum.into(%{}, fn %Field{field: field} = f -> {field, f} end)
-
-          field_keys =
-            fields
-            |> Map.keys()
-            |> Enum.map(&Atom.to_string/1)
+            |> Attributes.combine_and_key_by_field_attr()
 
           skip_sanitize = __MODULE__.skip_sanitize()
           Attributes.maybe_sanitize(attrs, fields, skip_sanitize)
@@ -77,16 +72,26 @@ defmodule ExTeal.Resource.Attributes do
 
   @spec maybe_sanitize(map(), map(), boolean()) :: map()
   def maybe_sanitize(attrs, _fields, true) do
-    attrs
-    |> Enum.reject(fn {k, _v} -> is_nil(k) end)
-    |> Enum.into(%{})
+    clean_and_nest_params(attrs)
   end
 
   def maybe_sanitize(attrs, fields, _) do
     attrs
     |> Enum.map(&sanitize_param(&1, fields))
+    |> clean_and_nest_params()
+  end
+
+  def clean_and_nest_params(attrs) do
+    attrs
     |> Enum.reject(fn {k, _v} -> is_nil(k) end)
-    |> Enum.into(%{})
+    |> Enum.reduce(%{}, fn {k, v}, acc ->
+      if String.contains?(k, ".") do
+        [key, rest] = String.split(k, ".", parts: 2)
+        Map.put(acc, key, Map.put(acc[key] || %{}, rest, v))
+      else
+        Map.put(acc, k, v)
+      end
+    end)
   end
 
   @doc false
@@ -104,7 +109,7 @@ defmodule ExTeal.Resource.Attributes do
     if String.ends_with?(k, "_id") do
       {k, v}
     else
-      field = Map.get(fields, String.to_existing_atom(k))
+      field = Map.get(fields, k)
 
       case field do
         nil -> {nil, nil}
@@ -133,4 +138,11 @@ defmodule ExTeal.Resource.Attributes do
   end
 
   def raw_html(field), do: %{field | sanitize: false}
+
+  def combine_and_key_by_field_attr(fields) do
+    Enum.into(fields, %{}, fn %Field{attribute: attribute} = f ->
+      attr = if is_atom(attribute), do: Atom.to_string(attribute), else: attribute
+      {attr, f}
+    end)
+  end
 end

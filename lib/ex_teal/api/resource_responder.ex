@@ -4,7 +4,7 @@ defmodule ExTeal.Api.ResourceResponder do
   and returns the resources response as serialized json
   """
   alias ExTeal.Api.ErrorSerializer
-  alias ExTeal.FieldFilter
+  alias ExTeal.{FieldFilter, Panel}
   alias ExTeal.Resource.{Create, Delete, Export, Fields, Index, Serializer, Show, Update}
 
   @spec index(Plug.Conn.t(), binary) :: Plug.Conn.t()
@@ -31,16 +31,19 @@ defmodule ExTeal.Api.ResourceResponder do
   def creation_fields(conn, resource_uri) do
     with {:ok, resource} <- ExTeal.resource_for(resource_uri),
          true <- resource.policy().create_any?(conn) do
+      panels = Panel.gather_panels(resource)
       fields = Fields.fields_for(:new, resource)
       schema = resource.model()
 
       fields =
-        Enum.map(fields, fn field ->
+        fields
+        |> Enum.map(fn field ->
           new_schema = struct(schema, %{})
           field.type.apply_options_for(field, new_schema, conn, :new)
         end)
+        |> Panel.give_panel_to_fields(resource)
 
-      {:ok, body} = Jason.encode(%{fields: fields})
+      {:ok, body} = Jason.encode(%{fields: fields, panels: panels})
       Serializer.as_json(conn, body, 200)
     else
       error -> responder_error(conn, error)
@@ -70,8 +73,11 @@ defmodule ExTeal.Api.ResourceResponder do
         :edit
         |> Fields.fields_for(resource)
         |> Fields.apply_values(model, resource, conn, :edit, nil)
+        |> Panel.give_panel_to_fields(resource)
 
-      {:ok, body} = Jason.encode(%{fields: fields})
+      panels = Panel.gather_panels(resource)
+
+      {:ok, body} = Jason.encode(%{fields: fields, panels: panels})
       Serializer.as_json(conn, body, 200)
     else
       error -> responder_error(conn, error)

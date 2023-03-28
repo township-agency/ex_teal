@@ -23,30 +23,30 @@
       </div>
     </div>
 
-    <card class="overflow-hidden">
-      <form
-        v-if="fields"
-        @submit.prevent="createResource"
-      >
-        <!-- Validation Errors -->
-        <validation-errors :errors="validationErrors" />
-        <!-- Fields -->
-        <div
-          v-for="field in fields"
-          :key="field.attribute"
-        >
-          <component
-            :is="'form-' + field.component"
-            :errors="validationErrors"
-            :resource-name="resourceName"
-            :field="field"
-            :via-resource="viaResource"
-            :via-resource-id="viaResourceId"
-            :via-relationship="viaRelationship"
-          />
-        </div>
-      </form>
-    </card>
+    <form
+      v-if="panels"
+      autocomplete="off"
+      @submit.prevent="createResource"
+    >
+      <validation-errors :errors="validationErrors" />
+
+      <form-panel
+        v-for="(panel, index) in panelsWithFields"
+        :key="panel.name"
+        class="mb-6"
+        :index="index"
+        :panel="panel"
+        :name="panel.name"
+        :fields="panel.fields"
+        :validation-errors="validationErrors"
+        :via-resource="viaResource"
+        :via-resource-id="viaResourceId"
+        :via-relationship="viaRelationship"
+        :resource-name="resourceName"
+      />
+      <!-- Validation Errors -->
+      <!-- Fields -->
+    </form>
   </loading-view>
 </template>
 
@@ -83,12 +83,24 @@ export default {
   data: () => ({
     loading: true,
     fields: [],
+    panels: [],
     validationErrors: new Errors()
   }),
 
   computed: {
     singularName () {
       return Capitalize(this.resourceInformation.singular);
+    },
+
+    panelsWithFields () {
+      return _.map(this.panels, panel => {
+        return {
+          ...panel,
+          fields: _.filter(this.fields, field => {
+            return field.panel === panel.key;
+          })
+        };
+      });
     }
   },
 
@@ -104,12 +116,13 @@ export default {
       this.fields = [];
 
       const {
-        data: { fields }
+        data: { fields, panels }
       } = await ExTeal.request().get(
         `/api/${this.resourceName}/creation-fields`
       );
 
       this.fields = fields;
+      this.panels = panels;
       this.loading = false;
     },
 
@@ -124,13 +137,12 @@ export default {
           `The ${this.resourceInformation.singular} was created`,
           { type: 'success' }
         );
-
-        const idField = _.find(response.data.fields, { attribute: 'id' });
+        const id = response.data.id;
         this.$router.push({
           name: 'detail',
           params: {
             resourceName: this.resourceName,
-            resourceId: idField.value
+            resourceId: id
           }
         });
       } catch (error) {
