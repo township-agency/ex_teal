@@ -13,6 +13,8 @@ defmodule ExTeal.ResourceTest do
     use ExTeal.Resource
 
     def nav_group(_), do: "Admin"
+
+    def singular_title, do: "Foo"
   end
 
   defmodule ExTealTest.TestResource do
@@ -54,7 +56,7 @@ defmodule ExTeal.ResourceTest do
                },
                %{
                  title: "Groups",
-                 singular: "Group",
+                 singular: "Foo",
                  uri: "groups",
                  group: "Admin",
                  hidden: false,
