@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.1](https://github.com/township-agency/ex_teal/compare/v0.19.0...v0.19.1) (2023-03-29)
+
+
+### Bug Fixes
+
+* add some styles for direct upload ([#167](https://github.com/township-agency/ex_teal/issues/167)) ([9809763](https://github.com/township-agency/ex_teal/commit/9809763e3c4c9328e6b81cee1ce1885a1156d8b6))
+
 ## [0.19.0](https://github.com/township-agency/ex_teal/compare/v0.18.0...v0.19.0) (2023-03-28)
 
 
