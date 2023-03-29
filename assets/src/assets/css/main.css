@@ -60,6 +60,14 @@ html {
   height: 32px;
 }
 
+.h-40 {
+  height: 160px;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
 /* Tables
 ---------------------------------------------------------------------------- */
 .table-fixed {
