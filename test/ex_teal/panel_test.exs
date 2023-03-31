@@ -9,6 +9,8 @@ defmodule ExTeal.PanelTest do
 
     def title, do: "Posts"
 
+    def singular_title, do: "Test Name"
+
     def fields,
       do: [
         Text.make(:name),
@@ -59,9 +61,9 @@ defmodule ExTeal.PanelTest do
   end
 
   describe "gather_panels/1" do
-    test "given a resource without panels, returns a single panel with the resource name" do
+    test "given a resource without panels, returns a single panel with the customized resource name" do
       panels = Panel.gather_panels(SimpleResource)
-      assert panels == [%Panel{key: :"post details", name: "Post Details"}]
+      assert panels == [%Panel{key: :"test name details", name: "Test Name Details"}]
     end
   end
 
