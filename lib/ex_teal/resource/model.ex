@@ -30,6 +30,11 @@ defmodule ExTeal.Resource.Model do
   @callback title() :: String.t()
 
   @doc """
+  Returns the singularized version of the title to display on forms.
+  """
+  @callback singular_title() :: String.t()
+
+  @doc """
   Returns the uri to display in the side bar.
 
   Defaults to finding the uri from the resource modules name
@@ -76,6 +81,7 @@ defmodule ExTeal.Resource.Model do
       @behaviour ExTeal.Resource.Model
 
       alias ExTeal.Resource.Model
+      alias Phoenix.Naming
 
       @inferred_model Model.model_from_resource(__MODULE__)
       @inferred_title Model.title_from_resource(__MODULE__)
@@ -83,6 +89,10 @@ defmodule ExTeal.Resource.Model do
 
       def model, do: @inferred_model
       def title, do: @inferred_title
+
+      def singular_title,
+        do: title() |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
+
       def uri, do: @inferred_uri
       def title_for_schema(schema), do: Model.title_for_schema_from_struct(schema)
       def subtitle_for_schema(schema), do: nil
@@ -94,6 +104,7 @@ defmodule ExTeal.Resource.Model do
 
       defoverridable model: 0,
                      title: 0,
+                     singular_title: 0,
                      uri: 0,
                      title_for_schema: 1,
                      subtitle_for_schema: 1,

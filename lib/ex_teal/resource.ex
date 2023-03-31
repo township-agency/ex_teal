@@ -1,8 +1,6 @@
 defmodule ExTeal.Resource do
   @type params :: map()
 
-  alias Phoenix.Naming
-
   @moduledoc """
   When used, includes all aspects of the functionality required to
   manage the resource.
@@ -114,12 +112,9 @@ defmodule ExTeal.Resource do
   end
 
   def to_json(resource, conn) do
-    singular =
-      resource.title() |> Inflex.underscore() |> Naming.humanize() |> Inflex.singularize()
-
     %{
       title: resource.title(),
-      singular: singular,
+      singular: resource.singular_title(),
       group: resource.nav_group(conn),
       uri: resource.uri(),
       hidden: resource.hide_from_nav(),
