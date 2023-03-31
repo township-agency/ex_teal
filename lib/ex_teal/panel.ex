@@ -78,8 +78,7 @@ defmodule ExTeal.Panel do
   defp is_a_panel?(_), do: false
 
   def default_panel_name(resource) do
-    title = resource.title() |> String.capitalize() |> Inflex.singularize()
-    "#{title} Details"
+    "#{resource.singular_title()} Details"
   end
 
   defp default_panel_for(resource) do

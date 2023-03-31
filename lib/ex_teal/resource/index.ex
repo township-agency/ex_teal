@@ -6,7 +6,7 @@ defmodule ExTeal.Resource.Index do
   alias Ecto.Association.ManyToMany
   alias ExTeal.{Field, FieldFilter}
   alias ExTeal.Fields.BelongsTo
-  alias ExTeal.Resource.Index
+  alias ExTeal.Resource.{Fields, Index}
 
   import Ecto.Query
 
@@ -163,7 +163,8 @@ defmodule ExTeal.Resource.Index do
           params,
         resource
       ) do
-    field = Enum.find(resource.fields(), &(&1.attribute == field))
+    fields = Fields.all_fields(resource)
+    field = Enum.find(fields, &(&1.attribute == field))
 
     case field do
       nil -> sort_by_pivot(query, params, resource)
@@ -173,7 +174,8 @@ defmodule ExTeal.Resource.Index do
 
   def sort(query, %{"order_by" => field, "order_by_direction" => dir}, resource)
       when not is_nil(field) and not is_nil(dir) do
-    field_struct = Enum.find(resource.fields(), &(&1.attribute == field))
+    fields = Fields.all_fields(resource)
+    field_struct = Enum.find(fields, &(&1.attribute == field))
     handle_sort(query, field_struct, String.to_existing_atom(field), dir)
   end
 
