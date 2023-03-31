@@ -91,7 +91,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header ==
                "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,inserted_at,updated_at"
@@ -123,7 +123,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "#{p1.id}"})
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [_header, p1_csv] = String.split(data, "\n", trim: true)
+      [_header, p1_csv] = String.split(data, "\r\n", trim: true)
 
       assert String.contains?(p1_csv, "#{p1.id},#{p1.name}")
     end
@@ -135,7 +135,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/users/exports", %{"resources" => "all", "search" => "Bern"})
       conn = Export.stream(TestExTeal.UserResource, conn)
       data = response(conn, 200)
-      [_header, u1_csv] = String.split(data, "\n", trim: true)
+      [_header, u1_csv] = String.split(data, "\r\n", trim: true)
 
       assert String.contains?(u1_csv, "#{u.id}")
     end
@@ -153,7 +153,7 @@ defmodule ExTeal.Resource.ExportTest do
 
       conn = Export.stream(TestExTeal.PostResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header ==
                "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,inserted_at,updated_at"
@@ -167,7 +167,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header == "id,name"
       assert p1_csv == "#{p1.id},#{p1.name}"
@@ -181,7 +181,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomRelatedResource, conn)
       data = response(conn, 200)
-      [header, p1_csv, p2_csv] = String.split(data, "\n", trim: true)
+      [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header == "id,name,email"
       assert p1_csv == "#{p1.id},#{p1.name},foo"
@@ -246,7 +246,7 @@ defmodule ExTeal.Resource.ExportTest do
       conn = prep_conn(:get, "/posts/exports", %{"resources" => "all"})
       conn = Export.stream(CustomRowResource, conn)
       data = response(conn, 200)
-      [header, p1_csv] = String.split(data, "\n", trim: true)
+      [header, p1_csv] = String.split(data, "\r\n", trim: true)
 
       assert header == "id,name,fake"
       assert p1_csv == "#{p1.id},#{p1.name},foo"
