@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.3](https://github.com/township-agency/ex_teal/compare/v0.19.2...v0.19.3) (2023-03-31)
+
+
+### Bug Fixes
+
+* default panel title and flatten panels while sorting ([#172](https://github.com/township-agency/ex_teal/issues/172)) ([66db8c0](https://github.com/township-agency/ex_teal/commit/66db8c00294e677bce94835da55c74bee56fa265))
+
 ## [0.19.2](https://github.com/township-agency/ex_teal/compare/v0.19.1...v0.19.2) (2023-03-31)
 
 
