@@ -31,8 +31,8 @@ defmodule ExTeal.FieldFilter.Select do
       |> Enum.find(fn %{value: value} -> value == op end)
 
     case option do
-      %{key: key} ->
-        where(query, [q], field(q, ^field_name) == ^key)
+      %{value: value} ->
+        where(query, [q], field(q, ^field_name) == ^value)
 
       _ ->
         query
