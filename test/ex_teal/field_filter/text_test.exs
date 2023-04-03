@@ -2,6 +2,7 @@ defmodule ExTeal.FieldFilter.TextTest do
   use TestExTeal.ConnCase
 
   alias ExTeal.FieldFilter.Text
+  alias ExTeal.Fields.Text, as: TextField
   alias TestExTeal.{Post, PostResource}
 
   test "interface_type is text" do
@@ -56,14 +57,18 @@ defmodule ExTeal.FieldFilter.TextTest do
     end
 
     defp find_post(op) do
+      f = TextField.make(:name)
+
       Post
-      |> Text.filter(%{"operator" => op}, :name, PostResource)
+      |> Text.filter(%{"operator" => op}, f, PostResource)
       |> Repo.all()
     end
 
     defp find_post(op, operand) do
+      f = TextField.make(:name)
+
       Post
-      |> Text.filter(%{"operator" => op, "operand" => operand}, :name, PostResource)
+      |> Text.filter(%{"operator" => op, "operand" => operand}, f, PostResource)
       |> Repo.all()
     end
   end

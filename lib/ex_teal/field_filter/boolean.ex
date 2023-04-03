@@ -21,12 +21,12 @@ defmodule ExTeal.FieldFilter.Boolean do
   def interface_type, do: nil
 
   @impl true
-  def filter(query, %{"operator" => "true"}, field_name, _) do
-    where(query, [q], field(q, ^field_name) == true)
+  def filter(query, %{"operator" => "true"}, field, _) do
+    where(query, [q], field(q, ^field.field) == true)
   end
 
-  def filter(query, %{"operator" => "false"}, field_name, _) do
-    where(query, [q], field(q, ^field_name) == false)
+  def filter(query, %{"operator" => "false"}, field, _) do
+    where(query, [q], field(q, ^field.field) == false)
   end
 
   def filter(query, _, _, _), do: query

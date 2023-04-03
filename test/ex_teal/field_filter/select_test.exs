@@ -8,13 +8,10 @@ defmodule ExTeal.FieldFilter.SelectTest do
     assert Select.interface_type() == "text"
   end
 
-  test "operators returns all values from all options" do
-  end
-
   describe "filter/3" do
     test "matches using the key to find the value" do
       %Post{id: id} = insert(:post, author: "foo")
-      [result] = find_post("Foo")
+      [result] = find_post("foo")
       assert result.id == id
     end
 
@@ -25,8 +22,10 @@ defmodule ExTeal.FieldFilter.SelectTest do
     end
 
     defp find_post(op, key \\ :author) do
+      field = Enum.find(PostResource.fields(), &(&1.field == key))
+
       Post
-      |> Select.filter(%{"operator" => op}, key, PostResource)
+      |> Select.filter(%{"operator" => op}, field, PostResource)
       |> Repo.all()
     end
   end

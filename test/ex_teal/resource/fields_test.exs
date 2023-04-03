@@ -69,6 +69,7 @@ defmodule ExTeal.Resource.FieldsTest do
         field
         |> Map.put(:attribute, :"location.#{field.field}")
         |> Map.put(:panel, :location)
+        |> Map.put(:embed_field, :location)
       end
 
       assert fields == [

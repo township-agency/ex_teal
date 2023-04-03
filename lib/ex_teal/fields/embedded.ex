@@ -13,7 +13,7 @@ defmodule ExTeal.Embedded do
       [Hidden.make(:id) | fields]
       |> Enum.map(fn field ->
         attr = :"#{name}.#{field.attribute}"
-        %{field | attribute: attr}
+        %{field | attribute: attr, embed_field: name}
       end)
 
     name = Field.field_name(name, label)
