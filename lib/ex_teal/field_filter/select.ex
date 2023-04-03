@@ -21,10 +21,8 @@ defmodule ExTeal.FieldFilter.Select do
   def interface_type, do: "text"
 
   @impl true
-  def filter(query, %{"operator" => op}, field_name, resource)
+  def filter(query, %{"operator" => op}, field, _resource)
       when op != "" and not is_nil(op) do
-    field = Enum.find(resource.fields(), &(&1.field == field_name))
-
     option =
       field
       |> Select.all_options_for()
@@ -32,7 +30,7 @@ defmodule ExTeal.FieldFilter.Select do
 
     case option do
       %{value: value} ->
-        where(query, [q], field(q, ^field_name) == ^value)
+        where(query, [q], field(q, ^field.field) == ^value)
 
       _ ->
         query

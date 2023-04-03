@@ -25,7 +25,9 @@ defmodule ExTeal.FieldFilter.DateTimeTest do
       assert result.id == id
     end
 
-    defp find_post(op, field, operand) do
+    defp find_post(op, field_name, operand) do
+      field = Enum.find(PostResource.fields(), &(&1.field == field_name))
+
       Post
       |> DT.filter(%{"operator" => op, "operand" => operand}, field, PostResource)
       |> Repo.all()
@@ -36,8 +38,8 @@ defmodule ExTeal.FieldFilter.DateTimeTest do
     test "uses the resource to determine the type of a field and cast the value" do
       dt = ~N[2000-01-01 23:00:07]
       value = "2000-01-01T18:00:07-05:00"
-
-      result = DT.value_cast_to_field_type(PostResource, :published_at, value)
+      field = Enum.find(PostResource.fields(), &(&1.field == :published_at))
+      result = DT.value_cast_to_field_type(PostResource, field, value)
       assert result == dt
     end
   end

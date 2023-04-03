@@ -84,6 +84,15 @@ defmodule TestExTeal.TagResource do
     ]
 end
 
+defmodule TestExTeal.OrderResourde do
+  use ExTeal.Resource
+  alias ExTeal.Fields.Number
+
+  def model, do: TestExTeal.Order
+
+  def fields, do: [Number.make(:grand_total)]
+end
+
 defmodule TestExTeal.SinglePostUserResource do
   use ExTeal.Resource
 

@@ -19,10 +19,10 @@ defmodule ExTeal.FieldFilter do
     - "operator" a string representing the operation selected by
       the user that is being performed
     - "operand" a string or map representing the value to apply against the operand and query
-  - An atom representing the name of the field being queried.
+  - The field struct being queried
   - The resource module for the resource being queried
   """
-  @callback filter(Ecto.Queryable.t(), map(), atom(), module()) :: Ecto.Queryable.t()
+  @callback filter(Ecto.Queryable.t(), map(), Field.t(), module()) :: Ecto.Queryable.t()
 
   @doc """
   Type of filter component to use in the user interface.
@@ -125,7 +125,7 @@ defmodule ExTeal.FieldFilter do
       nil ->
         query
 
-      %Field{filterable: filter_type} ->
+      %Field{filterable: filter_type} = field ->
         filter_type.filter(query, filter_param, field, resource)
     end
   end

@@ -33,42 +33,42 @@ defmodule ExTeal.FieldFilter.Number do
   def interface_type, do: "number"
 
   @impl true
-  def filter(query, %{"operator" => "=", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => "=", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) == ^val)
+    where(query, [q], field(q, ^field.field) == ^val)
   end
 
-  def filter(query, %{"operator" => "!=", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => "!=", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) != ^val)
+    where(query, [q], field(q, ^field.field) != ^val)
   end
 
-  def filter(query, %{"operator" => ">", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => ">", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) > ^val)
+    where(query, [q], field(q, ^field.field) > ^val)
   end
 
-  def filter(query, %{"operator" => ">=", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => ">=", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) >= ^val)
+    where(query, [q], field(q, ^field.field) >= ^val)
   end
 
-  def filter(query, %{"operator" => "<", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => "<", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) < ^val)
+    where(query, [q], field(q, ^field.field) < ^val)
   end
 
-  def filter(query, %{"operator" => "<=", "operand" => val}, field_name, _)
+  def filter(query, %{"operator" => "<=", "operand" => val}, field, _)
       when val != "" and not is_nil(val) do
-    where(query, [q], field(q, ^field_name) <= ^val)
+    where(query, [q], field(q, ^field.field) <= ^val)
   end
 
-  def filter(query, %{"operator" => "is empty"}, field_name, _) do
-    where(query, [q], is_nil(field(q, ^field_name)))
+  def filter(query, %{"operator" => "is empty"}, field, _) do
+    where(query, [q], is_nil(field(q, ^field.field)))
   end
 
-  def filter(query, %{"operator" => "not empty"}, field_name, _) do
-    where(query, [q], not is_nil(field(q, ^field_name)))
+  def filter(query, %{"operator" => "not empty"}, field, _) do
+    where(query, [q], not is_nil(field(q, ^field.field)))
   end
 
   def filter(query, _, _, _), do: query

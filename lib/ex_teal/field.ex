@@ -24,6 +24,7 @@ defmodule ExTeal.Field do
             text_align: "left",
             value: nil,
             panel: nil,
+            embed_field: nil,
             getter: nil,
             show_on_index: true,
             show_on_detail: true,

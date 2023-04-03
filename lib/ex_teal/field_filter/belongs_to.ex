@@ -20,25 +20,25 @@ defmodule ExTeal.FieldFilter.BelongsTo do
   def interface_type, do: "belongs-to"
 
   @impl true
-  def filter(query, %{"operator" => "=", "operand" => val}, field_name, resource)
+  def filter(query, %{"operator" => "=", "operand" => val}, field, resource)
       when val != "" and not is_nil(val) do
-    belongs_to_key = key_for(resource, field_name)
+    belongs_to_key = key_for(resource, field)
     where(query, [q], field(q, ^belongs_to_key) == ^val)
   end
 
-  def filter(query, %{"operator" => "!=", "operand" => val}, field_name, resource)
+  def filter(query, %{"operator" => "!=", "operand" => val}, field, resource)
       when val != "" and not is_nil(val) do
-    belongs_to_key = key_for(resource, field_name)
+    belongs_to_key = key_for(resource, field)
     where(query, [q], field(q, ^belongs_to_key) != ^val)
   end
 
-  def filter(query, %{"operator" => "is empty"}, field_name, resource) do
-    belongs_to_key = key_for(resource, field_name)
+  def filter(query, %{"operator" => "is empty"}, field, resource) do
+    belongs_to_key = key_for(resource, field)
     where(query, [q], is_nil(field(q, ^belongs_to_key)))
   end
 
-  def filter(query, %{"operator" => "not empty"}, field_name, resource) do
-    belongs_to_key = key_for(resource, field_name)
+  def filter(query, %{"operator" => "not empty"}, field, resource) do
+    belongs_to_key = key_for(resource, field)
     where(query, [q], not is_nil(field(q, ^belongs_to_key)))
   end
 
@@ -64,9 +64,9 @@ defmodule ExTeal.FieldFilter.BelongsTo do
     end
   end
 
-  defp key_for(resource, field_name) do
+  defp key_for(resource, field) do
     model = struct(resource.model(), %{})
-    rel = model.__struct__.__schema__(:association, field_name)
+    rel = model.__struct__.__schema__(:association, field.field)
     rel.owner_key
   end
 end
