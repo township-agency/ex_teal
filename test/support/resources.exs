@@ -68,6 +68,36 @@ defmodule TestExTeal.PostResource do
   def actions(_), do: [TestExTeal.PublishAction]
 end
 
+defmodule TestExTeal.PostEmbedResource do
+  use ExTeal.Resource
+
+  alias ExTeal.Fields.{
+    Boolean,
+    DateTime,
+    ID,
+    Select,
+    Text
+  }
+
+  alias ExTeal.Embedded
+
+  def model, do: TestExTeal.Post
+
+  def uri, do: "post-embeds"
+
+  def fields,
+    do: [
+      Text.make(:name),
+      Embedded.new(:location, [
+        Text.make(:address),
+        Text.make(:city),
+        Text.make(:state),
+        Text.make(:zip),
+        Boolean.make(:primary)
+      ])
+    ]
+end
+
 defmodule TestExTeal.TagResource do
   use ExTeal.Resource
 

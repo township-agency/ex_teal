@@ -39,6 +39,7 @@ defmodule TestExTeal.Location do
     field(:city, :string)
     field(:state, :string)
     field(:zip, :string)
+    field(:primary, :boolean)
   end
 
   def changeset(field, params) do
@@ -47,7 +48,8 @@ defmodule TestExTeal.Location do
       :address_line_2,
       :city,
       :state,
-      :zip
+      :zip,
+      :primary
     ])
   end
 end

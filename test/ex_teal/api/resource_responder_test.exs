@@ -291,5 +291,14 @@ defmodule ExTeal.Api.ResourceResponderTest do
       resp = ResourceResponder.field_filters(conn, "posts")
       assert resp.status == 200
     end
+
+    @tag manifest: DefaultManifest
+    test "returns the correct non-embedded filters" do
+      conn = build_conn(:get, "/api/post-embeds/field-filters")
+      resp = ResourceResponder.field_filters(conn, "post-embeds")
+      {:ok, body} = Jason.decode(resp.resp_body, keys: :atoms)
+      assert resp.status == 200
+      assert length(body.filters) == 1
+    end
   end
 end

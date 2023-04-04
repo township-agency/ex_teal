@@ -9,7 +9,7 @@ defmodule ExTeal.FieldFilter.TextTest do
     assert Text.interface_type() == "text"
   end
 
-  describe "filter/3" do
+  describe "filter/4" do
     test "= is case insensitive" do
       %Post{id: id} = insert(:post, name: "Foo")
       [result] = find_post("=", "foo")
