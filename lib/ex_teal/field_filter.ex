@@ -111,7 +111,9 @@ defmodule ExTeal.FieldFilter do
   defp filters_for_resource(resource) do
     resource
     |> Fields.all_fields()
-    |> Enum.filter(& &1.filterable)
+    |> Enum.reject(fn field ->
+      is_nil(field.filterable) or field.filterable == false or not is_nil(field.embed_field)
+    end)
   end
 
   defp to_filter(%Field{filterable: filter_type} = field, resource) do
@@ -125,8 +127,11 @@ defmodule ExTeal.FieldFilter do
       nil ->
         query
 
-      %Field{filterable: filter_type} = field ->
+      %Field{filterable: filter_type, embed_field: nil} = field ->
         filter_type.filter(query, filter_param, field, resource)
+
+      %Field{filterable: filter_type} = field ->
+        filter_type.embedded_filter(query, filter_param, field, resource)
     end
   end
 end
