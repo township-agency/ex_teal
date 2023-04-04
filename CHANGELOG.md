@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.4](https://github.com/township-agency/ex_teal/compare/v0.19.3...v0.19.4) (2023-04-04)
+
+
+### Bug Fixes
+
+* compare, display and use select values in field filters ([ffb7d87](https://github.com/township-agency/ex_teal/commit/ffb7d8796da37a6a1f2bc971f1dc9ad2d0695812))
+* **deps:** upgrade nimble csv ([#174](https://github.com/township-agency/ex_teal/issues/174)) ([21a3dd4](https://github.com/township-agency/ex_teal/commit/21a3dd4d621d274bc06135930113395edbd8163c))
+* embedded schema filtering may not be possible with postgres due to json magic ([8e28eeb](https://github.com/township-agency/ex_teal/commit/8e28eebb27d08c66482fcad990f9acb050f9212b))
+
 ## [0.19.3](https://github.com/township-agency/ex_teal/compare/v0.19.2...v0.19.3) (2023-03-31)
 
 
