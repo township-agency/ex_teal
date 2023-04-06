@@ -6,7 +6,7 @@
     <template slot="field">
       <DateTimePicker
         :field="field"
-        :name="field.name"
+        :field-name="field.name"
         :value="localizedValue"
         class="w-full form-control form-input form-input-bordered"
         :date-format="pickerFormat"

@@ -12,7 +12,7 @@ defmodule ExTeal.Resource.RecordsTest do
   end
 
   test "it should return a query for the model" do
-    assert %Ecto.Query{} = Default.records(%{}, Default)
+    assert TestExTeal.Post = Default.records(%{}, Default)
   end
 
   test "it should be allowed to be overriden" do

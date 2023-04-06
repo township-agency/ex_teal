@@ -10,7 +10,7 @@ defmodule ExTeal.GlobalSearch do
   import Ecto.Query, only: [from: 2]
 
   alias ExTeal.GlobalSearch
-  alias ExTeal.Resource.{Index, Serializer}
+  alias ExTeal.Resource.{Index, Records, Serializer}
   alias Plug.Conn
 
   @spec new(Conn.t(), [module]) :: GlobalSearch.t()
@@ -24,6 +24,7 @@ defmodule ExTeal.GlobalSearch do
         result =
           conn
           |> resource.handle_index(params)
+          |> Records.preload(resource)
           |> Index.search(params, resource)
           |> prepare_for_search(resource)
           |> resource.repo().all()

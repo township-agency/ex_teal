@@ -6,7 +6,7 @@ defmodule ExTeal.Resource.Index do
   alias Ecto.Association.ManyToMany
   alias ExTeal.{Field, FieldFilter}
   alias ExTeal.Fields.BelongsTo
-  alias ExTeal.Resource.{Fields, Index}
+  alias ExTeal.Resource.{Fields, Index, Records}
 
   import Ecto.Query
 
@@ -70,6 +70,7 @@ defmodule ExTeal.Resource.Index do
   def call(resource, conn) do
     conn
     |> resource.handle_index(conn.params)
+    |> Records.preload(resource)
     |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
     |> Index.field_filters(conn.params, resource)
@@ -82,6 +83,7 @@ defmodule ExTeal.Resource.Index do
   def query_for_related(resource, conn) do
     conn
     |> resource.handle_related(conn.params)
+    |> Records.preload(resource)
     |> Index.query_by_related(conn.params, resource)
     |> Index.search(conn.params, resource)
     |> execute_query(conn, resource, :related)

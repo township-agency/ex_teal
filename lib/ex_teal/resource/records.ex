@@ -49,7 +49,6 @@ defmodule ExTeal.Resource.Records do
 
         def records(_conn, module) do
           model()
-          |> Records.preload(module)
         end
 
         def with, do: []
