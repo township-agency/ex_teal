@@ -3,6 +3,7 @@ defmodule ExTeal.Panel do
   Separates fields on the detail page into panels
   """
   alias ExTeal.Field
+  alias ExTeal.Resource.Fields
 
   @derive {Jason.Encoder, except: [:fields, :field]}
   defstruct name: nil, key: nil, fields: [], options: %{}, field: nil
@@ -57,7 +58,8 @@ defmodule ExTeal.Panel do
   Given a resource, uses the fields definition to find the panels
   """
   def gather_panels(resource) do
-    user_defined = Enum.filter(resource.fields(), &is_a_panel?/1)
+    fields = Fields.all_fields(resource)
+    user_defined = Enum.filter(fields, &is_a_panel?/1)
     default = default_panel_for(resource)
     [default] ++ user_defined
   end

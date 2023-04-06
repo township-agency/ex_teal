@@ -6,7 +6,7 @@ defmodule ExTeal.Resource.Export do
 
   import Ecto.Query
   import Plug.Conn
-  alias ExTeal.Resource.Index
+  alias ExTeal.Resource.{Index, Records}
   alias Plug.Conn
 
   @doc """
@@ -150,6 +150,7 @@ defmodule ExTeal.Resource.Export do
   defp exportable_query(resource, %Conn{params: %{"resources" => "all"} = params} = conn) do
     conn
     |> resource.handle_index(params)
+    |> Records.preload(resource)
     |> Index.filter_via_relationships(params)
     |> Index.field_filters(params, resource)
     |> Index.sort(params, resource)
@@ -163,6 +164,7 @@ defmodule ExTeal.Resource.Export do
 
     conn
     |> resource.handle_index(params)
+    |> Records.preload(resource)
     |> Index.sort(params, resource)
     |> where([r], r.id in ^ids)
     |> resource.handle_export_query(params)

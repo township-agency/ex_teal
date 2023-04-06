@@ -33,7 +33,7 @@ defmodule ExTeal.Action do
   The commit should return an ActionResponse struct. The ActionResponse types that are available are 'success', 'error', 'redirect', 'download' and 'push'.
   """
 
-  alias ExTeal.Resource.Index
+  alias ExTeal.Resource.{Index, Records}
   alias Plug.Conn
 
   import Ecto.Query, only: [where: 3]
@@ -108,6 +108,7 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
+      |> Records.preload(resource)
       |> Index.filter_via_relationships(params)
       |> Index.field_filters(params, resource)
       |> Index.search(params, resource)
@@ -121,6 +122,7 @@ defmodule ExTeal.Action do
     query =
       conn
       |> resource.handle_index(params)
+      |> Records.preload(resource)
       |> Index.filter_via_relationships(params)
       |> Index.field_filters(params, resource)
       |> Index.search(params, resource)
