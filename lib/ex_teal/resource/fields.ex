@@ -21,10 +21,6 @@ defmodule ExTeal.Resource.Fields do
   """
   @callback fields() :: list(Field.t())
 
-  @doc """
-  Used to decorate the fields before
-  """
-
   defmacro __using__(_) do
     quote do
       @behaviour ExTeal.Resource.Fields
@@ -241,8 +237,24 @@ defmodule ExTeal.Resource.Fields do
       |> Map.put(:value, value)
       |> add_panel_key(panel)
       |> field.type.apply_options_for(model, conn, type)
+      |> apply_can_see(conn)
     end)
     |> Enum.reject(&is_nil/1)
+  end
+
+  @doc """
+  Apply the can_see function attached to a field to filter
+  out the field from serialized responses.
+  """
+  @spec apply_can_see(Field.t(), Plug.Conn.t()) :: Field.t() | nil
+  def apply_can_see(%Field{can_see: nil} = field, _), do: field
+
+  def apply_can_see(%Field{can_see: see} = field, conn) when is_function(see, 1) do
+    if see.(conn) do
+      field
+    else
+      nil
+    end
   end
 
   def add_panel_key(%Field{panel: panel} = field, _) when not is_nil(panel), do: field
