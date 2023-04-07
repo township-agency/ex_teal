@@ -1,7 +1,7 @@
 defmodule ExTeal.Resource.FieldsTest do
   use TestExTeal.ConnCase
 
-  alias ExTeal.Fields.{Hidden, ManyToManyBelongsTo, Text}
+  alias ExTeal.Fields.{ManyToManyBelongsTo, Text}
   alias ExTeal.Resource.Fields
   alias TestExTeal.{PostResource, TagResource, UserResource}
 
@@ -43,7 +43,9 @@ defmodule ExTeal.Resource.FieldsTest do
         Embedded.new(:location, [
           Text.make(:street_line_1),
           Text.make(:city)
-        ])
+        ]),
+        Text.make(:description)
+        |> can_see?(fn %{assigns: assigns} -> Map.get(assigns, :foo) == :bar end)
       ]
   end
 
@@ -65,18 +67,20 @@ defmodule ExTeal.Resource.FieldsTest do
     test "returns all fields for an embedded resource" do
       fields = Fields.all_fields(EmbeddedPostResource)
 
-      as_panel_field = fn field ->
-        field
-        |> Map.put(:attribute, :"location.#{field.field}")
-        |> Map.put(:panel, :location)
-        |> Map.put(:embed_field, :location)
-      end
+      assert Enum.map(fields, & &1.field) == [
+               :name,
+               :id,
+               :street_line_1,
+               :city,
+               :description
+             ]
 
-      assert fields == [
-               Text.make(:name),
-               as_panel_field.(Hidden.make(:id)),
-               as_panel_field.(Text.make(:street_line_1)),
-               as_panel_field.(Text.make(:city))
+      assert Enum.map(fields, & &1.attribute) == [
+               "name",
+               :"location.id",
+               :"location.street_line_1",
+               :"location.city",
+               "description"
              ]
     end
   end
@@ -139,6 +143,21 @@ defmodule ExTeal.Resource.FieldsTest do
       assert order_field.type == ExTeal.Fields.Number
       assert note_field.type == ExTeal.Fields.Text
     end
+  end
+
+  test "apply_values_for/5 hides fields based on can_see?/1" do
+    p = insert(:post)
+
+    conn = prep_conn(:get, "/post-embeds/#{p.id}")
+    fields = Fields.fields_for(:index, EmbeddedPostResource)
+    normal_fields = Fields.apply_values(fields, p, EmbeddedPostResource, conn, :index, nil)
+
+    assert Enum.count(normal_fields) == 3
+
+    conn = Plug.Conn.assign(conn, :foo, :bar)
+
+    fields = Fields.apply_values(fields, p, EmbeddedPostResource, conn, :index, nil)
+    assert Enum.count(fields) == 4
   end
 
   def prep_conn(method, path, params \\ %{}) do

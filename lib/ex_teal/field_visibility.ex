@@ -105,4 +105,14 @@ defmodule ExTeal.FieldVisibility do
   """
   @spec as_html(Field.t()) :: Field.t()
   def as_html(field), do: %{field | as_html: true}
+
+  @doc """
+  Conditionally render a field on a resource as a whole based on the current
+  request.  Helpful for filtering out fields based on the current
+  users permissions.
+  """
+  @spec can_see?(Field.t(), (Plug.Conn.t() -> boolean())) :: Field.t()
+  def can_see?(field, func) do
+    Map.put(field, :can_see, func)
+  end
 end

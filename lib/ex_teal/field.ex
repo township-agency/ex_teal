@@ -26,6 +26,7 @@ defmodule ExTeal.Field do
             panel: nil,
             embed_field: nil,
             getter: nil,
+            can_see: nil,
             show_on_index: true,
             show_on_detail: true,
             show_on_new: true,
