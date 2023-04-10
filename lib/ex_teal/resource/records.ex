@@ -30,9 +30,9 @@ defmodule ExTeal.Resource.Records do
         |> where([p], p.author_id == ^user_id)
       end
 
-  Return value should be %Plug.Conn{} or an %Ecto.Query{}.
+  Return value should be %Plug.Conn{} or an %Ecto.Queryable{}.
   """
-  @callback records(Plug.Conn.t(), module()) :: Plug.Conn.t() | Ecto.Query.t()
+  @callback records(Plug.Conn.t(), module()) :: Plug.Conn.t() | Ecto.Queryable.t()
 
   @doc """
   Used to specify which relationships to always
