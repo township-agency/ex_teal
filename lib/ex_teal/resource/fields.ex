@@ -47,13 +47,7 @@ defmodule ExTeal.Resource.Fields do
   end
 
   def meta_for(:index, _data, all, total, resource, conn) do
-    is_many_to_many = Map.get(conn.params, "relationship_type") == "ManyToMany"
-
-    fields =
-      if(is_many_to_many,
-        do: fields_for_many_to_many(:index, resource, conn),
-        else: fields_for(:index, resource)
-      )
+    fields = index_fields(resource, conn)
 
     %{
       label: resource.title(),
@@ -65,21 +59,12 @@ defmodule ExTeal.Resource.Fields do
   end
 
   def serialize_response(:index, resource, data, conn) do
-    fields =
-      if Map.get(conn.params, "relationship_type") == "ManyToMany" do
-        fields_for_many_to_many(:index, resource, conn)
-      else
-        fields_for(:index, resource)
-      end
-
+    fields = index_fields(resource, conn)
     policy = resource.policy()
 
     data
     |> Enum.map(fn model ->
-      fields =
-        fields
-        |> apply_values(model, resource, conn, :index, nil)
-        |> Enum.filter(&viewable/1)
+      fields = apply_values(fields, model, resource, conn, :index, nil)
 
       %{
         fields: fields,
@@ -113,6 +98,21 @@ defmodule ExTeal.Resource.Fields do
         can_update?: policy.update?(conn, model)
       }
     }
+  end
+
+  defp index_fields(resource, conn) do
+    is_many_to_many = Map.get(conn.params, "relationship_type") == "ManyToMany"
+
+    fields =
+      if(is_many_to_many,
+        do: fields_for_many_to_many(:index, resource, conn),
+        else: fields_for(:index, resource)
+      )
+
+    fields
+    |> Enum.filter(&viewable/1)
+    |> Enum.map(&apply_can_see(&1, conn))
+    |> Enum.reject(&is_nil/1)
   end
 
   defp viewable(%{options: %{can_view_any: false}}), do: false

@@ -31,11 +31,13 @@ defmodule ExTeal.Resource.Record do
     quote do
       unless ExTeal.Resource.Record in @behaviour do
         use ExTeal.Resource.Records
+        alias ExTeal.Resource.Records
         @behaviour ExTeal.Resource.Record
 
         def record(conn, id) do
           conn
           |> records(__MODULE__)
+          |> Records.preload(__MODULE__)
           |> repo().get(id)
         end
 
