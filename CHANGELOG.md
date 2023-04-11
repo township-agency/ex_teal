@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.0](https://github.com/township-agency/ex_teal/compare/v0.19.4...v0.20.0) (2023-04-11)
+
+
+### Features
+
+* Introduce can_see?/2 to add field specific authorization ([1d52b6b](https://github.com/township-agency/ex_teal/commit/1d52b6bc7399d2242f794333fae470d56f66656f))
+
+
+### Bug Fixes
+
+* Panels were lost in the see_more/2 release ([d28fa73](https://github.com/township-agency/ex_teal/commit/d28fa737e5786bcc46765e0045ce7b03f87c01c9))
+* Separate Query Preloads from records/2 call ([a6026f9](https://github.com/township-agency/ex_teal/commit/a6026f9896ab8de3ab8f2ca6891f83c78d40e5e3))
+
 ## [0.19.4](https://github.com/township-agency/ex_teal/compare/v0.19.3...v0.19.4) (2023-04-04)
 
 
