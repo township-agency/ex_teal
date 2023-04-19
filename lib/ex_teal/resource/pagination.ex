@@ -2,7 +2,7 @@ defmodule ExTeal.Resource.Pagination do
   @moduledoc """
   Used to build paginated views of resources
   """
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query
 
   def paginate_query(query, conn, resource) do
     per_page = conn.params |> Map.get("per_page", "25") |> String.to_integer()
@@ -12,7 +12,13 @@ defmodule ExTeal.Resource.Pagination do
 
     data_query = from(query, limit: ^per_page, offset: ^offset)
 
-    all = resource.repo().aggregate(query, :count, :id)
+    agg_query =
+      query
+      |> exclude(:preload)
+      |> exclude(:select)
+
+    agg_query = from(q in subquery(agg_query), select: count(q.id))
+    all = resource.repo().one(agg_query)
 
     total = Float.ceil(all / per_page)
 
