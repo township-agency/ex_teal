@@ -78,7 +78,7 @@ defmodule ExTeal.MixProject do
 
   defp description do
     "ExTeal is a beautiful administration dashboard written for Phoenix Apps built
-by Motel."
+by Township."
   end
 
   defp package do
@@ -91,8 +91,7 @@ by Motel."
         "Scott Taylor"
       ],
       licenses: ["MIT"],
-      links: %{"GitHub" => @source},
-      organization: "motel"
+      links: %{"GitHub" => @source}
     ]
   end
 
