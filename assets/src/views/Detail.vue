@@ -156,6 +156,7 @@ export default {
   watch: {
     resourceName: function (newResource, oldResource) {
       if (newResource !== oldResource) {
+        this.initialLoading = true;
         this.initializeComponent();
       }
     },
