@@ -88,7 +88,7 @@ defmodule ExTeal.Application.Configuration do
         ExTeal.available_resources()
         |> Enum.filter(& &1.policy().view_any?(conn))
         |> Resource.map_to_json(conn),
-      dashboards: ExTeal.available_dashboards() |> Dashboard.map_to_json(),
+      dashboards: conn |> ExTeal.available_dashboards() |> Dashboard.map_to_json(),
       nav_groups: ExTeal.available_nav_groups(conn),
       plugins: ExTeal.available_plugins(),
       authenticated: true,

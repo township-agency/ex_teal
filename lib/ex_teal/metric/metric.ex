@@ -84,7 +84,7 @@ defmodule ExTeal.Metric do
 
   Used as part of a dashboard or card list on a resource index or detail page.
   """
-  @callback options() :: map()
+  @callback options(Plug.Conn.t()) :: map()
 
   @doc """
   Define the range to render by default for a metric.
@@ -130,7 +130,7 @@ defmodule ExTeal.Metric do
 
       def chart_options, do: %{}
 
-      def options,
+      def options(_conn),
         do: %{
           ranges: ranges(),
           default_range: default_range(),
@@ -154,7 +154,7 @@ defmodule ExTeal.Metric do
         format: 0,
         component: 0,
         chart_options: 0,
-        options: 0,
+        options: 1,
         default_range: 0
       )
     end

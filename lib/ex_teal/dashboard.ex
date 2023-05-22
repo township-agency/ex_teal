@@ -14,6 +14,9 @@ defmodule ExTeal.Dashboard do
 
   @callback title() :: String.t()
 
+  @doc """
+  Unique URI that allows the dashboard to look up cards.  Should be url safe.
+  """
   @callback uri() :: String.t()
 
   @doc """
@@ -21,6 +24,11 @@ defmodule ExTeal.Dashboard do
   dashboard.
   """
   @callback cards(Plug.Conn.t()) :: [module()]
+
+  @doc """
+  Show or Hide a dashboard based on the current connection. Defaults to true
+  """
+  @callback display?(Plug.Conn.t()) :: boolean()
 
   defmacro __using__(_) do
     quote do
@@ -44,7 +52,9 @@ defmodule ExTeal.Dashboard do
 
       def cards(_conn), do: []
 
-      defoverridable title: 0, cards: 1, uri: 0
+      def display?(_conn), do: true
+
+      defoverridable title: 0, cards: 1, uri: 0, display?: 1
     end
   end
 

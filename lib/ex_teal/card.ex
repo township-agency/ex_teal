@@ -19,7 +19,7 @@ defmodule ExTeal.Card do
   @callback component() :: String.t()
   @callback only_on_detail(Plug.Conn.t()) :: bool
   @callback only_on_index(Plug.Conn.t()) :: bool
-  @callback options() :: map()
+  @callback options(Plug.Conn.t()) :: map()
   @callback width() :: String.t()
 
   defmacro __using__(_opts) do
@@ -28,7 +28,7 @@ defmodule ExTeal.Card do
       def component, do: nil
       def only_on_detail(_), do: false
       def only_on_index(_), do: false
-      def options, do: %{}
+      def options(_), do: %{}
       def width, do: "1/3"
       def title, do: nil
       def uri, do: nil
@@ -36,7 +36,7 @@ defmodule ExTeal.Card do
       defoverridable component: 0,
                      only_on_detail: 1,
                      only_on_index: 1,
-                     options: 0,
+                     options: 1,
                      width: 0,
                      title: 0,
                      uri: 0
@@ -48,7 +48,7 @@ defmodule ExTeal.Card do
       component: module.component(),
       only_on_detail: module.only_on_detail(conn),
       only_on_index: module.only_on_index(conn),
-      options: module.options(),
+      options: module.options(conn),
       width: module.width(),
       title: module.title()
     }

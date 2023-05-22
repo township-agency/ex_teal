@@ -26,7 +26,7 @@ defmodule ExTeal.Metric.MetricTest do
     def only_on_detail(conn), do: conn.request_path == "/foo"
 
     @impl true
-    def options, do: %{foo: "bar"}
+    def options(_), do: %{foo: "bar"}
   end
 
   describe "uri/0" do

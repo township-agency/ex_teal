@@ -46,11 +46,11 @@ defmodule ExTeal do
     end
   end
 
-  @spec available_dashboards() :: [module()]
-  def available_dashboards do
+  @spec available_dashboards(Plug.Conn.t()) :: [module()]
+  def available_dashboards(conn) do
     case manifest() do
       nil -> []
-      module -> module.dashboards()
+      module -> Enum.filter(module.dashboards(), & &1.display?(conn))
     end
   end
 
@@ -62,9 +62,9 @@ defmodule ExTeal do
     end
   end
 
-  @spec dashboard_for(String.t()) :: {:ok, module()} | {:error, :not_found}
-  def dashboard_for(uri) do
-    case Enum.find(available_dashboards(), fn x -> x.uri() == uri end) do
+  @spec dashboard_for(Plug.Conn.t(), String.t()) :: {:ok, module()} | {:error, :not_found}
+  def dashboard_for(conn, uri) do
+    case Enum.find(available_dashboards(conn), fn x -> x.uri() == uri end) do
       nil -> {:error, :not_found}
       module -> {:ok, module}
     end
@@ -73,7 +73,7 @@ defmodule ExTeal do
   @spec dashboard_metric_for(Conn.t(), String.t()) :: {:ok, module} | {:error, :not_found}
   def dashboard_metric_for(conn, uri) do
     all_metrics =
-      available_dashboards()
+      available_dashboards(conn)
       |> Enum.map(& &1.cards(conn))
       |> Enum.concat()
 
