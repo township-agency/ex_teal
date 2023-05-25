@@ -10,7 +10,7 @@ defmodule ExTeal.Api.CardResponder do
   alias ExTeal.Resource.Serializer
 
   def dashboard(conn, name) do
-    case ExTeal.dashboard_for(name) do
+    case ExTeal.dashboard_for(conn, name) do
       {:ok, dashboard} ->
         dashboard
         |> Dashboard.cards_to_json(conn)
