@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.21.0](https://github.com/township-agency/ex_teal/compare/v0.20.1...v0.21.0) (2023-05-25)
+
+
+### Features
+
+* Add a Greeting Card, enabled by adding a conn argument to options on Card ([#186](https://github.com/township-agency/ex_teal/issues/186)) ([48180d8](https://github.com/township-agency/ex_teal/commit/48180d83ed6807641301b902253e10b40f139be8))
+
+
+### Bug Fixes
+
+* reset the detail page when resources change so that cards are not persisted ([#183](https://github.com/township-agency/ex_teal/issues/183)) ([b04d582](https://github.com/township-agency/ex_teal/commit/b04d582d536abb18c2235abf48125627d378d6f2))
+
 ## [0.20.1](https://github.com/township-agency/ex_teal/compare/v0.20.0...v0.20.1) (2023-04-19)
 
 
