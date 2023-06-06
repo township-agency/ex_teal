@@ -73,7 +73,7 @@ defmodule ExTeal.Resource.Index do
     |> Records.preload(resource)
     |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
-    |> Index.field_filters(conn.params, resource)
+    |> Index.field_filters(conn, resource)
     |> Index.sort(conn.params, resource)
     |> Index.search(conn.params, resource)
     |> execute_query(conn, resource, :index)
@@ -138,16 +138,16 @@ defmodule ExTeal.Resource.Index do
     end
   end
 
-  def field_filters(query, %{"field_filters" => filters}, resource) do
+  def field_filters(query, %{params: %{"field_filters" => filters}} = conn, resource) do
     with {:ok, filters} <- filters |> :base64.decode() |> Jason.decode(),
          false <- Enum.empty?(filters) do
-      FieldFilter.query(query, filters, resource)
+      FieldFilter.query(query, filters, resource, conn)
     else
       _ -> query
     end
   end
 
-  def field_filters(query, _params, _resource), do: query
+  def field_filters(query, _conn, _resource), do: query
 
   @doc false
   def sort(

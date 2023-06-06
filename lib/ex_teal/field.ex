@@ -153,6 +153,7 @@ defmodule ExTeal.Field do
     field
     |> Map.put(:getter, func)
     |> Map.put(:sortable, false)
+    |> Map.put(:filterable, false)
     |> Map.put(:show_on_new, false)
     |> Map.put(:show_on_edit, false)
   end

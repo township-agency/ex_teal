@@ -152,7 +152,7 @@ defmodule ExTeal.Resource.Export do
     |> resource.handle_index(params)
     |> Records.preload(resource)
     |> Index.filter_via_relationships(params)
-    |> Index.field_filters(params, resource)
+    |> Index.field_filters(conn, resource)
     |> Index.sort(params, resource)
     |> Index.search(params, resource)
     |> resource.handle_export_query(params)

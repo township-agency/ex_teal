@@ -76,7 +76,7 @@ defmodule ExTeal.FieldFilter do
   def for_resource(resource, conn) do
     filters =
       resource
-      |> filters_for_resource()
+      |> filters_for_resource(conn)
       |> Enum.map(&to_filter(&1, resource))
 
     Serializer.send(conn, :index, %{filters: filters})
@@ -86,11 +86,11 @@ defmodule ExTeal.FieldFilter do
   Iterate over the fields from an index query, build the related field
   filter and apply their queries.
   """
-  @spec query(Ecto.Queryable.t(), list(map()), module()) :: Ecto.Queryable.t()
-  def query(query, filter_params, resource) do
+  @spec query(Ecto.Queryable.t(), list(map()), module(), Plug.Conn.t()) :: Ecto.Queryable.t()
+  def query(query, filter_params, resource, conn) do
     filters =
       resource
-      |> filters_for_resource()
+      |> filters_for_resource(conn)
       |> Enum.into(%{}, fn %Field{field: name} = f -> {name, f} end)
 
     Enum.reduce(filter_params, query, &build_and_query_filter(&1, &2, filters, resource))
@@ -108,12 +108,13 @@ defmodule ExTeal.FieldFilter do
     }
   end
 
-  defp filters_for_resource(resource) do
+  defp filters_for_resource(resource, conn) do
     resource
     |> Fields.all_fields()
     |> Enum.reject(fn field ->
       is_nil(field.filterable) or field.filterable == false or not is_nil(field.embed_field)
     end)
+    |> Enum.filter(&Fields.apply_can_see(&1, conn))
   end
 
   defp to_filter(%Field{filterable: filter_type} = field, resource) do
