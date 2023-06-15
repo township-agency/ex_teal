@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.0](https://github.com/township-agency/ex_teal/compare/v0.21.0...v0.22.0) (2023-06-15)
+
+
+### Features
+
+* Dashboard Resource Table, Virtual Aggregates ([#189](https://github.com/township-agency/ex_teal/issues/189)) ([03273a2](https://github.com/township-agency/ex_teal/commit/03273a2ba591b0a53eca6eed08744641a378a224))
+
 ## [0.21.0](https://github.com/township-agency/ex_teal/compare/v0.20.1...v0.21.0) (2023-05-25)
 
 
