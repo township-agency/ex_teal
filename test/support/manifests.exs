@@ -60,3 +60,8 @@ defmodule TestExTeal.ForeverManifest do
   def resources,
     do: [TestExTeal.UserResource, TestExTeal.Forever.PostResource, TestExTeal.TagResource]
 end
+
+defmodule TestExTeal.PostCountManifest do
+  use ExTeal.Manifest
+  def resources, do: [TestExTeal.UsersWithPostCountsResource]
+end

@@ -8,6 +8,7 @@ defmodule TestExTeal.User do
     field(:role, Ecto.Enum, values: [:admin, :moderator, :seller, :buyer])
 
     many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
+    field(:post_count, :integer, virtual: true)
     timestamps()
   end
 end

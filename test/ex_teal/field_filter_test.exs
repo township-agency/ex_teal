@@ -34,7 +34,7 @@ defmodule ExTeal.FieldFilterTest do
            ]
   end
 
-  test "query/3 builds a query using the fields and filters" do
+  test "query/4 builds a query using the fields and filters" do
     p = insert(:post, name: "Foo", user: nil)
     insert(:post, name: "Bar", user: nil)
 
@@ -42,7 +42,9 @@ defmodule ExTeal.FieldFilterTest do
       %{"field" => "name", "operator" => "=", "operand" => "Foo"}
     ]
 
-    [result] = FieldFilter.query(Post, filters, PostResource) |> Repo.all()
+    conn = prep_conn(:get, "/posts/")
+
+    [result] = FieldFilter.query(Post, filters, PostResource, conn) |> Repo.all()
     assert result.id == p.id
   end
 

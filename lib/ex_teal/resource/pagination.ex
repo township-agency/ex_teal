@@ -16,6 +16,7 @@ defmodule ExTeal.Resource.Pagination do
       query
       |> exclude(:preload)
       |> exclude(:select)
+      |> exclude(:order_by)
 
     agg_query = from(q in subquery(agg_query), select: count(q.id))
     all = resource.repo().one(agg_query)

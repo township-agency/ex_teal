@@ -308,3 +308,30 @@ defmodule TestExTeal.Forever.PostResource do
 
   def actions(_), do: [TestExTeal.PublishAction]
 end
+
+defmodule TestExTeal.UsersWithPostCountsResource do
+  use ExTeal.Resource
+  import Ecto.Query
+  alias ExTeal.Field
+
+  alias ExTeal.Fields.{Number, Text}
+
+  def model, do: TestExTeal.User
+
+  def records(_conn, _resource) do
+    TestExTeal.User
+    |> join(:left, [u], p in assoc(u, :posts))
+    |> group_by([u], u.id)
+    |> select([u, p], %{
+      id: u.id,
+      name: u.name,
+      post_count: p.id |> count() |> selected_as(:post_count)
+    })
+  end
+
+  def fields,
+    do: [
+      Text.make(:name),
+      Number.make(:post_count) |> Field.virtual()
+    ]
+end

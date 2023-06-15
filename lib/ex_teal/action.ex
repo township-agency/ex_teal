@@ -110,7 +110,7 @@ defmodule ExTeal.Action do
       |> resource.handle_index(params)
       |> Records.preload(resource)
       |> Index.filter_via_relationships(params)
-      |> Index.field_filters(params, resource)
+      |> Index.field_filters(conn, resource)
       |> Index.search(params, resource)
 
     {:ok, query}
@@ -124,7 +124,7 @@ defmodule ExTeal.Action do
       |> resource.handle_index(params)
       |> Records.preload(resource)
       |> Index.filter_via_relationships(params)
-      |> Index.field_filters(params, resource)
+      |> Index.field_filters(conn, resource)
       |> Index.search(params, resource)
       |> where([r], r.id in ^ids)
 
