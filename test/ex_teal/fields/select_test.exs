@@ -107,10 +107,10 @@ defmodule ExTeal.Fields.SelectTest do
       updated_field = Select.apply_options_for(field, model, %{}, :show)
 
       assert updated_field.options.field_options == [
-               %{disabled: false, value: :admin, key: :admin},
-               %{disabled: false, value: :moderator, key: :moderator},
-               %{disabled: false, value: :seller, key: :seller},
-               %{disabled: false, value: :buyer, key: :buyer}
+               %{disabled: false, value: "admin", key: :admin},
+               %{disabled: false, value: "moderator", key: :moderator},
+               %{disabled: false, value: "seller", key: :seller},
+               %{disabled: false, value: "buyer", key: :buyer}
              ]
     end
   end

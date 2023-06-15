@@ -70,6 +70,19 @@ defmodule ExTeal.Resource do
   """
   @callback default_order() :: [orderable_option]
 
+  @type indexed_resource :: struct() | %{_pivot: struct(), _row: struct(), pivot: true}
+
+  @doc """
+  Override the detail or edit link for a resource on the resource index.
+
+  When defining this callback, be aware that resources referenced by a many to many relationship
+  will also call this function when rendering the index of that many to many.
+  """
+  @callback navigate_to(:detail | :edit, Plug.Conn.t(), indexed_resource()) :: %{
+              resource_name: String.t(),
+              resource_id: String.t()
+            }
+
   defmacro __using__(_opts) do
     quote do
       @behaviour ExTeal.Resource
@@ -96,13 +109,19 @@ defmodule ExTeal.Resource do
 
       def skip_sanitize, do: false
 
+      def navigate_to(_, _conn, %{pivot: true, _row: row}),
+        do: %{resource_name: uri(), resource_id: row.id}
+
+      def navigate_to(_, _conn, schema), do: %{resource_name: uri(), resource_id: schema.id}
+
       defoverridable(
         hide_from_nav: 0,
         nav_group: 1,
         sortable_by: 0,
         default_order: 0,
         cards: 1,
-        skip_sanitize: 0
+        skip_sanitize: 0,
+        navigate_to: 3
       )
     end
   end

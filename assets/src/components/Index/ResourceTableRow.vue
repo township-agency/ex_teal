@@ -54,10 +54,7 @@
             v-if="shouldShowViewButton"
             :to="{
               name: 'detail',
-              params: {
-                resourceName: resourceName,
-                resourceId: resourceId
-              }
+              params: detailLinkParams
             }"
             title="Show"
             class="table-action-link primary"
@@ -99,10 +96,7 @@
             v-if="shouldShowUpdateButton"
             :to="{
               name: 'edit',
-              params: {
-                resourceName: resourceName,
-                resourceId: resourceId
-              }
+              params: editLinkParams
             }"
             title="Edit"
             class="table-action-link primary"
@@ -220,7 +214,11 @@ export default {
     },
 
     shouldShowViewButton () {
-      return this.resourceInformation && this.resourceInformation.can_view_any;
+      if (!this.resourceInformation || !this.resource) {
+        return false;
+      }
+
+      return this.resourceInformation.can_view_any && this.resource.meta['can_view?'];
     },
 
     shouldShowUpdateButton () {
@@ -235,6 +233,16 @@ export default {
         return false;
       }
       return this.resourceInformation.can_delete_any && this.resource.meta['can_delete?'];
+    },
+
+    detailLinkParams () {
+      const { resource_name: resourceName, resource_id: resourceId } = this.resource.meta.detail_link;
+      return { resourceName, resourceId };
+    },
+
+    editLinkParams () {
+      const { resource_name: resourceName, resource_id: resourceId } = this.resource.meta.edit_link;
+      return { resourceName, resourceId };
     }
   },
 

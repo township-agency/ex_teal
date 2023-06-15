@@ -28,7 +28,7 @@ defmodule ExTeal.FieldFilter.Select do
       |> Select.all_options_for()
       |> Enum.find(fn %{value: value} -> value == op || String.to_existing_atom(op) == value end)
 
-      case option do
+    case option do
       %{value: value} ->
         where(query, [q], field(q, ^field.field) == ^value)
 

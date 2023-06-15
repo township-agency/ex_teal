@@ -6,6 +6,7 @@ import BelongsToFieldFilter from '@/components/FieldFilters/BelongsToFieldFilter
 import Card from '@/components/Card';
 import Cards from '@/components/Cards';
 import CardsGreeting from '@/components/Cards/Greeting';
+import CardsResourceIndex from '@/components/Cards/ResourceIndex';
 import CardWrapper from '@/components/CardWrapper';
 import Checkbox from '@/components/Checkbox';
 import CheckboxWithLabel from '@/components/CheckboxWithLabel';
@@ -69,6 +70,7 @@ Vue.component('belongs-to-field-filter', BelongsToFieldFilter);
 Vue.component('card', Card);
 Vue.component('cards', Cards);
 Vue.component('cards-greeting', CardsGreeting);
+Vue.component('cards-resource-index', CardsResourceIndex);
 Vue.component('card-wrapper', CardWrapper);
 Vue.component('checkbox', Checkbox);
 Vue.component('checkbox-with-label', CheckboxWithLabel);

@@ -71,7 +71,10 @@ defmodule ExTeal.Resource.Fields do
         id: id_for(model),
         meta: %{
           can_delete?: policy.delete?(conn, model),
-          can_update?: policy.update?(conn, model)
+          can_update?: policy.update?(conn, model),
+          can_view?: policy.view?(conn, model),
+          detail_link: resource.navigate_to(:detail, conn, model),
+          edit_link: resource.navigate_to(:edit, conn, model)
         }
       }
     end)
@@ -95,7 +98,8 @@ defmodule ExTeal.Resource.Fields do
       panels: panels,
       meta: %{
         can_delete?: policy.delete?(conn, model),
-        can_update?: policy.update?(conn, model)
+        can_update?: policy.update?(conn, model),
+        can_view?: policy.view?(conn, model)
       }
     }
   end

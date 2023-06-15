@@ -178,6 +178,7 @@ defmodule ExTeal.Resource.Index do
       when not is_nil(field) and not is_nil(dir) do
     fields = Fields.all_fields(resource)
     field_struct = Enum.find(fields, &(&1.attribute == field))
+
     handle_sort(query, field_struct, String.to_existing_atom(field), dir)
   end
 
@@ -192,8 +193,16 @@ defmodule ExTeal.Resource.Index do
     handle_sort(query, nil, String.to_existing_atom("#{Atom.to_string(field)}_id"), dir)
   end
 
-  defp handle_sort(query, _, field, "asc"), do: from(query, order_by: ^[{:asc, field}])
-  defp handle_sort(query, _, field, "desc"), do: from(query, order_by: ^[{:desc, field}])
+  defp handle_sort(query, %Field{virtual: true}, f, "asc") do
+    order_by(query, [q], asc: fragment("?", literal(^"#{f}")))
+  end
+
+  defp handle_sort(query, %Field{virtual: true}, f, "desc") do
+    order_by(query, [q], desc: fragment("?", literal(^"#{f}")))
+  end
+
+  defp handle_sort(query, _, field, "asc"), do: order_by(query, [q], asc: field(q, ^field))
+  defp handle_sort(query, _, field, "desc"), do: order_by(query, [q], desc: field(q, ^field))
   defp handle_sort(query, _, _, _), do: query
 
   defp sort_by_pivot(query, params, _resource) do

@@ -187,7 +187,7 @@
       >
         <div class="text-center">
           <svg
-            class="mb-3"
+            class="mb-3 inline"
             xmlns="http://www.w3.org/2000/svg"
             width="65"
             height="51"
@@ -323,6 +323,11 @@ export default {
     relSortableBy: {
       type: String,
       default: ''
+    },
+    includeCards: {
+      required: false,
+      default: true,
+      type: Boolean
     }
   },
 
@@ -573,7 +578,7 @@ export default {
      */
     shouldShowCards () {
       // Don't show cards if this resource is beings shown via a relations
-      return this.cards.length > 0 && this.resourceName == this.$route.params.resourceName;
+      return this.includeCards && this.cards.length > 0 && this.resourceName == this.$route.params.resourceName;
     },
 
     /**

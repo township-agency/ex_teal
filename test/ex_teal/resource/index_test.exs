@@ -149,6 +149,27 @@ defmodule ExTeal.Resource.IndexTest do
     assert post.id == p.id
   end
 
+  @tag manifest: TestExTeal.PostCountManifest
+  test "can sort by virtual fields" do
+    [u1, u2] = insert_pair(:user)
+    insert_pair(:post, user: u2)
+    insert(:post, user: u1)
+
+    conn =
+      prep_conn(:get, "/users", %{
+        "order_by" => "post_count",
+        "order_by_direction" => "asc"
+      })
+
+    response = Index.call(TestExTeal.UsersWithPostCountsResource, conn)
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    [r1, r2] = json[:data]
+    assert r1.id == u1.id
+    assert r2.id == u2.id
+    assert Enum.at(r1.fields, 1).value == "1"
+    assert Enum.at(r2.fields, 1).value == "2"
+  end
+
   def prep_conn(method, path, params \\ %{}) do
     params = Map.merge(params, %{"_format" => "json"})
 

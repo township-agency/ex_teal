@@ -112,7 +112,8 @@ defmodule ExTeal.FieldFilter do
     resource
     |> Fields.all_fields()
     |> Enum.reject(fn field ->
-      is_nil(field.filterable) or field.filterable == false or not is_nil(field.embed_field)
+      is_nil(field.filterable) or field.virtual or field.filterable == false or
+        not is_nil(field.embed_field)
     end)
     |> Enum.filter(&Fields.apply_can_see(&1, conn))
   end

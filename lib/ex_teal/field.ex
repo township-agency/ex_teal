@@ -33,7 +33,8 @@ defmodule ExTeal.Field do
             show_on_edit: true,
             as_html: false,
             sanitize: :strip_tags,
-            relationship: nil
+            relationship: nil,
+            virtual: false
 
   alias ExTeal.Naming
 
@@ -164,6 +165,31 @@ defmodule ExTeal.Field do
   @spec filter_as(Field.t(), module) :: Field.t()
   def filter_as(field, filter_module) do
     Map.put(field, :filterable, filter_module)
+  end
+
+  @doc """
+  Mark a field as virtual, which will update how teal queries the database for the field.
+
+  This is relevant for fields that are based on schemaless queries in resources that represent complex
+  queries in read-only situations.  For example, if a resource has a records definition like:
+
+      from(p in "posts", select: %{user_id: p.user_id, count: count(p.id)}, group_by: p.user_id)
+
+  Sorting by that resource would fail without marking the `Number.make(:count)` field as
+  virtual.  Virtual fields allow Teal to sort by computed fields that are not backed
+  by a direct database reference, assuming the field is named with `Ecto.Query.API.selected_as/2`:
+
+      from(
+        p in "posts",
+        select: %{user_id: p.user_id, count: p.id |> count() |> selected_as(:count)},
+        group_by: p.user_id
+      )
+
+  A resource can then use `Number.make(:count) |> Field.virtual()` to mark the field as virtual.
+  """
+  @spec virtual(Field.t()) :: Field.t()
+  def virtual(field) do
+    %{field | virtual: true, filterable: false, show_on_new: false, show_on_edit: false}
   end
 
   def help_text(%Field{options: options} = f, text),
