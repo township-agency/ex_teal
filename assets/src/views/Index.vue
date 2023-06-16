@@ -165,6 +165,10 @@
           :filter="filter"
           :filters="fieldFilters"
           :resource-name="resourceName"
+          :via-relationship="viaRelationship"
+          :via-resource="viaResource"
+          :via-resource-id="viaResourceId"
+          :via-many-to-many="viaManyToMany"
           @fieldFilterUpdated="updateFieldFilter"
           @delete="deleteFieldFilter"
         />

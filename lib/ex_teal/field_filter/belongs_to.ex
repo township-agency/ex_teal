@@ -56,7 +56,7 @@ defmodule ExTeal.FieldFilter.BelongsTo do
         Map.merge(defaults, %{
           belongs_to_key: rel.owner_key,
           belongs_to_relationship: related_resource.uri(),
-          searchable: Map.get(field.options, :searchable, false)
+          searchable: true
         })
 
       _ ->

@@ -177,8 +177,13 @@ defmodule ExTeal.Resource.Index do
 
   def sort(query, %{"order_by" => field, "order_by_direction" => dir}, resource)
       when not is_nil(field) and not is_nil(dir) do
-    fields = Fields.all_fields(resource)
-    field_struct = Enum.find(fields, &(&1.attribute == field))
+    new_schema = struct(resource.model(), %{})
+
+    field_struct =
+      resource
+      |> Fields.all_fields()
+      |> Enum.find(&(&1.attribute == field))
+      |> then(& &1.type.apply_options_for(&1, new_schema, %{}, :index))
 
     handle_sort(query, field_struct, String.to_existing_atom(field), dir)
   end
@@ -190,8 +195,8 @@ defmodule ExTeal.Resource.Index do
     end
   end
 
-  defp handle_sort(query, %Field{type: BelongsTo}, field, dir) do
-    handle_sort(query, nil, String.to_existing_atom("#{Atom.to_string(field)}_id"), dir)
+  defp handle_sort(query, %Field{type: BelongsTo} = field, _field_key, dir) do
+    handle_sort(query, nil, field.options.belongs_to_key, dir)
   end
 
   defp handle_sort(query, %Field{virtual: true}, f, "asc") do
