@@ -25,6 +25,8 @@ defmodule TestExTeal.UserResource do
       ])
       |> ManyToMany.sortable_by(:order)
     ]
+
+  def default_order, do: [asc: :name]
 end
 
 defmodule TestExTeal.PostResource do
@@ -66,6 +68,8 @@ defmodule TestExTeal.PostResource do
     ]
 
   def actions(_), do: [TestExTeal.PublishAction]
+
+  def default_order, do: [asc: :name]
 end
 
 defmodule TestExTeal.PostEmbedResource do
@@ -112,6 +116,8 @@ defmodule TestExTeal.TagResource do
       Text.make(:name),
       ManyToMany.make(:posts, TestExTeal.Post)
     ]
+
+  def default_order, do: [asc: :name]
 end
 
 defmodule TestExTeal.OrderResourde do

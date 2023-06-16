@@ -16,7 +16,7 @@
           v-for="f in filters"
           :key="f.field"
         >
-          <a 
+          <a
             @click="selectFilter(f)"
           >
             {{ f.label }}
@@ -56,10 +56,13 @@
     </div>
     <component
       :is="selectedFieldFilter.as + '-field-filter'"
-      v-if="hasOperand" 
+      v-if="hasOperand"
       :filter="filter"
       :field-filter="selectedFieldFilter"
       :resource-name="resourceName"
+      :via-relationship="viaRelationship"
+      :via-resource="viaResource"
+      :via-resource-id="viaResourceId"
       @change="updateFilter"
     />
     <button
@@ -101,6 +104,22 @@ export default {
     resourceName: {
       type: String,
       required: true
+    },
+    viaResource: {
+      type: String,
+      default: ''
+    },
+    viaResourceId: {
+      type: Number,
+      default: null
+    },
+    viaRelationship: {
+      type: String,
+      default: ''
+    },
+    relationshipType: {
+      type: String,
+      default: ''
     }
   },
 

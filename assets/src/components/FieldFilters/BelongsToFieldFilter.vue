@@ -1,7 +1,6 @@
 <template>
   <div class="belongs-to-field-filter inline-flex">
     <search-input
-      v-if="isSearchable"
       :value="selectedResource"
       :data="availableResources"
       :is-searching="isSearching"
@@ -60,28 +59,6 @@
         </div>
       </div>
     </search-input>
-    <select
-      v-else
-      class="block appearance-none text-primary-dark bg-primary-10 leading-tight form-control field-filter-operand-input group-hover:rounded-none"
-      @change="selectResourceFromSelectControl"
-    >
-      <option
-        value=""
-        disabled="disabled"
-        selected
-      >
-        Choose {{ fieldFilter.label }}
-      </option>
-
-      <option
-        v-for="resource in availableResources"
-        :key="resource.id"
-        :value="resource.id"
-        :selected="selectedResourceId == resource.id"
-      >
-        {{ resource.title }}
-      </option>
-    </select>
   </div>
 </template>
 <script>
@@ -101,6 +78,22 @@ export default {
     resourceName: {
       required: true,
       type: String
+    },
+    viaResource: {
+      type: String,
+      default: ''
+    },
+    viaResourceId: {
+      type: Number,
+      default: null
+    },
+    viaRelationship: {
+      type: String,
+      default: ''
+    },
+    relationshipType: {
+      type: String,
+      default: ''
     }
   },
 
@@ -115,20 +108,17 @@ export default {
 
   computed: {
     /**
-     * Determine if the related resources is searchable
-     */
-    isSearchable () {
-      return this.fieldFilter.searchable;
-    },
-
-    /**
      * Get the query params for getting available resources
      */
     queryParams () {
       return {
         params: {
           current: this.selectedResourceId,
-          search: this.search
+          search: this.search,
+          via_resource: this.viaResource,
+          via_resource_id: this.viaResourceId,
+          via_relationship: this.viaRelationship,
+          relationship_type: this.relationshipType
         }
       };
     },
@@ -153,7 +143,7 @@ export default {
     this.initializeComponent();
   },
 
-  
+
   methods: {
     setOperand (e) {
       this.$emit('change', { ...this.filter, operand: e.target.value, valid: true });
