@@ -86,6 +86,7 @@ defmodule ExTeal.Resource.Index do
     |> Records.preload(resource)
     |> Index.query_by_related(conn.params, resource)
     |> Index.search(conn.params, resource)
+    |> Index.sort(conn.params, resource)
     |> execute_query(conn, resource, :related)
     |> resource.render_related(resource, conn)
   end

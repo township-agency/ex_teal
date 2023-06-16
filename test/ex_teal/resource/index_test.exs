@@ -4,49 +4,77 @@ defmodule ExTeal.Resource.IndexTest do
   alias ExTeal.Resource.Index
   alias TestExTeal.{PostResource, Repo, UserResource}
 
-  test "default implementation returns all records" do
-    insert_pair(:post)
-    conn = prep_conn(:get, "/posts/")
-    response = Index.call(PostResource, conn)
-    assert 200 == response.status
+  describe "call/2" do
+    test "default implementation returns all records" do
+      insert_pair(:post)
+      conn = prep_conn(:get, "/posts/")
+      response = Index.call(PostResource, conn)
+      assert 200 == response.status
 
-    json = Jason.decode!(response.resp_body, keys: :atoms!)
-    assert [_, _] = json[:data]
+      json = Jason.decode!(response.resp_body, keys: :atoms!)
+      assert [_, _] = json[:data]
+    end
+
+    test "is able to filter records based on field filters" do
+      insert(:post, name: "Foo")
+      insert(:post)
+      filters = [%{"field" => "name", "operator" => "=", "operand" => "Foo"}]
+      encoded_filters = filters |> Jason.encode!() |> :base64.encode()
+      conn = prep_conn(:get, "/posts/", %{"field_filters" => encoded_filters})
+      response = Index.call(PostResource, conn)
+      assert 200 == response.status
+
+      json = Jason.decode!(response.resp_body, keys: :atoms!)
+      assert [_] = json[:data]
+    end
+
+    test "can search with very basic ilikes across string fields" do
+      user = insert(:user, name: "Scott Taylor")
+      insert(:user, name: "Other")
+      conn = prep_conn(:get, "/users", %{"search" => "Scott"})
+      response = Index.call(UserResource, conn)
+      assert 200 == response.status
+      json = Jason.decode!(response.resp_body, keys: :atoms!)
+      assert [u] = json[:data]
+      assert u.id == user.id
+    end
+
+    test "can search by primary id" do
+      [u1, _u2] = insert_pair(:user)
+
+      conn = prep_conn(:get, "/users", %{"search" => "#{u1.id}"})
+      response = Index.call(UserResource, conn)
+      assert 200 == response.status
+      json = Jason.decode!(response.resp_body, keys: :atoms!)
+      assert [u] = json[:data]
+      assert u.id == u1.id
+    end
   end
 
-  test "is able to filter records based on field filters" do
-    insert(:post, name: "Foo")
-    insert(:post)
-    filters = [%{"field" => "name", "operator" => "=", "operand" => "Foo"}]
-    encoded_filters = filters |> Jason.encode!() |> :base64.encode()
-    conn = prep_conn(:get, "/posts/", %{"field_filters" => encoded_filters})
-    response = Index.call(PostResource, conn)
-    assert 200 == response.status
+  describe "query_for_related/2" do
+    test "returns sorted results for a belongs to" do
+      u1 = insert(:user, name: "Z")
+      u2 = insert(:user, name: "A")
+      json = result_for(UserResource, "/posts/relatable/user")
+      [r1, r2] = json[:data]
+      assert r1.id == u2.id
+      assert r2.id == u1.id
+    end
 
-    json = Jason.decode!(response.resp_body, keys: :atoms!)
-    assert [_] = json[:data]
-  end
+    test "returns sorted results for many to many" do
+      p1 = insert(:post, name: "Z")
+      p2 = insert(:post, name: "A")
+      json = result_for(PostResource, "/tags/relatable/posts")
+      [r1, r2] = json[:data]
+      assert r1.id == p2.id
+      assert r2.id == p1.id
+    end
 
-  test "can search with very basic ilikes across string fields" do
-    user = insert(:user, name: "Scott Taylor")
-    insert(:user, name: "Other")
-    conn = prep_conn(:get, "/users", %{"search" => "Scott"})
-    response = Index.call(UserResource, conn)
-    assert 200 == response.status
-    json = Jason.decode!(response.resp_body, keys: :atoms!)
-    assert [u] = json[:data]
-    assert u.id == user.id
-  end
-
-  test "can search by primary id" do
-    [u1, _u2] = insert_pair(:user)
-
-    conn = prep_conn(:get, "/users", %{"search" => "#{u1.id}"})
-    response = Index.call(UserResource, conn)
-    assert 200 == response.status
-    json = Jason.decode!(response.resp_body, keys: :atoms!)
-    assert [u] = json[:data]
-    assert u.id == u1.id
+    def result_for(resource, path) do
+      conn = prep_conn(:get, path)
+      response = Index.query_for_related(resource, conn)
+      Jason.decode!(response.resp_body, keys: :atoms!)
+    end
   end
 
   @tag manifest: TestExTeal.DefaultManifest
