@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@babel/runtime": "^7.22.5",
     "@websanova/vue-auth": "^2.21.14-beta",
     "chart.js": "^2.9.4",
     "flatpickr": "^4.6.3",
