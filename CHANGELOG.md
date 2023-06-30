@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.2](https://github.com/township-agency/ex_teal/compare/v0.22.1...v0.22.2) (2023-06-30)
+
+
+### Bug Fixes
+
+* BelongsTo fields should not assume an non-nil value ([#198](https://github.com/township-agency/ex_teal/issues/198)) ([90f9bbf](https://github.com/township-agency/ex_teal/commit/90f9bbff38dab6cd274d39506835f6887671f109))
+* Default Field filters should always apply on initialization, not just initially ([#200](https://github.com/township-agency/ex_teal/issues/200)) ([9707662](https://github.com/township-agency/ex_teal/commit/9707662c729984f0331150f869463128a61e851b))
+
 ## [0.22.1](https://github.com/township-agency/ex_teal/compare/v0.22.0...v0.22.1) (2023-06-16)
 
 
