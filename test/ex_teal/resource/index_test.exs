@@ -198,6 +198,27 @@ defmodule ExTeal.Resource.IndexTest do
     assert Enum.at(r2.fields, 1).value == "2"
   end
 
+  @tag manifest: TestExTeal.DefaultManifest
+  test "can return resources filtered by a has many relationship" do
+    user = insert(:user)
+    p = insert(:post, user: user)
+    insert(:post)
+
+    params = %{
+      "via_resource" => "users",
+      "via_resource_id" => "#{user.id}",
+      "via_relationship" => "posts",
+      "relationship_type" => "hasMany"
+    }
+
+    conn = prep_conn(:get, "/posts", params)
+    response = Index.call(TestExTeal.PostResource, conn)
+    json = Jason.decode!(response.resp_body, keys: :atoms!)
+    assert length(json[:data]) == 1
+    [r1] = json[:data]
+    assert r1.id == p.id
+  end
+
   def prep_conn(method, path, params \\ %{}) do
     params = Map.merge(params, %{"_format" => "json"})
 

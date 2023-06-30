@@ -11,14 +11,10 @@ defmodule ExTeal.Resource do
         use ExTeal.Resource
 
         alias Example.Content.Blog
-        alias ExTeal.Fields.{ID, F}
+
         def resource, do: Blog
 
         def title, do: "blog"
-
-        def fields, do: [
-
-        ]
       end
   """
 

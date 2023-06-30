@@ -97,7 +97,7 @@ defmodule ExTeal.Resource.FieldsTest do
     end
   end
 
-  describe "fields_for_many_to_many/3" do
+  describe "fields_for_many_to_many/2" do
     @tag manifest: TestExTeal.DefaultManifest
     test "returns a belongs_to field for an index" do
       [t1, _t2] = insert_pair(:tag)
@@ -111,7 +111,7 @@ defmodule ExTeal.Resource.FieldsTest do
           "relationship_type" => "ManyToMany"
         })
 
-      [field] = Fields.fields_for_many_to_many(:index, PostResource, conn)
+      [field] = Fields.fields_for_many_to_many(PostResource, conn)
       assert field.type == ManyToManyBelongsTo
       assert field.relationship == TagResource
       assert field.private_options.queried_resource == PostResource
@@ -119,12 +119,7 @@ defmodule ExTeal.Resource.FieldsTest do
 
     @tag manifest: TestExTeal.DefaultManifest
     test "returns pivot fields for an index" do
-      [t1, t2] = insert_pair(:tag)
       u = insert(:user)
-
-      insert(:preferred_tag)
-      insert(:preferred_tag, user: u, tag: t2, order: 2, notes: "foo")
-      insert(:preferred_tag, user: u, tag: t1, order: 1, notes: "bar")
 
       conn =
         prep_conn(:get, "/tags", %{
@@ -134,14 +129,46 @@ defmodule ExTeal.Resource.FieldsTest do
           "relationship_type" => "ManyToMany"
         })
 
-      [tag_field, order_field, note_field] =
-        Fields.fields_for_many_to_many(:index, UserResource, conn)
+      [tag_field, order_field, note_field] = Fields.fields_for_many_to_many(UserResource, conn)
 
       assert tag_field.type == ManyToManyBelongsTo
       assert tag_field.relationship == TagResource
       assert tag_field.private_options.queried_resource == UserResource
       assert order_field.type == ExTeal.Fields.Number
       assert note_field.type == ExTeal.Fields.Text
+    end
+  end
+
+  describe "fields_for_has_many" do
+    @tag manifest: TestExTeal.DefaultManifest
+    test "by default returns the fields for the queried relationship" do
+      conn =
+        prep_conn(:get, "/posts", %{
+          "via_resource" => "users",
+          "via_resource_id" => "-1",
+          "via_relationship" => "posts",
+          "relationship_type" => "hasMany"
+        })
+
+      fields = Fields.fields_for_has_many(PostResource, conn)
+
+      assert Enum.map(fields, & &1.field) ==
+               ~w(id name published author contributor published_at deleted_at user features)a
+    end
+
+    @tag manifest: TestExTeal.PostCountManifest
+    test "can be overriden based on the has many index" do
+      conn =
+        prep_conn(:get, "/posts", %{
+          "via_resource" => "users",
+          "via_resource_id" => "-1",
+          "via_relationship" => "posts",
+          "relationship_type" => "hasMany"
+        })
+
+      fields = Fields.fields_for_has_many(PostResource, conn)
+
+      assert Enum.map(fields, & &1.field) == ~w(id name)a
     end
   end
 

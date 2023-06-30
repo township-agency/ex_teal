@@ -104,14 +104,21 @@ defmodule ExTeal.Resource.Fields do
     }
   end
 
-  defp index_fields(resource, conn) do
+  def index_fields(resource, conn) do
     is_many_to_many = Map.get(conn.params, "relationship_type") == "ManyToMany"
+    is_has_many = Map.get(conn.params, "relationship_type") == "hasMany"
 
     fields =
-      if(is_many_to_many,
-        do: fields_for_many_to_many(:index, resource, conn),
-        else: fields_for(:index, resource)
-      )
+      cond do
+        is_many_to_many ->
+          fields_for_many_to_many(resource, conn)
+
+        is_has_many ->
+          fields_for_has_many(resource, conn)
+
+        true ->
+          fields_for(:index, resource)
+      end
 
     fields
     |> Enum.filter(&viewable/1)
@@ -135,7 +142,7 @@ defmodule ExTeal.Resource.Fields do
   field that represents a tag associated with the post.  The field will then have options
   built up to make it behave like a belongs_to on the client side.
   """
-  def fields_for_many_to_many(:index, _resource_queried, conn) do
+  def fields_for_many_to_many(_resource_queried, conn) do
     with {:ok, queried_through_resource_key} <- Map.fetch(conn.params, "via_resource"),
          {:ok, relationship} <- Map.fetch(conn.params, "via_relationship"),
          {:ok, queried_resource} <- ExTeal.resource_for(queried_through_resource_key),
@@ -162,19 +169,49 @@ defmodule ExTeal.Resource.Fields do
     end
   end
 
-  def pivot_fields_for(related, rel, _queried) do
-    relationship_field =
-      related
-      |> all_fields()
-      |> Enum.find(&(&1.field == rel))
+  def fields_for_has_many(resource, conn) do
+    with {:ok, queried_through_resource_key} <- Map.fetch(conn.params, "via_resource"),
+         {:ok, relationship} <- Map.fetch(conn.params, "via_relationship"),
+         {:ok, queried_resource} <- ExTeal.resource_for(queried_through_resource_key) do
+      relationship_field =
+        relationship_field(queried_resource, String.to_existing_atom(relationship))
 
-    case Map.get(relationship_field, :private_options) do
-      nil ->
-        []
-
-      options when is_map(options) ->
-        Map.get(options, :pivot_fields, [])
+      index_fields_for_many(relationship_field, resource)
+    else
+      _ -> {:error, :not_found}
     end
+  end
+
+  def pivot_fields_for(related, rel, _queried) do
+    relationship_field = relationship_field(related, rel)
+
+    with {:ok, options} <- Map.fetch(relationship_field, :private_options),
+         {:ok, pivot_fields} <- Map.fetch(options, :pivot_fields) do
+      pivot_fields
+    else
+      _ ->
+        []
+    end
+  end
+
+  def index_fields_for_many(relationship_field, queried_resource) do
+    with {:ok, options} <- Map.fetch(relationship_field, :private_options),
+         {:ok, index_fields} <- Map.fetch(options, :index_fields) do
+      index_fields
+    else
+      _ ->
+        fields_for(:index, queried_resource)
+    end
+  end
+
+  @doc """
+  Find the field on the resource that includes context for the relationship that
+  is being queried.
+  """
+  def relationship_field(related_resource, rel) do
+    related_resource
+    |> all_fields()
+    |> Enum.find(&(&1.field == rel))
   end
 
   def fields_for(:index, resource) do

@@ -63,5 +63,5 @@ end
 
 defmodule TestExTeal.PostCountManifest do
   use ExTeal.Manifest
-  def resources, do: [TestExTeal.UsersWithPostCountsResource]
+  def resources, do: [TestExTeal.UsersWithPostCountsResource, TestExTeal.PostResource]
 end
