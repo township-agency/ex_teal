@@ -17,7 +17,7 @@ export const HandlesValidationErrors = {
     },
 
     fieldAttribute () {
-      return this.field.attribute;
+      return this.field.options.belongs_to_key || this.field.attribute;
     },
 
     hasError () {
