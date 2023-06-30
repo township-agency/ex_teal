@@ -14,9 +14,7 @@ defmodule ExTeal.FieldVisibility do
   def except_on_forms(field),
     do: %{
       field
-      | show_on_detail: true,
-        show_on_edit: false,
-        show_on_index: true,
+      | show_on_edit: false,
         show_on_new: false
     }
 
