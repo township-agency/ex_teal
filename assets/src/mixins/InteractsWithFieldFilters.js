@@ -9,7 +9,7 @@ const InteractsWithFieldFilters = {
       this.clearAllFieldFilters();
       if (this.encodedFieldFilters) {
         this.currentFieldFilters = JSON.parse(atob(this.encodedFieldFilters));
-      } else if (this.resourceInformation && this.resourceInformation.default_filters && this.initialLoading){
+      } else if (this.resourceInformation && this.resourceInformation.default_filters){
         this.currentFieldFilters = this.resourceInformation.default_filters;
         this.updateQueryString({
           [this.pageParameter]: 1,
