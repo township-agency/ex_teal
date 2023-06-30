@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { HandlesValidationErrors } from 'ex-teal-js';
+import { HandlesValidationErrors } from '@/mixins';
 
 export default {
   mixins: [ HandlesValidationErrors ],

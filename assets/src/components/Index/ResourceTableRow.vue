@@ -145,8 +145,7 @@
 </template>
 
 <script>
-import { InteractsWithResourceInformation } from 'ex-teal-js';
-import Deleteable from '@/mixins/Deleteable';
+import { Deleteable, InteractsWithResourceInformation } from '@/mixins';
 export default {
   mixins: [ Deleteable, InteractsWithResourceInformation ],
   props: {

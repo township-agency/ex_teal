@@ -27,11 +27,10 @@
 </template>
 
 <script>
-import { Minimum } from 'ex-teal-js';
+import Minimum from '@/util/minimum';
 import BaseValueMetric from './Base/ValueMetric';
 import { DateTime } from 'luxon';
 import Duration from 'luxon/src/duration';
-import Interval from 'luxon/src/interval';
 
 export default {
   name: 'ValueMetric',

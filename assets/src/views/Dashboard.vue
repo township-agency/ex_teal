@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { HasCards } from 'ex-teal-js';
+import { HasCards } from '@/mixins';
 import find from 'lodash/find';
 
 export default {

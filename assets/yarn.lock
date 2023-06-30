@@ -656,13 +656,6 @@
     js-levenshtein "^1.1.3"
     semver "^5.5.0"
 
-"@babel/runtime@^7.4.5":
-  version "7.5.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.5.tgz#74fba56d35efbeca444091c7850ccd494fd2f132"
-  integrity sha512-28QvEGyQyNkB0/m2B4FU7IEZGK2NUrcMtT6BZEFALTguLk+AUT6ofsHtPk5QyjAdUkpMJ+/Em+quwz4HOt30AQ==
-  dependencies:
-    regenerator-runtime "^0.13.2"
-
 "@babel/template@^7.1.0", "@babel/template@^7.4.4":
   version "7.4.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.4.4.tgz#f4b88d1225689a08f5bc3a17483545be9e4ed237"
@@ -3266,16 +3259,6 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-ex-teal-js@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/ex-teal-js/-/ex-teal-js-1.0.4.tgz#faf7e5b2caa8cfeb5106b47f2b47988451876afe"
-  integrity sha512-gxmhct6BLj0fYBRK3hSpKkQKlZ3ctBaXeRo7REu/tXuBcaiv7NlX09VyrxBb6Iz/UzyDJJpKVlnlOxT7JwA6Bg==
-  dependencies:
-    "@babel/runtime" "^7.4.5"
-    form-backend-validation "^2.3.8"
-    inflector-js "^1.0.1"
-    lodash "^4.17.13"
-
 execa@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/execa/-/execa-0.10.0.tgz#ff456a8f53f90f8eccc71a96d11bdfc7f082cb50"
@@ -3615,7 +3598,7 @@ foreach@^2.0.5:
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
   integrity sha1-C+4AUBiusmDQo6865ljdATbsG5k=
 
-form-backend-validation@^2.3.3, form-backend-validation@^2.3.8:
+form-backend-validation@^2.3.3:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/form-backend-validation/-/form-backend-validation-2.3.8.tgz#e87f8d0ad33d36bc571a80071cc35983942c7e31"
   integrity sha512-bcwklhFMEDNPe20wV9fwv0SuU4+AvksRoAcdLVhU4nsnWz4hVoTeYqA2Rej55O6stVzvwrnpc41lKlVufGVh0g==
@@ -4246,7 +4229,7 @@ infer-owner@^1.0.3:
 inflector-js@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/inflector-js/-/inflector-js-1.0.1.tgz#8f2b8dae06ba8c1a846e40a196a5e132721be0e0"
-  integrity sha1-jyuNrga6jBqEbkChlqXhMnIb4OA=
+  integrity sha512-GYvCqr8mGKPoYH+08e76PV8JoIygIVC9Jxw2jA5QjBm/mK+mJqGdzEcs3L5nugnvP03yHajXpBRMRgHx0e770A==
 
 inflight@^1.0.4:
   version "1.0.6"

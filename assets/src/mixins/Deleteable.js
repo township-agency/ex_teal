@@ -1,4 +1,8 @@
-const Deleteable = {
+function mapResources (resources) {
+  return resources.map(resource => resource.id).join(',');
+}
+
+export const Deleteable = {
   computed: {
     deleteParams () {
       return {
@@ -89,9 +93,3 @@ const Deleteable = {
     }
   }
 };
-
-export default Deleteable;
-
-function mapResources (resources) {
-  return resources.map(resource => resource.id).join(',');
-}

@@ -19,7 +19,7 @@
 </template>
 <script>
 import DateTimePicker from '../DateTimePicker';
-import { FormField, HandlesValidationErrors } from 'ex-teal-js';
+import { FormField, HandlesValidationErrors } from '@/mixins';
 import { DateTime } from 'luxon';
 
 export default {

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors, Toggle } from 'ex-teal-js';
+import { FormField, HandlesValidationErrors, Toggle } from '@/mixins';
 
 export default {
   mixins: [ HandlesValidationErrors, FormField, Toggle ],

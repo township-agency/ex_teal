@@ -33,14 +33,13 @@
 </template>
 
 <script>
-import { Minimum } from 'ex-teal-js';
+import { InteractsWithTheme } from '@/mixins';
+import Minimum from '@/util/minimum';
 import BaseLineMetric from './Base/LineMetric';
 import BaseBarMetric from './Base/BarMetric';
 import merge from 'lodash/merge';
 import { DateTime } from 'luxon';
 import Duration from 'luxon/src/duration';
-import Interval from 'luxon/src/interval';
-import InteractsWithTheme from '@/mixins/InteractsWithTheme';
 import numbro from 'numbro';
 
 const FORMATS = {
@@ -220,7 +219,7 @@ export default {
 
             const multiData = data.map((trend, i) => {
               const colorData = {};
-              
+
               if (this.chartOptions.type == 'line') {
                 colorData.borderColor = colors[i];
                 colorData.backgroundColor = 'transparent';

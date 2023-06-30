@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { Toggle } from 'ex-teal-js';
+import { Toggle } from '@/mixins';
 
 export default {
   mixins: [ Toggle ],

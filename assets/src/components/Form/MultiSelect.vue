@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from 'ex-teal-js';
+import { FormField, HandlesValidationErrors } from '@/mixins';
 import Multiselect from 'vue-multiselect';
 
 export default {

@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import { Errors, FormField, HandlesValidationErrors } from 'ex-teal-js';
+import { FormField, HandlesValidationErrors } from '@/mixins';
+
 import _ from 'lodash';
 export default {
   mixins: [ HandlesValidationErrors, FormField ],

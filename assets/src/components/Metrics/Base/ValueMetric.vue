@@ -55,7 +55,7 @@
 
 <script>
 import numbro from 'numbro';
-import { singularOrPlural } from 'ex-teal-js';
+import singularOrPlural from '@/util/singularOrPlural';
 
 export default {
   props: {

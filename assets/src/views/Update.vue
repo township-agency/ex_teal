@@ -49,7 +49,8 @@
 
 <script>
 import _ from 'lodash';
-import { Errors, InteractsWithResourceInformation } from 'ex-teal-js';
+import { InteractsWithResourceInformation } from '@/mixins';
+import { Errors } from '@/util/errors';
 import Heading from '@/components/Heading';
 
 const flattenErrors = (obj, prefix = '') => {
