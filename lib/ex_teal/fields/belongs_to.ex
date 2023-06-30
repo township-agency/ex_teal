@@ -28,11 +28,11 @@ defmodule ExTeal.Fields.BelongsTo do
   def value_for(field, model, _type) do
     schema = Map.get(model, field.field)
 
-    case ExTeal.resource_for_model(field.relationship) do
-      {:ok, resource} ->
-        resource.title_for_schema(schema)
-
-      {:error, :not_found} ->
+    with true <- not is_nil(schema),
+         {:ok, resource} <- ExTeal.resource_for_model(field.relationship) do
+      resource.title_for_schema(schema)
+    else
+      _ ->
         nil
     end
   end
