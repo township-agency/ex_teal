@@ -53,10 +53,11 @@
 <script>
 import _ from 'lodash';
 import {
-  Capitalize,
-  Errors,
   InteractsWithResourceInformation
-} from 'ex-teal-js';
+} from '@/mixins';
+import { Errors } from '@/util/errors';
+import { Capitalize } from '@/util/capitalize';
+
 
 export default {
   mixins: [ InteractsWithResourceInformation ],

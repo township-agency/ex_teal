@@ -19,7 +19,7 @@ const hexToRgb = function (hex) {
   } : null;
 };
 
-const InteractsWithTheme = {
+export const InteractsWithTheme = {
   methods: {
     colorsForData (data_length) {
       const theme = window.ExTeal.config.theme;
@@ -37,5 +37,3 @@ const InteractsWithTheme = {
     }
   }
 };
-
-export default InteractsWithTheme;

@@ -127,7 +127,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { InteractsWithResourceInformation } from 'ex-teal-js';
+import { InteractsWithResourceInformation } from '@/mixins';
 import map from 'lodash/map';
 export default {
   components: {

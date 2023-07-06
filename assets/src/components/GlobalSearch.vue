@@ -45,7 +45,7 @@
         <h3 class="text-xs uppercase tracking-wide text-gray-darker bg-gray-light py-4 px-3">
           No Results Found
         </h3>
-      </div>  
+      </div>
 
       <!-- Results -->
       <div
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { Minimum } from 'ex-teal-js';
+import minimum from '@/util/minimum';
 import { mixin as clickaway } from 'vue-clickaway';
 import uniqBy from 'lodash/uniqBy';
 import debounce from 'lodash/debounce';
@@ -228,7 +228,7 @@ export default {
         try {
           const {
             data: { results }
-          } = await Minimum(
+          } = await minimum(
             ExTeal.request().get('/search', {
               params: { search }
             })

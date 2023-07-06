@@ -280,17 +280,16 @@
 <script>
 import _ from 'lodash';
 import {
-  Capitalize,
+  Deleteable,
   HasCards,
+  InteractsWithFieldFilters,
   InteractsWithQueryString,
   InteractsWithResourceInformation,
-  Minimum,
   Paginatable,
   PerPageable
-} from 'ex-teal-js';
-
-import InteractsWithFieldFilters from '@/mixins/InteractsWithFieldFilters';
-import Deleteable from '@/mixins/Deleteable';
+} from '@/mixins';
+import { Capitalize } from '@/util/capitalize';
+import Minimum from '@/util/minimum';
 
 export default {
   mixins: [

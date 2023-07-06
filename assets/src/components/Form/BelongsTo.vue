@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { HandlesValidationErrors, PerformsSearches } from 'ex-teal-js';
+import { HandlesValidationErrors, PerformsSearches } from '@/mixins';
 
 export default {
   mixins: [ PerformsSearches, HandlesValidationErrors ],

@@ -104,7 +104,8 @@
 </template>
 
 <script>
-import { Errors, PerformsSearches } from 'ex-teal-js';
+import { PerformsSearches } from '@/mixins';
+import { Errors } from '@/util/errors';
 import find from 'lodash/find';
 import tap from 'lodash/tap';
 

@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import InteractsWithTheme from '@/mixins/InteractsWithTheme';
-import { Minimum } from 'ex-teal-js';
+import { InteractsWithTheme } from '@/mixins';
+import Minimum from '@/util/minimum';
 import BasePartitionMetric from './Base/PartitionMetric';
 import merge from 'lodash/merge';
 

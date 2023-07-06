@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const InteractsWithFieldFilters = {
+export const InteractsWithFieldFilters = {
   methods: {
     /**
      * Initialize the current field filter values from the decoded query string.
@@ -77,5 +77,3 @@ const InteractsWithFieldFilters = {
     }
   }
 };
-
-export default InteractsWithFieldFilters;

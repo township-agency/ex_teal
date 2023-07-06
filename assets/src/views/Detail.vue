@@ -89,8 +89,7 @@
 </template>
 
 <script>
-import { HasCards, InteractsWithResourceInformation } from 'ex-teal-js';
-import Deleteable from '@/mixins/Deleteable';
+import { Deleteable, HasCards, InteractsWithResourceInformation } from '@/mixins';
 import _ from 'lodash';
 export default {
   mixins: [ InteractsWithResourceInformation, Deleteable, HasCards ],

@@ -48,8 +48,8 @@
 <script>
 import each from 'lodash/each';
 import tap from 'lodash/tap';
-import { Errors, InteractsWithResourceInformation } from 'ex-teal-js';
-
+import { InteractsWithResourceInformation } from '@/mixins';
+import { Errors } from '@/util/errors';
 export default {
   mixins: [ InteractsWithResourceInformation ],
 

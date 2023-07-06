@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-import { PerformsSearches } from 'ex-teal-js';
+import { PerformsSearches } from '@/mixins';
 
 export default {
   mixins: [ PerformsSearches ],

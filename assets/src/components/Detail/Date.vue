@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import InteractsWithDateTimes from '@/mixins/InteractsWithDateTimes';
+import { InteractsWithDateTimes } from '@/mixins';
+
 
 export default {
   mixins: [ InteractsWithDateTimes ],

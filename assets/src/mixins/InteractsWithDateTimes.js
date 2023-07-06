@@ -23,7 +23,7 @@ const formatKeys = {
   'datetime_huge_with_seconds': DateTime.DATETIME_HUGE_WITH_SECONDS,
 };
 
-const InteractsWithDateTimes = {
+export const InteractsWithDateTimes = {
   computed: {
     format () {
       const key = this.naiveDateTime ? 'datetime_med' : 'datetime_full';
@@ -40,5 +40,3 @@ const InteractsWithDateTimes = {
     }
   }
 };
-
-export default InteractsWithDateTimes;

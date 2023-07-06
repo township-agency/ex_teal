@@ -4,9 +4,9 @@
     :errors="errors"
   >
     <template slot="field">
-      <div 
+      <div
         v-if="!listFirst && !maxReached"
-        class="flex border border-gray-light p-4" 
+        class="flex border border-gray-light p-4"
       >
         <input
           v-model="newItem"
@@ -24,10 +24,10 @@
           <icon type="create" />
         </a>
       </div>
-      <ul 
-        v-if="items.length" 
+      <ul
+        v-if="items.length"
         ref="itemslist"
-        :style="maxHeight" 
+        :style="maxHeight"
         class="border border-gray-light py-2"
       >
         <draggable
@@ -55,7 +55,7 @@
                 class="flex-1 form-control form-input form-input-bordered"
                 @keyup="updateItem(index, $event)"
               >
-              <a 
+              <a
                 class="btn btn-default btn-danger btn-only-icon cursor-pointer ml-3"
                 @click="removeItem(index)"
               >
@@ -65,9 +65,9 @@
           </li>
         </draggable>
       </ul>
-      <div 
+      <div
         v-if="listFirst && !maxReached"
-        class="flex border border-gray-light p-4" 
+        class="flex border border-gray-light p-4"
       >
         <input
           v-model="newItem"
@@ -91,7 +91,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { FormField, HandlesValidationErrors } from 'ex-teal-js';
+import { FormField, HandlesValidationErrors } from '@/mixins';
 
 export default {
   components: { draggable },
@@ -126,7 +126,7 @@ export default {
     maxReached () {
       return this.maxItems !== false && this.items.length + 1 > this.maxItems;
     },
-    
+
     isDraggable () {
       return this.field.options.draggable || false;
     },
