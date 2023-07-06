@@ -189,7 +189,7 @@ defmodule ExTeal.Field do
   """
   @spec virtual(Field.t()) :: Field.t()
   def virtual(field) do
-    %{field | virtual: true, filterable: false, show_on_new: false, show_on_edit: false}
+    %{field | virtual: true, filterable: false}
   end
 
   def help_text(%Field{options: options} = f, text),
