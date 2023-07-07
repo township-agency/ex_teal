@@ -1,7 +1,7 @@
 defmodule TestExTeal.UserResource do
   use ExTeal.Resource
 
-  alias ExTeal.Fields.{ID, ManyToMany, Number, Select, Text}
+  alias ExTeal.Fields.{HasMany, ID, ManyToMany, Number, Select, Text}
 
   def model, do: TestExTeal.User
 
@@ -18,6 +18,7 @@ defmodule TestExTeal.UserResource do
       Text.make(:name),
       Text.make(:email),
       Select.make(:role),
+      HasMany.make(:posts),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
       |> ManyToMany.with_pivot_fields([
         Number.make(:order),
@@ -320,7 +321,7 @@ defmodule TestExTeal.UsersWithPostCountsResource do
   import Ecto.Query
   alias ExTeal.Field
 
-  alias ExTeal.Fields.{Number, Text}
+  alias ExTeal.Fields.{HasMany, ID, Number, Text}
 
   def model, do: TestExTeal.User
 
@@ -338,6 +339,13 @@ defmodule TestExTeal.UsersWithPostCountsResource do
   def fields,
     do: [
       Text.make(:name),
-      Number.make(:post_count) |> Field.virtual()
+      Number.make(:post_count) |> Field.virtual(),
+      HasMany.make(:posts)
+      |> HasMany.with_index_fields([
+        ID.make(),
+        Text.make(:name)
+      ])
     ]
+
+  def uri, do: "users"
 end
