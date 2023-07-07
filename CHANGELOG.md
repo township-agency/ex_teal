@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.0](https://github.com/township-agency/ex_teal/compare/v0.22.2...v0.23.0) (2023-07-07)
+
+
+### Features
+
+* Customize the index fields on a has many field ([#197](https://github.com/township-agency/ex_teal/issues/197)) ([4a2dde1](https://github.com/township-agency/ex_teal/commit/4a2dde1d7600a55dc14c9d427016df1de18f6749))
+
+
+### Bug Fixes
+
+* except on forms should only touch forms ([#202](https://github.com/township-agency/ex_teal/issues/202)) ([fbd489b](https://github.com/township-agency/ex_teal/commit/fbd489b4f2d2f5e99964fa3ba23818a70be6d62b))
+* Surface BelongsTo Errors in form validation errors, move ex-teal-js code ([#201](https://github.com/township-agency/ex_teal/issues/201)) ([6542f67](https://github.com/township-agency/ex_teal/commit/6542f676209d160bd4aaa5f5455bc79bb6269427))
+* virtual fields should just mark themselves virtual, do not force field visibility ([#204](https://github.com/township-agency/ex_teal/issues/204)) ([479cc35](https://github.com/township-agency/ex_teal/commit/479cc357fa418602578f326e95938275c7850912))
+
 ## [0.22.2](https://github.com/township-agency/ex_teal/compare/v0.22.1...v0.22.2) (2023-06-30)
 
 
