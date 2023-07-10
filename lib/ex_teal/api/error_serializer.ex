@@ -12,16 +12,14 @@ defmodule ExTeal.Api.ErrorSerializer do
   See `Ecto.Changeset.traverse_errors/2`
   """
   def translate_errors(%Changeset{} = changeset) do
-    Changeset.traverse_errors(changeset, &parse_changeset_error/1)
-  end
-
-  defp parse_changeset_error({msg, opts}) do
-    Enum.reduce(opts, msg, fn {key, value}, acc ->
-      String.replace(acc, "%{#{key}}", to_string(value))
+    Changeset.traverse_errors(changeset, fn {message, opts} ->
+      Regex.replace(~r"%{(\w+)}", message, fn _, key ->
+        opts
+        |> Keyword.get(String.to_existing_atom(key), key)
+        |> to_string()
+      end)
     end)
   end
-
-  defp parse_changeset_error(msg), do: msg
 
   def render(%Changeset{} = changeset) do
     # When encoded, the changeset returns its errors
