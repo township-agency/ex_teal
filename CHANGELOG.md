@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.1](https://github.com/township-agency/ex_teal/compare/v0.23.0...v0.23.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* Serializer should consider errors where the key is an array ([#205](https://github.com/township-agency/ex_teal/issues/205)) ([59953fc](https://github.com/township-agency/ex_teal/commit/59953fc6927a2f9bfce1e23f1207c6c87a5b5a37))
+
 ## [0.23.0](https://github.com/township-agency/ex_teal/compare/v0.22.2...v0.23.0) (2023-07-07)
 
 
