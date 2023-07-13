@@ -4,11 +4,13 @@ defmodule TestExTeal.User do
   schema "users" do
     field(:email, :string)
     field(:name, :string)
-    has_many(:posts, TestExTeal.Post)
     field(:role, Ecto.Enum, values: [:admin, :moderator, :seller, :buyer])
-
-    many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
     field(:post_count, :integer, virtual: true)
+
+    has_many(:posts, TestExTeal.Post)
+    has_many(:post_likes, through: [:posts, :likes])
+    many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
+
     timestamps()
   end
 end
@@ -75,6 +77,9 @@ defmodule TestExTeal.Post do
     many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 
     belongs_to(:user, TestExTeal.User)
+
+    has_many(:authors_posts, through: [:user, :posts])
+    has_many(:likes, TestExTeal.Like)
 
     timestamps()
   end
@@ -172,6 +177,15 @@ defmodule TestExTeal.Order do
     field(:name, :string)
     field(:grand_total, :integer)
     timestamps()
+  end
+end
+
+defmodule TestExTeal.Like do
+  use Ecto.Schema
+
+  schema "likes" do
+    field(:identifier, :string)
+    belongs_to(:post, TestExTeal.Post)
   end
 end
 

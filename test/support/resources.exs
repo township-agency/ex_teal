@@ -19,6 +19,7 @@ defmodule TestExTeal.UserResource do
       Text.make(:email),
       Select.make(:role),
       HasMany.make(:posts),
+      HasMany.make(:post_likes),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
       |> ManyToMany.with_pivot_fields([
         Number.make(:order),
@@ -38,6 +39,7 @@ defmodule TestExTeal.PostResource do
     Boolean,
     BooleanGroup,
     DateTime,
+    HasMany,
     ID,
     ManyToMany,
     Select,
@@ -65,7 +67,8 @@ defmodule TestExTeal.PostResource do
         "show_cta" => "Show CTA",
         "show_featured_image" => "Show Featured Image"
       }),
-      ManyToMany.make(:tags, TestExTeal.Tag)
+      ManyToMany.make(:tags, TestExTeal.Tag),
+      HasMany.make(:authors_posts)
     ]
 
   def actions(_), do: [TestExTeal.PublishAction]
@@ -348,4 +351,19 @@ defmodule TestExTeal.UsersWithPostCountsResource do
     ]
 
   def uri, do: "users"
+end
+
+defmodule TestExTeal.LikeResource do
+  use ExTeal.Resource
+  alias ExTeal.Fields.{BelongsTo, Text}
+
+  def model, do: TestExTeal.Like
+
+  def with, do: [:post]
+
+  def fields,
+    do: [
+      Text.make(:identifier),
+      BelongsTo.make(:post, TestExTeal.Post)
+    ]
 end

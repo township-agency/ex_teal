@@ -2,6 +2,7 @@ defmodule ExTeal.Resource.Index do
   @moduledoc """
   Behavior for handling index requests for a given resource
   """
+  use ExTeal.Resource.Repo
 
   alias Ecto.Association.ManyToMany
   alias ExTeal.{Field, FieldFilter}
@@ -279,11 +280,22 @@ defmodule ExTeal.Resource.Index do
       when resource_name != "" and resource_id != "" and rel_name != "" do
     with {:ok, resource} <- ExTeal.resource_for(resource_name),
          {:ok, relationship} <- schema_assoc_for(resource, rel_name) do
-      from(query, where: ^[{relationship.related_key, resource_id}])
+      reversed_query(relationship, query, resource_id, resource)
     end
   end
 
   def filter_via_relationships(query, _params), do: query
+
+  def reversed_query(%Ecto.Association.HasThrough{} = rel, query, resource_id, related_resource) do
+    related_schema = related_resource.record(nil, resource_id)
+    related = repo().preload(related_schema, rel.field)
+    ids = related |> Map.get(rel.field) |> Enum.map(& &1.id)
+    from(q in query, where: q.id in ^ids)
+  end
+
+  def reversed_query(relationship, query, resource_id, _related_resource) do
+    from(query, where: ^[{relationship.related_key, resource_id}])
+  end
 
   defp schema_assoc_for(resource, rel_name) do
     associations = resource.model().__schema__(:associations)

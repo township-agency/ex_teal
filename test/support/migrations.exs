@@ -29,6 +29,11 @@ defmodule TestExTeal.Migrations do
       timestamps()
     end
 
+    create table(:likes) do
+      add(:identifier, :string)
+      add(:post_id, references(:posts))
+    end
+
     create table(:tags) do
       add(:name, :string)
 
