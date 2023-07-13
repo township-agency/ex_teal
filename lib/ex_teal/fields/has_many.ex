@@ -21,9 +21,9 @@ defmodule ExTeal.Fields.HasMany do
   def show_on_edit, do: false
 
   def apply_options_for(field, model, conn, _type) do
-    rel = model.__struct__.__schema__(:association, field.field)
+    relationship = model.__struct__.__schema__(:association, field.field)
 
-    with {:ok, resource} <- ExTeal.resource_for_model(rel.queryable) do
+    with {:ok, rel, resource} <- rel_and_resource(relationship, model) do
       opts =
         Map.merge(field.options, %{
           has_many_relationship: field.field,
@@ -36,6 +36,22 @@ defmodule ExTeal.Fields.HasMany do
           private_options: Map.merge(field.private_options, %{rel: rel})
       }
     end
+  end
+
+  defp rel_and_resource(%Ecto.Association.HasThrough{through: through_keys} = rel, model) do
+    queried_model =
+      Enum.reduce(through_keys, model.__struct__, fn key, m ->
+        rel = m.__schema__(:association, key)
+        rel.queryable
+      end)
+
+    {:ok, resource} = ExTeal.resource_for_model(queried_model)
+    {:ok, rel, resource}
+  end
+
+  defp rel_and_resource(%Ecto.Association.Has{queryable: model} = rel, _model) do
+    {:ok, resource} = ExTeal.resource_for_model(model)
+    {:ok, rel, resource}
   end
 
   @doc """

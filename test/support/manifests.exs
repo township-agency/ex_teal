@@ -7,7 +7,8 @@ defmodule TestExTeal.DefaultManifest do
       TestExTeal.PostResource,
       TestExTeal.TagResource,
       TestExTeal.SinglePostUserResource,
-      TestExTeal.PostEmbedResource
+      TestExTeal.PostEmbedResource,
+      TestExTeal.LikeResource
     ]
 
   def dashboards,
