@@ -75,7 +75,7 @@ defmodule ExTeal.Resource.Index do
     |> Index.with_pivot_fields(conn.params, resource)
     |> Index.filter_via_relationships(conn.params)
     |> Index.field_filters(conn, resource)
-    |> Index.sort(conn.params, resource)
+    |> Index.sort(conn, resource)
     |> Index.search(conn.params, resource)
     |> execute_query(conn, resource, :index)
     |> resource.render_index(resource, conn)
@@ -151,20 +151,16 @@ defmodule ExTeal.Resource.Index do
 
   def field_filters(query, _conn, _resource), do: query
 
-  @doc false
   def sort(
         query,
-        %{"order_by" => field, "order_by_direction" => dir, "via_relationship" => field},
-        _resource
-      )
-      when not is_nil(field) and not is_nil(dir) do
-    handle_sort(query, nil, :id, dir)
-  end
-
-  def sort(
-        query,
-        %{"order_by" => field, "order_by_direction" => dir, "relationship_type" => "ManyToMany"} =
-          params,
+        %{
+          params:
+            %{
+              "order_by" => field,
+              "order_by_direction" => dir,
+              "relationship_type" => "ManyToMany"
+            } = params
+        },
         resource
       ) do
     fields = Fields.all_fields(resource)
@@ -176,13 +172,13 @@ defmodule ExTeal.Resource.Index do
     end
   end
 
-  def sort(query, %{"order_by" => field, "order_by_direction" => dir}, resource)
+  def sort(query, %{params: %{"order_by" => field, "order_by_direction" => dir}} = conn, resource)
       when not is_nil(field) and not is_nil(dir) do
     new_schema = struct(resource.model(), %{})
 
     field_struct =
       resource
-      |> Fields.all_fields()
+      |> Fields.index_fields(conn)
       |> Enum.find(&(&1.attribute == field))
       |> then(& &1.type.apply_options_for(&1, new_schema, %{}, :index))
 
