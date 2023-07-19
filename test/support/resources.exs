@@ -21,6 +21,10 @@ defmodule TestExTeal.UserResource do
       HasMany.make(:posts),
       HasMany.make(:post_likes),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
+      |> ManyToMany.with_index_fields([
+        Text.make(:name),
+        Select.make(:tag_type) |> Select.options(~w(foo bar))
+      ])
       |> ManyToMany.with_pivot_fields([
         Number.make(:order),
         Text.make(:notes) |> hide_when_updating()
@@ -109,7 +113,7 @@ end
 defmodule TestExTeal.TagResource do
   use ExTeal.Resource
 
-  alias ExTeal.Fields.{ManyToMany, Text}
+  alias ExTeal.Fields.{ManyToMany, Select, Text}
 
   def model, do: TestExTeal.Tag
 
@@ -118,6 +122,7 @@ defmodule TestExTeal.TagResource do
   def fields,
     do: [
       Text.make(:name),
+      Select.make(:tag_type) |> Select.options(~w(foo bar)),
       ManyToMany.make(:posts, TestExTeal.Post)
     ]
 

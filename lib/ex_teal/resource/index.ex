@@ -168,7 +168,7 @@ defmodule ExTeal.Resource.Index do
 
     case field do
       nil -> sort_by_pivot(query, params, resource)
-      _ -> handle_sort(query, field, String.to_existing_atom(field), dir)
+      _ -> handle_sort(query, field, String.to_existing_atom(field.attribute), dir)
     end
   end
 
@@ -251,7 +251,10 @@ defmodule ExTeal.Resource.Index do
       ) do
     with {:ok, resource} <- ExTeal.resource_for(resource_name),
          {:ok, resource_assoc} <- schema_assoc_for(resource, rel_name) do
-      pivot_query(query, resource_assoc, resource_id)
+      resource_field =
+        Enum.find(resource.fields(), &(&1.field == String.to_existing_atom(rel_name)))
+
+      pivot_query(query, resource_assoc, resource_id, resource_field)
     end
   end
 
@@ -306,16 +309,39 @@ defmodule ExTeal.Resource.Index do
     end
   end
 
-  defp pivot_query(query, %ManyToMany{join_through: join_through} = assoc, resource_id)
+  defp pivot_query(
+         query,
+         %ManyToMany{join_through: join_through} = assoc,
+         resource_id,
+         many_to_many_field
+       )
        when is_bitstring(join_through) do
-    join_pivot_and_filter(query, assoc, resource_id)
-  end
-
-  defp pivot_query(query, assoc, resource_id) do
     query
     |> join_pivot_and_filter(assoc, resource_id)
-    |> select([q, x], %{_row: q, _pivot: x, pivot: true})
+    |> customize_many_to_many_query(many_to_many_field, assoc, resource_id)
   end
+
+  defp pivot_query(query, assoc, resource_id, many_to_many_field) do
+    query
+    |> join_pivot_and_filter(assoc, resource_id)
+    |> customize_many_to_many_query(many_to_many_field, assoc, resource_id)
+  end
+
+  defp customize_many_to_many_query(
+         query,
+         %Field{private_options: %{index_query_fn: index_fn}},
+         assoc,
+         resource_id
+       ) do
+    index_fn.(query, assoc, resource_id)
+  end
+
+  defp customize_many_to_many_query(query, _field, %ManyToMany{join_through: assoc}, _)
+       when is_bitstring(assoc),
+       do: query
+
+  defp customize_many_to_many_query(query, _, _, _),
+    do: select(query, [q, x], %{_row: q, _pivot: x, pivot: true})
 
   defp join_pivot_and_filter(query, assoc, resource_id) do
     [{rel_1, _rel_2}, {pivot_id, id}] = assoc.join_keys

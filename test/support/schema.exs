@@ -101,6 +101,7 @@ defmodule TestExTeal.Tag do
 
   schema "tags" do
     field(:name, :string)
+    field(:tag_type, :string)
     many_to_many(:posts, TestExTeal.Post, join_through: "posts_tags", on_replace: :delete)
 
     many_to_many(:users, TestExTeal.User,
@@ -113,7 +114,7 @@ defmodule TestExTeal.Tag do
 
   def changeset(%Tag{} = tag, params \\ %{}) do
     tag
-    |> cast(params, [:name])
+    |> cast(params, [:name, :tag_type])
     |> validate_required([:name])
   end
 end

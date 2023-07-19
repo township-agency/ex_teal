@@ -129,11 +129,11 @@ defmodule ExTeal.Resource.FieldsTest do
           "relationship_type" => "ManyToMany"
         })
 
-      [tag_field, order_field, note_field] = Fields.fields_for_many_to_many(UserResource, conn)
+      [tag_name, tag_type, order_field, note_field] =
+        Fields.fields_for_many_to_many(UserResource, conn)
 
-      assert tag_field.type == ManyToManyBelongsTo
-      assert tag_field.relationship == TagResource
-      assert tag_field.private_options.queried_resource == UserResource
+      assert tag_name.type == ExTeal.Fields.Text
+      assert tag_type.type == ExTeal.Fields.Select
       assert order_field.type == ExTeal.Fields.Number
       assert note_field.type == ExTeal.Fields.Text
     end

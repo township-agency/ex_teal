@@ -36,6 +36,7 @@ defmodule TestExTeal.Migrations do
 
     create table(:tags) do
       add(:name, :string)
+      add(:tag_type, :string)
 
       timestamps()
     end
