@@ -6,7 +6,7 @@ defmodule ExTeal.Resource.Fields do
   """
 
   alias ExTeal.{Field, Panel}
-  alias ExTeal.Fields.ManyToManyBelongsTo
+  alias ExTeal.Fields.ManyToMany
 
   @doc """
   Used to get the fields available to the current action.
@@ -148,13 +148,7 @@ defmodule ExTeal.Resource.Fields do
          {:ok, queried_resource} <- ExTeal.resource_for(queried_through_resource_key),
          {:ok, related_resource} <-
            ExTeal.resource_for_relationship(queried_resource, relationship) do
-      primary = [
-        ManyToManyBelongsTo.make(
-          String.to_existing_atom(relationship),
-          related_resource,
-          queried_resource
-        )
-      ]
+      primary = ManyToMany.index_fields(queried_resource, relationship, related_resource)
 
       pivot =
         pivot_fields_for(

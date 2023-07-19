@@ -66,7 +66,9 @@ defmodule ExTeal.Resource do
   """
   @callback default_order() :: [orderable_option]
 
-  @type indexed_resource :: struct() | %{_pivot: struct(), _row: struct(), pivot: true}
+  @type pivot_resource :: %{_pivot: struct(), _row: struct(), pivot: true}
+
+  @type indexed_resource :: struct() | pivot_resource()
 
   @doc """
   Override the detail or edit link for a resource on the resource index.

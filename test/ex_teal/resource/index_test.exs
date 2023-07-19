@@ -134,6 +134,8 @@ defmodule ExTeal.Resource.IndexTest do
 
     assert result_1.id == t1.id
     assert result_2.id == t2.id
+
+    assert Enum.map(result_1.fields, & &1.attribute) == ~w(name tag_type order notes)
   end
 
   @tag manifest: TestExTeal.DefaultManifest
