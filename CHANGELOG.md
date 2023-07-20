@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.25.0](https://github.com/township-agency/ex_teal/compare/v0.24.0...v0.25.0) (2023-07-20)
+
+
+### Features
+
+* More Many-To-Many customization ([35039ab](https://github.com/township-agency/ex_teal/commit/35039ab518068135a1444806aac8391c32840c49))
+
+
+### Bug Fixes
+
+* index queries filtered by a relationship should still use virtual fields for sorting ([3ad1ea7](https://github.com/township-agency/ex_teal/commit/3ad1ea754f5b74fc8bdd62de38d6862c56e60417))
+
 ## [0.24.0](https://github.com/township-agency/ex_teal/compare/v0.23.1...v0.24.0) (2023-07-14)
 
 
