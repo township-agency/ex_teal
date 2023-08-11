@@ -534,7 +534,7 @@ export default {
      * Determine whether the delete menu should be shown to the user
      */
     shouldShowDeleteMenu () {
-      return Boolean(this.selectedResources.length > 0);
+      return Boolean(this.selectedResources.length > 0) && this.resourceInformation.can_delete_any;
     },
 
     /**
