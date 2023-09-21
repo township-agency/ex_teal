@@ -2,27 +2,61 @@
 
 ## Installation
 
-Add ExTeal to your packages:
+Add ExTeal as a dependency in your `mix.exs` file:
 
 ```elixir
 def deps do
   [
-    {:ex_teal, "~> 0.1"}
+    {:ex_teal, "~> 0.25"}
   ]
 end
 ```
 
-Stuff here! One Day!
+and configure Teal in `config/config.exs`:
+
+```
+# config/config.exs
+
+config :ex_teal,
+  repo: YourApp.Repo,
+  manifest: YourAppWeb.ExTeal.Manifest
+```
+
+Teal scales as your business logic scales so we recommend adding a `ex_teal`
+directory in the web directory of your phoenix app to store teal resources,
+cards, dashboards and other files.  Start your app with an empty manifest:
+
 
 ```elixir
-defmodule YourAppWeb.ExTeal do
-  alias YourAppWeb.Resources
+defmodule YourAppWeb.ExTeal.Manifest do
+  use ExTeal.Manifest
+  alias YourAppWeb.Endpoint
 
-  def resources, do: [
-    Resources.User
-  ]
+  def application_name, do: "Your cool app name"
+
+  def logo_image_path, do: "#{Endpoint.url()}/images/favicon.png"
+
+  def resources, do: []
+
+  def plugins, do: []
+
+  # defaults to /teal
+  def path, do: "/admin"
 end
 ```
+
+and use your router to expose Teal to the web (guarding with appropriate
+pipelines for authentication and authorization.
+
+```elixir
+  # lib/your_app_web/router.ex
+  scope path: "/admin" do
+    pipe_through [:browser, :authenticated]
+    forward("/", ExTeal.Router, namespace: "admin")
+  end
+```
+
+Visit `/admin` as an authenticated user and see all the cool :rocket:
 
 ## Developing Teal
 
@@ -44,4 +78,5 @@ assets rather than the compiled assets.
 config :ex_teal, compiled_assets: false
 ```
 
-In Teal's `assets/`, host the assets by running `yarn && yarn dev`
+
+In your local teal `assets/` folder, host the assets by running `yarn && yarn dev`
