@@ -1,6 +1,6 @@
 defmodule ExTeal.Fields.EmbedsManyTest do
   use ExUnit.Case
-  alias ExTeal.Fields.{EmbedsMany, Number, Boolean, Text}
+  alias ExTeal.Fields.{Boolean, EmbedsMany, Number, Text}
 
   describe "value_for/3" do
     test "generates a group of fields for each item in the collection" do
