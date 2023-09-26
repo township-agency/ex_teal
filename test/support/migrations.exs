@@ -59,5 +59,13 @@ defmodule TestExTeal.Migrations do
       add(:order, :integer)
       timestamps()
     end
+
+    create table(:songs) do
+      add(:name, :string)
+      add(:artist, :map, default: %{})
+      add(:musicians, :map, default: %{})
+      add(:lyrics, {:array, :map}, default: [])
+      timestamps()
+    end
   end
 end

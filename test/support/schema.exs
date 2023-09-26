@@ -201,3 +201,46 @@ defmodule TestExTeal.SinglePostUser do
     timestamps()
   end
 end
+
+defmodule TestExTeal.Song do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  alias __MODULE__
+
+  schema("songs") do
+    field(:name, :string)
+
+    embeds_one :artist, Artist do
+      field(:name, :string)
+      field(:age, :integer)
+      field(:genre, :string)
+      field(:award_winning, :boolean, default: false)
+    end
+
+    embeds_many :musicians, Musician do
+      field(:name, :string)
+      field(:instrument, :string)
+    end
+  end
+
+  def changeset(%Song{} = song, params \\ %{}) do
+    song
+    |> cast(params, [:name])
+    |> cast_embed(:artist, &artist_changeset/2)
+    |> cast_embed(:musicians, &musician_changeset/2)
+    |> validate_required([:name, :artist])
+  end
+
+  def artist_changeset(schema, params) do
+    schema
+    |> cast(params, [:name, :age, :genre, :award_winning])
+    |> validate_required([:name, :age, :genre])
+  end
+
+  def musician_changeset(schema, params) do
+    schema
+    |> cast(params, [:name, :instrument])
+    |> validate_required([:name, :instrument])
+  end
+end

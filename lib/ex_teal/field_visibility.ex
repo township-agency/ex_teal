@@ -105,6 +105,12 @@ defmodule ExTeal.FieldVisibility do
   def as_html(field), do: %{field | as_html: true}
 
   @doc """
+  Stack a fields value or form underneath its label
+  """
+  @spec stacked(Field.t()) :: Field.t()
+  def stacked(field), do: %{field | stacked: true}
+
+  @doc """
   Conditionally render a field on a resource as a whole based on the current
   request.  Helpful for filtering out fields based on the current
   users permissions.

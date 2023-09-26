@@ -52,7 +52,10 @@ import ValueMetric from '@/components/Metrics/ValueMetric';
 
 import Icon from '@/components/Icons/Icon';
 import Action from '@/components/Icons/Action';
+import ArrowDown from '@/components/Icons/ArrowDown';
+import ArrowUp from '@/components/Icons/ArrowUp';
 import Create from '@/components/Icons/Create';
+import ChevronDown from '@/components/Icons/ChevronDown';
 import Delete from '@/components/Icons/Delete';
 import Download from '@/components/Icons/Download';
 import Drag from '@/components/Icons/Drag';
@@ -116,7 +119,10 @@ Vue.component('validation-errors', ValidationErrors);
 
 Vue.component('icon', Icon);
 Vue.component('icon-action', Action);
+Vue.component('icon-arrow-down', ArrowDown);
+Vue.component('icon-arrow-up', ArrowUp);
 Vue.component('icon-create', Create);
+Vue.component('icon-chevron-down', ChevronDown);
 Vue.component('icon-delete', Delete);
 Vue.component('icon-download', Download);
 Vue.component('icon-drag', Drag);

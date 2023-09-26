@@ -1,13 +1,17 @@
 <template>
-  <div class="flex border-b border-gray-light">
-    <div class="w-1/4 py-4">
+  <div :class="styles">
+    <div
+      :class="{'pt-4 pb-2': field.stacked, 'w-1/4 py-4': !field.stacked}"
+    >
       <slot>
         <h4 class="font-normal text-gray-darker">
           {{ label }}
         </h4>
       </slot>
     </div>
-    <div class="w-3/4 py-4">
+    <div
+      :class="{'pt-2 pb-4': field.stacked, 'w-3/4 py-4': !field.stacked}"
+    >
       <slot name="value">
         <p
           v-if="field.value && !field.as_html"
@@ -32,17 +36,23 @@ export default {
   props: {
     field: {
       type: Object,
-      required: true
+      required: true,
     },
     fieldName: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
     label () {
       return this.fieldName || this.field.name;
-    }
-  }
+    },
+    styles () {
+      return [
+        'flex border-b border-gray-light',
+        this.field.stacked && 'flex-col',
+      ];
+    },
+  },
 };
 </script>
