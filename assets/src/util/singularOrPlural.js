@@ -1,4 +1,4 @@
-import { Inflector } from 'inflector-js';
+import Inflector from 'inflector-js';
 
 export default function singularOrPlural (value, suffix) {
   if (value > 1 || value == 0) {return Inflector.pluralize(suffix);}

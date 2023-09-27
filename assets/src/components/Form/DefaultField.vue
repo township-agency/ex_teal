@@ -1,13 +1,19 @@
 <template>
-  <field-wrapper>
-    <div class="sm:w-1/5 px-8 py-2 sm:py-6">
+  <field-wrapper :stacked="field.stacked">
+    <div
+      class="px-8 py-2"
+      :class="{'sm:py-6 sm:w-1/5': !field.stacked, 'sm:pt-4': field.stacked}"
+    >
       <slot>
         <form-label :for="field.name">
           {{ field.name || fieldName }}
         </form-label>
       </slot>
     </div>
-    <div class="sm:w-4/5 px-8 py-2 sm:py-6">
+    <div
+      class="px-8 py-2"
+      :class="{'sm:w-4/5 sm:py-6': !field.stacked, 'w-full sm:pb-6': field.stacked}"
+    >
       <slot name="field" />
       <help-text
         :show-help-text="canShowHelpText"

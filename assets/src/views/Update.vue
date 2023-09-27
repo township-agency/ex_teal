@@ -96,10 +96,12 @@ export default {
      * Create the form data for creating the resource.
      */
     updateResourceFormData () {
+      console.log('is broke');
       return _.tap(new FormData(), formData => {
         _(this.fields).each(field => {
           field.fill(formData);
         });
+        console.log('hi');
 
         formData.append('_method', 'PUT');
         formData.append('_retrieved_at', this.lastRetrievedAt);

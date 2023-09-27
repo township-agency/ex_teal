@@ -48,7 +48,7 @@ defmodule ExTeal.MixProject do
       {:hound, "~> 1.0", only: :test},
       {:html_sanitize_ex, "~> 1.4.1"},
       {:phoenix_ecto, "~> 4.1", only: :test},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:nimble_csv, "~> 1.0"},
       {:timex, ">= 3.6.0"},
@@ -85,9 +85,6 @@ by Township."
     [
       files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG* priv version*),
       maintainers: [
-        "Caleb Oller",
-        "Lydia Koller",
-        "Samina Khan",
         "Scott Taylor"
       ],
       licenses: ["MIT"],
@@ -99,6 +96,7 @@ by Township."
     [
       main: "readme",
       extras: [
+        "guides/Fields.md",
         "guides/Policies.md",
         "README.md",
         "CHANGELOG.md"

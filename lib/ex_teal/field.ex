@@ -3,7 +3,7 @@ defmodule ExTeal.Field do
   The core struct that represents a field on a resource served by ExTeal.
   """
 
-  @serialized ~w(as_html attribute component name options prefix_component sortable text_align value panel)a
+  @serialized ~w(as_html attribute component name options prefix_component sortable text_align value panel stacked)a
   @derive {Jason.Encoder, only: @serialized}
 
   @type t :: %__MODULE__{}
@@ -34,7 +34,8 @@ defmodule ExTeal.Field do
             as_html: false,
             sanitize: :strip_tags,
             relationship: nil,
-            virtual: false
+            virtual: false,
+            stacked: false
 
   alias ExTeal.Naming
 

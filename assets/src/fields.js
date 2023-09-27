@@ -165,5 +165,14 @@ Vue.component('form-boolean-group', FormBooleanGroupField);
 Vue.component('detail-boolean-group', DetailBooleanGroupField);
 Vue.component('index-boolean-group', IndexBooleanGroupField);
 
+// Hidden...
 import FormHidden from '@/components/Form/Hidden.vue';
+import DetailHiddenField from '@/components/Detail/Hidden.vue';
 Vue.component('form-hidden-field', FormHidden);
+Vue.component('detail-hidden-field', DetailHiddenField);
+
+// Embeds
+import FormEmbedsMany from '@/components/Form/EmbedsMany.vue';
+import DetailEmbedsMany from '@/components/Detail/EmbedsMany.vue';
+Vue.component('form-embeds-many-field', FormEmbedsMany);
+Vue.component('detail-embeds-many-field', DetailEmbedsMany);
