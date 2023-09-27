@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.26.0](https://github.com/township-agency/ex_teal/compare/v0.25.1...v0.26.0) (2023-09-27)
+
+
+### Features
+
+* Support embedded many schemas ([#215](https://github.com/township-agency/ex_teal/issues/215)) ([55bdc65](https://github.com/township-agency/ex_teal/commit/55bdc65919b6632a5dcf33da4576fe35b3ec308b))
+
 ## [0.25.1](https://github.com/township-agency/ex_teal/compare/v0.25.0...v0.25.1) (2023-08-11)
 
 
