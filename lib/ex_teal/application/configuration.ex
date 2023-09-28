@@ -39,6 +39,18 @@ defmodule ExTeal.Application.Configuration do
   """
   @callback path() :: String.t()
 
+  @doc """
+  Define which plugin is responsible for providing attachment uploads
+  for rich text content.  Teal does not currently provide a default for
+  this.  If you do not need to upload attachments, you can return `nil`.
+
+  Providers from plugins must implement a `window.{PROVIDER_NAME}.uploadFile` that
+  accepts a `File` and a `progressCallback` callback function. The function should
+  return a `<Promise{response: AxiosResponse}>` that resolves to the response from
+  uploading the file.
+  """
+  @callback asset_upload_provider() :: nil | String.t()
+
   defmacro __using__(_) do
     quote do
       alias ExTeal.Application.Configuration
@@ -64,6 +76,8 @@ defmodule ExTeal.Application.Configuration do
 
       def theme, do: %ExTeal.Theme{}
 
+      def asset_upload_provider, do: nil
+
       defoverridable(
         application_name: 0,
         logo_image_path: 0,
@@ -73,6 +87,7 @@ defmodule ExTeal.Application.Configuration do
         path: 0,
         dashboards: 0,
         nav_groups: 1,
+        asset_upload_provider: 0,
         theme: 0
       )
     end
@@ -92,7 +107,8 @@ defmodule ExTeal.Application.Configuration do
       nav_groups: ExTeal.available_nav_groups(conn),
       plugins: ExTeal.available_plugins(),
       authenticated: true,
-      theme: ExTeal.theme()
+      theme: ExTeal.theme(),
+      asset_upload_provider: ExTeal.asset_upload_provider()
     }
   end
 end

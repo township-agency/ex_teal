@@ -102,6 +102,13 @@ defmodule ExTeal do
     end
   end
 
+  def asset_upload_provider do
+    case manifest() do
+      nil -> nil
+      module -> module.asset_upload_provider()
+    end
+  end
+
   def default_policy do
     case manifest() do
       nil -> ExTeal.OpenEverywherePolicy

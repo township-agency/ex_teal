@@ -11,4 +11,10 @@ defmodule ExTeal.Fields.RichText do
   def sanitize_as, do: :html5
 
   def as_html, do: true
+
+  @doc """
+  Enable File Uploads for this field.  This assumes you've configured a plugin that handles and exposes
+  file uploading functionality to the vue app.
+  """
+  def with_files(field), do: %{field | options: Map.put(field.options, :with_files, true)}
 end
