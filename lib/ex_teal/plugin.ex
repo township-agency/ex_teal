@@ -6,7 +6,7 @@ defmodule ExTeal.Plugin do
   alias ExTeal.Asset.Script
   alias ExTeal.Plugin
 
-  @serialized ~w(uri title navigation_component)a
+  @serialized ~w(uri title navigation_component js_config)a
   @derive {Jason.Encoder, only: @serialized}
 
   @type t :: %__MODULE__{}
@@ -17,10 +17,26 @@ defmodule ExTeal.Plugin do
             options: nil,
             router: nil,
             scripts: [],
-            styles: []
+            styles: [],
+            js_config: %{}
+
+  @callback uri :: String.t() | nil
+
+  @callback navigation_component :: String.t() | nil
+
+  @callback title :: String.t()
+
+  @callback router :: module() | nil
+
+  @callback scripts :: [Script.t()]
+
+  @callback styles :: [String.t()]
+
+  @callback js_config :: map()
 
   defmacro __using__(_opts) do
     quote do
+      @behaviour ExTeal.Plugin
       use ExTeal.Resource.Repo
 
       alias ExTeal.{Naming, Plugin}
@@ -32,6 +48,7 @@ defmodule ExTeal.Plugin do
 
       def scripts, do: []
       def styles, do: []
+      def js_config, do: %{}
 
       def new(opts) do
         params = %{
@@ -41,13 +58,14 @@ defmodule ExTeal.Plugin do
           options: opts,
           router: __MODULE__.router(),
           scripts: __MODULE__.scripts(),
-          styles: __MODULE__.styles()
+          styles: __MODULE__.styles(),
+          js_config: __MODULE__.js_config()
         }
 
         struct(Plugin, params)
       end
 
-      defoverridable(uri: 0, navigation_component: 0, title: 0, router: 0, scripts: 0, styles: 0)
+      defoverridable(uri: 0, navigation_component: 0, title: 0, router: 0, scripts: 0, styles: 0, js_config: 0)
     end
   end
 
