@@ -4,17 +4,13 @@
     :errors="errors"
   >
     <template slot="field">
-      <input
-        :id="editorId"
-        type="hidden"
-        name="content"
-      >
       <editor
         :value="field.value"
         :class="errorClasses"
-        :input="editorId"
         :placeholder="field.name"
+        :with-files="withFiles"
         @change="handleChange"
+        @file-added="handleFileAdded"
       />
     </template>
   </default-field>
@@ -38,9 +34,30 @@ export default {
   },
 
   computed: {
-    editorId () {
-      return `editor-${this.field.name}`;
-    }
+    withFiles () {
+      return this.field.options.with_files || false;
+    },
+  },
+
+  methods: {
+    handleFileAdded ({ attachment }) {
+      const uploader = ExTeal.config.asset_upload_provider;
+
+      if (!attachment.file || !uploader) { return; }
+
+      const onUploadProgress = progressEvent => {
+        attachment.setUploadProgress(
+          Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        );
+      };
+
+      window[uploader].uploadFile(attachment.file, onUploadProgress).then(({ url }) => {
+        return attachment.setAttributes({
+          url: url,
+          href: url,
+        });
+      });
+    },
   }
 };
 </script>

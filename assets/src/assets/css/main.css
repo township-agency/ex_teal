@@ -565,7 +565,7 @@ textarea, select, input, button, .checkbox { outline: none; z-index: 10}
   max-height: 1000px;
   transition: all .5s;
   opacity:1;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Override Form Field Widths For ConfirmActionModal

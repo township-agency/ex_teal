@@ -2,8 +2,15 @@
   <div class="border">
     <div class="border-b flex justify-between items-center bg-primary-10">
       <div class="inline-flex items-center pl-2">
-        <button @click="toggleExpand" type="button" class="inline-flex items-center">
-          <div class="origin-center transition-transform transform" :class="{'rotate-180': !expanded}">
+        <button
+          type="button"
+          class="inline-flex items-center"
+          @click="toggleExpand"
+        >
+          <div
+            class="origin-center transition-transform transform"
+            :class="{'rotate-180': !expanded}"
+          >
             <icon type="chevron-down" />
           </div>
         </button>
@@ -12,15 +19,15 @@
       <div class="inline-flex items-center">
         <button
           type="button"
-          @click="moveUp(index)"
           class="btn btn-icon btn-sm"
+          @click="moveUp(index)"
         >
           <icon type="arrow-up" />
         </button>
         <button
           type="button"
-          @click="moveDown(index)"
           class="btn btn-icon  btn-sm"
+          @click="moveDown(index)"
         >
           <icon type="arrow-down" />
         </button>
@@ -35,9 +42,9 @@
     </div>
     <div :class="{'hidden': !expanded}">
       <component
+        :is="'form-' + field.component"
         v-for="field in fields"
         :key="fieldKey(field, index)"
-        :is="'form-' + field.component"
         :via-resource="viaResource"
         :via-resource-id="viaResourceId"
         :via-relationship="viaRelationship"

@@ -102,6 +102,13 @@ defmodule ExTeal do
     end
   end
 
+  def asset_upload_provider do
+    case manifest() do
+      nil -> nil
+      module -> module.asset_upload_provider()
+    end
+  end
+
   def default_policy do
     case manifest() do
       nil -> ExTeal.OpenEverywherePolicy
@@ -158,6 +165,13 @@ defmodule ExTeal do
   def all_scripts do
     available_plugins()
     |> Enum.map(&Plugin.available_scripts/1)
+    |> List.flatten()
+  end
+
+  @spec all_styles() :: [ExTeal.Asset.Style.t()]
+  def all_styles do
+    available_plugins()
+    |> Enum.map(&Plugin.available_styles/1)
     |> List.flatten()
   end
 
