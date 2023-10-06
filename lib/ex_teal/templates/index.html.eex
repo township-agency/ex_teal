@@ -20,6 +20,10 @@
     <% else %>
       <link href="http://localhost:8080/teal/js/main.js" rel="preload" as="script"></head>
     <% end %>
+
+    <%= for style <- @plugin_styles do %>
+      <link href="<%= @config.path %>/plugins/<%= style.plugin_uri %>/<%= style.path %>" rel="stylesheet" type="text/css">
+    <% end %>
   </head>
   <body class="font-normal text-black leading-normal">
     <noscript>

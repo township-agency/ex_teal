@@ -3,7 +3,7 @@ defmodule ExTeal.Plugin do
   The base module that describes the functionality of a plugin
   """
 
-  alias ExTeal.Asset.Script
+  alias ExTeal.Asset.{Script, Style}
   alias ExTeal.Plugin
 
   @serialized ~w(uri title navigation_component js_config)a
@@ -30,7 +30,7 @@ defmodule ExTeal.Plugin do
 
   @callback scripts :: [Script.t()]
 
-  @callback styles :: [String.t()]
+  @callback styles :: [Style.t()]
 
   @callback js_config :: map()
 
@@ -65,7 +65,15 @@ defmodule ExTeal.Plugin do
         struct(Plugin, params)
       end
 
-      defoverridable(uri: 0, navigation_component: 0, title: 0, router: 0, scripts: 0, styles: 0, js_config: 0)
+      defoverridable(
+        uri: 0,
+        navigation_component: 0,
+        title: 0,
+        router: 0,
+        scripts: 0,
+        styles: 0,
+        js_config: 0
+      )
     end
   end
 
@@ -74,4 +82,12 @@ defmodule ExTeal.Plugin do
       Map.put(script, :plugin_uri, uri)
     end)
   end
+
+  def available_styles(%Plugin{uri: uri, styles: styles}) do
+    Enum.map(styles, fn %Style{} = style ->
+      Map.put(style, :plugin_uri, uri)
+    end)
+  end
+
+  def available_styles, do: []
 end

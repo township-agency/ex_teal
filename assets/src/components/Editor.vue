@@ -4,7 +4,6 @@
     :value="value"
     :placeholder="placeholder"
     class="trix-content"
-    @trix-before-initialize="beforeInitialize"
     @trix-initialize="initialize"
     @trix-change="handleChange"
     @trix-attachment-add="handleAddFile"
@@ -26,9 +25,6 @@ export default {
   emits: [ 'change', 'file-added', 'file-removed' ],
 
   methods: {
-    beforeInitialize (e) {
-      console.log(Trix.config);
-    },
     initialize () {
       this.$refs.theEditor.editor.insertHTML(this.value);
     },

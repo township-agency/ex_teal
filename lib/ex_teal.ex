@@ -168,6 +168,13 @@ defmodule ExTeal do
     |> List.flatten()
   end
 
+  @spec all_styles() :: [ExTeal.Asset.Style.t()]
+  def all_styles do
+    available_plugins()
+    |> Enum.map(&Plugin.available_styles/1)
+    |> List.flatten()
+  end
+
   @spec resource_for_relationship(ExTeal.Resource.t(), String.t()) ::
           {:ok, ExTeal.Resource.t()} | {:error, :not_found}
   def resource_for_relationship(resource, relationship) do

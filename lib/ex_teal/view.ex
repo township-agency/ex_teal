@@ -30,6 +30,7 @@ defmodule ExTeal.View do
       user: user,
       assets: assets,
       plugin_scripts: ExTeal.all_scripts(),
+      plugin_styles: ExTeal.all_styles(),
       csrf_token: csrf_token,
       dropdown: dropdown,
       colors: color_variables

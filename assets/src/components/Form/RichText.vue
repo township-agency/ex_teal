@@ -35,7 +35,7 @@ export default {
 
   computed: {
     withFiles () {
-      return this.field.options.withFiles || false;
+      return this.field.options.with_files || false;
     },
   },
 

@@ -1,16 +1,13 @@
 <template>
   <panel-item :field="field">
     <template slot="value">
-      <Excerpt :content="field.value" />
+      <excerpt :content="field.value" />
     </template>
   </panel-item>
 </template>
 
 <script>
-import Excerpt from '../Excerpt';
-
 export default {
-  components: { Excerpt },
   props: {
     resourceName: {
       type: String,
