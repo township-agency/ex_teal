@@ -1,7 +1,7 @@
 {
   "npm.babel.js": "/js/0.e53acd4a3b6f3dddb993.chunk.js",
   "main.css": "/css/main.css",
-  "main.js": "/js/ff2b38ca7b9ca26e255e.js",
+  "main.js": "/js/837ed21d3dc65aa3e5b7.js",
   "npm.axios.js": "/js/2.b5681d8781a013e3a46a.chunk.js",
   "npm.chart.js.js": "/js/3.5e6b2fe6b95b03fdd807.chunk.js",
   "npm.core-js.js": "/js/4.e93b620fa8cc3701e33e.chunk.js",
@@ -18,7 +18,7 @@
   "npm.setimmediate.js": "/js/15.6e098479cf6a94f45351.chunk.js",
   "npm.sortablejs.js": "/js/16.b5051b115ec55934a9d7.chunk.js",
   "npm.timers-browserify.js": "/js/17.e1b797d0ba3ce9cf1823.chunk.js",
-  "npm.trix.js": "/js/18.27e295a488dd132d4476.chunk.js",
+  "npm.trix.js": "/js/18.61207d7d6304404e5de3.chunk.js",
   "npm.uid.js": "/js/19.28770ba1ccfdbc5cf284.chunk.js",
   "npm.v-tooltip.js": "/js/20.9a06a01e78b2677c068c.chunk.js",
   "npm.vue.js": "/js/21.65b0e23928eb3d660f27.chunk.js",
@@ -41,7 +41,7 @@
   "js/10.9e9ac19d7b57659e71c3.chunk.js.gz": "/js/10.9e9ac19d7b57659e71c3.chunk.js.gz",
   "js/12.1e4e648a73418808fae5.chunk.js.gz": "/js/12.1e4e648a73418808fae5.chunk.js.gz",
   "js/16.b5051b115ec55934a9d7.chunk.js.gz": "/js/16.b5051b115ec55934a9d7.chunk.js.gz",
-  "js/18.27e295a488dd132d4476.chunk.js.gz": "/js/18.27e295a488dd132d4476.chunk.js.gz",
+  "js/18.61207d7d6304404e5de3.chunk.js.gz": "/js/18.61207d7d6304404e5de3.chunk.js.gz",
   "js/2.b5681d8781a013e3a46a.chunk.js.gz": "/js/2.b5681d8781a013e3a46a.chunk.js.gz",
   "js/20.9a06a01e78b2677c068c.chunk.js.gz": "/js/20.9a06a01e78b2677c068c.chunk.js.gz",
   "js/21.65b0e23928eb3d660f27.chunk.js.gz": "/js/21.65b0e23928eb3d660f27.chunk.js.gz",
@@ -54,6 +54,6 @@
   "js/4.e93b620fa8cc3701e33e.chunk.js.gz": "/js/4.e93b620fa8cc3701e33e.chunk.js.gz",
   "js/5.6b71956b7656aa029b3f.chunk.js.gz": "/js/5.6b71956b7656aa029b3f.chunk.js.gz",
   "js/8.99b3024d9ac1ce535a8d.chunk.js.gz": "/js/8.99b3024d9ac1ce535a8d.chunk.js.gz",
-  "js/9.551d6dd6fd261f870ac3.chunk.js.gz": "/js/9.551d6dd6fd261f870ac3.chunk.js.gz",
-  "js/ff2b38ca7b9ca26e255e.js.gz": "/js/ff2b38ca7b9ca26e255e.js.gz"
+  "js/837ed21d3dc65aa3e5b7.js.gz": "/js/837ed21d3dc65aa3e5b7.js.gz",
+  "js/9.551d6dd6fd261f870ac3.chunk.js.gz": "/js/9.551d6dd6fd261f870ac3.chunk.js.gz"
 }
