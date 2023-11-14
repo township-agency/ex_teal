@@ -48,12 +48,14 @@ defmodule ExTeal.Fields.BelongsTo do
     case ExTeal.resource_for_model(field.relationship) do
       {:ok, resource} ->
         rel = model.__struct__.__schema__(:association, field.field)
+        IO.inspect(rel)
 
         opts =
           Map.merge(field.options, %{
             belongs_to_key: rel.owner_key,
             belongs_to_relationship: resource.uri(),
-            belongs_to_id: id
+            belongs_to_id: id,
+            reverse: rel.field == rel.relationship
           })
 
         Map.put(field, :options, opts)

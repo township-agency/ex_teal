@@ -127,6 +127,7 @@ export default {
     creatingViaRelatedResource () {
       return (
         this.viaResource == this.field.options.belongs_to_relationship &&
+        this.field.options.reverse &&
         this.viaResourceId
       );
     },
@@ -167,18 +168,16 @@ export default {
 
   methods: {
     initializeComponent () {
-      // If a user is editing an existing resource with this relation
-      // we'll have a belongsToId on the field, and we should prefill
-      // that resource in this field
       if (this.editingExistingResource) {
+        // If a user is editing an existing resource with this relation
+        // we'll have a belongsToId on the field, and we should prefill
+        // that resource in this field
         this.initializingWithExistingResource = true;
         this.selectedResourceId = this.field.options.belongs_to_id;
-      }
-
-      // If the user is creating this resource via a related resource's index
-      // page we'll have a viaResource and viaResourceId in the params and
-      // should prefill the resource in this field with that information
-      if (this.creatingViaRelatedResource) {
+      } else if (this.creatingViaRelatedResource) {
+        // If the user is creating this resource via a related resource's index
+        // page we'll have a viaResource and viaResourceId in the params and
+        // should prefill the resource in this field with that information
         this.initializingWithExistingResource = true;
         this.selectedResourceId = this.viaResourceId;
       }
