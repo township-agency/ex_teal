@@ -53,7 +53,8 @@ defmodule ExTeal.Fields.BelongsTo do
           Map.merge(field.options, %{
             belongs_to_key: rel.owner_key,
             belongs_to_relationship: resource.uri(),
-            belongs_to_id: id
+            belongs_to_id: id,
+            reverse: rel.field == rel.relationship
           })
 
         Map.put(field, :options, opts)
