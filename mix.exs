@@ -51,8 +51,8 @@ defmodule ExTeal.MixProject do
       {:ex_doc, "~> 0.30", only: :dev, runtime: false},
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:nimble_csv, "~> 1.0"},
-      {:timex, ">= 3.6.0"},
-      {:tzdata, "~> 1.0"}
+      {:timex, ">= 3.7.0"},
+      {:tzdata, "~> 1.1"}
     ]
   end
 

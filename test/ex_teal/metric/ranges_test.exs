@@ -35,8 +35,8 @@ defmodule ExTeal.Metric.RangesTest do
     test "for a start year and a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2016, 12, 31}, {23, 59, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/UTC-6"),
+                 Timex.to_datetime({{2016, 12, 31}, {23, 59, 59}}, "Etc/UTC-6")
                }
     end
 
@@ -49,8 +49,8 @@ defmodule ExTeal.Metric.RangesTest do
     @tag unit: "month"
     test "for a month unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) == {
-               Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/GMT+6"),
-               Timex.to_datetime({{2016, 3, 31}, {23, 59, 59}}, "Etc/GMT+6")
+               Timex.to_datetime({{2016, 1, 1}, {0, 0, 0}}, "Etc/UTC-6"),
+               Timex.to_datetime({{2016, 3, 31}, {23, 59, 59}}, "Etc/UTC-6")
              }
     end
 
@@ -64,8 +64,8 @@ defmodule ExTeal.Metric.RangesTest do
     test "for a week unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2016, 1, 4}, {0, 0, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 4}, {0, 0, 0}}, "Etc/UTC-6"),
+                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/UTC-6")
                }
     end
 
@@ -73,8 +73,8 @@ defmodule ExTeal.Metric.RangesTest do
     test "for a day unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2016, 1, 5}, {0, 0, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 5}, {0, 0, 0}}, "Etc/UTC-6"),
+                 Timex.to_datetime({{2016, 3, 6}, {23, 59, 59}}, "Etc/UTC-6")
                }
     end
 
@@ -82,8 +82,8 @@ defmodule ExTeal.Metric.RangesTest do
     test "for a hour unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2016, 1, 5}, {2, 0, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2016, 3, 6}, {2, 59, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 5}, {2, 0, 0}}, "Etc/UTC-6"),
+                 Timex.to_datetime({{2016, 3, 6}, {2, 59, 59}}, "Etc/UTC-6")
                }
     end
 
@@ -91,8 +91,8 @@ defmodule ExTeal.Metric.RangesTest do
     test "for a minute unit with a user timezone", %{request: request} do
       assert Ranges.get_aggregate_datetimes(request) ==
                {
-                 Timex.to_datetime({{2016, 1, 5}, {2, 3, 0}}, "Etc/GMT+6"),
-                 Timex.to_datetime({{2016, 3, 6}, {2, 4, 59}}, "Etc/GMT+6")
+                 Timex.to_datetime({{2016, 1, 5}, {2, 3, 0}}, "Etc/UTC-6"),
+                 Timex.to_datetime({{2016, 3, 6}, {2, 4, 59}}, "Etc/UTC-6")
                }
     end
   end
