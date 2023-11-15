@@ -207,7 +207,7 @@ defmodule ExTeal.Metric.Trend do
   def to_local_dt(db_date, format, timezone) do
     db_date
     |> Timex.parse!(format)
-    |> DateTime.from_naive!(timezone)
+    |> Timex.Timezone.convert(timezone)
   end
 
   @doc """
