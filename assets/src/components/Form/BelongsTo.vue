@@ -5,7 +5,7 @@
   >
     <template slot="field">
       <search-input
-        :disabled="isLocked"
+        :disabled="creatingViaRelatedResource"
         :error="hasError"
         :value="selectedResource"
         :data="availableResources"
@@ -153,10 +153,6 @@ export default {
         }
       };
     },
-
-    isLocked () {
-      return this.viaResource == this.field.options.belongs_to_relationship;
-    }
   },
 
   /**
