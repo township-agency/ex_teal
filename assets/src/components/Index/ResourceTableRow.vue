@@ -96,7 +96,8 @@
             v-if="shouldShowUpdateButton"
             :to="{
               name: 'edit',
-              params: editLinkParams
+              params: editLinkParams,
+              query: editLinkQuery,
             }"
             title="Edit"
             class="table-action-link primary"
@@ -242,6 +243,14 @@ export default {
     editLinkParams () {
       const { resource_name: resourceName, resource_id: resourceId } = this.resource.meta.edit_link;
       return { resourceName, resourceId };
+    },
+
+    editLinkQuery () {
+      const query = {};
+      if (this.viaResource) { query.viaResource = this.viaResource; }
+      if (this.viaResourceId) { query.viaResourceId = this.viaResourceId; }
+      if (this.viaRelationship) { query.viaRelationship = this.viaRelationship; }
+      return query;
     }
   },
 

@@ -94,7 +94,7 @@ defmodule ExTeal.Resource.ExportTest do
       [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header ==
-               "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,inserted_at,updated_at"
+               "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,editor_id,inserted_at,updated_at"
 
       assert String.contains?(p1_csv, "#{p1.id},#{p1.name}")
       assert String.contains?(p2_csv, "#{p2.id},#{p2.name}")
@@ -156,7 +156,7 @@ defmodule ExTeal.Resource.ExportTest do
       [header, p1_csv, p2_csv] = String.split(data, "\r\n", trim: true)
 
       assert header ==
-               "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,inserted_at,updated_at"
+               "id,name,body,author,contributor,published,published_at,deleted_at,features,location,user_id,editor_id,inserted_at,updated_at"
 
       assert String.contains?(p1_csv, "#{p2.id},#{p2.name}")
       assert String.contains?(p2_csv, "#{p1.id},#{p1.name}")
@@ -194,7 +194,7 @@ defmodule ExTeal.Resource.ExportTest do
       fields = TestExTeal.PostResource.export_fields()
 
       expected =
-        ~w(id name body author contributor published published_at deleted_at features location user_id inserted_at updated_at)a
+        ~w(id name body author contributor published published_at deleted_at features location user_id editor_id inserted_at updated_at)a
 
       assert fields == expected
     end

@@ -61,7 +61,10 @@ export default [
     props: route => {
       return {
         resourceName: route.params.resourceName,
-        resourceId: Number.parseInt(route.params.resourceId)
+        resourceId: Number.parseInt(route.params.resourceId),
+        viaResource: route.query.viaResource,
+        viaResourceId: Number.parseInt(route.query.viaResourceId),
+        viaRelationship: route.query.viaRelationship
       };
     }
   },

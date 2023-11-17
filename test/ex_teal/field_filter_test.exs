@@ -30,7 +30,8 @@ defmodule ExTeal.FieldFilterTest do
              "contributor",
              "published_at",
              "deleted_at",
-             "user"
+             "user",
+             "editor"
            ]
   end
 

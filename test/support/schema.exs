@@ -8,6 +8,7 @@ defmodule TestExTeal.User do
     field(:post_count, :integer, virtual: true)
 
     has_many(:posts, TestExTeal.Post)
+    has_many(:edited_posts, TestExTeal.Post, foreign_key: :editor_id)
     has_many(:post_likes, through: [:posts, :likes])
     many_to_many(:preferred_tags, TestExTeal.Tag, join_through: TestExTeal.PreferredTag)
 
@@ -77,6 +78,7 @@ defmodule TestExTeal.Post do
     many_to_many(:tags, TestExTeal.Tag, join_through: "posts_tags", on_replace: :delete)
 
     belongs_to(:user, TestExTeal.User)
+    belongs_to(:editor, TestExTeal.User, foreign_key: :editor_id)
 
     has_many(:authors_posts, through: [:user, :posts])
     has_many(:likes, TestExTeal.Like)
@@ -84,7 +86,7 @@ defmodule TestExTeal.Post do
     timestamps()
   end
 
-  @fields ~w(name body author contributor published published_at deleted_at user_id)a
+  @fields ~w(name body author contributor published published_at deleted_at user_id editor_id)a
 
   def changeset(%Post{} = post, params \\ %{}) do
     post

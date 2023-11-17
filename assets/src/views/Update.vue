@@ -80,6 +80,18 @@ export default {
     resourceId: {
       required: true,
       type: Number
+    },
+    viaResource: {
+      default: '',
+      type: String
+    },
+    viaResourceId: {
+      default: null,
+      type: Number
+    },
+    viaRelationship: {
+      default: '',
+      type: String
     }
   },
 
@@ -96,12 +108,10 @@ export default {
      * Create the form data for creating the resource.
      */
     updateResourceFormData () {
-      console.log('is broke');
       return _.tap(new FormData(), formData => {
         _(this.fields).each(field => {
           field.fill(formData);
         });
-        console.log('hi');
 
         formData.append('_method', 'PUT');
         formData.append('_retrieved_at', this.lastRetrievedAt);
@@ -141,7 +151,13 @@ export default {
       const {
         data: { fields, panels }
       } = await ExTeal.request()
-        .get(`/api/${this.resourceName}/${this.resourceId}/update-fields`)
+        .get(`/api/${this.resourceName}/${this.resourceId}/update-fields`, {
+          params: {
+            viaResource: this.viaResource,
+            viaResourceId: this.viaResourceId,
+            viaRelationship: this.viaRelationship
+          }
+        })
         .catch(error => {
           if (error.response.status == 404) {
             this.$router.push({ name: '404' });

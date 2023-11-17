@@ -153,7 +153,7 @@ defmodule ExTeal.Resource.FieldsTest do
       fields = Fields.fields_for_has_many(PostResource, conn)
 
       assert Enum.map(fields, & &1.field) ==
-               ~w(id name published author contributor published_at deleted_at user features)a
+               ~w(id name published author contributor published_at deleted_at user editor features)a
     end
 
     @tag manifest: TestExTeal.PostCountManifest
