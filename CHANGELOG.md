@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.27.3](https://github.com/township-agency/ex_teal/compare/v0.27.2...v0.27.3) (2023-11-17)
+
+
+### Bug Fixes
+
+* Use ecto schema assocs to determine if the viaRelationship is a reverse. ([#244](https://github.com/township-agency/ex_teal/issues/244)) ([075632f](https://github.com/township-agency/ex_teal/commit/075632f324fe0d9d4a2784fb217fdf6df4b7109d))
+
 ## [0.27.2](https://github.com/township-agency/ex_teal/compare/v0.27.1...v0.27.2) (2023-11-16)
 
 
