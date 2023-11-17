@@ -1,7 +1,7 @@
 {
   "npm.babel.js": "/js/0.e53acd4a3b6f3dddb993.chunk.js",
   "main.css": "/css/main.css",
-  "main.js": "/js/75e00c2905ee40bb104d.js",
+  "main.js": "/js/c5a2a3991a08372f403a.js",
   "npm.axios.js": "/js/2.b5681d8781a013e3a46a.chunk.js",
   "npm.chart.js.js": "/js/3.5e6b2fe6b95b03fdd807.chunk.js",
   "npm.core-js.js": "/js/4.e93b620fa8cc3701e33e.chunk.js",
@@ -53,7 +53,7 @@
   "js/30.042b195e0929ed4396d1.chunk.js.gz": "/js/30.042b195e0929ed4396d1.chunk.js.gz",
   "js/4.e93b620fa8cc3701e33e.chunk.js.gz": "/js/4.e93b620fa8cc3701e33e.chunk.js.gz",
   "js/5.6b71956b7656aa029b3f.chunk.js.gz": "/js/5.6b71956b7656aa029b3f.chunk.js.gz",
-  "js/75e00c2905ee40bb104d.js.gz": "/js/75e00c2905ee40bb104d.js.gz",
   "js/8.99b3024d9ac1ce535a8d.chunk.js.gz": "/js/8.99b3024d9ac1ce535a8d.chunk.js.gz",
-  "js/9.551d6dd6fd261f870ac3.chunk.js.gz": "/js/9.551d6dd6fd261f870ac3.chunk.js.gz"
+  "js/9.551d6dd6fd261f870ac3.chunk.js.gz": "/js/9.551d6dd6fd261f870ac3.chunk.js.gz",
+  "js/c5a2a3991a08372f403a.js.gz": "/js/c5a2a3991a08372f403a.js.gz"
 }
