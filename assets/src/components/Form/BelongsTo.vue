@@ -5,7 +5,7 @@
   >
     <template slot="field">
       <search-input
-        :disabled="creatingViaRelatedResource"
+        :disabled="disabled"
         :error="hasError"
         :value="selectedResource"
         :data="availableResources"
@@ -125,7 +125,7 @@ export default {
      * Determine if we are creating a new resource via a parent relation
      */
     creatingViaRelatedResource () {
-      return (
+      return Boolean(
         this.viaResource == this.field.options.belongs_to_relationship &&
         this.field.options.reverse &&
         this.viaResourceId
@@ -137,7 +137,7 @@ export default {
      */
     shouldSelectInitialResource () {
       return Boolean(
-        this.editingExistingResource || this.creatingViaRelatedResource
+        this.editingExistingResource || this.creatingViaRelatedResource || this.field.value
       );
     },
 
@@ -149,10 +149,17 @@ export default {
         params: {
           current: this.selectedResourceId,
           first: this.initializingWithExistingResource,
-          search: this.search
+          search: this.search,
+          viaResource: this.viaResource,
+          viaResourceId: this.viaResourceId,
+          viaRelationship: this.viaRelationship
         }
       };
     },
+
+    disabled () {
+      return !!this.creatingViaRelatedResource;
+    }
   },
 
   /**

@@ -119,7 +119,14 @@ export default {
       const {
         data: { fields, panels }
       } = await ExTeal.request().get(
-        `/api/${this.resourceName}/creation-fields`
+        `/api/${this.resourceName}/creation-fields`,
+        {
+          params: {
+            viaResource: this.viaResource,
+            viaResourceId: this.viaResourceId,
+            viaRelationship: this.viaRelationship
+          }
+        }
       );
 
       this.fields = fields;

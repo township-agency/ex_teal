@@ -38,7 +38,7 @@ defmodule ExTeal.Fields.BelongsTo do
   end
 
   @impl true
-  def apply_options_for(field, model, _conn, _type) do
+  def apply_options_for(field, model, conn, _type) do
     id =
       case Map.get(model, field.field) do
         nil -> nil
@@ -54,7 +54,7 @@ defmodule ExTeal.Fields.BelongsTo do
             belongs_to_key: rel.owner_key,
             belongs_to_relationship: resource.uri(),
             belongs_to_id: id,
-            reverse: rel.field == rel.relationship
+            reverse: is_reverse_relationship(resource, rel, conn)
           })
 
         Map.put(field, :options, opts)
@@ -72,5 +72,29 @@ defmodule ExTeal.Fields.BelongsTo do
   def searchable(field) do
     IO.warn("searchable/1 is deprecated.  BelongsTo fields are always searchable")
     field
+  end
+
+  defp is_reverse_relationship(resource, rel, conn) do
+    via_resource = Map.get(conn.params, "viaResource")
+    via_relationship = Map.get(conn.params, "viaRelationship")
+
+    if is_nil(via_resource) || via_resource != resource.uri() do
+      false
+    else
+      matches_relationship?(rel, via_relationship)
+    end
+  end
+
+  defp matches_relationship?(rel, via_relationship) do
+    all_relationships = rel.related.__schema__(:associations)
+
+    if Enum.any?(all_relationships, fn assoc -> Atom.to_string(assoc) == via_relationship end) do
+      known_relationship =
+        rel.related.__schema__(:association, String.to_existing_atom(via_relationship))
+
+      rel.owner_key == known_relationship.related_key
+    else
+      false
+    end
   end
 end

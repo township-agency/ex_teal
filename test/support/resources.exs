@@ -19,6 +19,7 @@ defmodule TestExTeal.UserResource do
       Text.make(:email),
       Select.make(:role),
       HasMany.make(:posts),
+      HasMany.make(:edited_posts),
       HasMany.make(:post_likes),
       ManyToMany.make(:preferred_tags, TestExTeal.Tag)
       |> ManyToMany.with_index_fields([
@@ -53,7 +54,7 @@ defmodule TestExTeal.PostResource do
 
   def model, do: TestExTeal.Post
 
-  def with, do: [:user]
+  def with, do: [:user, :editor]
 
   def fields,
     do: [
@@ -65,7 +66,8 @@ defmodule TestExTeal.PostResource do
       Select.make(:contributor) |> Select.options(~w(foo bar)),
       DateTime.make(:published_at),
       DateTime.make(:deleted_at),
-      BelongsTo.make(:user),
+      BelongsTo.make(:user, TestExTeal.User),
+      BelongsTo.make(:editor, TestExTeal.User),
       BooleanGroup.make(:features)
       |> BooleanGroup.options(%{
         "show_cta" => "Show CTA",
@@ -312,7 +314,6 @@ defmodule TestExTeal.Forever.PostResource do
       Select.make(:contributor) |> Select.options(~w(foo bar)),
       DateTime.make(:published_at),
       DateTime.make(:deleted_at),
-      BelongsTo.make(:user),
       BooleanGroup.make(:features)
       |> BooleanGroup.options(%{
         "show_cta" => "Show CTA",

@@ -246,6 +246,6 @@ defmodule ExTeal.Resource.IndexTest do
 
     method
     |> build_conn(path, params)
-    |> fetch_query_params
+    |> fetch_query_params()
   end
 end
