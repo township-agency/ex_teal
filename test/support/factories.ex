@@ -3,7 +3,7 @@ defmodule TestExTeal.Factory do
 
   use ExMachina.Ecto, repo: TestExTeal.Repo
 
-  alias TestExTeal.{Like, Order, Post, PreferredTag, SinglePostUser, Tag, User}
+  alias TestExTeal.{Like, Order, Post, PreferredTag, SinglePostUser, Song, Tag, User}
 
   def user_factory do
     %User{
@@ -54,6 +54,18 @@ defmodule TestExTeal.Factory do
     %Like{
       post: build(:post),
       identifier: sequence(:identifier, &"#{&1}")
+    }
+  end
+
+  def song_factory do
+    %Song{
+      name: sequence(:name, &"Song #{&1}"),
+      musicians: [
+        %{name: "John", instrument: "guitar"},
+        %{name: "Paul", instrument: "bass"},
+        %{name: "George", instrument: "guitar"},
+        %{name: "Ringo", instrument: "drums"}
+      ]
     }
   end
 end
