@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.27.6](https://github.com/township-agency/ex_teal/compare/v0.27.5...v0.27.6) (2024-01-24)
+
+
+### Bug Fixes
+
+* Update EmbedsMany ([#252](https://github.com/township-agency/ex_teal/issues/252)) ([52596c1](https://github.com/township-agency/ex_teal/commit/52596c18e350b33501c232015657508a4a327f32))
+
 ## [0.27.5](https://github.com/township-agency/ex_teal/compare/v0.27.4...v0.27.5) (2024-01-24)
 
 
