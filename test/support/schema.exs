@@ -224,6 +224,8 @@ defmodule TestExTeal.Song do
       field(:name, :string)
       field(:instrument, :string)
     end
+
+    timestamps()
   end
 
   def changeset(%Song{} = song, params \\ %{}) do
