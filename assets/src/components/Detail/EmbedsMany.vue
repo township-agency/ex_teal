@@ -1,24 +1,20 @@
 <template>
   <panel-item :field="field">
     <template slot="value">
-      <div v-if="field.value && field.value.length > 1">
-        <div
+      <div
+        v-if="field.value && field.value.length > 0"
+        class="space-y-4 mb-4"
+      >
+        <EmbeddedRow
           v-for="(item, index) in field.value"
-          :key="index"
-        >
-          <div class="border p-4 mb-4">
-            <component
-              :is="resolveComponentName(nested_field)"
-              v-for="(nested_field, nested_index) in item"
-              :key="nested_index"
-              :class="{ 'remove-bottom-border': index === field.value.length - 1 }"
-              :resource-name="resourceName"
-              :resource-id="resourceId"
-              :resource="resource"
-              :field="nested_field"
-            />
-          </div>
-        </div>
+          :key="item[0].value"
+          :fields="item"
+          :index="index"
+          :resource-name="resourceName"
+          :resource-id="resourceId"
+          :resource="resource"
+          :label="label"
+        />
       </div>
       <div v-else>
         &mdash;
@@ -28,7 +24,11 @@
 </template>
 
 <script>
+import EmbeddedRow from './EmbeddedRow';
+import singularOrPlural from '@/util/singularOrPlural';
+
 export default {
+  components: { EmbeddedRow },
   props: {
     resourceName: {
       type: String,
@@ -48,12 +48,10 @@ export default {
     }
   },
 
-  methods: {
-    resolveComponentName (field) {
-      return field.prefix_component
-        ? 'detail-' + field.component
-        : field.component;
-    },
+  computed: {
+    label () {
+      return singularOrPlural(1, this.field.name);
+    }
   }
 };
 </script>

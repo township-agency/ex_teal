@@ -114,7 +114,6 @@ export default {
     },
     toggleExpand () {
       this.expanded = !this.expanded;
-      console.log(this.expanded);
     }
   }
 };

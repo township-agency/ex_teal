@@ -197,6 +197,7 @@ export default {
      * Create the form data for creating the resource.
      */
     createResourceFormData () {
+      console.log('broken');
       return _.tap(new FormData(), formData => {
         _.each(this.fields, field => {
           field.fill(formData);

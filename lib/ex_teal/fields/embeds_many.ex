@@ -33,22 +33,9 @@ defmodule ExTeal.Fields.EmbedsMany do
       |> Map.get(:embed_fields, [])
       |> Enum.map(fn embedded_field ->
         value = embedded_field.type.value_for(embedded_field, element, type)
-        %{embedded_field | value: value}
+        updated_field = %{embedded_field | value: value}
+        embedded_field.type.apply_options_for(updated_field, element, %{}, type)
       end)
     end)
-  end
-
-  @impl true
-  def apply_options_for(field, model, conn, type) do
-    value =
-      field
-      |> value_for(model, type)
-      |> Enum.map(fn related ->
-        Enum.map(related, fn value_field ->
-          value_field.type.apply_options_for(value_field, related, conn, type)
-        end)
-      end)
-
-    %{field | value: value}
   end
 end
