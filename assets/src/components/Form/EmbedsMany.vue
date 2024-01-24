@@ -78,8 +78,9 @@ export default {
     },
 
     finalPayload () {
-      const nested = this.field.options.nested || false;
-
+      if (!this.field.value) {
+        return [];
+      }
       return this.field.value.map(item => {
         const formData = new FormData();
         const fields = {};
@@ -113,7 +114,6 @@ export default {
     },
 
     fill (formData) {
-      console.log('hallo');
       const nested = this.field.options.nested || false;
       this.finalPayload.forEach((repeatable, i) => {
         const attribute = `${this.field.attribute}[${i}]`;
