@@ -1,8 +1,5 @@
 <template>
-  <default-field
-    :field="field"
-    :errors="errors"
-  >
+  <default-field :field="field" :errors="errors">
     <template slot="field">
       <Multiselect
         v-if="useCards"
@@ -17,28 +14,18 @@
         label="label"
         track-by="value"
       >
-        <template
-          slot="tag"
-          slot-scope="{ option, remove }"
-        >
-          <div class="inline-flex items-center mr-2 border rounded px-2 py-1 mb-2">
-            <div
-              v-if="option.thumbnail"
-              class="mr-3"
-            >
-              <img
-                :src="option.thumbnail"
-                class="w-8 h-8 rounded block"
-              >
+        <template slot="tag" slot-scope="{ option, remove }">
+          <div
+            class="inline-flex items-center mr-2 border rounded px-2 py-1 mb-2"
+          >
+            <div v-if="option.thumbnail" class="mr-3">
+              <img :src="option.thumbnail" class="w-8 h-8 rounded block" />
             </div>
             <div>
               <p class="text-gray-darkest">
                 {{ option.title }}
               </p>
-              <p
-                v-if="option.subtitle"
-                class="text-xs mt-0.5 opacity-75"
-              >
+              <p v-if="option.subtitle" class="text-xs mt-0.5 opacity-75">
                 {{ option.subtitle }}
               </p>
             </div>
@@ -46,36 +33,23 @@
               class="w-5 h-5 rounded-full block border border-danger text-danger flex items-center justify-center ml-4"
               @click="remove(option)"
             >
-              <icon
-                type="delete"
-                :width="12"
-                :height="12"
-              />
+              <icon type="delete" :width="12" :height="12" />
             </a>
           </div>
         </template>
-        <template
-          slot="option"
-          slot-scope="props"
-        >
+        <template slot="option" slot-scope="props">
           <div class="inline-flex items-center">
-            <div
-              v-if="props.option.thumbnail"
-              class="mr-3"
-            >
+            <div v-if="props.option.thumbnail" class="mr-3">
               <img
                 :src="props.option.thumbnail"
                 class="w-8 h-8 rounded block"
-              >
+              />
             </div>
             <div>
               <p class="text-gray-darkest">
                 {{ props.option.title }}
               </p>
-              <p
-                v-if="props.option.subtitle"
-                class="text-xs mt-0.5 opacity-75"
-              >
+              <p v-if="props.option.subtitle" class="text-xs mt-0.5 opacity-75">
                 {{ props.option.subtitle }}
               </p>
             </div>
@@ -100,40 +74,41 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from '@/mixins';
-import Multiselect from 'vue-multiselect';
+import { FormField, HandlesValidationErrors } from "@/mixins";
+import Multiselect from "vue-multiselect";
 
 export default {
   components: { Multiselect },
-  mixins: [ HandlesValidationErrors, FormField ],
+  mixins: [HandlesValidationErrors, FormField],
 
   data: () => ({
     value: false,
-    options: []
+    options: [],
   }),
 
   computed: {
-    useCards () {
+    useCards() {
       return !!this.field.options[0].title;
-    }
+    },
   },
 
-  mounted () {
+  mounted() {
     this.value = this.field.value || false;
     this.options = this.field.options;
 
-    this.field.fill = formData => {
+    this.field.fill = (formData) => {
       if (this.value) {
         this.value.forEach((option) => {
           formData.append(`${this.field.attribute}[]`, option.value);
         });
       }
     };
-  }
+  },
 };
 </script>
 
 <style>
+/* purgecss start ignore */
 fieldset[disabled] .multiselect {
   pointer-events: none;
 }
@@ -156,17 +131,16 @@ fieldset[disabled] .multiselect {
   width: 16px;
   height: 16px;
   border-radius: 100%;
-  border-color: #41b883 transparent transparent;
-  border-style: solid;
-  border-width: 2px;
+  border: 2px solid transparent;
+  border-top-color: #41b883;
   box-shadow: 0 0 0 1px transparent;
 }
 .multiselect__spinner:before {
-  animation: a 2.4s cubic-bezier(0.41, 0.26, 0.2, 0.62);
+  animation: spinning 2.4s cubic-bezier(0.41, 0.26, 0.2, 0.62);
   animation-iteration-count: infinite;
 }
 .multiselect__spinner:after {
-  animation: a 2.4s cubic-bezier(0.51, 0.09, 0.21, 0.8);
+  animation: spinning 2.4s cubic-bezier(0.51, 0.09, 0.21, 0.8);
   animation-iteration-count: infinite;
 }
 .multiselect__loading-enter-active,
@@ -202,10 +176,12 @@ fieldset[disabled] .multiselect {
   outline: none;
 }
 .multiselect--disabled {
+  background: #ededed;
+  pointer-events: none;
   opacity: 0.6;
 }
 .multiselect--active {
-  z-index: 1;
+  z-index: 50;
 }
 .multiselect--active:not(.multiselect--above) .multiselect__current,
 .multiselect--active:not(.multiselect--above) .multiselect__input,
@@ -319,8 +295,7 @@ fieldset[disabled] .multiselect {
 .multiselect__current {
   min-height: 40px;
   overflow: hidden;
-  padding: 8px 12px 0;
-  padding-right: 30px;
+  padding: 8px 30px 0 12px;
   white-space: nowrap;
   border-radius: 5px;
   border: 1px solid #e8e8e8;
@@ -350,9 +325,9 @@ fieldset[disabled] .multiselect {
   top: 65%;
   color: #999;
   margin-top: 4px;
+  border-color: #999 transparent transparent;
   border-style: solid;
   border-width: 5px 5px 0;
-  border-color: #999 transparent transparent;
   content: "";
 }
 .multiselect__placeholder {
@@ -375,7 +350,7 @@ fieldset[disabled] .multiselect {
   border-top: none;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  z-index: 1;
+  z-index: 50;
   -webkit-overflow-scrolling: touch;
 }
 .multiselect__content {
@@ -404,7 +379,7 @@ fieldset[disabled] .multiselect {
 .multiselect__option {
   display: block;
   padding: 12px;
-  min-height: 40px;
+  min-height: 32px;
   line-height: 16px;
   text-decoration: none;
   text-transform: none;
@@ -449,10 +424,6 @@ fieldset[disabled] .multiselect {
   background: #ff6a6a;
   content: attr(data-deselect);
   color: #fff;
-}
-.multiselect--disabled {
-  background: #ededed;
-  pointer-events: none;
 }
 .multiselect--disabled .multiselect__current,
 .multiselect--disabled .multiselect__select {
@@ -527,7 +498,7 @@ fieldset[disabled] .multiselect {
   right: auto;
   left: 1px;
 }
-@keyframes a {
+@keyframes spinning {
   0% {
     transform: rotate(0);
   }
@@ -535,7 +506,6 @@ fieldset[disabled] .multiselect {
     transform: rotate(2turn);
   }
 }
-
 .multiselect__tags {
   border-radius: 0;
   @apply .border .border-gray-dark;
@@ -559,4 +529,5 @@ fieldset[disabled] .multiselect {
 .multiselect__option--selected.multiselect__option--highlight:after {
   @apply .bg-danger;
 }
+/* purgecss end ignore */
 </style>
