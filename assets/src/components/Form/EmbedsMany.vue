@@ -114,17 +114,22 @@ export default {
     },
 
     fill (formData) {
-      const nested = this.field.options.nested || false;
+      if (this.finalPayload.length === 0) {
+        formData.append(this.field.attribute, '[]');
+        return;
+      }
       this.finalPayload.forEach((repeatable, i) => {
         const attribute = `${this.field.attribute}[${i}]`;
         Object.keys(repeatable).forEach(key => {
           let updatedKey;
-          if (nested) {
-            updatedKey = `${attribute}[${key}]`;
+          const firstPartIndex = key.indexOf('[');
+          if (firstPartIndex >= 0) {
+            const first = key.slice(0, firstPartIndex);
+            const rest = key.slice(firstPartIndex);
+            updatedKey = `${attribute}[${first}]${rest}`;
           }
           else {
-            const splitKey = key.split(/\[(.*)/s);
-            updatedKey = `${attribute}[${splitKey[0]}][${splitKey[1]}`;
+            updatedKey = `${attribute}[${key}]`;
           }
           formData.append(updatedKey, repeatable[key]);
         });
