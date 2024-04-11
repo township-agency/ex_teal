@@ -42,6 +42,7 @@ defmodule ExTeal.MixProject do
       {:phoenix, "~> 1.7"},
       {:phoenix_html, ">= 3.3.0"},
       {:phoenix_ecto, "~> 4.4", only: :test},
+      {:phoenix_live_view, "~> 0.20 or ~> 1.0"},
       {:ecto, "~> 3.10"},
       {:ecto_sql, "~> 3.10"},
       {:ex_machina, "~> 2.2", only: :test},
