@@ -54,7 +54,16 @@ defmodule ExTeal.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:nimble_csv, "~> 1.0"},
       {:timex, ">= 3.7.0"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:heroicons,
+       github: "tailwindlabs/heroicons",
+       tag: "v2.1.1",
+       sparse: "optimized",
+       app: false,
+       compile: false,
+       depth: 1}
     ]
   end
 
@@ -65,17 +74,15 @@ defmodule ExTeal.MixProject do
         "features"
       ],
       features: "test --only feature:true",
-      "assets.compile": &compile_assets/1,
+      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.build": ["tailwind default", "esbuild default"],
+      "assets.watch": ["tailwind watch", "esbuild watch"],
       "test.dev": [
         "format --check-formatted",
         "compile --warnings-as-errors --force",
         "credo --strict"
       ]
     ]
-  end
-
-  defp compile_assets(_) do
-    Mix.shell().cmd("cd assets && ./node_modules/.bin/vue-cli-service build")
   end
 
   defp description do

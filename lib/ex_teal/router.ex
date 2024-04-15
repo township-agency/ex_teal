@@ -39,29 +39,30 @@ defmodule ExTeal.Router do
         opts
       end
 
-      scope =
-        quote bind_quoted: binding() do
-          scope path, alias: false, as: false do
-            {session_name, session_opts, route_opts} =
-             ExTeal.Router.__options__(opts)
+    scope =
+      quote bind_quoted: binding() do
+        scope path, alias: false, as: false do
+          {session_name, session_opts, route_opts} = ExTeal.Router.__options__(opts)
 
-            import Phoenix.Router, only: [get: 4]
-            import Phoenix.LiveView.Router, only: [live: 4, live_session: 3]
+          import Phoenix.Router, only: [get: 4, forward: 4]
+          import Phoenix.LiveView.Router, only: [live: 4, live_session: 3]
 
-            live_session session_name, session_opts do
-              live "/", ExTeal.PageLive, :home, route_opts
-              live "/r/:resource_uri", ExTeal.IndexPage, :index, route_opts
-            end
+          live_session session_name, session_opts do
+            get("/assets/:file_uri", ExTeal.Assets, :asset, as: :live_dashboard_asset)
+
+            live("/", ExTeal.PageLive, :home, route_opts)
+            live("/r/:resource_uri", ExTeal.IndexPage, :index, route_opts)
           end
         end
+      end
 
     quote do
       unquote(scope)
 
-      unless Module.get_attribute(__MODULE__, :live_dashboard_prefix) do
-        @live_dashboard_prefix Phoenix.Router.scoped_path(__MODULE__, path)
-                                |> String.replace_suffix("/", "")
-        def __live_dashboard_prefix__, do: @live_dashboard_prefix
+      unless Module.get_attribute(__MODULE__, :ex_teal_prefix) do
+        @ex_teal_prefix Phoenix.Router.scoped_path(__MODULE__, path)
+                        |> String.replace_suffix("/", "")
+        def __ex_teal_prefix__, do: @ex_teal_prefix
       end
     end
   end
@@ -75,17 +76,41 @@ defmodule ExTeal.Router do
   def __options__(options) do
     live_socket_path = Keyword.get(options, :live_socket_path, "/live")
 
+    csp_nonce_assign_key =
+      case options[:csp_nonce_assign_key] do
+        nil -> nil
+        key when is_atom(key) -> %{img: key, style: key, script: key}
+        %{} = keys -> Map.take(keys, [:img, :style, :script])
+      end
+
+    session_args = [
+      csp_nonce_assign_key
+    ]
+
     {
       options[:live_session_name] || :ex_teal,
       [
-        # session: {__MODULE__, :__session__, []},
+        session: {__MODULE__, :__session__, session_args},
         root_layout: {ExTeal.LayoutView, :dash},
         on_mount: options[:on_mount] || nil
       ],
       [
-        private: %{live_socket_path: live_socket_path},
+        private: %{live_socket_path: live_socket_path, csp_nonce_assign_key: csp_nonce_assign_key},
         as: :ex_teal
       ]
+    }
+  end
+
+  def __session__(conn, csp_nonce_assign_key) do
+    auth_provider = ExTeal.auth_provider()
+
+    %{
+      "user" => auth_provider.current_user_for(conn),
+      "csp_nonces" => %{
+        img: conn.assigns[csp_nonce_assign_key[:img]],
+        style: conn.assigns[csp_nonce_assign_key[:style]],
+        script: conn.assigns[csp_nonce_assign_key[:script]]
+      }
     }
   end
 

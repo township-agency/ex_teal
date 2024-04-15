@@ -13,8 +13,4 @@ defmodule TestExTealWeb.Router do
     pipe_through(:browser)
     get("/dummies", TestExTealWeb.DummyController, :index)
   end
-
-  scope path: "/teal" do
-    forward("/", ExTeal.Router, namespace: "teal")
-  end
 end
