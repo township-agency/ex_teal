@@ -1,4 +1,9 @@
 defmodule ExTeal.IndexPage do
+  @moduledoc """
+  A very simple live view page that currently is just for mocking behavior
+
+  Currently it receives a `:resource_uri` parameter.
+  """
   use ExTeal.Web, :live_view
 
   @impl true
@@ -9,7 +14,7 @@ defmodule ExTeal.IndexPage do
   @impl true
   def render(assigns) do
     ~H"""
-    <h1 class="text-blue-500 text-4xl">Hello World</h1>
+    <h1 class="text-blue-100 text-xl">Hello World</h1>
     <h2><%= @current_user.full_name %></h2> this is a live view
     <p><%= @foo %></p>
     <button phx-click="inc">Inc</button>
