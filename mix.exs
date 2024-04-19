@@ -19,7 +19,8 @@ defmodule ExTeal.MixProject do
       source_url: @source,
       dialyzer: [
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
-      ]
+      ],
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -57,6 +58,8 @@ defmodule ExTeal.MixProject do
       {:tzdata, "~> 1.1"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:faker, "~> 0.18.0", only: :dev},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.1.1",
@@ -81,7 +84,8 @@ defmodule ExTeal.MixProject do
         "format --check-formatted",
         "compile --warnings-as-errors --force",
         "credo --strict"
-      ]
+      ],
+      dev: ["run --no-halt dev.exs"]
     ]
   end
 
@@ -112,5 +116,13 @@ by Township."
       ],
       source_url: @source
     ]
+  end
+
+  defp elixirc_paths(env) do
+    cond do
+      env == :dev && System.get_env("EX_TEAL_DEV") -> ["lib", "dev"]
+      env == :test -> ["lib", "test"]
+      true -> ["lib"]
+    end
   end
 end

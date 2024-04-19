@@ -19,7 +19,7 @@ defmodule ExTeal.Assets do
 
   defp content_type_of("app.css"), do: "text/css"
   defp content_type_of("app.js"), do: "text/javascript"
-  defp content_type_of(_), do: raise ArgumentError
+  defp content_type_of(_), do: raise(ArgumentError)
 
   defp content_of(file) do
     path = Application.app_dir(:ex_teal, ["priv", "static", "assets", file])
