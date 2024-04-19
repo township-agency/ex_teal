@@ -33,6 +33,7 @@ defmodule ExTeal.Web do
       import Phoenix.HTML
       import Phoenix.HTML.Form
       import Phoenix.LiveView.Helpers
+      import ExTeal.Components
       # import Phoenix.LiveDashboard.Helpers
     end
   end

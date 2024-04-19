@@ -5,8 +5,7 @@ defmodule ExTeal.Assets do
 
   def init(asset) when asset in [:asset], do: asset
 
-  def call(%Plug.Conn{params: %{"file_uri" => param}} = conn, _asset)
-      when param in ["app.css", "app.js"] do
+  def call(%Plug.Conn{params: %{"file_uri" => param}} = conn, _asset) do
     contents = content_of(param)
     content_type = content_type_of(param)
 
@@ -20,8 +19,9 @@ defmodule ExTeal.Assets do
 
   defp content_type_of("app.css"), do: "text/css"
   defp content_type_of("app.js"), do: "text/javascript"
+  defp content_type_of(_), do: raise ArgumentError
 
-  defp content_of(file) when file in ["app.css", "app.js"] do
+  defp content_of(file) do
     path = Application.app_dir(:ex_teal, ["priv", "static", "assets", file])
     File.read!(path)
   end

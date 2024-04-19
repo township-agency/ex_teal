@@ -2,6 +2,8 @@ defmodule ExTeal.LayoutView do
   @moduledoc false
   use ExTeal.Web, :html
 
+  import ExTeal.Components.SidebarLayout
+
   embed_templates("layouts/*")
 
   def render("dash.html", assigns), do: dash(assigns)

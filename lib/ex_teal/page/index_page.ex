@@ -15,7 +15,8 @@ defmodule ExTeal.IndexPage do
   def render(assigns) do
     ~H"""
     <h1 class="text-blue-100 text-xl">Hello World</h1>
-    <h2><%= @current_user.full_name %></h2> this is a live view
+    <h2><%= @current_user.full_name %></h2>
+    this is a live view
     <p><%= @foo %></p>
     <button phx-click="inc">Inc</button>
     """
