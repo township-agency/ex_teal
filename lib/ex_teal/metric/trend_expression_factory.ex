@@ -11,7 +11,7 @@ defmodule ExTeal.Metric.TrendExpressionFactory do
   a date expression to be used in a Ecto Query fragment for the query
   """
   def make(query, metric, timezone, unit, start_dt) do
-    case metric.repo().__adapter__ do
+    case metric.repo().__adapter__() do
       Ecto.Adapters.Postgres ->
         PostgresTrendExpression.generate(query, metric, timezone, unit, start_dt)
 

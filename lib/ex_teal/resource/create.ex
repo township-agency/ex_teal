@@ -72,7 +72,7 @@ defmodule ExTeal.Resource.Create do
       alias ExTeal.Resource.Serializer
 
       def handle_create(_conn, attributes) do
-        __MODULE__.model().changeset(__MODULE__.model().__struct__, attributes)
+        __MODULE__.model().changeset(__MODULE__.model().__struct__(), attributes)
       end
 
       def handle_invalid_create(conn, errors) do
