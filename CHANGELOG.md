@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.27.8](https://github.com/township-agency/ex_teal/compare/v0.27.7...v0.27.8) (2024-06-21)
+
+
+### Bug Fixes
+
+* build teal for 1.17 and correct new warnings ([#265](https://github.com/township-agency/ex_teal/issues/265)) ([f058f39](https://github.com/township-agency/ex_teal/commit/f058f39a1b2589afab2525e5eb06cffe5e355960))
+
 ## [0.27.7](https://github.com/township-agency/ex_teal/compare/v0.27.6...v0.27.7) (2024-02-02)
 
 
