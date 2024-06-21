@@ -38,7 +38,7 @@ defmodule ExTeal.Asset do
   defp scripts_in_manifest(map) do
     map
     |> Enum.filter(fn {k, v} ->
-      is_not_a_chunk?(k) && is_not_minified?(v) && !is_css?(v)
+      not_chunk?(k) && not_minified?(v) && !css?(v)
     end)
     |> Enum.map(fn {_k, v} -> v end)
     |> Enum.sort()
@@ -47,19 +47,19 @@ defmodule ExTeal.Asset do
   defp styles_in_manifest(map) do
     map
     |> Enum.filter(fn {k, v} ->
-      is_not_a_chunk?(k) && is_not_minified?(v) && is_css?(v)
+      not_chunk?(k) && not_minified?(v) && css?(v)
     end)
     |> Enum.map(fn {_k, v} -> v end)
     |> Enum.sort()
   end
 
-  defp is_not_a_chunk?("npm." <> _), do: true
-  defp is_not_a_chunk?("js/" <> _), do: false
-  defp is_not_a_chunk?(_), do: true
+  defp not_chunk?("npm." <> _), do: true
+  defp not_chunk?("js/" <> _), do: false
+  defp not_chunk?(_), do: true
 
-  defp is_not_minified?(value) do
+  defp not_minified?(value) do
     !String.ends_with?(value, ".gz") && !String.ends_with?(value, ".br")
   end
 
-  defp is_css?(value), do: String.ends_with?(value, ".css")
+  defp css?(value), do: String.ends_with?(value, ".css")
 end

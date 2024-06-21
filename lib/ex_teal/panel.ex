@@ -58,7 +58,7 @@ defmodule ExTeal.Panel do
   """
   def gather_panels(resource) do
     fields = resource.fields()
-    user_defined = Enum.filter(fields, &is_a_panel?/1)
+    user_defined = Enum.filter(fields, &panel?/1)
     default = default_panel_for(resource)
     [default] ++ user_defined
   end
@@ -75,8 +75,8 @@ defmodule ExTeal.Panel do
     end)
   end
 
-  defp is_a_panel?(%__MODULE__{}), do: true
-  defp is_a_panel?(_), do: false
+  defp panel?(%__MODULE__{}), do: true
+  defp panel?(_), do: false
 
   def default_panel_name(resource) do
     "#{resource.singular_title()} Details"

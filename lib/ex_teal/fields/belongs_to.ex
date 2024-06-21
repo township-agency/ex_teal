@@ -54,7 +54,7 @@ defmodule ExTeal.Fields.BelongsTo do
             belongs_to_key: rel.owner_key,
             belongs_to_relationship: resource.uri(),
             belongs_to_id: id,
-            reverse: is_reverse_relationship(resource, rel, conn)
+            reverse: reverse_relationship?(resource, rel, conn)
           })
 
         Map.put(field, :options, opts)
@@ -74,7 +74,7 @@ defmodule ExTeal.Fields.BelongsTo do
     field
   end
 
-  defp is_reverse_relationship(resource, rel, conn) do
+  defp reverse_relationship?(resource, rel, conn) do
     via_resource = Map.get(conn.params, "viaResource")
     via_relationship = Map.get(conn.params, "viaRelationship")
 
