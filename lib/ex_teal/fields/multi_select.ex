@@ -34,7 +34,7 @@ defmodule ExTeal.Fields.MultiSelect do
 
   def default_sortable, do: false
 
-  @spec with_options(Field.t(), valid_options | (() -> valid_options)) :: Field.t()
+  @spec with_options(Field.t(), valid_options | (-> valid_options)) :: Field.t()
   def with_options(field, options) when is_list(options) do
     %{field | options: options}
   end
