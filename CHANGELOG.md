@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.27.9](https://github.com/township-agency/ex_teal/compare/v0.27.8...v0.27.9) (2024-07-01)
+
+
+### Bug Fixes
+
+* Allow a multi-select to be emptied ([#275](https://github.com/township-agency/ex_teal/issues/275)) ([c4b9d1a](https://github.com/township-agency/ex_teal/commit/c4b9d1a000873e345e247f49d739c5c09bcdcbd6))
+
 ## [0.27.8](https://github.com/township-agency/ex_teal/compare/v0.27.7...v0.27.8) (2024-06-21)
 
 
