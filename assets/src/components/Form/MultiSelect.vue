@@ -82,25 +82,30 @@ export default {
   mixins: [HandlesValidationErrors, FormField],
 
   data: () => ({
-    value: false,
+    value: [],
     options: [],
   }),
 
   computed: {
-    useCards() {
+    useCards () {
       return !!this.field.options[0].title;
     },
   },
 
-  mounted() {
-    this.value = this.field.value || false;
+  mounted () {
+    this.value = this.field.value || [];
     this.options = this.field.options;
 
     this.field.fill = (formData) => {
-      if (this.value) {
+      console.log(this.value);
+      if (this.value && this.value.length > 0) {
         this.value.forEach((option) => {
           formData.append(`${this.field.attribute}[]`, option.value);
         });
+        return;
+      }
+      if (this.value && this.value.length === 0) {
+        formData.append(`${this.field.attribute}[]`, []);
       }
     };
   },
