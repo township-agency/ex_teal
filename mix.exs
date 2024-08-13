@@ -34,7 +34,7 @@ defmodule ExTeal.MixProject do
   defp deps do
     [
       {:plug, "~> 1.14"},
-      {:corsica, "~> 1.0"},
+      {:corsica, "~> 2.1"},
       {:postgrex, ">= 0.15.0"},
       {:jason, "~> 1.4"},
       {:inflex, "~> 2.0"},
