@@ -121,4 +121,8 @@ defmodule ExTeal.Metric.Ranges do
   defp to_dt_field_type(value, :utc_datetime) do
     value
   end
+
+  defp to_dt_field_type(value, :date) do
+    DateTime.to_date(value)
+  end
 end
