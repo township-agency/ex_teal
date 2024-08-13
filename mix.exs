@@ -6,7 +6,7 @@ defmodule ExTeal.MixProject do
   def project do
     [
       app: :ex_teal,
-      version: "0.27.9",
+      version: "0.28.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       build_embedded: Mix.env() == :prod,
