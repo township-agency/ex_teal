@@ -70,6 +70,7 @@ defmodule TestExTeal.Post do
     field(:contributor, :string)
     field(:published, :boolean)
     field(:published_at, :naive_datetime)
+    field(:featured_on, :date)
     field(:deleted_at, :utc_datetime)
 
     embeds_one(:features, Features, on_replace: :update)
@@ -86,7 +87,7 @@ defmodule TestExTeal.Post do
     timestamps()
   end
 
-  @fields ~w(name body author contributor published published_at deleted_at user_id editor_id)a
+  @fields ~w(name body author contributor published published_at featured_on deleted_at user_id editor_id)a
 
   def changeset(%Post{} = post, params \\ %{}) do
     post

@@ -151,44 +151,22 @@ defmodule ExTeal.Metric.Trend do
         unit,
         timezone
       ) do
+    format = result_format(unit)
+
     date =
-      case unit do
-        "year" ->
-          date
-          |> to_local_dt("{YYYY}", timezone)
-          |> to_result_date()
-
-        "month" ->
-          date
-          |> to_local_dt("{YYYY}-{0M}", timezone)
-          |> to_result_date()
-
-        "week" ->
-          date
-          |> to_local_dt("{YYYY}-{Wiso}", timezone)
-          |> to_result_date()
-
-        "day" ->
-          date
-          |> to_local_dt("{YYYY}-{0M}-{0D}", timezone)
-          |> to_result_date()
-
-        "hour" ->
-          date
-          |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}", timezone)
-          |> to_result_date()
-
-        "minute" ->
-          date
-          |> to_local_dt("{YYYY}-{0M}-{0D} {h24}:{m}", timezone)
-          |> to_result_date()
-
-        true ->
-          nil
-      end
+      date
+      |> to_local_dt(format, timezone)
+      |> to_result_date()
 
     {date, val}
   end
+
+  defp result_format("year"), do: "{YYYY}"
+  defp result_format("month"), do: "{YYYY}-{0M}"
+  defp result_format("week"), do: "{YYYY}-{Wiso}"
+  defp result_format("day"), do: "{YYYY}-{0M}-{0D}"
+  defp result_format("hour"), do: "{YYYY}-{0M}-{0D} {h24}:{m}"
+  defp result_format(_), do: "{YYYY}-{0M}-{0D} {h24}:{m}"
 
   def get_possible_results(start_dt, end_dt, request, timezone) do
     tz = Timezone.get(timezone, start_dt)

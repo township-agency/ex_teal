@@ -14,7 +14,21 @@ defmodule ExTeal.Metric do
         }
 
   @callback date_field() :: atom()
-  @callback date_field_type() :: :naive_datetime | :utc_datetime
+
+  @type valid_date_field_type :: :naive_datetime | :utc_datetime | :date
+
+  @doc """
+  Specify the type of time field used in the date_field.  Defaults to `:naive_datetime`
+
+  Metrics based on `:date` fields will only be aggregated by day, discarding time and timezone information
+  """
+  @callback date_field_type() :: valid_date_field_type()
+
+  @doc """
+  Specify if a metric can return multiple results.  Defaults to `false`
+
+  If set to `true`, Teal expects the `calculate/1` function to return a list of aggregates
+  """
   @callback multiple_results() :: boolean()
 
   @doc """
@@ -102,9 +116,12 @@ defmodule ExTeal.Metric do
 
       def multiple_results, do: false
 
-      def ranges, do: ExTeal.Metric.default_ranges()
+      def ranges do
+        df_type = date_field_type()
+        ExTeal.Metric.default_date_ranges(df_type)
+      end
 
-      def default_range, do: %{label: "24H", unit: :hour, value: 24}
+      def default_range, do: %{label: "7D", unit: :day, value: 7}
 
       def uri, do: ExTeal.Naming.resource_name(__MODULE__)
 
@@ -160,9 +177,26 @@ defmodule ExTeal.Metric do
     end
   end
 
-  @spec default_ranges() :: [range()]
-  def default_ranges,
-    do: [
+  @spec default_date_ranges() :: [range()]
+  def default_date_ranges do
+    default_date_ranges(:naive_datetime)
+  end
+
+  @spec default_date_ranges(valid_date_field_type()) :: [range()]
+  def default_date_ranges(:date) do
+    [
+      %{label: "7D", unit: :day, value: 7},
+      %{label: "14D", unit: :day, value: 14},
+      %{label: "4W", unit: :week, value: 4},
+      %{label: "3M", unit: :month, value: 3},
+      %{label: "6M", unit: :month, value: 6},
+      %{label: "1Y", unit: :month, value: 12},
+      %{label: "3Y", unit: :year, value: 3}
+    ]
+  end
+
+  def default_date_ranges(_) do
+    [
       %{label: "60m", unit: :minute, value: 60},
       %{label: "24H", unit: :hour, value: 24},
       %{label: "7D", unit: :day, value: 7},
@@ -173,4 +207,5 @@ defmodule ExTeal.Metric do
       %{label: "1Y", unit: :month, value: 12},
       %{label: "3Y", unit: :year, value: 3}
     ]
+  end
 end

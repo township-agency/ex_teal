@@ -19,6 +19,20 @@ defmodule TestExTeal.NewUserTrend do
   end
 end
 
+defmodule TestExTeal.PostFeaturedTrend do
+  use ExTeal.Metric.Trend
+  @impl true
+  def calculate(request) do
+    count(request, TestExTeal.Post)
+  end
+
+  @impl true
+  def date_field, do: :featured_on
+
+  @impl true
+  def date_field_type, do: :date
+end
+
 defmodule TestExTeal.RevenueTrend do
   use ExTeal.Metric.Trend
 

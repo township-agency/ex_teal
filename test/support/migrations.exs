@@ -25,6 +25,7 @@ defmodule TestExTeal.Migrations do
       add(:editor_id, references(:users))
       add(:published, :boolean, default: false, null: false)
       add(:published_at, :naive_datetime)
+      add(:featured_on, :date)
       add(:deleted_at, :utc_datetime)
 
       timestamps()

@@ -5,8 +5,8 @@ defmodule ExTeal.Metric.TrendTest do
 
   alias Decimal, as: D
   alias ExTeal.Metric.{Ranges, Request, Trend}
-  alias TestExTeal.{NewUserTrend, RevenueTrend}
-  alias TestExTeal.{Order, User}
+  alias TestExTeal.{NewUserTrend, PostFeaturedTrend, RevenueTrend}
+  alias TestExTeal.{Order, Post, User}
 
   @utc_params %{
     "uri" => "new-user-trend",
@@ -26,6 +26,7 @@ defmodule ExTeal.Metric.TrendTest do
     params = if context[:utc], do: @utc_params, else: @central_params
 
     params = if context[:unit], do: Map.put(params, "unit", context[:unit]), else: params
+    params = if context[:start], do: Map.put(params, "start_at", context[:start]), else: params
     params = if context[:end], do: Map.put(params, "end_at", context[:end]), else: params
 
     {:ok, request: Request.from_conn(build_conn(:post, "/foo", params))}
@@ -102,6 +103,21 @@ defmodule ExTeal.Metric.TrendTest do
                %{x: "2016-01-05T02:04:00-06:00", y: Decimal.new(46)},
                %{x: "2016-01-05T02:05:00-06:00", y: zero},
                %{x: "2016-01-05T02:06:00-06:00", y: zero}
+             ]
+    end
+
+    @tag start: "2024-01-01T00:00:00-06:00", end: "2024-01-04T00:00:00-06:00", unit: "day"
+    test "can count by date when date is a date field", %{request: request} do
+      insert(:post, featured_on: ~D[2024-01-01])
+      insert_pair(:post, featured_on: ~D[2024-01-02])
+      result = Trend.aggregate(PostFeaturedTrend, request, Post, :count, :id, %{})
+      zero = Decimal.new(0)
+
+      assert result.data == [
+               %{x: "2024-01-01T00:00:00-06:00", y: Decimal.new(1)},
+               %{x: "2024-01-02T00:00:00-06:00", y: Decimal.new(2)},
+               %{x: "2024-01-03T00:00:00-06:00", y: zero},
+               %{x: "2024-01-04T00:00:00-06:00", y: zero}
              ]
     end
   end

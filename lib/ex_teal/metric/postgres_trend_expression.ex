@@ -7,20 +7,31 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
   @impl true
   def generate(query, metric, timezone, unit, start_dt) do
     offset = fetch_offset(timezone, start_dt)
+    ts_field_type = metric.date_field_type()
 
-    format = date_format(unit)
-
-    ts_field = metric.date_field()
-    sign = positive_or_negative(offset)
-    interval = to_interval(offset)
-
-    sign
-    |> select_by_sign(query, ts_field, interval, format)
+    query
+    |> select_based_on_field_type(ts_field_type, metric, unit, offset)
     |> group_by([_q], fragment("date_result"))
     |> order_by([_q], fragment("date_result ASC"))
   end
 
-  defp select_by_sign("+", query, ts_field, interval, format) do
+  def select_based_on_field_type(query, :date, metric, unit, _offset) do
+    ts_field = metric.date_field()
+    format = date_format(unit)
+
+    select_dt_by_sign(query, "?", ts_field, 0, format)
+  end
+
+  def select_based_on_field_type(query, _, metric, unit, offset) do
+    ts_field = metric.date_field()
+    sign = positive_or_negative(offset)
+    interval = to_interval(offset)
+    format = date_format(unit)
+
+    select_dt_by_sign(query, sign, ts_field, interval, format)
+  end
+
+  defp select_dt_by_sign(query, "+", ts_field, interval, format) do
     select_merge(
       query,
       [q],
@@ -36,7 +47,7 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
     )
   end
 
-  defp select_by_sign("-", query, ts_field, interval, format) do
+  defp select_dt_by_sign(query, "-", ts_field, interval, format) do
     select_merge(
       query,
       [q],
@@ -52,7 +63,7 @@ defmodule ExTeal.Metric.PostgresTrendExpression do
     )
   end
 
-  defp select_by_sign(_, query, ts_field, _interval, format) do
+  defp select_dt_by_sign(query, _, ts_field, _interval, format) do
     select_merge(
       query,
       [q],
