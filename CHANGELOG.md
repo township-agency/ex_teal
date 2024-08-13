@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.28.0](https://github.com/township-agency/ex_teal/compare/v0.27.9...v0.28.0) (2024-08-13)
+
+
+### Features
+
+* Enable Trend Metrics to use date fields ([#279](https://github.com/township-agency/ex_teal/issues/279)) ([71ea73d](https://github.com/township-agency/ex_teal/commit/71ea73d95c47f34c21fdf117d6e0ecca8f1d4d0d))
+
 ## [0.27.9](https://github.com/township-agency/ex_teal/compare/v0.27.8...v0.27.9) (2024-07-01)
 
 
