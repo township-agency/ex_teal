@@ -180,7 +180,7 @@ defmodule ExTeal.Resource.Index do
       resource
       |> Fields.index_fields(conn)
       |> Enum.find(&(&1.attribute == field))
-      |> then(& &1.type.apply_options_for(&1, new_schema, %{}, :index))
+      |> then(& &1.type.apply_options_for(&1, new_schema, conn, :index))
 
     handle_sort(query, field_struct, String.to_existing_atom(field), dir)
   end
