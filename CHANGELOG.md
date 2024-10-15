@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.28.1](https://github.com/township-agency/ex_teal/compare/v0.28.0...v0.28.1) (2024-10-15)
+
+
+### Bug Fixes
+
+* sorting an index request should pass the conn to the child fields ([#284](https://github.com/township-agency/ex_teal/issues/284)) ([42161d4](https://github.com/township-agency/ex_teal/commit/42161d447655045d0dc37580a863783dfba6d7b2))
+
 ## [0.28.0](https://github.com/township-agency/ex_teal/compare/v0.27.9...v0.28.0) (2024-08-13)
 
 
