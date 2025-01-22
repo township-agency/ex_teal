@@ -1,4 +1,5 @@
 # ExTeal
+Teal is an open-source admin dashboard built in Elixir and Phoenix.
 
 ## Installation
 
